@@ -110,6 +110,8 @@ class StyleResolver:
     def font(self, run):
         run._editable()
         paragraph = run.parent_node
+        if paragraph is not None and _is(paragraph._element, "hyperlink"):
+            paragraph = paragraph.parent_node
         if paragraph is None or not _is(paragraph._element, "p"):
             raise ValueError("Effective run formatting requires a direct paragraph parent")
         paragraph_styles, _ = self._paragraph_layers(paragraph)

@@ -1,9 +1,7 @@
 """Explicit original-package editing entry point; legacy Document remains unchanged."""
 
-import posixpath
-from urllib.parse import unquote, urlsplit
-
 from aspose.words_foss._io import MAX_TABLE_COLUMNS
+from aspose.words_foss._opc import resolve_target
 from aspose.words_foss.dom.nodes import (
     _NODE_CLASSES,
     Body,
@@ -119,12 +117,8 @@ class DocxDocument:
         if len(links) != 1 or links[0].getAttribute("TargetMode") not in {"", "Internal"}:
             raise ValueError("Expected one internal styles relationship")
         target = links[0].getAttribute("Target")
-        uri = urlsplit(target)
-        if not target or uri.scheme or uri.netloc or uri.query or uri.fragment:
-            raise ValueError("Invalid styles relationship target")
-        path = unquote(uri.path)
-        name = posixpath.normpath(path.lstrip("/") if path.startswith("/") else "word/" + path)
-        if name.startswith("../") or "\\" in name or name not in self.part_names:
+        name = resolve_target("word/document.xml", target)
+        if name not in self.part_names:
             raise ValueError("Styles relationship points to a missing or unsafe part")
         root = self._package.tree(name).documentElement
         if not _is(root, "styles"):

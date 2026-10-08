@@ -217,7 +217,7 @@ class Node:
         node = self._element
         while node is not None and node.nodeType == XmlNode.ELEMENT_NODE:
             if node.namespaceURI != W or node.localName not in {
-                "document", "body", "hdr", "ftr", "p", "r", "tbl", "tr", "tc",
+                "document", "body", "hdr", "ftr", "p", "r", "hyperlink", "tbl", "tr", "tc",
             }:
                 raise NotImplementedError("Editing inside unsupported containers is not supported")
             node = node.parentNode
@@ -349,6 +349,18 @@ class Paragraph(Node):
                        for node in self._element.getElementsByTagNameNS(W, "*")
                        if node.localName in {"t", "tab", "br", "cr"})
 
+    def add_hyperlink(self, text, target):
+        """Append a link; URLs are never fetched. Complex range stories remain rejected."""
+        from aspose.words_foss.dom.resources import add_hyperlink
+
+        return add_hyperlink(self, text, target)
+
+    def add_picture(self, source, *, width=None, height=None, alternative_text=""):
+        """Append an inline PNG/JPEG from bytes, a stream or a path; sizes are points."""
+        from aspose.words_foss.dom.resources import add_picture
+
+        return add_picture(self, source, width, height, alternative_text)
+
     def replace_text(self, old, new):
         """Replace non-overlapping literals across direct runs; keep first-run formatting.
 
@@ -476,16 +488,116 @@ class Run(Node):
         return StyleResolver(self.owner_document).font(self)
 
 
+class Hyperlink(Node):
+    @property
+    def runs(self):
+        return tuple(node for node in self.child_nodes if isinstance(node, Run))
+
+    @property
+    def text(self):
+        return "".join(run.text for run in self.runs)
+
+    @property
+    def target(self):
+        from aspose.words_foss.docx_writer.constants import REL_HYPERLINK, R_URI
+        from aspose.words_foss.dom.resources import relationship_root
+
+        rid = self._element.getAttributeNS(R_URI, "id")
+        target = ""
+        if rid:
+            root = relationship_root(self.owner_document._package, self.part_name)
+            relation = next((node for node in _elements(root) if node.getAttribute("Id") == rid), None)
+            if (relation is None or relation.getAttribute("Type") != REL_HYPERLINK or
+                    relation.getAttribute("TargetMode") != "External"):
+                raise ValueError("Missing or unsupported hyperlink relationship")
+            target = relation.getAttribute("Target")
+        anchor = self._element.getAttributeNS(W, "anchor")
+        return target + ("#" + anchor if anchor else "")
+
+    @target.setter
+    def target(self, value):
+        from aspose.words_foss.dom.resources import set_link_target
+
+        set_link_target(self, value)
+
+
 class Table(Node):
     node_type = NodeType.TABLE
 
-    # ponytail: row edits wait for grid/merge invariants; whole plain tables remain editable.
+    # ponytail: row/column edits and vertical merges still require a complete grid editor.
     def insert_before(self, child, reference):
         raise NotImplementedError("Changing existing table rows requires grid/merge support")
 
     @property
     def rows(self):
         return tuple(node for node in self.child_nodes if isinstance(node, Row))
+
+    def merge_cells(self, row_index, start_column, end_column):
+        """Merge a horizontal grid range [start, end); reject vertical/legacy merges."""
+        from aspose.words_foss._io import MAX_TABLE_COLUMNS
+
+        self._structural_editable()
+        if not _safe_structure(self._element):
+            raise NotImplementedError("Merging tables with complex content is unsupported")
+        rows = self.rows
+        if (any(type(value) is not int for value in (row_index, start_column, end_column)) or
+                not 0 <= row_index < len(rows) or not 0 <= start_column < end_column):
+            raise ValueError("Expected a valid row and nonempty integer column range")
+        grid = _find(self._element, "tblGrid")
+        columns = len(_elements(grid)) if grid is not None else 0
+        if not 1 <= columns <= MAX_TABLE_COLUMNS:
+            raise ValueError("Expected a bounded table grid")
+        selected = []
+        for index, row in enumerate(rows):
+            tr_pr = _find(row._element, "trPr")
+            if tr_pr is not None and any(_find(tr_pr, tag) is not None for tag in ("gridBefore", "gridAfter")):
+                raise NotImplementedError("Rows with omitted grid cells are unsupported")
+            column = 0
+            for cell in row.cells:
+                properties = _find(cell._element, "tcPr")
+                if properties is not None and any(_find(properties, tag) is not None for tag in ("vMerge", "hMerge")):
+                    raise NotImplementedError("Vertical and legacy horizontal merges are unsupported")
+                span_node = _find(properties, "gridSpan") if properties is not None else None
+                raw = span_node.getAttributeNS(W, "val") if span_node is not None else "1"
+                if not raw.isascii() or not raw.isdecimal() or len(raw) > 4 or not 1 <= int(raw) <= MAX_TABLE_COLUMNS:
+                    raise ValueError("Invalid grid span")
+                span = int(raw)
+                if not cell.child_nodes or not isinstance(cell.child_nodes[-1], Paragraph):
+                    raise ValueError("A table cell must end with a paragraph")
+                if index == row_index and column < end_column and column + span > start_column:
+                    if column < start_column or column + span > end_column:
+                        raise ValueError("Merge boundaries cannot split an existing cell")
+                    selected.append(cell)
+                column += span
+            if column != columns:
+                raise ValueError("Table rows do not match the grid")
+        if end_column > columns or not selected:
+            raise ValueError("Merge range exceeds the grid")
+        if len(selected) == 1:
+            return selected[0]
+        target = selected[0]
+        properties = _find(target._element, "tcPr")
+        if properties is None:
+            properties = _new(target._element, "tcPr")
+            target._element.insertBefore(properties, target._element.firstChild)
+        span = _find(properties, "gridSpan")
+        if span is None:
+            span = _new(properties, "gridSpan")
+            order = ("vMerge", "tcBorders", "shd", "noWrap", "tcMar", "textDirection", "tcFitText", "vAlign", "hideMark")
+            anchor = next((node for node in _elements(properties) if node.localName in order), None)
+            properties.insertBefore(span, anchor)
+        span.setAttributeNS(XMLNS, "xmlns:w", W)
+        span.setAttributeNS(W, "w:val", str(end_column - start_column))
+        width = _find(properties, "tcW")
+        if width is not None:
+            properties.removeChild(width)  # The grid/span now determines width, not the old single cell.
+        for cell in selected[1:]:
+            for child in cell.child_nodes:
+                _bind_namespace_context(child._element, child._element, target._element)
+                target._element.appendChild(child._element)
+            cell._element.parentNode.removeChild(cell._element)
+        self._changed()
+        return target
 
 
 class Row(Node):
@@ -635,4 +747,4 @@ class ParagraphFormat(_Format):
 
 
 _NODE_CLASSES = {"body": Body, "p": Paragraph, "r": Run, "tbl": Table, "tr": Row,
-                 "tc": Cell, "hdr": HeaderFooter, "ftr": HeaderFooter}
+                 "tc": Cell, "hdr": HeaderFooter, "ftr": HeaderFooter, "hyperlink": Hyperlink}

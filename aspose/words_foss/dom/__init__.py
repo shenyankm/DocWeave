@@ -6,6 +6,7 @@ from aspose.words_foss.dom.nodes import (
     Cell,
     Font,
     HeaderFooter,
+    Hyperlink,
     Node,
     Paragraph,
     ParagraphFormat,
@@ -19,6 +20,6 @@ from aspose.words_foss.dom.styles import EffectiveFont, EffectiveParagraphFormat
 
 __all__ = [
     "Body", "Cell", "DocxDocument", "EffectiveFont", "EffectiveParagraphFormat", "Font",
-    "HeaderFooter", "Node", "Paragraph", "ParagraphFormat", "Row", "Run", "Table",
+    "HeaderFooter", "Hyperlink", "Node", "Paragraph", "ParagraphFormat", "Row", "Run", "Table",
     "TextRange", "UnknownNode",
 ]

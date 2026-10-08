@@ -313,7 +313,8 @@ def _render_drawing_run(
             [
                 el("wp:extent", {"cx": cx, "cy": cy}),
                 el("wp:effectExtent", {"l": 0, "t": 0, "r": 0, "b": 0}),
-                el("wp:docPr", {"id": doc_pr_id, "name": name}),
+                el("wp:docPr", {"id": doc_pr_id, "name": name,
+                               "descr": shape.alternative_text or None}),
                 cnv_gfp,
                 graphic,
             ],

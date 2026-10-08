@@ -2,10 +2,11 @@
 
 from io import BytesIO
 from pathlib import Path
-from zipfile import ZipFile
+from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 from defusedxml.minidom import parseString
 
+from aspose.words_foss import _io
 from aspose.words_foss._io import (
     atomic_output,
     check_input_size,
@@ -56,6 +57,29 @@ class DocxPackage:
         if name in self._dirty:
             return self.tree(name).toxml(encoding="utf-8")
         return self._payloads[name]
+
+    def set_parts(self, parts):
+        """Commit prebuilt resource parts together, after checking output size limits."""
+        for name, data in parts.items():
+            if (not name or name.startswith("/") or ".." in name.split("/") or
+                    "\\" in name or not isinstance(data, bytes)):
+                raise ValueError("Unsafe DOCX part")
+            if len(data) > _io.MAX_PART_BYTES:
+                raise ValueError("DOCX part exceeds the safety limit")
+        names = set(self._payloads) | set(parts)
+        if len(names) > _io.MAX_ZIP_ENTRIES:
+            raise ValueError("DOCX has too many ZIP entries")
+        size = sum(len(parts[name] if name in parts else self.payload(name)) for name in names)
+        if size > _io.MAX_EXPANDED_BYTES:
+            raise ValueError("DOCX expanded size exceeds the safety limit")
+        for name, data in parts.items():
+            if name not in self._payloads:
+                entry = ZipInfo(name)
+                entry.compress_type = ZIP_DEFLATED
+                self._entries.append(entry)
+            self._payloads[name] = data
+            self._trees.pop(name, None)
+            self._dirty.discard(name)
 
     def to_bytes(self):
         stream = BytesIO()

@@ -149,6 +149,10 @@ class ShapeParserMixin:
         shape.is_inline = is_inline
         shape.width = width_pt
         shape.height = height_pt
+        doc_pr = container.find(f"{WP_NS}docPr")
+        if doc_pr is not None:
+            shape.alternative_text = doc_pr.get("descr", "")
+            shape.name = doc_pr.get("name", "")
         shape.image_data = ldm.ImageData(
             source_full_name=filename,
             image_type=ldm.ImageData.from_mime(mime),
