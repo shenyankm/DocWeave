@@ -1,7 +1,7 @@
 [project]
 name = "aspose-words-foss"
 version = "26.7.0"
-description = "Lightweight free open-source alternative to Aspose.Words — convert DOCX, DOC, RTF to Markdown, text, and PDF"
+description = "Unofficial enhanced fork of Aspose.Words FOSS with Chinese/Unicode PDF export"
 readme = "README.md"
 license = "MIT AND OFL-1.1"
 license-files = ["LICENSE", "aspose/words_foss/pdf_writer/fonts/OFL.txt"]
@@ -35,9 +35,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python"
-Repository = "https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python"
-Issues = "https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python/issues"
+Homepage = "https://github.com/shenyankm/Aspose.Words-FOSS-for-Python"
+Repository = "https://github.com/shenyankm/Aspose.Words-FOSS-for-Python"
+Issues = "https://github.com/shenyankm/Aspose.Words-FOSS-for-Python/issues"
+Upstream = "https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python"
 
 [project.optional-dependencies]
 dev = [

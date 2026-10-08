@@ -1,4 +1,10 @@
-# Bundled PDF fonts
+# Bundled PDF fonts — Unofficial Fork Enhancement
+
+These resources were added by this repository's unofficial enhanced fork of
+Aspose.Words FOSS for Python. They were not present in the imported upstream
+revision `2d2efee2787cb9e56d071d17f8d7b740dce8b784`; they are not official
+Aspose fonts or a claim about fonts in later upstream releases. See the
+[project's fork status and differences](../../../../README.md#fork-status-and-upstream-differences).
 
 `DocumentSansSC-*.ttf` are renamed derivatives of **Noto Sans SC 2.004**,
 licensed under the SIL Open Font License 1.1; see `OFL.txt`. The original

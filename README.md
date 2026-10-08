@@ -1,17 +1,26 @@
-# Aspose.Words FOSS for Python
+# Aspose.Words FOSS for Python — Unofficial Enhanced Fork
 
-[![PyPI version](https://img.shields.io/pypi/v/aspose-words-foss.svg)](https://pypi.org/project/aspose-words-foss/) [![Python versions](https://img.shields.io/pypi/pyversions/aspose-words-foss.svg)](https://pypi.org/project/aspose-words-foss/) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-words-foss/Aspose.Words-FOSS-for-Python.svg)](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python/graphs/contributors)
+[![Unofficial fork](https://img.shields.io/badge/status-unofficial_enhanced_fork-orange.svg)](#fork-status-and-upstream-differences) [![Code license: MIT](https://img.shields.io/badge/code_license-MIT-blue.svg)](LICENSE) [![Font license: OFL-1.1](https://img.shields.io/badge/font_license-OFL--1.1-blue.svg)](aspose/words_foss/pdf_writer/fonts/OFL.txt)
 
-[![Aspose.Words FOSS for Python](https://products.aspose.org/media/words/python/banner-readme.png)](https://products.aspose.org/words/python/)
+> **非官方增强版说明：** 本仓库基于官方 Aspose.Words FOSS for Python 项目进行增强，
+> 不是 Aspose 官方发布版。当前主要增强是中文/Unicode PDF 导出；字体、排版、依赖和
+> 许可证构成与所基于的官方版本存在差异。请安装本仓库的 `dev` 分支，并以本文档和
+> 本仓库测试为准；官方 PyPI 包和官方文档不能代表本增强版的行为。
 
-Aspose.Words FOSS for Python is a free, open-source, MIT-licensed Python library for working with
-Word documents. It reads DOCX, DOC (Word 97-2003), RTF, Markdown, and plain-text files into a
-shared Light Document Model, and exports that model to DOCX, Markdown, PDF, or plain text — all
-without Microsoft Word or any COM/Office automation. It follows a compatible API shape (`Document`,
-`SaveFormat`) to the commercial Aspose.Words for Python.
+This repository is an independently maintained enhanced fork of
+[the official Aspose.Words FOSS for Python project](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python).
+The original library and its authors are credited; this fork is **not an official Aspose release**.
+Its default development branch is `dev`.
+
+The library reads DOCX, DOC (Word 97-2003), OLE2/DOC-backed RTF, Markdown, and plain-text files
+into a shared Light Document Model, and exports that model to DOCX, Markdown, PDF, or plain text —
+without Microsoft Word or COM/Office automation. It retains the familiar `Document` / `SaveFormat`
+API shape, but does not guarantee identical behavior or output to upstream or commercial Aspose.Words.
+Library code remains MIT-licensed; bundled PDF fonts are separately OFL-1.1-licensed.
 
 ## Navigation
 
+- [Fork Status and Upstream Differences](#fork-status-and-upstream-differences)
 - [At a Glance](#at-a-glance)
 - [Key Capabilities](#key-capabilities)
 - [Installation](#installation)
@@ -23,6 +32,28 @@ without Microsoft Word or any COM/Office automation. It follows a compatible API
 - [Scope and Limitations](#scope-and-limitations)
 - [Development and Testing](#development-and-testing)
 - [License](#license)
+
+## Fork Status and Upstream Differences
+
+This fork started from upstream revision
+[`2d2efee2787cb9e56d071d17f8d7b740dce8b784`](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python/commit/2d2efee2787cb9e56d071d17f8d7b740dce8b784).
+The comparison below is against that imported revision, **not a claim about the latest upstream
+release**. Fork changes are maintained independently on
+[`dev`](https://github.com/shenyankm/Aspose.Words-FOSS-for-Python/tree/dev).
+
+| Area | Imported upstream revision | This enhanced fork |
+|---|---|---|
+| Chinese / Unicode PDF text | Latin-1 conversion replaced unsupported characters, including Chinese, with `?` | Preserves Unicode and common Simplified/Traditional Chinese, mixed Latin text, and punctuation |
+| PDF fonts | Word font names mapped to built-in PDF core fonts | Bundled Document Sans SC fonts are subset-embedded; no system-font installation is needed |
+| Font styling and layout | Core serif/sans/monospace substitution and x-height scaling | One Unicode family for all text, including code blocks; dedicated bold and derived oblique faces. Original font families, monospace metrics, and pagination can differ |
+| Runtime dependency | Declared `fpdf2>=2.7.5` | Requires `fpdf2>=2.8.1`, verified with the renderer's `text=` API |
+| Tests | API example suite | Adds Chinese DOCX/PDF regression tests for text preservation, font embedding, styles, tables, headers/footers, and two-page output; PDF checks use the `pypdf` dev dependency |
+| Distribution and licensing | MIT-licensed library code | MIT code plus OFL-1.1 font resources; four font files add approximately 41 MiB before compression |
+
+This is a targeted PDF enhancement, not full Word layout compatibility or a replacement for the
+commercial product. Existing unsupported formats/options remain unsupported; see
+[Scope and Limitations](#scope-and-limitations). The source implementation and local tests take
+precedence when upstream documentation differs.
 
 ## At a Glance
 
@@ -88,25 +119,37 @@ flowchart TD
 
 ## Installation
 
-Install from PyPI:
+### Install this enhanced fork
+
+Install from this repository's `dev` branch, preferably in a separate virtual environment:
 
 ```bash
-pip install aspose-words-foss>=26.5.0
+pip install "git+https://github.com/shenyankm/Aspose.Words-FOSS-for-Python.git@dev"
 ```
 
-Or install the latest nightly build directly from GitHub:
+For reproducible deployments, replace `@dev` with the full commit hash you have tested.
+For local development, clone this fork rather than the upstream repository:
 
 ```bash
-pip install git+https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python.git
+git clone --branch dev https://github.com/shenyankm/Aspose.Words-FOSS-for-Python.git
+cd Aspose.Words-FOSS-for-Python
+pip install -e ".[dev]"
 ```
 
-Requires Python 3.10 or later; runtime dependencies install automatically via pip — see
-[Dependencies](#dependencies) below for the full required and native-requirement breakdown.
+**`pip install aspose-words-foss` installs the upstream PyPI distribution, not this fork.**
+This fork currently retains upstream's distribution name (`aspose-words-foss`), import namespace
+(`aspose.words_foss`), and version (`26.7.0`). Upstream and this fork cannot be installed side by
+side in the same environment; the version string alone does not identify which one is installed.
+Use separate environments and record the source commit. Installing/upgrading the PyPI package can
+replace the enhanced build.
 
-Verify the install:
+Requires Python 3.10–3.12; runtime dependencies install automatically via pip — see
+[Dependencies](#dependencies) below.
+
+Verify the import (this checks availability, not fork provenance):
 
 ```bash
-python -c "import aspose_words_foss; print('aspose_words_foss OK')"
+python -c "import aspose.words_foss as aw; print(aw.__version__)"
 ```
 
 ## Dependencies
@@ -127,7 +170,7 @@ python -c "import aspose_words_foss; print('aspose_words_foss OK')"
 - `pytest>=9.0.2` — the test runner used to execute `tests/` and `ApiExamples/`.
 - `pypdf>=5.0.0` — checks PDF links, extracted Unicode text, and embedded fonts in tests.
 
-None of these are required to install or use the published package; they apply only when
+None of these are required to install or use this fork at runtime; they apply only when
 installing with `pip install -e ".[dev]"` for local development and testing.
 
 ## Quick Start
@@ -605,16 +648,24 @@ shared Light Document Model, summarized in the module-grouped table below.
 
 ## Documentation & Resources
 
-- **[Getting started guide](https://docs.aspose.org/words/python/)** — installation, walkthroughs, and feature guides for this library.
-- **[How-to guides & FAQ](https://kb.aspose.org/words/python/)** — task-focused answers for common Word-processing questions.
-- **[Full API reference](https://reference.aspose.org/words/python/)** — the complete, browsable reference for all 146 public types (the [API reference](#api-reference) section above covers the essentials).
-- The `ApiExamples/` scripts are written against the API this library shares with the commercial
-  [`aspose-words`](https://github.com/aspose-words/Aspose.Words-for-Python-via-.NET) package — the
-  same sources run there too, by replacing `aspose.words_foss` with `aspose.words` in the imports.
-- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python/issues) on GitHub.
+- **This fork:** this README, [`ApiExamples/`](ApiExamples/), and
+  [`tests/test_pdf_unicode.py`](tests/test_pdf_unicode.py) describe the enhanced behavior.
+- **[Fork issues](https://github.com/shenyankm/Aspose.Words-FOSS-for-Python/issues)** — report
+  enhancement-specific bugs and requests here, not to the official project as if this were its release.
+- **[Official upstream repository](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python)**
+  and **[upstream PyPI package](https://pypi.org/project/aspose-words-foss/)** — original source and releases.
+- **Upstream documentation:** [getting started](https://docs.aspose.org/words/python/),
+  [how-to guides & FAQ](https://kb.aspose.org/words/python/), and
+  [API reference](https://reference.aspose.org/words/python/). These are upstream resources,
+  not documentation for this fork's enhancements, font substitution, or dependency requirements.
+- Many API examples use the familiar commercial
+  [`aspose-words`](https://github.com/aspose-words/Aspose.Words-for-Python-via-.NET) API shape.
+  Similar imports and method names do not guarantee matching features, rendering, or behavior.
 
 ## Scope and Limitations
 
+- RTF loading delegates to the DOC/OLE2 reader; it is not a general parser for text-based
+  `{\rtf...}` files. This inherited limitation is unchanged by the PDF enhancement.
 - PDF export substitutes the bundled Document Sans SC family for source fonts, including code
   blocks. Bold uses a dedicated bold face; italic uses a derived oblique face. Original font
   families, monospace metrics, and exact Word pagination are not preserved. These four static
@@ -636,7 +687,7 @@ shared Light Document Model, summarized in the module-grouped table below.
 For DOC writing, strict ISO 29500 compliance, and the additional load/save formats and page-layout
 features beyond this edition's scope, see
 [Aspose.Words for Python — Enterprise Edition](https://products.aspose.com/words/python-net/),
-which adds the full commercial feature set on top of the same compatible document model.
+a separate commercial product. It is not this fork and is not guaranteed to be a drop-in replacement.
 
 ## Development and Testing
 
