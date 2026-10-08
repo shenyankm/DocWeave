@@ -6,6 +6,7 @@ from aspose.words_foss.document import (
     MarkdownLoadOptions,
 )
 from aspose.words_foss import loading, saving
+from aspose.words_foss.dom import DocxDocument
 from aspose.words_foss.diagnostics import ContentLossWarning, ConversionDiagnostic, ConversionWarning
 from aspose.words_foss.model import wrap_type, enums
 from aspose.words_foss.light_document_model import NodeType  # noqa: F401
@@ -28,6 +29,7 @@ __upstream_version__ = "26.7.0"
 __upstream_revision__ = "2d2efee2787cb9e56d071d17f8d7b740dce8b784"
 __all__ = [
     "Document",
+    "DocxDocument",
     "SaveFormat",
     "LoadFormat",
     "LoadOptions",
