@@ -1,4 +1,4 @@
-# 原包保真的 DOCX DOM（第二阶段：文本范围与有效格式）
+# 原包保真的 DOCX DOM（资源关系与受限水平合并）
 
 新增入口 `aspose.words_foss.DocxDocument`，与现有 `Document → LDM → writer` 转换路径并行。
 它以原始 OOXML 为唯一权威状态，节点是 XML 的类型化视图，不维护另一份同步模型。
@@ -147,12 +147,40 @@ runs = editable.get_child_nodes(aw.NodeType.RUN, deep=True)
 - 只允许移动、删除、复制受支持的简单结构。含未知元素、复杂范围或关系属性的结构明确拒绝。
   目标或来源 story 包含书签、批注范围、字段、权限范围或修订时，结构操作保守拒绝。
 - 支持整张普通表格的创建、插入、移动和删除，以及单元格内的段落编辑。
-  **现有表格的行/列增删、合并和拆分暂不支持**，避免破坏 gridSpan/vMerge。
+  现有表格仅开放下述受限水平合并；行/列增删、垂直合并和拆分暂不支持。
 - 创建但未插入的节点不会使原包 part 被重新序列化。
 
 `get_child_nodes()` 默认遍历正文 story 的直属节点；`deep=True` 递归遍历，也能读到未知容器内的已知节点。
 这些节点不一定允许修改，例如内容控件和修订容器下的 Run 只读。
 `UnknownNode.xml` 可查看未建模内容；未知内容不会因遍历或保存而丢弃。
+
+## 图片、超链接与水平合并
+
+```python
+paragraph = editable.body.paragraphs[0]
+link = paragraph.add_hyperlink("网站", "https://example.com/report")
+link.runs[0].font.bold = True
+link.target = "mailto:team@example.com"  # 或 "#bookmark"
+picture_run = paragraph.add_picture("logo.png", width=72, alternative_text="公司标识")
+
+# 逻辑网格列范围 [0, 2)，保留各源单元格的段落/子表格顺序。
+# merged = editable.body.tables[0].merge_cells(0, 0, 2)
+```
+
+- `add_hyperlink(text, target)` 返回 `dom.Hyperlink`，可读取 `text`、`runs` 和读写 `target`。
+  写入仅允许非空 bookmark、HTTP(S)、mailto；不联网验证目的地址。更改共享链接中的一个目标
+  不会篡改其他链接；旧的未使用关系保留，不做可能误删未知引用的资源清理。
+- `add_picture(source, *, width=None, height=None, alternative_text="")` 接受 PNG/JPEG 的 bytes、
+  二进制流或路径。尺寸以点为单位；只给一边时保持宽高比，未指定时按 96 DPI。
+  像素/数据/包大小检查沿用现有安全限制，媒体按字节去重，更新 Content Types 和当前 part 的 relationships。
+- relationship ID 在当前 part 内分配；drawing ID 扫描包内声明的 XML 部件，避免冲突。
+  新资源插入前先验证和构建；验证失败不会改变文档。返回的图片 Run 不支持通过 `text` 设置删除图片。
+- `Table.merge_cells(row_index, start_column, end_column)` 支持简单、完整网格的水平合并；
+  已有 gridSpan 必须完整落在选区内，禁止切开已有单元格。首个单元格保留自身格式，
+  旧单格首选宽度移除，由网格与新跨度决定宽度；内容按原顺序移动，不重复 ID。
+  vMerge、旧式 hMerge、省略网格单元格、复杂范围/未知结构明确拒绝。
+- 图片/链接可加到正文及可编辑页眉页脚。含字段、修订、书签范围等不安全 story 的插入仍拒绝；
+  不开放带关系节点的任意复制、移动或跨 part/跨文档导入。
 
 ## 页眉页脚与转换兼容
 
@@ -168,17 +196,18 @@ styles_xml = editable.part_xml("word/styles.xml")
 ldm_snapshot = editable.to_light_document()
 ```
 
-页眉页脚支持与正文相同的基础操作，但不允许跨 part 移动节点，尚未实现资源导入和关系修改。
+页眉页脚支持与正文相同的基础操作和新增图片/链接，但不允许跨 part 移动或导入已有节点。
 `part_xml()` 返回只读 XML 快照，其他部件（如批注、脚注、编号、主题）可检查，但没有语义编辑接口。
 当前要求主文档是 `word/document.xml`；样式查询按它的内部 styles relationship 解析实际部件。
-页眉页脚使用同一份文档样式表；跨 part 关系修改和资源导入仍未实现。
+页眉页脚使用同一份文档样式表；图片/链接关系在自身 part 内管理，跨 part/跨文档导入仍未实现。
 
 `to_light_document()` 调用现有 reader，从当前 DOM 生成独立快照。快照可用于现有 Markdown/PDF writer；
 **修改快照不会反写 DOM**，并且旧 reader 的内容损失警告和限制仍然适用。
 也可以将 `editable.to_bytes()` 交给 `aw.Document(BytesIO(...))` 继续现有转换。
 
 现有 `aw.Document`、`Document.light_document_model`、`Document.save()` 以及
-`docx_edit.replace_text()` 的行为没有改变。不能把旧转换保存当作原包保真保存。
+`docx_edit.replace_text()` 的调用方式保持兼容；内容顺序/提取改进见 [升级说明](upgrade-notes.md)。
+不能把转换路径的保存当作原包保真保存。
 
 ## 保存契约与安全边界
 
@@ -193,16 +222,17 @@ ldm_snapshot = editable.to_light_document()
 - `save()` 使用原子输出，允许源和目标相同；失败时不覆盖既有目标。
 - 数字签名包和 Strict OOXML 主文档拒绝加载，避免无效签名或伪装格式支持。
 - 宏、嵌入对象和外部关系照原样保留，不执行、不联网，**不是安全清洗或脱敏器**。
-- 同一个可变文档不可并发编辑。当前接口不会更新关系、主题、编号、域结果或排版缓存。
+- 同一个可变文档不可并发编辑。关系仅随受支持的图片/链接操作更新；主题、编号、域结果和排版缓存不更新。
 
 ## 后续实施顺序
 
 1. 基础文本范围与有效格式已实现；后续补齐主题字体/颜色、编号和表格条件样式规则。
-2. 增加图片、超链接与跨文档导入的关系和资源管理；再开放相关结构操作。
-3. 实现表格网格/合并不变量与分节/页眉页脚语义。
+2. 图片/超链接关系管理已实现；跨文档/part 导入仍按需求评估。
+3. 简单水平网格合并已实现；后续补齐垂直合并、行列编辑及分节/页眉页脚写回语义。
 4. 按业务需求增加内容控件、批注、脚注、复杂域和修订操作。
 5. 页面坐标、精确分页与字段计算单独评估渲染引擎，不将基础 DOM 承诺成完整排版引擎。
 
-测试位于 `tests/test_docx_dom.py`、`tests/test_docx_dom_ranges.py` 和 `tests/test_docx_dom_styles.py`；
+测试位于 `tests/test_docx_dom.py`、`tests/test_docx_dom_ranges.py`、`tests/test_docx_dom_styles.py`、
+`tests/test_docx_dom_resources.py`、`tests/test_content_integrity.py` 和 `tests/test_dom_libreoffice_integration.py`；
 保真验证以 part payload、XML 内容和修改约束为准，
 不替代 Microsoft Word 实际打开、修复提示检查及复杂业务文档的兼容性验证。

@@ -1,0 +1,68 @@
+{
+  "python": "3.13.15 | packaged by Anaconda, Inc. | (main, Aug 14 2026, 17:19:34) [Clang 20.1.8 ]",
+  "platform": "darwin",
+  "repeat": 3,
+  "method": "Alternating HEAD snapshot / working-tree fresh workers; matching imports asserted",
+  "median": {
+    "small": {
+      "import_ms": 198.4716250008205,
+      "parse_ms": 1.6398330008087214,
+      "layout_ms": 98.98308400079259,
+      "serialize_ms": 17.096125000534812,
+      "write_ms": 1.634125001146458,
+      "total_ms": 316.83808299931115,
+      "peak_rss_bytes": 145702912,
+      "output_bytes": 6115,
+      "pages": 1,
+      "process_ms": 382.22599999789963
+    },
+    "hundred_pages": {
+      "import_ms": 190.83458299792255,
+      "parse_ms": 79.26916699943831,
+      "layout_ms": 774.4381669981522,
+      "serialize_ms": 23.506167002778966,
+      "write_ms": 0.7761249980831053,
+      "total_ms": 1072.6017079978192,
+      "peak_rss_bytes": 160825344,
+      "output_bytes": 75183,
+      "pages": 100,
+      "process_ms": 1144.6445420006057
+    },
+    "image_table": {
+      "import_ms": 216.12104099767748,
+      "parse_ms": 11.04529100120999,
+      "layout_ms": 238.5986250010319,
+      "serialize_ms": 33.50716700151679,
+      "write_ms": 1.0422919986012857,
+      "total_ms": 503.5089999983029,
+      "peak_rss_bytes": 192397312,
+      "output_bytes": 11314,
+      "pages": 3,
+      "process_ms": 576.5751250000903
+    },
+    "repeated_images": {
+      "import_ms": 216.92312500090338,
+      "parse_ms": 10.28437500281143,
+      "layout_ms": 114.61008399783168,
+      "serialize_ms": 17.36729200274567,
+      "write_ms": 0.8143749982991721,
+      "total_ms": 363.0312089990184,
+      "peak_rss_bytes": 161726464,
+      "output_bytes": 5522,
+      "pages": 4,
+      "process_ms": 429.11179200018523
+    },
+    "mixed_styles": {
+      "import_ms": 209.67629100050544,
+      "parse_ms": 12.400209001498297,
+      "layout_ms": 528.4662909980398,
+      "serialize_ms": 78.95141700282693,
+      "write_ms": 0.7986249984242022,
+      "total_ms": 831.3065000002098,
+      "peak_rss_bytes": 272302080,
+      "output_bytes": 19598,
+      "pages": 5,
+      "process_ms": 931.2701669987291
+    }
+  }
+}

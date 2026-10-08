@@ -2,7 +2,8 @@
 
 本页描述本 fork 的 `26.7.0.post2`，不是官方 Aspose 的功能保证。
 新增内存输出、结构化内容、原包定点替换和塑形的用法见 [升级说明](upgrade-notes.md)；
-实际测试及性能结果见 [优化核验报告](optimization-report.md)。
+此前测试及性能结果见 [优化核验报告](optimization-report.md)；本次资源/内容完整性重构见
+[生态借鉴优化验证](ecosystem-optimization-validation.md)。
 
 ## 中文排版和字体
 
@@ -118,7 +119,8 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 这是独立可选入口，不改变 `Document.save()` 默认后端。高保真仍受 LibreOffice 兼容性和部署的
 **系统字体**影响；它不直接使用本库 WOFF 字体。`--strict`、`--fallback-font` 和 `--text-shaping` 不适用于该后端。
 本仓库既测试协议/异常，也提供真实渲染测试。已在 macOS / LibreOffice 26.2.6 验证中文 DOCX、标准文本 RTF、
-原始 DOCX 脚注和受限 CLI；脚注内容在轻量模型中丢失、在原文件转换中保留。未安装 LibreOffice 的环境跳过真实测试。
+原始 DOCX 脚注和受限 CLI；脚注可提取到 `source_stories`，但轻量模型的转换输出仍会丢失，
+原文件转换中可保留。另有新增 DOM 图片、超链接与水平合并的真实 LibreOffice 渲染用例。未安装 LibreOffice 的环境跳过真实测试。
 这些用例证明入口可用和已测内容保留，不证明所有文档与 Microsoft Word 视觉一致。
 
 **私有 profile 与资源限制不是安全沙箱。** 原生 Office 解析器、宏、外部链接与文件系统访问必须由

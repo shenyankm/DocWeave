@@ -39,6 +39,21 @@ report = [asdict(item) for item in doc.diagnostics]
 修复了 Python 3.10 的另一个边界：其 Unicode 数据库可能不认识较新的 emoji，
 但这些字符及私用区字符仍需字体覆盖，不能因为 `isprintable()` 为假就跳过缺字检查。
 
+### 本次开发分支的内容完整性改进
+
+- DOCX 按实际关系定位 styles/settings/numbering/theme/images 以及页眉页脚、脚注、尾注，
+  支持非惯常路径与 URI 转义；同一 reader 重复加载不会泄漏前一文档的状态。
+- `Document.to_dict()` 增加 `source_stories`：原始 part、note ID、有序 blocks，以及
+  页眉页脚的 section/variant/inherited 引用。段落增加 `note_references`；
+  单元格增加有序 `blocks`，原有字段保留，`schema_version` 仍为 1（加法扩展）。
+- 提取注释内容**不等于渲染或完整写回**。DOCX/PDF/Markdown/TXT 输出均报告
+  `*.notes_omitted`；页眉页脚输出仍有旧的聚合/变体限制。
+- `get_text()` / TXT 包含正文嵌套表格的按序可见文本；过滤字段指令/隐藏 Run，
+  展示链接标签而非内部 Markdown 编码，不附加 source stories。
+- 标签括号与 URL 括号的编解码由转换路径共用；已有 DOCX 链接经过 Markdown/DOCX/PDF 时不截断目的地址。
+  Markdown 的合并网格展开、嵌套表格展平会给出明确损失诊断。
+- 原包 DOM 增加图片/超链接资源操作和受限水平合并，详见 [DOM 指南](docx-dom.md)。
+
 ## 2. 内存输出
 
 ```python
@@ -71,8 +86,9 @@ PDF/DOCX 使用与文件输出相同的 writer，Markdown 保留编码设置。
   垂直合并仍是边线和网格层面的近似，不是 Word 的完整合并单元格排版。
   嵌套表格按整体布局；过高而不能拆分的内容会失败，不会偷偷裁掉再宣称成功。
 
-保留标准旋转文本支持，其他未知方向明确拒绝。LDM 分开存储单元格段落和子表格，
-因此不能恢复源 DOCX 中两者交错的顺序。图文绕排、分页和页眉页脚继续存在 Word 兼容性边界。
+保留标准旋转文本支持，其他未知方向明确拒绝。单元格新增 `children` 有序视图和序列化的
+`content_order`，DOCX/PDF/结构化输出保留段落与嵌套表格的交错顺序；旧 `paragraphs`/`tables`
+构造保持兼容。Markdown 按序展平嵌套表格并报警。图文绕排、分页和页眉页脚仍存在 Word 兼容性边界。
 
 ## 4. 保留原 OOXML 包的定点替换
 

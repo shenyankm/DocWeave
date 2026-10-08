@@ -111,9 +111,12 @@ flowchart TD
   plain paragraph/run/table structure, direct font/paragraph formatting, literal cross-run
   replacement, explicit paragraph-local text ranges and boundary-run splitting. Supported effective
   formatting follows document defaults and paragraph/character style chains with OOXML toggle semantics.
+  Paragraphs can add PNG/JPEG pictures and safe hyperlink targets with part-local relationships;
+  simple tables support bounded horizontal grid merges. Cross-part imports remain unsupported.
   Unmodified part payloads remain byte-identical; unknown XML is retained.
   This is a bounded DOM, **not a complete Word DOM**.
-  See [DOCX DOM usage and boundaries](docs/docx-dom.md).
+  See [DOCX DOM usage and boundaries](docs/docx-dom.md) and
+  [ecosystem optimization validation](docs/ecosystem-optimization-validation.md).
 - Convert image-containing documents — inline images, captioned images, images in tables, and
   images in headers/footers — to every output format: images embed as base64 data URIs in
   Markdown by default, render through the built-in `ShapeRenderer` in PDF, and round-trip
@@ -126,13 +129,15 @@ flowchart TD
   Bundled Unicode fonts support common Simplified/Traditional Chinese, Latin text, and punctuation;
   PDF font subsets are embedded automatically.
 - Extract plain text from any loaded document with `Document.get_text()`, or save it directly with
-  `SaveFormat.TEXT`.
-- Configure DOCX packaging through `OoxmlSaveOptions`: compression level, ECMA-376/ISO 29500
+  `SaveFormat.TEXT`. Body table text keeps its nested content order; hidden runs and field instructions
+  are excluded, and encoded links contribute their visible labels.- Configure DOCX packaging through `OoxmlSaveOptions`: compression level, ECMA-376/ISO 29500
   Transitional compliance, and pretty-printed XML.
 - Inspect the parsed document model directly — sections, paragraphs, runs, tables, styles, and
   numbered/bulleted lists are typed Pydantic models reachable from `Document.light_document_model`.
 - Render to memory with `Document.to_bytes(format_or_options)`, export ordered JSON-safe content
   with `Document.to_dict()`, and inspect structured warnings via `Document.diagnostics`.
+  Structured `source_stories` retain extracted footnote/endnote IDs and section-specific header/footer
+  references; this does not add full note rendering or section-specific header/footer round-tripping.
 - Keep mixed text, links and images inside PDF table grids; repeat leading header rows and split
   oversized rows at content-line boundaries. These improvements do not promise Word-identical layout.
 
