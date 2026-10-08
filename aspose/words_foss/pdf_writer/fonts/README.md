@@ -6,7 +6,7 @@ revision `2d2efee2787cb9e56d071d17f8d7b740dce8b784`; they are not official
 Aspose fonts or a claim about fonts in later upstream releases. See the
 [project's fork status and differences](../../../../README.md#fork-status-and-upstream-differences).
 
-`DocumentSansSC-*.ttf` are renamed derivatives of **Noto Sans SC 2.004**,
+`DocumentSansSC-*.woff` are losslessly compressed, renamed derivatives of **Noto Sans SC 2.004**,
 licensed under the SIL Open Font License 1.1; see `OFL.txt`. The original
 copyright and license also remain in each font's `name` table.
 
@@ -23,6 +23,13 @@ by decomposing glyphs and applying a 12-degree rightward shear:
 with the italic flags set in the `head` and `OS/2` tables. Font-family and
 PostScript names were changed to Document Sans SC / DocumentSansSC.
 
+The four static faces were losslessly compressed to WOFF with fontTools
+(`font.flavor = "woff"; font.save(path)`). Glyph order, Unicode mappings and
+horizontal metrics were checked against the original TTF faces. Resource
+size decreased from approximately 41.1 MiB to 25.0 MiB; this does not imply
+the same reduction in already ZIP-compressed wheel downloads. WOFF needs
+fpdf2 2.8.9 or newer; the PDF embeds ordinary font subsets, not WOFF data.
+
 All source glyphs were retained; the resources are not limited to the
 characters used in the regression test. This provides common Simplified
 and Traditional Chinese characters plus Latin text and punctuation.
@@ -31,4 +38,6 @@ It is not an all-language font or an emoji font.
 The PDF writer substitutes this family for source fonts, including code
 blocks. Bold uses the 700-weight face; italic uses the derived oblique
 face. Original font family, monospace metrics and exact Word pagination
-are not preserved. fpdf2 subsets the fonts when embedding them in PDFs.
+are not preserved. Only styles appearing in the document are registered;
+fpdf2 subsets the fonts when embedding them in PDFs. Missing glyphs emit
+a warning unless covered by explicitly configured trusted fallback fonts.

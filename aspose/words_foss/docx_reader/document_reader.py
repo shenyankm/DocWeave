@@ -9,10 +9,15 @@ ShapeParserMixin, respectively.
 
 import posixpath
 import zipfile
+import warnings
 from io import BytesIO
 from pathlib import Path
 from typing import Optional, Union, BinaryIO, Iterator
 from xml.etree import ElementTree as ET
+from defusedxml.ElementTree import parse
+from aspose.words_foss._io import (
+    DocumentLoadWarning, check_input_size, read_bounded, validate_docx_archive, validate_image,
+)
 
 from aspose.words_foss.docx_reader.constants import (
     A_NS,
@@ -83,53 +88,57 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
 
     def load_file(self, filepath: Union[str, Path]) -> None:
         """Load DOCX from file path."""
+        check_input_size(Path(filepath).stat().st_size)
         with zipfile.ZipFile(str(filepath), "r") as zf:
             self._load_from_zip(zf)
 
     def load_stream(self, stream: BinaryIO) -> None:
         """Load DOCX from stream."""
-        with zipfile.ZipFile(stream, "r") as zf:
-            self._load_from_zip(zf)
+        self.load_bytes(read_bounded(stream))
 
     def load_bytes(self, data: bytes) -> None:
         """Load DOCX from bytes."""
+        check_input_size(len(data))
         with zipfile.ZipFile(BytesIO(data), "r") as zf:
             self._load_from_zip(zf)
 
     def _load_from_zip(self, zf: zipfile.ZipFile) -> None:
         """Extract and parse XML from DOCX archive."""
+        validate_docx_archive(zf)
         namelist = set(zf.namelist())
 
         # Load all media files (images)
         for name in namelist:
             if name.startswith("word/media/"):
-                self._media[name] = zf.read(name)
+                data = zf.read(name)
+                validate_image(data)
+                self._media[name] = data
 
         # Parse document.xml
         with zf.open("word/document.xml") as f:
-            self._document_xml = ET.parse(f).getroot()
+            self._document_xml = parse(f).getroot()
 
         # Parse theme (for font resolution)
         if "word/theme/theme1.xml" in namelist:
             with zf.open("word/theme/theme1.xml") as f:
-                self._parse_theme(ET.parse(f).getroot())
+                self._parse_theme(parse(f).getroot())
 
         # Parse styles.xml (optional)
         if "word/styles.xml" in namelist:
             with zf.open("word/styles.xml") as f:
-                self._styles_xml = ET.parse(f).getroot()
+                self._styles_xml = parse(f).getroot()
             self._build_style_id_map()
             self._parse_doc_defaults()
 
         # Parse settings.xml (optional)
         if "word/settings.xml" in namelist:
             with zf.open("word/settings.xml") as f:
-                self._settings_xml = ET.parse(f).getroot()
+                self._settings_xml = parse(f).getroot()
 
         # Parse numbering.xml (optional)
         if "word/numbering.xml" in namelist:
             with zf.open("word/numbering.xml") as f:
-                self._numbering_xml = ET.parse(f).getroot()
+                self._numbering_xml = parse(f).getroot()
             self._parse_numbering()
 
         # Parse document relationships (hyperlinks + images + headers/footers)
@@ -138,7 +147,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         footer_targets: list[str] = []
         if rels_path in namelist:
             with zf.open(rels_path) as f:
-                rels_root = ET.parse(f).getroot()
+                rels_root = parse(f).getroot()
             for rel in rels_root.findall(f"{_PKG_RELS_NS}Relationship"):
                 rid = rel.get("Id", "")
                 target = rel.get("Target", "")
@@ -160,7 +169,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         for hdr_path in header_targets:
             if hdr_path in namelist:
                 with zf.open(hdr_path) as f:
-                    hdr_xml = ET.parse(f).getroot()
+                    hdr_xml = parse(f).getroot()
                 hdr_rels = self._parse_part_image_rels(zf, hdr_path, namelist)
                 self._header_data.append((hdr_xml, hdr_rels))
 
@@ -168,9 +177,19 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         for ftr_path in footer_targets:
             if ftr_path in namelist:
                 with zf.open(ftr_path) as f:
-                    ftr_xml = ET.parse(f).getroot()
+                    ftr_xml = parse(f).getroot()
                 ftr_rels = self._parse_part_image_rels(zf, ftr_path, namelist)
                 self._footer_data.append((ftr_xml, ftr_rels))
+
+        unsupported = {W_NS + name for name in (
+            "footnoteReference", "endnoteReference", "commentReference", "object", "altChunk"
+        )}
+        roots = [self._document_xml] + [root for root, _ in self._header_data + self._footer_data]
+        found = {node.tag[len(W_NS):] for root in roots for node in root.iter()
+                 if node.tag in unsupported}
+        if found:
+            warnings.warn("DOCX constructs are not retained: " + ", ".join(sorted(found)),
+                          DocumentLoadWarning, stacklevel=3)
 
     def _parse_numbering(self) -> None:
         """Parse numbering definitions from numbering.xml."""
@@ -349,7 +368,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         if rels_path not in namelist:
             return result
         with zf.open(rels_path) as f:
-            rels_root = ET.parse(f).getroot()
+            rels_root = parse(f).getroot()
         for rel in rels_root.findall(f"{_PKG_RELS_NS}Relationship"):
             rid = rel.get("Id", "")
             target = rel.get("Target", "")

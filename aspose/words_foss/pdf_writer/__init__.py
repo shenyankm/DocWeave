@@ -7,5 +7,11 @@ continue to work without changes.
 
 from aspose.words_foss.pdf_writer.color import parse_color as _parse_color
 from aspose.words_foss.pdf_writer.writer import LdmPdfWriter
+from aspose.words_foss.pdf_writer.diagnostics import (
+    PdfConversionWarning, PdfMissingGlyphWarning, PdfFontSubstitutionWarning, PdfUnsupportedOptionWarning,
+)
 
-__all__ = ["LdmPdfWriter", "_parse_color"]
+__all__ = [
+    "LdmPdfWriter", "_parse_color", "PdfConversionWarning", "PdfMissingGlyphWarning",
+    "PdfFontSubstitutionWarning", "PdfUnsupportedOptionWarning",
+]

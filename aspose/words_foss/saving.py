@@ -206,7 +206,14 @@ class PdfSaveOptions:
     color_mode = _EnumField(ColorMode, ColorMode.NORMAL)
     zoom_behavior = _EnumField(PdfZoomBehavior, PdfZoomBehavior.NONE)
 
+    def __setattr__(self, name, value):
+        object.__setattr__(self, name, value)
+        if not name.startswith("_") and not getattr(self, "_initializing", True):
+            self._explicit_options.add(name)
+
     def __init__(self):
+        self._initializing = True
+        self._explicit_options: set[str] = set()
         # PDF standard compliance
         # Only sets the PDF version header; PDF/A and PDF/UA conformance is not implemented.
         self.compliance = PdfCompliance.PDF17
@@ -258,6 +265,8 @@ class PdfSaveOptions:
 
         # Viewer preferences
         self.display_doc_title: bool = False
+        self.fallback_fonts: list[str] = []
+        self._initializing = False
 
 
 class OoxmlCompliance(IntEnum):

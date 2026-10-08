@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Optional, Union, BinaryIO
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss._io import atomic_output, check_input_size, read_bounded
 from aspose.words_foss.models import ConversionOptions
 from aspose.words_foss.reader_factory import create_reader
 from aspose.words_foss.saving import (
@@ -128,6 +129,7 @@ class MarkdownLoadOptions(LoadOptions):
         super().__init__()
         self.load_format = LoadFormat.MARKDOWN
         self.preserve_empty_lines: bool = False
+        self.allow_local_images: bool = False
 
 
 class SaveFormat(IntEnum):
@@ -234,6 +236,8 @@ class Document:
 
     @staticmethod
     def _apply_load_options(reader: object, load_options: Optional[LoadOptions]) -> None:
+        if load_options and hasattr(reader, "allow_local_images"):
+            reader.allow_local_images = getattr(load_options, "allow_local_images", False)
         if load_options and hasattr(reader, "encoding"):
             reader.encoding = load_options.encoding  # type: ignore[union-attr]
         if load_options and hasattr(load_options, "preserve_empty_lines") and hasattr(
@@ -247,6 +251,7 @@ class Document:
         load_options: Optional[LoadOptions],
     ) -> None:
         """Load from a file path."""
+        check_input_size(filepath.stat().st_size)
         fmt = _coerce_load_format(load_options.load_format) if load_options else None
         if fmt is not None and fmt != LoadFormat.AUTO:
             suffix = _LOAD_FORMAT_TO_SUFFIX.get(fmt, filepath.suffix.lower())
@@ -254,7 +259,10 @@ class Document:
             suffix = filepath.suffix.lower()
         reader = create_reader(suffix)
         self._apply_load_options(reader, load_options)
-        reader.load_file(filepath)
+        with filepath.open("rb") as stream:
+            reader.load_bytes(read_bounded(stream))
+        if hasattr(reader, "_base_dir"):
+            reader._base_dir = filepath.resolve().parent
         self._document = reader.to_light_document()
 
     def _load_from_stream(
@@ -263,7 +271,7 @@ class Document:
         load_options: Optional[LoadOptions],
     ) -> None:
         """Load from a binary stream, auto-detecting format."""
-        raw = stream.read()
+        raw = read_bounded(stream)
         suffix = self._resolve_suffix(raw, load_options)
         reader = create_reader(suffix)
         self._apply_load_options(reader, load_options)
@@ -276,6 +284,7 @@ class Document:
         load_options: Optional[LoadOptions],
     ) -> None:
         """Load from raw bytes, auto-detecting format."""
+        check_input_size(len(data))
         suffix = self._resolve_suffix(data, load_options)
         reader = create_reader(suffix)
         self._apply_load_options(reader, load_options)
@@ -446,14 +455,16 @@ class Document:
         # ...) round-trips verbatim instead of being doubled into
         # "\r\r\n" on Windows (where text mode would otherwise rewrite
         # every ``\n`` to ``\r\n``).
-        output_path.write_text(markdown, encoding=encoding, newline="")
+        with atomic_output(output_path) as temporary:
+            temporary.write_text(markdown, encoding=encoding, newline="")
 
     def _save_as_text(self, output_path: Path, doc: ldm.Document) -> None:
         """Extract plain text from the LDM and save."""
         output_path.parent.mkdir(parents=True, exist_ok=True)
         # Preserve the LDM's exact line endings on Windows by disabling
         # universal-newline translation.
-        output_path.write_text(doc.text, encoding="utf-8", newline="")
+        with atomic_output(output_path) as temporary:
+            temporary.write_text(doc.text, encoding="utf-8", newline="")
 
     def _save_as_pdf(
         self,

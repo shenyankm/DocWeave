@@ -34,6 +34,7 @@ class MarkdownReader:
     def __init__(self) -> None:
         self._delegate = MarkdownFileReader()
         self.preserve_empty_lines: bool = False
+        self.allow_local_images: bool = False
         self._base_dir: Optional[Path] = None
 
     @property
@@ -77,4 +78,5 @@ class MarkdownReader:
         text = self._delegate.text
         if not text:
             return self._delegate.to_light_document()
-        return parse_and_build(text, self.preserve_empty_lines, base_dir=self._base_dir)
+        return parse_and_build(text, self.preserve_empty_lines,
+                               base_dir=self._base_dir if self.allow_local_images else None)

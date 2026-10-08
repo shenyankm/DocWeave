@@ -11,6 +11,7 @@ from typing import Optional
 from urllib.parse import urlparse
 
 from aspose.words_foss.model.enums.image import ImageType
+from aspose.words_foss._io import read_bounded, validate_image
 
 _EXT_TO_IMAGE_TYPE = {
     "png": ImageType.PNG, "jpg": ImageType.JPEG, "jpeg": ImageType.JPEG,
@@ -80,11 +81,15 @@ def load_local_image(uri: str, base_dir: Optional[Path]) -> Optional[tuple[bytes
     if not is_local_path(uri) or base_dir is None:
         return None
     path = Path(uri)
-    full_path = path if path.is_absolute() else base_dir / path
+    full_path = (path if path.is_absolute() else base_dir / path).resolve()
+    if not full_path.is_relative_to(base_dir.resolve()):
+        raise ValueError("Local Markdown images must stay inside the document directory")
     try:
-        data = full_path.read_bytes()
+        with full_path.open("rb") as stream:
+            data = read_bounded(stream)
     except OSError:
         return None
+    validate_image(data)
     image_type = guess_image_type(uri)
     width, height = sniff_dimensions(data)
     return data, image_type, width, height
@@ -111,5 +116,6 @@ def load_data_uri_image(uri: str) -> Optional[tuple[bytes, int, Optional[float],
         return None
     if not data:
         return None
+    validate_image(data)
     width, height = sniff_dimensions(data)
     return data, image_type, width, height

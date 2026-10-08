@@ -16,6 +16,7 @@ from typing import Optional, Union
 from dataclasses import dataclass
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss._io import atomic_output
 from aspose.words_foss.saving import (
     CompressionLevel,
     OoxmlCompliance,
@@ -258,14 +259,15 @@ class LdmDocxWriter:
         """Render ``doc`` and write the resulting ``.docx`` to disk."""
         parts = self._render_parts(doc)
         compress_type, compresslevel = self._compression()
-        write_docx_package(
-            output_path,
-            **parts.as_kwargs(),
-            compression=compress_type,
-            compresslevel=compresslevel,
-            allow_zip64=self._allow_zip64(),
-            pretty_format=self._pretty_format(),
-        )
+        with atomic_output(output_path) as temporary:
+            write_docx_package(
+                temporary,
+                **parts.as_kwargs(),
+                compression=compress_type,
+                compresslevel=compresslevel,
+                allow_zip64=self._allow_zip64(),
+                pretty_format=self._pretty_format(),
+            )
 
     def write_to_bytes(self, doc: ldm.Document) -> bytes:
         """Render ``doc`` and return the ``.docx`` as raw bytes."""

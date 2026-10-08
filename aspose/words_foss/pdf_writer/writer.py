@@ -16,6 +16,7 @@ from fpdf.prefs import ViewerPreferences
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._visible_runs import visible_runs
+from aspose.words_foss._io import atomic_output, validate_image
 from aspose.words_foss.pdf_writer.constants import (
     A4_HEIGHT_MM,
     A4_WIDTH_MM,
@@ -26,6 +27,7 @@ from aspose.words_foss.pdf_writer.constants import (
     PT_TO_MM,
 )
 from aspose.words_foss.pdf_writer.font import register_fonts
+from aspose.words_foss.pdf_writer.diagnostics import document_nodes, warn_about_conversion
 from aspose.words_foss.pdf_writer.page_bands import install_page_footer, install_page_header
 from aspose.words_foss.pdf_writer.paragraph_renderer import ParagraphRenderer
 from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
@@ -178,7 +180,11 @@ class LdmPdfWriter:
                 page_h_mm = ps.page_height * PT_TO_MM
 
         pdf = FPDF(unit="mm", format=(page_w_mm, page_h_mm))
-        register_fonts(pdf)
+        fallback_families = register_fonts(pdf, doc, self.options.fallback_fonts)
+        warn_about_conversion(pdf, doc, self.options, fallback_families)
+        for node in document_nodes(doc):
+            if isinstance(node, ldm.Shape) and node.image_data and node.image_data.image_bytes:
+                validate_image(node.image_data.image_bytes)
         # Apply PDF version from compliance setting
         version = COMPLIANCE_TO_VERSION.get(self.options.compliance)
         if version:
@@ -354,18 +360,13 @@ class LdmPdfWriter:
 
         self._apply_viewer_options(pdf)
 
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-
+        pdf_bytes = pdf.output()
         if self.options.zoom_behavior == PdfZoomBehavior.NONE:
-            pdf_bytes = pdf.output()
             pdf_bytes = _remove_open_action(pdf_bytes)
-            output_path.write_bytes(pdf_bytes)
         elif self.options.zoom_behavior in (_FIT_HEIGHT, _FIT_BOX):
-            pdf_bytes = pdf.output()
             pdf_bytes = _replace_open_action(pdf_bytes, self.options.zoom_behavior)
-            output_path.write_bytes(pdf_bytes)
-        else:
-            pdf.output(str(output_path))
+        with atomic_output(output_path) as temporary:
+            temporary.write_bytes(pdf_bytes)
 
     # ------------------------------------------------------------------
     # Viewer-option helpers
