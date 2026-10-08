@@ -107,6 +107,13 @@ flowchart TD
   markers, grid spans and custom paragraph styles. This is **not arbitrary lossless round-tripping**:
   footnotes, comments, tracked changes and header/footer variants can be lost. Known losses warn.
   For bounded literal edits that retain original package parts, use `docx_edit.replace_text()`.
+- Original-package DOM editing: `DocxDocument` binds typed nodes to retained OOXML, supports
+  plain paragraph/run/table structure, direct font/paragraph formatting, literal cross-run
+  replacement, explicit paragraph-local text ranges and boundary-run splitting. Supported effective
+  formatting follows document defaults and paragraph/character style chains with OOXML toggle semantics.
+  Unmodified part payloads remain byte-identical; unknown XML is retained.
+  This is a bounded DOM, **not a complete Word DOM**.
+  See [DOCX DOM usage and boundaries](docs/docx-dom.md).
 - Convert image-containing documents — inline images, captioned images, images in tables, and
   images in headers/footers — to every output format: images embed as base64 data URIs in
   Markdown by default, render through the built-in `ShapeRenderer` in PDF, and round-trip
@@ -427,6 +434,7 @@ are summarized in the module-grouped table below.
 | `ConversionDiagnostic` | Frozen dataclass with `code`, `severity`, `location`, and `message`; use `dataclasses.asdict()` for JSON serialization. |
 | `ConversionWarning` / `ContentLossWarning` | Public warning bases available under `aspose.words_foss`; content-loss filters do not catch missing glyphs, which require `PdfMissingGlyphWarning` separately. |
 | `docx_edit.replace_text(source, destination, replacements)` | Separate original-package edit API; returns replacement count. Literal matches must fit inside one `w:t` node, and every key must occur. Retains unknown parts; not a sanitizer. |
+| `DocxDocument(source)` | Original-package DOM for bounded text, direct-format and simple structure edits; path or binary stream input. `Paragraph.range(start, end)` selects text for replacement or local formatting; `Run.effective_font` and `Paragraph.effective_paragraph_format` resolve supported inherited properties. `save(path)` / `to_bytes()` retain unmodified parts, `to_light_document()` produces an independent conversion snapshot. See [DOM guide](docs/docx-dom.md). |
 
 Examples and complete boundaries are in [upgrade notes](docs/upgrade-notes.md).
 

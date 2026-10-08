@@ -94,8 +94,12 @@ count = replace_text("original.docx", "edited.docx", {"客户公司": "新的客
   当前仅接受 UTF-8 XML，拒绝数字签名包及不适合文本节点的替换字符（包括换行和 Tab）。
 
 **不是 sanitizer**：宏、外部关系和未知部件会保留。只在适当隔离环境中处理文件；
-不能将保留原包误当成安全清洗。需要一般跨 run 编辑或复杂文档修改时，应选 python-docx
-或专门的 OOXML 工具；需要原文档渲染时选 LibreOffice/商业引擎。
+不能将保留原包误当成安全清洗。新增的 `aw.DocxDocument` 提供 XML 绑定的基础 DOM，支持
+同段落普通 Run 之间的替换、基础直接格式和简单结构修改，同时保留未知 XML 和原始部件。
+后续升级增加 `Paragraph.range()`、局部字体格式与边界 Run 拆分，并按文档默认值和段落/字符样式链
+解析粗斜体、字号及段落对齐。未支持的编号/表格样式上下文明确拒绝，不猜测完整有效格式。
+详见 [DOCX DOM 使用与边界](docx-dom.md)。它不改变旧 `Document.save()` 的重建语义，
+也不是全功能 Word 编辑器；复杂修改仍需专门的 OOXML 工具，原文档渲染仍需 LibreOffice/商业引擎。
 
 ## 5. 可选多语言塑形
 
