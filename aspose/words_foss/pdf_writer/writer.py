@@ -119,6 +119,9 @@ class LdmPdfWriter:
 
     def __init__(self, options: Optional[PdfSaveOptions] = None):
         self.options = options or PdfSaveOptions()
+        self._measurement_pdf: Optional[FPDF] = None
+        self._measurement_writer: Optional["LdmPdfWriter"] = None
+        self._paragraph_insets = (0.0, 0.0)
         # Page layout defaults — overridden by write() from section page_setup
         self._page_margin_left = DEFAULT_MARGIN_MM
         self._page_margin_right = DEFAULT_MARGIN_MM
@@ -180,11 +183,19 @@ class LdmPdfWriter:
                 page_h_mm = ps.page_height * PT_TO_MM
 
         pdf = FPDF(unit="mm", format=(page_w_mm, page_h_mm))
+        # Cumulative floating-point rounding must not split an exactly fitting paragraph.
+        pdf.will_page_break = lambda height: FPDF.will_page_break(pdf, height - 1e-7)
         fallback_families = register_fonts(pdf, doc, self.options.fallback_fonts)
         warn_about_conversion(pdf, doc, self.options, fallback_families)
         for node in document_nodes(doc):
             if isinstance(node, ldm.Shape) and node.image_data and node.image_data.image_bytes:
                 validate_image(node.image_data.image_bytes)
+        self._measurement_writer = None
+        self._measurement_pdf = FPDF()
+        self._measurement_pdf.fonts.update(pdf.fonts)
+        if fallback_families:
+            self._measurement_pdf.set_fallback_fonts(fallback_families, exact_match=False)
+        self._measurement_pdf.add_page()
         # Apply PDF version from compliance setting
         version = COMPLIANCE_TO_VERSION.get(self.options.compliance)
         if version:
@@ -406,10 +417,10 @@ class LdmPdfWriter:
         if col_w <= 0:
             return None
         total_h = sum(self._estimate_child_height(c, col_w) for c in children)
-        if total_h <= 0:
+        page_bottom = self._page_height - self._page_margin_bottom
+        if total_h <= 0 or total_h > (page_bottom - start_y) * col_state.ncols:
             return None
         per_col = total_h / col_state.ncols
-        page_bottom = self._page_height - self._page_margin_bottom
         return min(start_y + per_col, page_bottom)
 
     def _force_next_column(
@@ -486,13 +497,11 @@ class LdmPdfWriter:
         return 0.0
 
     def _estimate_paragraph_height(self, para: ldm.Paragraph, col_w_mm: float) -> float:
-        from aspose.words_foss.pdf_writer.text import get_dominant_font_size
         from aspose.words_foss.model.wrap_type import WrapType
+        from aspose.words_foss.pdf_writer.constants import FPDF_ALIGN
 
         pf = para.paragraph_format
         runs = visible_runs(para)
-        fs = get_dominant_font_size(runs) or DEFAULT_FONT_SIZE_PT
-        line_h = self._paragraph_renderer.line_height_mm(fs, pf)
 
         wrap_h = 0.0  # anchored, treated as floating (no inline cost)
         inline_shape_h = 0.0
@@ -509,22 +518,36 @@ class LdmPdfWriter:
             else:
                 inline_shape_h = max(inline_shape_h, h_mm)
 
-        text = "".join(r.text or "" for r in runs)
-        if not text.strip() and inline_shape_h == 0 and wrap_h == 0:
-            # Empty para: real render advances by just line_h.
-            return line_h
-
-        char_w_mm = fs * PT_TO_MM * 0.5
-        if col_w_mm > char_w_mm:
-            chars_per_line = max(1, int(col_w_mm / char_w_mm))
-            lines = max(1, (len(text) + chars_per_line - 1) // chars_per_line)
-        else:
-            lines = 1
-        text_h = lines * line_h if text.strip() else 0.0
-        space = (pf.space_before + pf.space_after) * PT_TO_MM
+        if self._measurement_pdf is None:
+            self._measurement_pdf = FPDF()
+            register_fonts(self._measurement_pdf)
+            self._measurement_pdf.add_page()
+        measure = self._measurement_pdf
+        measure.set_auto_page_break(False)
+        measure.set_margins(0, 0, measure.w - col_w_mm)
+        measure.set_xy(0, 0)
+        if self._measurement_writer is None:
+            self._measurement_writer = LdmPdfWriter()
+            self._measurement_writer._link_target_for = lambda pdf, url: ""
+        shadow = self._measurement_writer
+        shadow._page_width = measure.w
+        shadow._page_margin_left = 0
+        shadow._page_margin_right = measure.w - col_w_mm
+        shadow._doc = self._doc
+        shadow._default_tab_stop = getattr(self, "_default_tab_stop", 36.0)
+        shadow._list_counters = self._list_counters.copy()
+        shadow._page_number_offset = self._page_number_offset
+        # Dry-run the real text renderer; isolate outlines, tags and list counters from output.
+        with measure._disable_writing():
+            shadow._paragraph_renderer._render_styled_block(
+                measure, runs, pf, para.list_format, para.list_label,
+                FPDF_ALIGN.get(pf.alignment, "L"),
+            )
+            text_h = measure.get_y()
         # Anchored-wrapped images reserve their height in our inline
         # flow (we can't do real wrap-around), so count them here.
-        return wrap_h + text_h + inline_shape_h + space
+        # ponytail: image-flow height remains approximate; upgrade when implementing true image wrapping.
+        return wrap_h + text_h + inline_shape_h
 
     def _estimate_table_height(self, table: ldm.Table, col_w_mm: float) -> float:
         if not table.rows:
@@ -605,11 +628,11 @@ class LdmPdfWriter:
         state.current = col_idx
         left = state.col_x[col_idx]
         right = self._page_width - left - state.col_w[col_idx]
-        pdf.set_left_margin(left)
-        pdf.set_right_margin(right)
+        pdf.set_left_margin(left + self._paragraph_insets[0])
+        pdf.set_right_margin(right + self._paragraph_insets[1])
         self._page_margin_left = left
         self._page_margin_right = right
-        pdf.set_x(left)
+        pdf.set_x(pdf.l_margin)
 
     def _install_column_hook(
         self,
@@ -620,24 +643,11 @@ class LdmPdfWriter:
         """Override ``accept_page_break`` so fpdf2 flows to the next column
         instead of adding a new page when content overflows."""
         writer = self
-        # Tiny overshoots are inevitable because empty-paragraph leading is
-        # estimated, not measured against the actual line metrics. Tolerate
-        # up to one line height of slop so a paragraph that *almost* fits
-        # the column doesn't jump to the next one and break the layout.
-        overshoot_tolerance = DEFAULT_FONT_SIZE_PT * PT_TO_MM * 1.0
-
         @property  # type: ignore[misc]
         def _col_accept_page_break(self_pdf: FPDF) -> bool:
             col_y[state.current] = pdf.get_y()
             next_col = state.current + 1
             page_bottom = writer._page_height - writer._page_margin_bottom
-            if (
-                next_col < state.ncols
-                and pdf.get_y() <= page_bottom + overshoot_tolerance
-            ):
-                # Within slop — let the line render in the current column
-                # rather than ripping it across the column boundary.
-                return False
             if next_col < state.ncols:
                 if state.line_between:
                     mid_x = (
@@ -649,9 +659,6 @@ class LdmPdfWriter:
                 writer._apply_column(pdf, state, next_col)
                 pdf.set_y(col_y.get(next_col, state.margin_top))
                 return False  # don't let fpdf2 add a page
-            # All columns exhausted — restore full-width margins so the
-            # header/footer callbacks render at the correct position.
-            writer._restore_full_width(pdf, state.margin_left, state.margin_right)
             return True  # let fpdf2 add the page
 
         pdf.__class__ = type(
@@ -662,16 +669,29 @@ class LdmPdfWriter:
         orig_add_page = pdf.add_page.__func__  # type: ignore[attr-defined]
 
         def _add_page_then_col0(*args, **kwargs):  # type: ignore[no-untyped-def]
+            # Only change band margins when adding a page, not during a break probe.
+            writer._restore_full_width(pdf, state.margin_left, state.margin_right)
             orig_add_page(pdf, *args, **kwargs)
+            col_y.clear()
             writer._apply_column(pdf, state, 0)
 
         pdf.add_page = _add_page_then_col0  # type: ignore[method-assign]
+
+        def _advance_region():
+            col_y[state.current] = pdf.get_y()
+            if state.current < state.ncols - 1:
+                writer._force_next_column(pdf, state, col_y)
+            else:
+                pdf.add_page()
+
+        pdf._advance_region = _advance_region
 
     @staticmethod
     def _remove_column_hook(pdf: FPDF) -> None:
         """Remove the column accept_page_break override."""
         pdf.__class__ = FPDF
         pdf.__dict__.pop("add_page", None)
+        pdf.__dict__.pop("_advance_region", None)
 
     def _restore_full_width(
         self, pdf: FPDF, margin_left: float, margin_right: float

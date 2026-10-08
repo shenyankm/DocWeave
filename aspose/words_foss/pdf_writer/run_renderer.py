@@ -5,6 +5,7 @@ and strikethrough lines.
 """
 
 
+import re
 from typing import Optional, Tuple, Union
 
 from fpdf import FPDF
@@ -12,6 +13,7 @@ from fpdf import FPDF
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.pdf_writer.color import parse_color
 from aspose.words_foss.pdf_writer.constants import (
+    DEFAULT_FONT_NAME,
     DEFAULT_FONT_SIZE_PT,
     GAP_MIN_SPACES,
     HIGHLIGHT_HEIGHT_RATIO,
@@ -123,7 +125,7 @@ class RunRenderer:
                     # Use cell-based rendering so the fill rectangle
                     # and text are always perfectly aligned — even
                     # when the run wraps across lines.
-                    self._write_with_highlight(pdf, safe, line_h, highlight, link=link_target)
+                    self._write_with_highlight(pdf, safe, line_h, highlight, run=run, link=link_target)
                 elif font.strike_through:
                     x_before = pdf.get_x()
                     y_before = pdf.get_y()
@@ -218,8 +220,7 @@ class RunRenderer:
         color and style via ``pdf.cell()``.
         """
         fs = DEFAULT_FONT_SIZE_PT
-        w = self._writer
-        usable_w = w._page_width - w._page_margin_left - w._page_margin_right
+        usable_w = pdf.epw
 
         # Pre-compute chunk widths using each run's own font settings.
         segments: list[Tuple[ldm.Run, str, float, float, Optional[str]]] = []
@@ -267,12 +268,12 @@ class RunRenderer:
         if tab_idx is not None:
             left = [s for s in segments[:tab_idx] if s[1] != "\t"]
             right = [s for s in segments[tab_idx + 1 :] if s[1] != "\t"]
-            self._render_segment_row(pdf, left, line_h, fs, at_x=w._page_margin_left)
+            self._render_segment_row(pdf, left, line_h, fs, at_x=pdf.l_margin)
             if right:
                 right_w = sum(sw for _, _, sw, _, _ in right)
                 right_x = max(
-                    w._page_margin_left,
-                    w._page_margin_left + usable_w - right_w,
+                    pdf.l_margin,
+                    pdf.l_margin + usable_w - right_w,
                 )
                 pdf.set_y(pdf.get_y() - line_h)  # stay on the same baseline
                 self._render_segment_row(pdf, right, line_h, fs, at_x=right_x)
@@ -283,7 +284,6 @@ class RunRenderer:
         visible = [s for s in segments if s[1] != "\t"]
         if not visible:
             return
-        total_w = sum(sw for _, _, sw, _, _ in visible)
 
         # Word footers frequently encode a two-column "left / right" line
         # as a single right-aligned paragraph with a long run of spaces
@@ -294,35 +294,76 @@ class RunRenderer:
             if split_idx is not None:
                 left = visible[:split_idx]
                 right = visible[split_idx + 1 :]
-                self._render_segment_row(pdf, left, line_h, fs, at_x=w._page_margin_left)
+                self._render_segment_row(pdf, left, line_h, fs, at_x=pdf.l_margin)
                 right_w = sum(sw for _, _, sw, _, _ in right)
                 right_x = max(
-                    w._page_margin_left,
-                    w._page_margin_left + usable_w - right_w,
+                    pdf.l_margin,
+                    pdf.l_margin + usable_w - right_w,
                 )
                 pdf.set_y(pdf.get_y() - line_h)  # stay on the same baseline
                 self._render_segment_row(pdf, right, line_h, fs, at_x=right_x)
                 pdf.set_text_color(0, 0, 0)
                 return
-        segments = visible
-
-        # Position cursor for alignment
-        x_start = w._page_margin_left
-        if align == "C":
-            x_start += (usable_w - total_w) / 2
-        elif align == "R":
-            x_start += usable_w - total_w
-        # "J" and "L" start at the left margin (default)
-
-        # Clamp to left margin when text is wider than the page
-        x_start = max(w._page_margin_left, x_start)
-
-        self._render_segment_row(pdf, segments, line_h, fs, at_x=x_start)
+        first_offset = pdf.get_x() - pdf.l_margin
+        rows = self.wrap_segments(pdf, visible, usable_w - 2 * pdf.c_margin,
+                                  first_width=usable_w - first_offset - 2 * pdf.c_margin)
+        for index, row in enumerate(rows):
+            row_w = sum(seg[2] for seg in row)
+            offset = first_offset if index == 0 else 0.0
+            x_start = pdf.l_margin + offset
+            if align == "C":
+                x_start += (usable_w - offset - row_w) / 2
+            elif align == "R":
+                x_start += usable_w - offset - row_w - 2 * pdf.c_margin
+            self._render_segment_row(pdf, row, line_h, fs, at_x=x_start)
         pdf.set_text_color(0, 0, 0)
 
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def wrap_segments(pdf: FPDF, segments: list, width: float, *, first_width=None) -> list:
+        """Wrap styled Unicode runs using actual glyph widths, retaining every character."""
+        if width <= 0:
+            raise ValueError("No usable text width")
+        saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else ""), pdf.font_size_pt)
+        rows, row, used = [], [], 0.0
+        available = width if first_width is None else max(0.0, first_width)
+        try:
+            # ponytail: oversized words use character breaks; typography-specific punctuation rules are deferred.
+            for run, text, _, size, link in segments:
+                style = ("B" if run.font.bold else "") + ("I" if run.font.italic else "")
+                pdf.set_font(DEFAULT_FONT_NAME, style=style, size=size)
+                widths = {char: pdf.get_string_width(char) for char in set(text) if char != "\n"}
+                for token in re.findall(r"\n|[^\S\n]+|[^\s]+", text):
+                    token_width = sum(widths.get(char, 0) for char in token)
+                    if (used and not token.isspace() and token_width <= width
+                            and used + token_width > available + 1e-7):
+                        rows.append(row)
+                        row, used, available = [], 0.0, width
+                    for char in token:
+                        if char == "\n":
+                            rows.append(row)
+                            row, used, available = [], 0.0, width
+                            continue
+                        char_w = widths[char]
+                        if char_w > width:
+                            raise ValueError("A glyph is wider than the usable text area")
+                        if used + char_w > available + 1e-7:
+                            rows.append(row)
+                            row, used, available = [], 0.0, width
+                        if row and row[-1][0] is run and row[-1][4] == link:
+                            previous = row[-1]
+                            row[-1] = (run, previous[1] + char, previous[2] + char_w, size, link)
+                        else:
+                            row.append((run, char, char_w, size, link))
+                        used += char_w
+            rows.append(row)
+        finally:
+            if saved_font[0]:
+                pdf.set_font(*saved_font)
+        return rows
 
     def _render_segment_row(
         self,
@@ -334,7 +375,10 @@ class RunRenderer:
         at_x: float,
     ) -> None:
         """Emit *segments* on a single line starting at *at_x*."""
+        offset = at_x - pdf.l_margin
         pdf.set_x(at_x)
+        pdf.cell(w=0, h=line_h)  # Break pages/columns before painting the background.
+        pdf.set_x(pdf.l_margin + offset)
         for run, safe, seg_w, size, link in segments:
             apply_run_font(pdf, run.font, default_size=fs)
             highlight = parse_color(run.font.highlight_color)
@@ -406,6 +450,7 @@ class RunRenderer:
         line_h: float,
         rgb: Tuple[int, int, int],
         *,
+        run: ldm.Run,
         link: Union[int, str] = "",
     ) -> None:
         """Write *text* with a filled highlight background.
@@ -416,44 +461,22 @@ class RunRenderer:
         anchor the fill at the cell's left edge instead, producing a
         half-character drift between text and highlight.
         """
-        w = self._writer
-        right_edge = w._page_width - w._page_margin_right
-        pdf.set_fill_color(*rgb)
-
-        while text:
-            x = pdf.get_x()
-            avail = right_edge - x
-            text_w = pdf.get_string_width(text)
-
-            if text_w <= avail:
-                self._fill_text_rect(pdf, x, pdf.get_y(), text_w, line_h)
-                pdf.cell(w=text_w, h=line_h, text=text, link=link)
-                break
-
-            # Find the last space-separated word that fits.
-            words = text.split(" ")
-            fit_count = 0
-            for i in range(len(words)):
-                test_str = " ".join(words[: i + 1])
-                if pdf.get_string_width(test_str) > avail:
-                    break
-                fit_count = i + 1
-
-            if fit_count == 0:
-                fit_count = 1
-
-            first = " ".join(words[:fit_count])
-            rest = " ".join(words[fit_count:])
-
-            first_w = pdf.get_string_width(first)
-            self._fill_text_rect(pdf, x, pdf.get_y(), first_w, line_h)
-            pdf.cell(w=first_w, h=line_h, text=first, link=link)
-
-            # Advance to the next line at the left margin.
-            pdf.ln(line_h)
-            pdf.set_x(w._page_margin_left)
-
-            text = rest
+        width = pdf.epw - 2 * pdf.c_margin
+        first_width = pdf.w - pdf.r_margin - pdf.get_x() - 2 * pdf.c_margin
+        segments = [(run, text, 0.0, pdf.font_size_pt, None)]
+        rows = self.wrap_segments(pdf, segments, width, first_width=first_width)
+        for index, row in enumerate(rows):
+            if index:
+                pdf.ln(line_h)
+                pdf.set_x(pdf.l_margin)
+            offset = pdf.get_x() - pdf.l_margin
+            pdf.cell(w=0, h=line_h)
+            pdf.set_x(pdf.l_margin + offset)
+            chunk = "".join(seg[1] for seg in row)
+            chunk_width = sum(seg[2] for seg in row)
+            pdf.set_fill_color(*rgb)
+            self._fill_text_rect(pdf, pdf.get_x(), pdf.get_y(), chunk_width, line_h)
+            pdf.cell(w=chunk_width, h=line_h, text=chunk, link=link)
 
     @staticmethod
     def _fill_text_rect(pdf: FPDF, x: float, y: float, w: float, h: float) -> None:

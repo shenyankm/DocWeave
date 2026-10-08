@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._visible_runs import visible_runs
-from aspose.words_foss.pdf_writer.constants import INLINE_LINK_RE
+from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_SIZE_PT, INLINE_LINK_RE
 from aspose.words_foss.pdf_writer.color import parse_color
 
 def safe_text(text: str) -> str:
@@ -97,6 +97,12 @@ def get_dominant_font_size(runs: list[ldm.Run]) -> float:
         if run.font.size > 0:
             return run.font.size
     return 0.0
+
+
+def get_line_font_size(runs: list[ldm.Run]) -> float:
+    """Line advance must accommodate the largest visible run, not just the first."""
+    return max((run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT for run in runs),
+               default=DEFAULT_FONT_SIZE_PT)
 
 
 def get_dominant_color(runs: list[ldm.Run]) -> Optional[Tuple[int, int, int]]:

@@ -22,6 +22,7 @@ class PDFWriterContext(Protocol):
     _page_margin_right: float
     _page_margin_bottom: float
     _page_number_offset: int
+    _paragraph_insets: tuple[float, float]
 
     _anchor_links: dict[str, int]
     _pre_rendered_shapes: set[int]
@@ -31,6 +32,8 @@ class PDFWriterContext(Protocol):
     _table_renderer: Any
 
     def _link_target_for(self, pdf: FPDF, url: Optional[str]) -> Union[int, str]: ...
+
+    def _estimate_paragraph_height(self, para: ldm.Paragraph, col_w_mm: float) -> float: ...
 
     def _estimate_child_height(
         self, child: Union[ldm.Paragraph, ldm.Table], col_w_mm: float

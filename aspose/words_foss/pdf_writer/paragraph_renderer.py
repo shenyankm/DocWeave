@@ -39,6 +39,7 @@ from aspose.words_foss.pdf_writer.text import (
     extract_link_segments,
     get_dominant_color,
     get_dominant_font_size,
+    get_line_font_size,
     is_pure_page_break,
     is_toc_style,
     safe_text,
@@ -212,18 +213,11 @@ class ParagraphRenderer:
         text = self._plain_text_from_runs(runs)
         if not text.strip():
             return
-        fs = get_dominant_font_size(runs) or DEFAULT_FONT_SIZE_PT
-        line_h = self.line_height_mm(fs, pf)
         usable_w = w._page_width - w._page_margin_left - w._page_margin_right
-        char_w = fs * PT_TO_MM * 0.5
-        chars_per_line = max(1, int(usable_w / char_w))
-        num_lines = 0
-        for line in text.split("\n") or [""]:
-            num_lines += max(1, (len(line) + chars_per_line - 1) // chars_per_line)
-        est_height = num_lines * line_h + pf.space_before * PT_TO_MM + pf.space_after * PT_TO_MM
+        est_height = w._estimate_paragraph_height(para, usable_w)
         remaining = w._page_height - w._page_margin_bottom - pdf.get_y()
-        if est_height > remaining and est_height < (w._page_height - w._page_margin_bottom - pdf.t_margin):
-            pdf.add_page()
+        if est_height > remaining + 1e-7 and est_height <= (w._page_height - w._page_margin_bottom - pdf.t_margin) + 1e-7:
+            getattr(pdf, "_advance_region", pdf.add_page)()
 
     # ------------------------------------------------------------------
     # Outline helpers
@@ -351,6 +345,29 @@ class ParagraphRenderer:
         list_label: Optional[ldm.ListLabel],
         align: str,
     ) -> None:
+        """Apply paragraph margins, including after page/column changes."""
+        w = self._writer
+        previous = w._paragraph_insets
+        left = pf.left_indent * PT_TO_MM
+        if not pf.is_heading and "Quote" in (pf.style_name or "") and left <= 0:
+            left = DEFAULT_QUOTE_INDENT_MM
+        if list_format and list_format.is_list_item:
+            left = 0.0  # The list branch positions its own marker and text.
+        w._paragraph_insets = (left, pf.right_indent * PT_TO_MM)
+        pdf.set_left_margin(w._page_margin_left + left)
+        pdf.set_right_margin(w._page_margin_right + pf.right_indent * PT_TO_MM)
+        pdf.set_x(pdf.l_margin)
+        try:
+            self._render_styled_content(pdf, runs, pf, list_format, list_label, align)
+        finally:
+            w._paragraph_insets = previous
+            pdf.set_left_margin(w._page_margin_left + previous[0])
+            pdf.set_right_margin(w._page_margin_right + previous[1])
+
+    def _render_styled_content(
+        self, pdf: FPDF, runs: list[ldm.Run], pf: ldm.ParagraphFormat,
+        list_format: Optional[ldm.ListFormat], list_label: Optional[ldm.ListLabel], align: str,
+    ) -> None:
         """Shared heading/code/quote/list/normal rendering logic.
 
         This single method replaces the duplicated branching that
@@ -399,7 +416,7 @@ class ParagraphRenderer:
             with w._tag(pdf, "/Code"):
                 pdf.set_fill_color(*CODE_BLOCK_BG_RGB)
                 pdf.set_font(DEFAULT_FONT_NAME, size=code_size)
-                usable_w = w._page_width - w._page_margin_left - w._page_margin_right
+                usable_w = pdf.epw
                 pdf.multi_cell(
                     w=usable_w,
                     h=line_h,
@@ -418,10 +435,6 @@ class ParagraphRenderer:
             with w._tag(pdf, "/BlockQuote"):
                 pdf.set_font(DEFAULT_FONT_NAME, style="I", size=fs)
                 pdf.set_text_color(*QUOTE_TEXT_RGB)
-                indent = (
-                    pf.left_indent * PT_TO_MM if pf.left_indent > 0 else DEFAULT_QUOTE_INDENT_MM
-                )
-                pdf.cell(w=indent)
                 pdf.multi_cell(w=0, h=line_h, text=safe_text(text), align=align)
             self._apply_space_after(pdf, pf)
             reset_font(pdf)
@@ -443,7 +456,7 @@ class ParagraphRenderer:
             with w._tag(pdf, "/LI"):
                 run_size = get_dominant_font_size(runs)
                 effective_fs = run_size if run_size > 0 else fs
-                line_h = self.line_height_mm(effective_fs, pf)
+                line_h = self.line_height_mm(get_line_font_size(runs), pf)
                 if marker_indent_mm > 0:
                     pdf.cell(w=marker_indent_mm)
                 pdf.set_font(DEFAULT_FONT_NAME, size=effective_fs)
@@ -455,6 +468,7 @@ class ParagraphRenderer:
                     pdf,
                     runs,
                     newline=True,
+                    line_h_override=line_h,
                     pf=pf,
                 )
             self._apply_space_after(pdf, pf)
@@ -468,12 +482,9 @@ class ParagraphRenderer:
             return
 
         # Apply first-line indent.
-        effective_indent = pf.left_indent + pf.first_line_indent
-        if effective_indent > 0:
-            pdf.cell(w=effective_indent * PT_TO_MM)
+        pdf.set_x(pdf.l_margin + pf.first_line_indent * PT_TO_MM)
 
-        run_size = get_dominant_font_size(runs) or fs
-        line_h = self.line_height_mm(run_size, pf)
+        line_h = self.line_height_mm(get_line_font_size(runs), pf)
 
         with w._tag(pdf, "/P"):
             w._run_renderer.render_formatted_runs(
