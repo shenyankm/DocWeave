@@ -113,6 +113,25 @@ def test_bounded_cli_failure_preserves_output(tmp_path, mode):
     assert sorted(p.name for p in tmp_path.iterdir()) == ["report.pdf", "source.txt"]
 
 
+@pytest.mark.skipif(os.name != "posix", reason="Bounded CLI requires process groups")
+def test_strict_cli_rejects_known_table_write_loss(tmp_path):
+    from aspose.words_foss import light_document_model as ldm
+    from aspose.words_foss.docx_writer import LdmDocxWriter
+    paragraph = ldm.Paragraph(children=[ldm.Run(text="中文" * 200)])
+    grid = ldm.Table(rows=[ldm.Row(cells=[ldm.Cell(paragraphs=[paragraph])],
+                                 row_format=ldm.RowFormat(allow_break_across_pages=False))])
+    model = ldm.Document(sections=[ldm.Section(page_setup=ldm.PageSetup(page_width=240, page_height=150),
+                                              body=ldm.Body(children=[grid]))])
+    source = tmp_path / "source.docx"
+    LdmDocxWriter().write(model, source)
+    output = tmp_path / "existing.pdf"
+    output.write_bytes(b"old document")
+    run = subprocess.run([sys.executable, "-m", "aspose.words_foss.convert", str(source), str(output), "--strict"],
+                         capture_output=True, text=True, timeout=20)
+    assert run.returncode != 0 and "cantSplit" in run.stderr
+    assert output.read_bytes() == b"old document"
+
+
 @pytest.mark.skipif(os.name != "posix", reason="Process groups require POSIX")
 def test_timeout_kills_descendants(tmp_path):
     pid_file = tmp_path / "child.pid"

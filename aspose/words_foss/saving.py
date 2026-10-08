@@ -178,7 +178,7 @@ class OutlineOptions:
         self.default_bookmarks_outline_level: int = 0
         # Bookmarks whose name starts with "_" are skipped even if listed here.
         self.bookmarks_outline_levels: dict[str, int] = {}
-        # Only affects tables rendered via the image-cell fallback path.
+        # Enables heading outlines inside table cells.
         self.create_outlines_for_headings_in_tables: bool = False
         # Currently unused: gap-filling is always active in the fpdf2 backend.
         self.create_missing_outline_levels: bool = False
@@ -266,6 +266,8 @@ class PdfSaveOptions:
         # Viewer preferences
         self.display_doc_title: bool = False
         self.fallback_fonts: list[str] = []
+        # Requires the optional uharfbuzz dependency; uses fpdf2 shaping and bidi handling.
+        self.text_shaping: bool = False
         self._initializing = False
 
 

@@ -10,6 +10,7 @@ from typing import Callable, Optional
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss._io import MAX_TABLE_COLUMNS
 from aspose.words_foss.docx_reader.constants import (
     W_NS,
     _ALIGNMENT_MAP,
@@ -45,7 +46,6 @@ _HEIGHT_RULE_EXACT = 1
 _HEIGHT_RULE_AUTO = 2
 _VMERGE_RESTART = 1
 _VMERGE_CONTINUE = 2
-_GRID_SPAN_MERGE = 1
 _FLOATING_TEXT_WRAPPING = 1
 
 _FLOATING_ATTRS: tuple[str, ...] = (
@@ -306,14 +306,11 @@ class CellBuilder:
 
     @staticmethod
     def _apply_merge(tcPr: ET.Element, cf: ldm.CellFormat) -> None:
-        vMerge = tcPr.find(f"{W_NS}vMerge")
-        if vMerge is None:
-            return
-        cf.vertical_merge = (
-            _VMERGE_RESTART
-            if vMerge.get(f"{W_NS}val", "continue") == "restart"
-            else _VMERGE_CONTINUE
-        )
+        for tag, name in (("vMerge", "vertical_merge"), ("hMerge", "horizontal_merge")):
+            merge = tcPr.find(f"{W_NS}{tag}")
+            if merge is not None:
+                setattr(cf, name, _VMERGE_RESTART if merge.get(f"{W_NS}val", "continue") == "restart"
+                        else _VMERGE_CONTINUE)
 
     @staticmethod
     def _apply_grid_span(tcPr: ET.Element, cf: ldm.CellFormat) -> None:
@@ -321,8 +318,9 @@ class CellBuilder:
         if gridSpan is None:
             return
         span = int(gridSpan.get(f"{W_NS}val", "1"))
-        if span > 1:
-            cf.horizontal_merge = _GRID_SPAN_MERGE
+        if not 1 <= span <= MAX_TABLE_COLUMNS:
+            raise ValueError(f"DOCX gridSpan must be between 1 and {MAX_TABLE_COLUMNS}")
+        cf.grid_span = span
 
     @staticmethod
     def _apply_text_direction(tcPr: ET.Element, cf: ldm.CellFormat) -> None:

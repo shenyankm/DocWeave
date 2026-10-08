@@ -125,6 +125,7 @@ def _resolve_references(block: Block, definitions: dict[str, tuple[str, str]]) -
     block.children = new_children
 
 
+# ponytail: keep inherited flat +4 tabs; migrate to a conforming parser when full CommonMark is required.
 def _leading_ws_flat_len(line: str) -> int:
     """Flat length of leading spaces/tabs, matches C#'s GetLength (tab=4 always, not column-based)."""
     n = 0

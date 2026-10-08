@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import NamedTuple, Optional
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss.diagnostics import ContentLossWarning, document_nodes, warn
 from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_runs
 from aspose.words_foss.md_import.document_builder import (
     _link_destination,
@@ -171,6 +172,9 @@ class LdmMarkdownWriter:
         output_path: Optional[Path] = None,
     ) -> str:
         """Convert *doc* to Markdown and return the result string."""
+        if any(isinstance(node, ldm.UnknownNode) for node in document_nodes(doc)):
+            warn("Unknown document nodes are omitted from Markdown", ContentLossWarning,
+                 code="markdown.unknown_node")
         self._list_indents.clear()
         self._reference_links.clear()
         self._image_counter = 0

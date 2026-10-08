@@ -6,8 +6,13 @@ from pathlib import Path
 import tempfile
 
 
-class DocumentLoadWarning(UserWarning):
+from aspose.words_foss.diagnostics import ContentLossWarning
+
+
+class DocumentLoadWarning(ContentLossWarning):
     """Source constructs cannot be retained by the light document model."""
+
+    code = "load.content_loss"
 
 
 MAX_INPUT_BYTES = 64 * 1024 * 1024
@@ -15,6 +20,7 @@ MAX_PART_BYTES = 64 * 1024 * 1024
 MAX_EXPANDED_BYTES = 256 * 1024 * 1024
 MAX_ZIP_ENTRIES = 10_000
 MAX_IMAGE_PIXELS = 25_000_000
+MAX_TABLE_COLUMNS = 1024
 
 
 def check_input_size(size: int) -> None:

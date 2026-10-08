@@ -4,6 +4,7 @@
 from typing import Mapping, Optional
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss._io import MAX_TABLE_COLUMNS
 from aspose.words_foss.model.enums.table import PreferredWidthType as _PWT
 
 from aspose.words_foss.docx_writer.bookmarks import BookmarkState
@@ -185,6 +186,9 @@ def _tcPr(cell: ldm.Cell) -> str:
         )
     else:
         children.append(el("w:tcW", _preferred_width_attrs(fmt.preferred_width)))
+
+    if fmt.grid_span > 1:
+        children.append(el("w:gridSpan", {"w:val": fmt.grid_span}))
 
     if fmt.horizontal_merge == 1:
         children.append(el("w:hMerge", {"w:val": "restart"}))
@@ -453,12 +457,19 @@ def _tblGrid(table: ldm.Table) -> str:
     """Emit a ``<w:tblGrid>`` with per-column widths from row 0."""
     if not table.rows:
         return el("w:tblGrid")
-    cells = table.rows[0].cells
-    cols: list[str] = []
-    for cell in cells:
-        width = cell.cell_format.width
-        attrs = {"w:w": pt_to_twips(width) if width > 0 else 2400}
-        cols.append(el("w:gridCol", attrs))
+    count = max(sum(cell.cell_format.grid_span for cell in row.cells) for row in table.rows)
+    if count > MAX_TABLE_COLUMNS:
+        raise ValueError("Table has too many grid columns")
+    widths = [0.0] * count
+    for row in table.rows:
+        col = 0
+        for cell in row.cells:
+            span = cell.cell_format.grid_span
+            for i in range(col, col + span):
+                widths[i] = max(widths[i], cell.cell_format.width / span)
+            col += span
+    cols = [el("w:gridCol", {"w:w": pt_to_twips(width) if width > 0 else 2400})
+            for width in widths]
     return el("w:tblGrid", None, cols)
 
 

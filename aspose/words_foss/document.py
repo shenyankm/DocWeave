@@ -27,6 +27,7 @@ from typing import Optional, Union, BinaryIO
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._io import atomic_output, check_input_size, read_bounded
 from aspose.words_foss.models import ConversionOptions
+from aspose.words_foss.diagnostics import ConversionDiagnostic, collect_diagnostics
 from aspose.words_foss.reader_factory import create_reader
 from aspose.words_foss.saving import (
     MarkdownSaveOptions,
@@ -109,7 +110,7 @@ class LoadOptions:
     """
 
     def __init__(self) -> None:
-        self.load_format: str = LoadFormat.AUTO
+        self.load_format: LoadFormat | int | str = LoadFormat.AUTO
         self.encoding: str = "utf-8"
 
 
@@ -209,6 +210,8 @@ class Document:
         binary stream. ``stream=`` / ``data=`` are deprecated.
         """
         self._document: Optional[ldm.Document] = None
+        self.diagnostics: list[ConversionDiagnostic] = []
+        self._source_name = str(source) if isinstance(source, (str, Path)) else None
 
         if stream is not None or data is not None:
             name = "stream" if stream is not None else "data"
@@ -224,15 +227,16 @@ class Document:
                 stacklevel=2,
             )
 
-        if source is not None:
-            if _is_stream(source):
-                self._load_from_stream(source, load_options)
-            else:
-                self._load_from_file(Path(source), load_options)
-        elif stream is not None:
-            self._load_from_stream(stream, load_options)
-        elif data is not None:
-            self._load_from_bytes(data, load_options)
+        with collect_diagnostics(self.diagnostics):
+            if source is not None:
+                if _is_stream(source):
+                    self._load_from_stream(source, load_options)
+                else:
+                    self._load_from_file(Path(source), load_options)
+            elif stream is not None:
+                self._load_from_stream(stream, load_options)
+            elif data is not None:
+                self._load_from_bytes(data, load_options)
 
     @staticmethod
     def _apply_load_options(reader: object, load_options: Optional[LoadOptions]) -> None:
@@ -386,6 +390,10 @@ class Document:
                 instance. If ``None``, the format is inferred from
                 ``output_path``'s extension.
         """
+        with collect_diagnostics(self.diagnostics):
+            self._save(output_path, save_format_or_options)
+
+    def _save(self, output_path, save_format_or_options) -> None:
         doc = self.light_document_model  # validates that a document is loaded
         output_path = Path(output_path)
         suffix = output_path.suffix.lower()
@@ -421,13 +429,52 @@ class Document:
                 f"Supported formats: Markdown, Text, PDF, DOCX."
             )
 
-    def _save_as_markdown(
+    def to_bytes(
         self,
-        output_path: Path,
+        save_format_or_options: SaveFormat | int | str | MarkdownSaveOptions | PdfSaveOptions | OoxmlSaveOptions,
+    ) -> bytes:
+        """Render in memory. An explicit format is required; no files are created.
+
+        External Markdown image files require save(path, options) instead.
+        Diagnostics accumulate alongside load/save diagnostics, including on failure.
+        """
+        doc = self.light_document_model
+        with collect_diagnostics(self.diagnostics):
+            fmt = _coerce_save_format(save_format_or_options)
+            if isinstance(save_format_or_options, MarkdownSaveOptions) or fmt == SaveFormat.MARKDOWN:
+                md_options = save_format_or_options if isinstance(save_format_or_options, MarkdownSaveOptions) else None
+                if md_options and md_options.images_folder and not md_options.export_images_as_base64:
+                    raise ValueError("External Markdown images require save(path, options)")
+                markdown, encoding = self._render_markdown(doc, md_options)
+                return markdown.encode(encoding)
+            if isinstance(save_format_or_options, PdfSaveOptions) or fmt == SaveFormat.PDF:
+                from aspose.words_foss.pdf_writer import LdmPdfWriter
+                pdf_options = save_format_or_options if isinstance(save_format_or_options, PdfSaveOptions) else None
+                return LdmPdfWriter(pdf_options).write_to_bytes(doc)
+            if isinstance(save_format_or_options, OoxmlSaveOptions) or fmt == SaveFormat.DOCX:
+                from aspose.words_foss.docx_writer import LdmDocxWriter
+                docx_options = save_format_or_options if isinstance(save_format_or_options, OoxmlSaveOptions) else None
+                return LdmDocxWriter(docx_options).write_to_bytes(doc)
+            if fmt == SaveFormat.TEXT:
+                return doc.text.encode("utf-8")
+            raise ValueError("Unsupported save format; supported formats: Markdown, Text, PDF, DOCX")
+
+    def to_dict(self) -> dict:
+        """Export ordered content with model locations, not inferred PDF page positions."""
+        from dataclasses import asdict
+        from aspose.words_foss.structure import export_document
+
+        result = export_document(self.light_document_model, self._source_name)
+        result["diagnostics"] = [asdict(item) for item in self.diagnostics]
+        return result
+
+    def _render_markdown(
+        self,
         doc: ldm.Document,
         options: Optional[MarkdownSaveOptions] = None,
-    ) -> None:
-        """Convert the loaded LDM to Markdown and save."""
+        output_path: Optional[Path] = None,
+    ) -> tuple[str, str]:
+        """Shared Markdown rendering for path and memory output."""
         from aspose.words_foss.md_writer import LdmMarkdownWriter
 
         conversion_opts = ConversionOptions()
@@ -447,8 +494,12 @@ class Document:
             encoding = options.encoding
 
         writer = LdmMarkdownWriter(conversion_opts)
-        markdown = writer.write(doc, output_path=output_path)
+        return writer.write(doc, output_path=output_path), encoding
 
+    def _save_as_markdown(
+        self, output_path: Path, doc: ldm.Document, options: Optional[MarkdownSaveOptions] = None,
+    ) -> None:
+        markdown, encoding = self._render_markdown(doc, options, output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         # ``newline=""`` disables Python's universal-newline translation
         # so a caller's choice of ``paragraph_break`` ("\r\n", "\n",

@@ -24,6 +24,7 @@ from aspose.words_foss.pdf_writer.constants import (
     DEFAULT_FONT_NAME,
     DEFAULT_FONT_SIZE_PT,
     DEFAULT_MARGIN_MM,
+    POST_TABLE_SPACING_MM,
     PT_TO_MM,
 )
 from aspose.words_foss.pdf_writer.font import register_fonts
@@ -154,9 +155,23 @@ class LdmPdfWriter:
         self._table_renderer = TableRenderer(self)
 
     def write(self, doc: ldm.Document, output_path: Union[str, Path]) -> None:
-        """Convert *doc* to PDF and write to *output_path*."""
-        output_path = Path(output_path)
+        """Convert *doc* to PDF, leaving an existing destination intact on failure."""
+        with atomic_output(output_path) as temporary:
+            temporary.write_bytes(self.write_to_bytes(doc))
 
+    def write_to_bytes(self, doc: ldm.Document) -> bytes:
+        pdf = self._render_pdf(doc)
+        pdf_bytes = pdf.output()
+        if self.options.zoom_behavior == PdfZoomBehavior.NONE:
+            pdf_bytes = _remove_open_action(pdf_bytes)
+        elif self.options.zoom_behavior in (_FIT_HEIGHT, _FIT_BOX):
+            pdf_bytes = _replace_open_action(pdf_bytes, self.options.zoom_behavior)
+        # fpdf2 subsets shared fonts during output; do not reuse them for later measurements.
+        self._measurement_pdf = None
+        self._measurement_writer = None
+        return bytes(pdf_bytes)
+
+    def _render_pdf(self, doc: ldm.Document) -> FPDF:
         # Fresh anchor-link state per write
         self._anchor_links = {}
         self._default_tab_stop = doc.default_tab_stop
@@ -185,6 +200,8 @@ class LdmPdfWriter:
         pdf = FPDF(unit="mm", format=(page_w_mm, page_h_mm))
         # Cumulative floating-point rounding must not split an exactly fitting paragraph.
         pdf.will_page_break = lambda height: FPDF.will_page_break(pdf, height - 1e-7)
+        if self.options.text_shaping:
+            pdf.set_text_shaping(True)
         fallback_families = register_fonts(pdf, doc, self.options.fallback_fonts)
         warn_about_conversion(pdf, doc, self.options, fallback_families)
         for node in document_nodes(doc):
@@ -192,6 +209,8 @@ class LdmPdfWriter:
                 validate_image(node.image_data.image_bytes)
         self._measurement_writer = None
         self._measurement_pdf = FPDF()
+        if self.options.text_shaping:
+            self._measurement_pdf.set_text_shaping(True)
         self._measurement_pdf.fonts.update(pdf.fonts)
         if fallback_families:
             self._measurement_pdf.set_fallback_fonts(fallback_families, exact_match=False)
@@ -371,13 +390,7 @@ class LdmPdfWriter:
 
         self._apply_viewer_options(pdf)
 
-        pdf_bytes = pdf.output()
-        if self.options.zoom_behavior == PdfZoomBehavior.NONE:
-            pdf_bytes = _remove_open_action(pdf_bytes)
-        elif self.options.zoom_behavior in (_FIT_HEIGHT, _FIT_BOX):
-            pdf_bytes = _replace_open_action(pdf_bytes, self.options.zoom_behavior)
-        with atomic_output(output_path) as temporary:
-            temporary.write_bytes(pdf_bytes)
+        return pdf
 
     # ------------------------------------------------------------------
     # Viewer-option helpers
@@ -520,7 +533,9 @@ class LdmPdfWriter:
 
         if self._measurement_pdf is None:
             self._measurement_pdf = FPDF()
-            register_fonts(self._measurement_pdf)
+            if self.options.text_shaping:
+                self._measurement_pdf.set_text_shaping(True)
+            register_fonts(self._measurement_pdf, fallback_fonts=self.options.fallback_fonts)
             self._measurement_pdf.add_page()
         measure = self._measurement_pdf
         measure.set_auto_page_break(False)
@@ -552,13 +567,21 @@ class LdmPdfWriter:
     def _estimate_table_height(self, table: ldm.Table, col_w_mm: float) -> float:
         if not table.rows:
             return 0.0
-        # Floating tables don't displace the inline cursor for paragraphs
-        # in *other* columns, but they do consume vertical space in the
-        # column they pin to — count their height so the balancer knows
-        # the right column's room is smaller than it looks.
-        line_h = DEFAULT_FONT_SIZE_PT * PT_TO_MM * 1.2
-        pad_mm = (table.top_padding + table.bottom_padding) * PT_TO_MM
-        return len(table.rows) * line_h + pad_mm
+        count = max(sum(cell.cell_format.grid_span for cell in row.cells) for row in table.rows)
+        if not count:
+            return 0.0
+        if self._measurement_pdf is None:
+            self._measurement_pdf = FPDF()
+            if self.options.text_shaping:
+                self._measurement_pdf.set_text_shaping(True)
+            register_fonts(self._measurement_pdf, fallback_fonts=self.options.fallback_fonts)
+            self._measurement_pdf.add_page()
+        measure = self._measurement_pdf
+        widths = self._table_renderer._compute_col_widths(table, count, col_w_mm)
+        with measure._disable_writing():
+            height = sum(self._table_renderer._compute_row_height(measure, row, widths, count)
+                         for row in table.rows)
+        return height + table.top_padding * PT_TO_MM + (table.bottom_padding * PT_TO_MM or POST_TABLE_SPACING_MM)
 
     # ------------------------------------------------------------------
     # Multi-column layout helpers

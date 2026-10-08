@@ -2,6 +2,7 @@
 
 import warnings
 from pathlib import Path
+from types import SimpleNamespace
 
 from fpdf import FPDF
 from fontTools.ttLib import TTFont
@@ -18,6 +19,8 @@ from aspose.words_foss.pdf_writer import (
     PdfUnsupportedOptionWarning,
 )
 from aspose.words_foss.pdf_writer.font import register_fonts
+from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_NAME
+from aspose.words_foss.pdf_writer.diagnostics import warn_about_conversion
 
 FONTS = Path(__file__).resolve().parents[1] / "aspose/words_foss/pdf_writer/fonts"
 
@@ -106,6 +109,12 @@ def test_pdf_archival_compliance_is_not_silently_claimed(tmp_path):
         LdmPdfWriter(options).write(plain_document(), tmp_path / "archival.pdf")
 
 
+@pytest.mark.parametrize("codepoint", [0x1FAE0, 0xE123, 0x10FFFF])
+def test_missing_glyph_includes_new_unassigned_and_private_use_characters(tmp_path, codepoint):
+    with pytest.warns(PdfMissingGlyphWarning, match=f"U\\+{codepoint:04X}"):
+        LdmPdfWriter().write(plain_document(chr(codepoint)), tmp_path / "missing.pdf")
+
+
 def test_missing_list_label_warns(tmp_path):
     document = plain_document()
     paragraph = document.sections[0].body.children[0]
@@ -113,6 +122,43 @@ def test_missing_list_label_warns(tmp_path):
     paragraph.list_label = ldm.ListLabel(label_string=chr(0x1FAE0))
     with pytest.warns(PdfMissingGlyphWarning, match="U\\+1FAE0"):
         LdmPdfWriter().write(document, tmp_path / "list.pdf")
+
+
+@pytest.mark.parametrize("bold", [False, True])
+@pytest.mark.parametrize("fallback", [False, True])
+def test_glyph_diagnostics_do_not_scan_primary_font_cmap(bold, fallback):
+    class LookupOnlyCmap(dict):
+        def __iter__(self):
+            raise AssertionError("Diagnostics must only look up text characters")
+
+        def keys(self):
+            raise AssertionError("Diagnostics must not scan the font cmap")
+
+    coverage = LookupOnlyCmap({ord("A"): "A"})
+    family = DEFAULT_FONT_NAME.lower()
+    pdf = SimpleNamespace(fonts={
+        family: SimpleNamespace(cmap=coverage),
+        family + "B": SimpleNamespace(cmap=coverage),
+        "fallback0": SimpleNamespace(cmap={0x1FAE0: "fallback"}),
+    })
+    document = plain_document("AA" + chr(0x1FAE0) + chr(0x10FFFF) + "\t\n",
+                              name=DEFAULT_FONT_NAME, bold=bold)
+    paragraph = document.sections[0].body.children[0]
+    paragraph.list_format = ldm.ListFormat(is_list_item=True)
+    paragraph.list_label = ldm.ListLabel(label_string=chr(0xE123) + chr(0x1FAE0))
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        warn_about_conversion(pdf, document, aw.saving.PdfSaveOptions(),
+                              ["Fallback0"] if fallback else [])
+    missing = [w for w in caught if issubclass(w.category, PdfMissingGlyphWarning)]
+    assert len(missing) == 1
+    expected = "U+E123, U+10FFFF" if fallback else "U+E123, U+1FAE0, U+10FFFF"
+    assert str(missing[0].message) == (
+        f"PDF has {2 if fallback else 3} unsupported character(s): {expected}. Configure fallback_fonts."
+    )
+    substitutions = [w for w in caught if issubclass(w.category, PdfFontSubstitutionWarning)]
+    assert len(substitutions) == int(bold and fallback)
+    assert len(caught) == len(missing) + len(substitutions)
 
 
 def test_source_font_substitution_warns(tmp_path):

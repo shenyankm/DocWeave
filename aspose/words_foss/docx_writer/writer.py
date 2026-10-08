@@ -17,6 +17,7 @@ from dataclasses import dataclass
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._io import atomic_output
+from aspose.words_foss.diagnostics import ContentLossWarning, document_nodes, header_footer_losses, warn
 from aspose.words_foss.saving import (
     CompressionLevel,
     OoxmlCompliance,
@@ -42,36 +43,18 @@ from aspose.words_foss.docx_writer.styles_part import (
 )
 
 
-class DocxWriterLossyWarning(UserWarning):
-    """Warns the caller that the writer is dropping known LDM constructs.
+class DocxWriterLossyWarning(ContentLossWarning):
+    """Known LDM content cannot be faithfully written as DOCX."""
 
-    The reader populates fields the writer does not yet emit (headers,
-    footers, inline shapes/images).  Round-tripping a document that
-    carries any of these silently strips them.  We surface a
-    :class:`UserWarning` so call sites can opt into stricter behaviour
-    (``warnings.simplefilter("error", DocxWriterLossyWarning)``) or
-    suppress it if the lossiness is acceptable.
-    """
-
-
-# Headers/footers, inline shapes/images, bookmarks, and custom-style
-# ``<w:pPr>`` are now preserved on round-trip — see ``drawing.py``,
-# ``bookmarks.py``, ``headers_footers.py`` and ``styles_part._custom_style``.
-# Text-box-only shapes (``Shape`` without ``image_data``) and
-# ``FieldStart`` markers in ``inline_extras`` are still dropped silently
-# — they don't appear in the test fixtures and adding emit paths for
-# them is a separate scope.
+    code = "docx.content_loss"
 
 
 def _warn_about_unsupported_constructs(doc: ldm.Document) -> None:
-    """Reserved for future lossy-construct warnings.
-
-    Currently a no-op: every previously-warned-about construct
-    (headers/footers, inline shapes) now round-trips through the writer.
-    Kept as a hook so new lossy fields can be flagged without rewiring
-    the call site.
-    """
-    del doc  # nothing to warn about right now
+    if any(isinstance(node, ldm.UnknownNode) for node in document_nodes(doc)):
+        warn("Unknown document nodes are omitted from DOCX", DocxWriterLossyWarning,
+             stacklevel=3, code="docx.unknown_node")
+    for code, message in header_footer_losses(doc):
+        warn(message, DocxWriterLossyWarning, stacklevel=3, code="docx." + code)
 
 
 _COMPRESSION_MAP: dict[int, tuple[int, int]] = {

@@ -47,14 +47,16 @@ def _worker(args):
         convert_to_pdf(args.input, args.output, timeout=args.timeout, _new_session=False)
     else:
         import aspose.words_foss as aw
+        from aspose.words_foss.diagnostics import ContentLossWarning
         from aspose.words_foss.pdf_writer import PdfMissingGlyphWarning
 
         if args.strict:
-            warnings.simplefilter("error", PdfMissingGlyphWarning)
-            warnings.simplefilter("error", aw.loading.DocumentLoadWarning)
-        options = aw.saving.PdfSaveOptions() if args.fallback_font else None
+            for category in (PdfMissingGlyphWarning, ContentLossWarning):
+                warnings.simplefilter("error", category)
+        options = aw.saving.PdfSaveOptions() if args.fallback_font or args.text_shaping else None
         if options:
             options.fallback_fonts = args.fallback_font
+            options.text_shaping = args.text_shaping
         aw.Document(args.input).save(args.output, options)
 
 
@@ -83,6 +85,8 @@ def _convert(args):
             ]
             if args.strict:
                 command.append("--strict")
+            if args.text_shaping:
+                command.append("--text-shaping")
             for font in args.fallback_font:
                 command.extend(("--fallback-font", str(Path(font).resolve())))
             log = run_process(command, args.timeout, memory_mb=args.memory_mb)
@@ -106,17 +110,18 @@ def main(argv=None):
         help="RSS watchdog threshold; Linux also uses RLIMIT_AS; 0 disables memory checks",
     )
     parser.add_argument(
-        "--strict", action="store_true", help="Fail on missing glyphs or known DOCX content loss"
+        "--strict", action="store_true", help="Fail on missing glyphs and known load/write loss (not a full fidelity validator)"
     )
     parser.add_argument("--fallback-font", action="append", default=[])
+    parser.add_argument("--text-shaping", action="store_true", help="Enable fpdf2/HarfBuzz shaping; install [shaping]")
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     if not math.isfinite(args.timeout) or args.timeout <= 0 or args.memory_mb < 0:
         parser.error("timeout must be positive/finite and memory-mb must be nonnegative")
-    if args.backend == "libreoffice" and (args.strict or args.fallback_font):
-        parser.error("strict glyph checks and fallback-font require the builtin backend")
-    if args.fallback_font and Path(args.output).suffix.lower() != ".pdf":
-        parser.error("fallback-font only applies to PDF output")
+    if args.backend == "libreoffice" and (args.strict or args.fallback_font or args.text_shaping):
+        parser.error("strict checks, fallback-font and text-shaping require the builtin backend")
+    if (args.fallback_font or args.text_shaping) and Path(args.output).suffix.lower() != ".pdf":
+        parser.error("fallback-font and text-shaping only apply to PDF output")
     try:
         if args.worker:
             _worker(args)

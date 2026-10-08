@@ -6,7 +6,8 @@ eliminating the previous code duplication.
 """
 
 
-import warnings
+from aspose.words_foss.diagnostics import warn
+from aspose.words_foss.pdf_writer.diagnostics import PdfUnsupportedOptionWarning
 from typing import Optional
 
 from fpdf import FPDF
@@ -253,9 +254,9 @@ class ParagraphRenderer:
         oo = w.options.outline_options
         # TODO: implement expanded_outline_levels via PDF /Count post-processing
         if oo.expanded_outline_levels > 0 and not self._warned_expanded:
-            warnings.warn(
+            warn(
                 "OutlineOptions.expanded_outline_levels is not yet implemented; "
-                "the value will be ignored",
+                "the value will be ignored", PdfUnsupportedOptionWarning,
                 stacklevel=2,
             )
             self._warned_expanded = True

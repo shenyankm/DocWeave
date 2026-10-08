@@ -14,6 +14,7 @@ from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import BaseModel, BeforeValidator, Field, PrivateAttr, model_serializer, model_validator
 
+from aspose.words_foss._io import MAX_TABLE_COLUMNS
 from aspose.words_foss.model.enums.image import ImageType as _IT, _IMAGE_TYPE_TO_MIME, _MIME_TO_IMAGE_TYPE
 from aspose.words_foss.model.enums.table import PreferredWidthType as _PWT
 
@@ -764,6 +765,7 @@ class CellFormat(BaseModel):
     vertical_alignment: int = 0
     vertical_merge: int = 0  # 0=None, 1=First, 2=Previous
     horizontal_merge: int = 0  # 0=None, 1=First, 2=Previous
+    grid_span: int = Field(default=1, ge=1, le=MAX_TABLE_COLUMNS)
     top_padding: float = 0.0
     bottom_padding: float = 0.0
     left_padding: float = 0.0

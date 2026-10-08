@@ -1,19 +1,25 @@
 """Table rendering for the PDF writer."""
 
 
+from dataclasses import dataclass, field, replace
+from io import BytesIO
 from typing import Optional
 
 from fpdf import FPDF
-from fpdf.errors import FPDFException
+from aspose.words_foss.diagnostics import warn
+from aspose.words_foss._io import MAX_TABLE_COLUMNS
+from aspose.words_foss.pdf_writer.page_bands import register_bookmarks
+from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._visible_runs import visible_runs
 from aspose.words_foss.model.enums import LineStyle, ParagraphAlignment
 from aspose.words_foss.pdf_writer.color import parse_color
 from aspose.words_foss.pdf_writer.constants import (
-    A4_HEIGHT_MM,
-    CHAR_WIDTH_ESTIMATE_FACTOR,
     DEFAULT_CELL_LINE_H_FACTOR,
+    DEFAULT_SHAPE_DIM_PT,
+    FPDF_ALIGN,
+    LINE_HEIGHT_FACTOR,
     DEFAULT_CELL_PAD_LEFT_MM,
     DEFAULT_CELL_PAD_TOP_MM,
     DEFAULT_FONT_SIZE_PT,
@@ -24,7 +30,7 @@ from aspose.words_foss.pdf_writer.constants import (
 )
 from aspose.words_foss.pdf_writer.font import apply_run_font, reset_font
 from aspose.words_foss.pdf_writer._context import PDFWriterContext
-from aspose.words_foss.pdf_writer.text import cell_text, safe_text
+from aspose.words_foss.pdf_writer.text import apply_caps, cell_text, extract_link_segments, safe_text
 
 # Border slot indices in the LDM `borders` list, matching the canonical
 # BorderType layout shared with the DOCX writer:
@@ -47,6 +53,18 @@ _ORIENTATION_TO_ANGLE: dict[int, float] = {
 }
 
 
+@dataclass
+class _CellLine:
+    height: float
+    segments: list = field(default_factory=list)
+    image: Optional[ldm.Shape] = None
+    width: float = 0.0
+    align: str = "L"
+    nested: Optional[tuple] = None
+    rotated_text: Optional[str] = None
+    paragraph: Optional[ldm.Paragraph] = None
+
+
 class TableRenderer:
     """Renders LDM tables into PDF."""
 
@@ -54,165 +72,288 @@ class TableRenderer:
         self._writer = writer
 
     def render_table(self, pdf: FPDF, table: ldm.Table) -> None:
-        """Render a complete table."""
+        """Keep rich cell content in a grid and split long rows at content-line boundaries."""
         if not table.rows:
             return
-
         w = self._writer
-
-        # If any cell has images, render as flowing paragraphs rather than a fixed grid
-        has_cell_images = any(
-            isinstance(item, ldm.Shape) and item.has_image
-            for row in table.rows
-            for cell in row.cells
-            for para in cell.paragraphs
-            for item in para._children
-        )
-        if has_cell_images:
-            for row in table.rows:
-                for cell in row.cells:
-                    for para in cell.paragraphs:
-                        w._paragraph_renderer.render_paragraph(pdf, para)
-            pdf.ln(POST_TABLE_SPACING_MM)
-            return
-
-        # Tables with an explicit ``tblpXSpec`` (right/center/inside/
-        # outside) are pinned to a side of the column area; we render
-        # at the float coordinates and leave the cursor alone so the
-        # inline flow continues under the table. ``tblpXSpec`` left
-        # (or absent) is equivalent to a normal inline table that just
-        # happens to have an offset.
         attrs = table._tblp_pr_attrs
-        if (
-            attrs
-            and table.text_wrapping == 1
-            and attrs.get("tblpXSpec") in ("right", "center", "inside", "outside")
-        ):
+        if (attrs and table.text_wrapping == 1
+                and attrs.get("tblpXSpec") in ("right", "center", "inside", "outside")):
             self._render_floating_table(pdf, table)
             return
-
-        num_cols = max(len(row.cells) for row in table.rows)
-        if num_cols == 0:
+        num_cols = max(sum(cell.cell_format.grid_span for cell in row.cells) for row in table.rows)
+        if not num_cols:
             return
-        num_rows = len(table.rows)
+        usable_w = w._page_width - w._page_margin_left - w._page_margin_right - max(0, table.left_indent * PT_TO_MM)
+        widths = self._compute_col_widths(table, num_cols, usable_w)
+        layouts = [self._layout_row(pdf, row, widths) for row in table.rows]
+        for row, layout in zip(table.rows, layouts):
+            if (row.row_format.height_rule == 1 and row.row_format.height > 0
+                    and self._row_height(None, layout) > row.row_format.height * PT_TO_MM + 1e-7):
+                warn("Exact table row height is expanded to avoid clipping content",
+                     PdfContentLossWarning, code="pdf.table_row_height")
+        headers = []
+        for i, row in enumerate(table.rows):
+            if not row.row_format.heading_format:
+                break
+            headers.append(i)
+        header_height = sum(self._row_height(table.rows[i], layouts[i]) for i in headers)
+        in_hf = getattr(pdf, "_in_header_render", False) or getattr(pdf, "_in_footer_render", False)
+        bottom = pdf.h - pdf.b_margin
+        full_height = bottom - pdf.t_margin
+        if not in_hf and header_height >= full_height:
+            raise ValueError("Table headers do not fit the printable page area")
+        pdf.ln(table.top_padding * PT_TO_MM)
 
-        usable_w = w._page_width - w._page_margin_left - w._page_margin_right
-        col_widths = self._compute_col_widths(table, num_cols, usable_w)
+        def table_x():
+            free = usable_w - sum(widths)
+            offset = free / 2 if table.alignment == ParagraphAlignment.CENTER else free if table.alignment == ParagraphAlignment.RIGHT else 0
+            return w._page_margin_left + max(0.0, offset) + table.left_indent * PT_TO_MM
 
-        # Borders cascade: cell explicit > table-level (carried per-row by
-        # the reader as row_format.borders, since the LDM has no Table
-        # field) > table style. The table-level set can disable insideH /
-        # insideV the style enables, so it must win over the style.
-        table_level_borders = self._table_level_borders(table)
-        style_borders = self._inherited_table_borders(table)
+        def advance(repeat_headers=True):
+            pdf._perform_page_break_if_need_be(pdf.h - pdf.get_y() + 1)
+            if sum(widths) > w._page_width - w._page_margin_left - w._page_margin_right + 1e-7:
+                raise ValueError("Table cannot flow into a narrower column")
+            if repeat_headers:
+                for index in headers:
+                    height = self._row_height(table.rows[index], layouts[index])
+                    self._paint_row(pdf, table, index, layouts[index], table_x(), pdf.get_y(), height)
+                    pdf.set_y(pdf.get_y() + height)
 
-        # Table padding
-        table_pad_top = table.top_padding * PT_TO_MM if table.top_padding else 0
-        table_pad_bottom = table.bottom_padding * PT_TO_MM if table.bottom_padding else 0
-
-        if table_pad_top:
-            pdf.ln(table_pad_top)
-
-        # Table horizontal position
-        table_x = pdf.get_x()
-        if table.left_indent > 0:
-            table_x += table.left_indent * PT_TO_MM
-        total_table_w = sum(col_widths)
-        free_space = usable_w - total_table_w
-        if free_space > 0:
-            if table.alignment == ParagraphAlignment.CENTER:
-                table_x += free_space / 2
-            elif table.alignment == ParagraphAlignment.RIGHT:
-                table_x += free_space
-
-        for row_idx, row in enumerate(table.rows):
-            row_height = self._compute_row_height(pdf, row, col_widths, num_cols)
-            row_y = pdf.get_y()
-
-            # Check for page break (skip during header/footer rendering
-            # to avoid infinite recursion with the footer callback).
-            in_hf = getattr(pdf, "_in_header_render", False) or getattr(
-                pdf, "_in_footer_render", False
-            )
-            if (
-                not in_hf
-                and row_y + row_height
-                > getattr(w, "_page_height", A4_HEIGHT_MM) - w._page_margin_bottom
-            ):
-                pdf.add_page()
-                row_y = pdf.get_y()
-
-            for i, cell in enumerate(row.cells):
-                if i >= num_cols:
+        for row_index, row in enumerate(table.rows):
+            remaining = [(cell, col, span, width, list(lines))
+                         for cell, col, span, width, lines in layouts[row_index]]
+            first_fragment = True
+            while True:
+                height = self._row_height(row, remaining) if first_fragment else self._row_height(None, remaining)
+                available = bottom - pdf.get_y()
+                capacity = full_height - (header_height if row_index not in headers else 0)
+                if in_hf or height <= available + 1e-7:
+                    self._paint_row(pdf, table, row_index, remaining, table_x(), pdf.get_y(), height)
+                    pdf.set_y(pdf.get_y() + height)
                     break
-                cw = col_widths[i]
+                if height <= capacity + 1e-7:
+                    advance(row_index not in headers)
+                    continue
+                if row_index in headers:
+                    raise ValueError("Table header row cannot be split across pages")
+                if first_fragment and row.row_format.height * PT_TO_MM > capacity:
+                    warn("Table row minimum height exceeds a page; content is laid out without that minimum",
+                         PdfContentLossWarning, code="pdf.table_row_height")
+                if first_fragment and not row.row_format.allow_break_across_pages:
+                    warn("A table row taller than a page must be split despite cantSplit",
+                         PdfContentLossWarning, code="pdf.table_row_split")
+                fragment, rest, taken = [], [], 0
+                for cell, col, span, width, lines in remaining:
+                    top, right, bottom_pad, left = self._padding(cell)
+                    room = available - top - bottom_pad
+                    selected, used = [], 0.0
+                    for line in lines:
+                        if line.image and line.height > capacity - top - bottom_pad:
+                            scale = (capacity - top - bottom_pad) / line.height
+                            if scale <= 0:
+                                raise ValueError("No usable image height in table cell")
+                            line = replace(line, height=line.height * scale, width=line.width * scale)
+                        if used + line.height > room + 1e-7:
+                            break
+                        selected.append(line)
+                        used += line.height
+                    taken += len(selected)
+                    fragment.append((cell, col, span, width, selected))
+                    rest.append((cell, col, span, width, lines[len(selected):]))
+                if not taken:
+                    if available >= capacity - 1e-7:
+                        raise ValueError("A table cell content line is taller than the printable page area")
+                    advance()
+                    continue
+                height = self._row_height(None, fragment)
+                self._paint_row(pdf, table, row_index, fragment, table_x(), pdf.get_y(), height)
+                pdf.set_y(pdf.get_y() + height)
+                remaining = rest
+                if not any(lines for _, _, _, _, lines in remaining):
+                    break
+                first_fragment = False
+                advance()
+        pdf.set_x(w._page_margin_left)
+        pdf.ln(table.bottom_padding * PT_TO_MM or POST_TABLE_SPACING_MM)
+
+    @staticmethod
+    def _padding(cell):
+        cf = cell.cell_format
+        return (cf.top_padding * PT_TO_MM or DEFAULT_CELL_PAD_TOP_MM,
+                cf.right_padding * PT_TO_MM or DEFAULT_CELL_PAD_LEFT_MM,
+                cf.bottom_padding * PT_TO_MM or DEFAULT_CELL_PAD_TOP_MM,
+                cf.left_padding * PT_TO_MM or DEFAULT_CELL_PAD_LEFT_MM)
+
+    @staticmethod
+    def _row_cells(row):
+        col, i = 0, 0
+        while i < len(row.cells):
+            cell = row.cells[i]
+            span = cell.cell_format.grid_span
+            i += 1
+            if cell.cell_format.horizontal_merge == 1:
+                paragraphs, tables = list(cell.paragraphs), list(cell.tables)
+                while i < len(row.cells) and row.cells[i].cell_format.horizontal_merge == 2:
+                    following = row.cells[i]
+                    span += following.cell_format.grid_span
+                    paragraphs.extend(following.paragraphs)
+                    tables.extend(following.tables)
+                    i += 1
+                cell = cell.model_copy(update={"paragraphs": paragraphs, "tables": tables})
+            yield cell, col, span
+            col += span
+
+    def _layout_row(self, pdf, row, widths):
+        layout = []
+        for cell, col, span in self._row_cells(row):
+            width = sum(widths[col:col + span])
+            top, right, bottom, left = self._padding(cell)
+            inner_width = width - left - right
+            if inner_width <= 0:
+                raise ValueError("No usable text width in table cell")
+            lines = self._cell_lines(pdf, cell, inner_width)
+            layout.append((cell, col, span, width, lines))
+        return layout
+
+    def _cell_lines(self, pdf, cell, width):
+        lines = []
+        w = self._writer
+        if cell.cell_format.orientation in _VERTICAL_ORIENTATIONS:
+            if cell.tables or any(isinstance(item, ldm.Shape) for para in cell.paragraphs for item in para._children):
+                raise ValueError("Rotated table cells with shapes or nested tables are unsupported")
+            text = safe_text(cell_text(cell))
+            height = max(self._measure_text_width(pdf, text, cell), DEFAULT_FONT_SIZE_PT * MIN_ROW_HEIGHT_FACTOR)
+            return [_CellLine(height, rotated_text=text)]
+        for para in cell.paragraphs:
+            first_line = len(lines)
+            segments = []
+            align = FPDF_ALIGN.get(para.paragraph_format.alignment, "L")
+
+            def flush(segments=segments, para=para, align=align):
+                if not segments:
+                    return
+                rows = w._run_renderer.wrap_segments(pdf, segments, width) if cell.cell_format.wrap_text else [list(segments)]
+                for row in rows:
+                    size = max((item[3] for item in row), default=DEFAULT_FONT_SIZE_PT)
+                    height = w._paragraph_renderer.line_height_mm(size, para.paragraph_format)
+                    lines.append(_CellLine(height, segments=row, align=align))
+                segments.clear()
+
+            if para.paragraph_format.space_before:
+                lines.append(_CellLine(para.paragraph_format.space_before * PT_TO_MM))
+            visible = {id(run) for run in visible_runs(para)}
+            for item in para._children:
+                if isinstance(item, ldm.Run) and id(item) in visible and not item.font.hidden:
+                    apply_run_font(pdf, item.font)
+                    text = w._run_renderer._resolve_run_text(pdf, item.text).replace("\t", " ").replace("\f", "")
+                    for chunk, link in extract_link_segments(apply_caps(text, item.font)):
+                        chunk = safe_text(chunk)
+                        if chunk:
+                            segments.append((item, chunk, pdf.get_string_width(chunk), pdf.font_size_pt, link))
+                elif isinstance(item, ldm.Shape):
+                    flush()
+                    if item.has_image and item.image_data and item.image_data.image_bytes:
+                        image_w = (item.width or DEFAULT_SHAPE_DIM_PT) * PT_TO_MM
+                        image_h = (item.height or DEFAULT_SHAPE_DIM_PT) * PT_TO_MM
+                        if image_w <= 0 or image_h <= 0:
+                            raise ValueError("Table image dimensions must be positive")
+                        scale = min(1.0, width / image_w)
+                        lines.append(_CellLine(image_h * scale, image=item, width=image_w * scale, align=align))
+                    if item.text_box:
+                        nested_cell = ldm.Cell(paragraphs=item.text_box.get("paragraphs", []))
+                        lines.extend(self._cell_lines(pdf, nested_cell, width))
+            flush()
+            if not para._children:
+                lines.append(_CellLine(DEFAULT_FONT_SIZE_PT * PT_TO_MM * LINE_HEIGHT_FACTOR))
+            if para.paragraph_format.space_after:
+                lines.append(_CellLine(para.paragraph_format.space_after * PT_TO_MM))
+            if len(lines) > first_line:
+                lines[first_line].paragraph = para
+        # ponytail: the LDM loses paragraph/table interleaving in cells; nested tables follow cell paragraphs.
+        for table in cell.tables:
+            count = max((sum(c.cell_format.grid_span for c in row.cells) for row in table.rows), default=0)
+            if not count:
+                continue
+            widths = self._compute_col_widths(table, count, width)
+            for i, row in enumerate(table.rows):
+                layout = self._layout_row(pdf, row, widths)
+                lines.append(_CellLine(self._row_height(row, layout), nested=(table, i, layout)))
+        reset_font(pdf)
+        return lines
+
+    def _row_height(self, row, layout):
+        height = DEFAULT_FONT_SIZE_PT * MIN_ROW_HEIGHT_FACTOR
+        for cell, _, _, _, lines in layout:
+            top, _, bottom, _ = self._padding(cell)
+            height = max(height, sum(line.height for line in lines) + top + bottom)
+        return max(height, row.row_format.height * PT_TO_MM if row else 0)
+
+    def _paint_row(self, pdf, table, row_index, layout, x, y, height):
+        w = self._writer
+        table_borders = self._table_level_borders(table)
+        style_borders = self._inherited_table_borders(table)
+        num_cols = max(sum(c.cell_format.grid_span for c in row.cells) for row in table.rows)
+        previous_auto, previous_margin = pdf.auto_page_break, pdf.b_margin
+        previous_cell_margin = pdf.c_margin
+        pdf.set_auto_page_break(False)
+        pdf.c_margin = 0
+        try:
+            for cell, col, span, width, lines in layout:
+                top, right, bottom, left = self._padding(cell)
                 cf = cell.cell_format
-
-                cell_x = table_x + sum(col_widths[:i])
-
-                # Draw cell background
                 bg_color = parse_color(cf.shading.background_pattern_color)
                 if bg_color:
                     pdf.set_fill_color(*bg_color)
-                    pdf.rect(cell_x, row_y, cw, row_height, "F")
-
-                self._draw_cell_borders(
-                    pdf, cell, table_level_borders, style_borders,
-                    row_idx, i, num_rows, num_cols,
-                    cell_x, row_y, cw, row_height,
-                )
-
-                # Cell padding
-                pad_left = (
-                    cf.left_padding * PT_TO_MM if cf.left_padding else DEFAULT_CELL_PAD_LEFT_MM
-                )
-                pad_top = cf.top_padding * PT_TO_MM if cf.top_padding else DEFAULT_CELL_PAD_TOP_MM
-
-                # Render cell text
-                text = safe_text(cell_text(cell))
-                line_h = DEFAULT_FONT_SIZE_PT * DEFAULT_CELL_LINE_H_FACTOR
-
-                with w._tag(pdf, "/TD"):
-                    first_font = self._get_cell_first_font(cell)
-                    if first_font:
-                        apply_run_font(pdf, first_font)
-                    else:
-                        reset_font(pdf)
-
-                    if cf.orientation in _VERTICAL_ORIENTATIONS:
-                        self._render_rotated_cell(
-                            pdf, text, cell_x, row_y, cw, row_height,
-                            pad_left, pad_top, line_h, cf.orientation,
-                        )
-                    elif not cf.wrap_text:
-                        with pdf.rect_clip(cell_x, row_y, cw, row_height):
-                            pdf.set_xy(cell_x + pad_left, row_y + pad_top)
-                            pdf.cell(
-                                w=cw - 2 * pad_left,
-                                h=line_h,
-                                text=text,
-                            )
-                    else:
-                        usable_w = cw - 2 * pad_left
-                        pdf.set_xy(cell_x + pad_left, row_y + pad_top)
-                        # multi_cell raises if the usable width is smaller
-                        # than one glyph; clip the text in that case.
-                        if usable_w > 0:
-                            try:
-                                pdf.multi_cell(w=usable_w, h=line_h, text=text)
-                            except FPDFException:
-                                with pdf.rect_clip(cell_x, row_y, cw, row_height):
-                                    pdf.set_xy(cell_x + pad_left, row_y + pad_top)
-                                    pdf.cell(w=usable_w, h=line_h, text=text)
-                reset_font(pdf)
-
-            # Move to next row
-            pdf.set_xy(table_x, row_y + row_height)
-
-        if table_pad_bottom:
-            pdf.ln(table_pad_bottom)
-        else:
-            pdf.ln(POST_TABLE_SPACING_MM)
+                    pdf.rect(x, y, width, height, "F")
+                next_merged = False
+                if row_index + 1 < len(table.rows):
+                    next_merged = any(c == col and candidate.cell_format.vertical_merge == 2
+                                      for candidate, c, _ in self._row_cells(table.rows[row_index + 1]))
+                self._draw_cell_borders(pdf, cell, table_borders, style_borders,
+                    row_index, col, len(table.rows), num_cols, x, y, width, height,
+                    last_col=col + span - 1, suppress_top=cf.vertical_merge == 2,
+                    suppress_bottom=next_merged and cf.vertical_merge in (1, 2))
+                content_height = sum(line.height for line in lines)
+                free = max(0, height - top - bottom - content_height)
+                at_y = y + top + (free / 2 if cf.vertical_alignment == 1 else free if cf.vertical_alignment == 2 else 0)
+                with w._tag(pdf, "/TH" if table.rows[row_index].row_format.heading_format else "/TD"):
+                    with pdf.rect_clip(x + left, y + top, width - left - right, height - top - bottom):
+                        # q/Q restores the PDF font, but fpdf2 can retain the clip's cached font flag.
+                        pdf.current_font_is_set_on_page = False
+                        for line in lines:
+                            offset = max(0, width - left - right - (line.width if line.image else sum(s[2] for s in line.segments)))
+                            at_x = x + left + (offset / 2 if line.align == "C" else offset if line.align == "R" else 0)
+                            pdf.set_xy(at_x, at_y)
+                            if line.paragraph:
+                                register_bookmarks(pdf, line.paragraph, w._anchor_links)
+                                w._paragraph_renderer._emit_bookmark_outlines(pdf, line.paragraph)
+                                pf = line.paragraph.paragraph_format
+                                if pf.is_heading and w.options.outline_options.create_outlines_for_headings_in_tables:
+                                    w._paragraph_renderer._emit_heading_outline(pdf, cell_text(cell), pf.outline_level + 1)
+                            if line.rotated_text is not None:
+                                font = self._get_cell_first_font(cell)
+                                if font:
+                                    apply_run_font(pdf, font)
+                                self._render_rotated_cell(pdf, line.rotated_text, x, y, width, height,
+                                                          left, top, DEFAULT_FONT_SIZE_PT * DEFAULT_CELL_LINE_H_FACTOR,
+                                                          cf.orientation)
+                            elif line.image:
+                                data = w._shape_renderer.compress_image_bytes(line.image.image_data.image_bytes)
+                                pdf.image(BytesIO(data), x=at_x, y=at_y, w=line.width, h=line.height)
+                            elif line.nested:
+                                nested_table, nested_index, nested_layout = line.nested
+                                self._paint_row(pdf, nested_table, nested_index, nested_layout, x + left, at_y, line.height)
+                            elif line.segments:
+                                w._run_renderer._render_segment_row(pdf, line.segments, line.height, DEFAULT_FONT_SIZE_PT, at_x=at_x)
+                            at_y += line.height
+                x += width
+        finally:
+            pdf.set_auto_page_break(previous_auto, previous_margin)
+            pdf.c_margin = previous_cell_margin
+            pdf.set_y(y)
+            reset_font(pdf)
+            pdf.current_font_is_set_on_page = False
 
     def _render_floating_table(self, pdf: FPDF, table: ldm.Table) -> None:
         """Draw a `w:tblpPr` floating table without disturbing the cursor.
@@ -269,6 +410,7 @@ class TableRenderer:
         pdf.set_xy(float_x, float_y)
 
         attrs_holder = table._tblp_pr_attrs
+        table_bottom = saved_y
         table._tblp_pr_attrs = {}  # avoid recursion
         try:
             self.render_table(pdf, table)
@@ -299,66 +441,39 @@ class TableRenderer:
 
     @staticmethod
     def _compute_col_widths(table: ldm.Table, num_cols: int, usable_w: float) -> list[float]:
-        """Compute column widths from cell formats or distribute evenly."""
+        """Distribute spanning-cell widths across their actual grid columns."""
+        if num_cols > MAX_TABLE_COLUMNS:
+            raise ValueError("Table has too many grid columns")
+        if usable_w <= 0:
+            raise ValueError("No usable table width")
+        preferred = table.preferred_width
+        if preferred.type == 1 and preferred.value > 0:
+            usable_w *= min(preferred.value, 100) / 100
+        elif preferred.type == 2 and preferred.value > 0:
+            usable_w = min(usable_w, preferred.value * PT_TO_MM)
         widths = [0.0] * num_cols
-        has_explicit = False
         for row in table.rows:
-            for i, cell in enumerate(row.cells):
-                if i >= num_cols:
-                    break
-                w = cell.cell_format.width
-                if w > 0:
-                    w_mm = w * PT_TO_MM
-                    widths[i] = max(widths[i], w_mm)
-                    has_explicit = True
-
-        if not has_explicit:
-            return [usable_w / num_cols] * num_cols
-
-        total_explicit = sum(w for w in widths if w > 0)
-        zero_count = sum(1 for w in widths if w == 0)
-        if zero_count > 0 and total_explicit < usable_w:
-            fill = (usable_w - total_explicit) / zero_count
-            widths = [w if w > 0 else fill for w in widths]
-
+            for cell, col, span in TableRenderer._row_cells(row):
+                if cell.cell_format.width > 0:
+                    each = cell.cell_format.width * PT_TO_MM / span
+                    for index in range(col, min(col + span, num_cols)):
+                        widths[index] = max(widths[index], each)
         total = sum(widths)
-        if total > usable_w and total > 0:
-            scale = usable_w / total
-            widths = [w * scale for w in widths]
-
+        if not total:
+            return [usable_w / num_cols] * num_cols
+        zero_count = widths.count(0)
+        if zero_count:
+            fill = max(usable_w - total, usable_w / num_cols * zero_count) / zero_count
+            widths = [width or fill for width in widths]
+        total = sum(widths)
+        if total > usable_w:
+            widths = [width * usable_w / total for width in widths]
         return widths
 
     def _compute_row_height(
         self, pdf: FPDF, row: ldm.Row, col_widths: list[float], num_cols: int
     ) -> float:
-        """Estimate row height based on text content."""
-        min_h = DEFAULT_FONT_SIZE_PT * MIN_ROW_HEIGHT_FACTOR
-        max_h = min_h
-        for i, cell in enumerate(row.cells):
-            if i >= num_cols:
-                break
-            text = cell_text(cell)
-            cw = col_widths[i]
-            cf = cell.cell_format
-            pad_top = cf.top_padding * PT_TO_MM if cf.top_padding else DEFAULT_CELL_PAD_TOP_MM
-            pad_left = cf.left_padding * PT_TO_MM if cf.left_padding else DEFAULT_CELL_PAD_LEFT_MM
-            line_h = DEFAULT_FONT_SIZE_PT * DEFAULT_CELL_LINE_H_FACTOR
-            if cf.orientation in _VERTICAL_ORIENTATIONS:
-                text_w = self._measure_text_width(pdf, text, cell)
-                h = text_w + 2 * pad_top
-                max_h = max(max_h, h)
-            elif not cf.wrap_text:
-                h = line_h + 2 * pad_top
-                max_h = max(max_h, h)
-            elif cw > 2 * pad_left + 1:
-                inner_w = cw - 2 * pad_left
-                num_lines = self._estimate_wrap_lines(pdf, text, cell, inner_w)
-                h = num_lines * line_h + 2 * pad_top
-                max_h = max(max_h, h)
-        if row.row_format.height > 0:
-            explicit_h = row.row_format.height * PT_TO_MM
-            max_h = max(max_h, explicit_h)
-        return max_h
+        return self._row_height(row, self._layout_row(pdf, row, col_widths))
 
     @staticmethod
     def _render_rotated_cell(
@@ -414,31 +529,11 @@ class TableRenderer:
         finally:
             pdf.set_font(prev_family, prev_style, prev_size)
 
-    def _estimate_wrap_lines(
-        self, pdf: FPDF, text: str, cell: ldm.Cell, inner_w: float
-    ) -> int:
-        """Number of lines *text* takes when wrapped to *inner_w* (mm)."""
-        if not text:
-            return 1
-        lines = 0
-        for source_line in text.split("\n"):
-            if not source_line:
-                lines += 1
-                continue
-            line_w = self._measure_text_width(pdf, source_line, cell)
-            if line_w <= inner_w:
-                lines += 1
-            else:
-                lines += max(1, int(line_w / inner_w + 0.999))
-        return max(1, lines)
-
     @staticmethod
     def _cell_has_borders(cell: ldm.Cell) -> bool:
-        """Return True when the cell requests any visible borders."""
-        for border in cell.cell_format.borders or ():
-            if border.line_style != LineStyle.NONE or border.line_width > 0:
-                return True
-        return False
+        """Kept for the writer\'s backward-compatible helper alias."""
+        return any(border.line_style != LineStyle.NONE or border.line_width > 0
+                   for border in cell.cell_format.borders or ())
 
     @staticmethod
     def _border_is_visible(border: Optional[ldm.Border]) -> bool:
@@ -513,6 +608,10 @@ class TableRenderer:
         y: float,
         w: float,
         h: float,
+        *,
+        last_col: Optional[int] = None,
+        suppress_top: bool = False,
+        suppress_bottom: bool = False,
     ) -> None:
         """Draw cell sides using cell → table-level → style cascade."""
         cell_borders = cell.cell_format.borders or []
@@ -534,9 +633,13 @@ class TableRenderer:
         )
         right = self._resolve_cell_side(
             cell_borders, table_level_borders, style_borders,
-            _B_RIGHT, _B_INSIDE_V, col_idx == num_cols - 1,
+            _B_RIGHT, _B_INSIDE_V, (last_col if last_col is not None else col_idx) == num_cols - 1,
         )
 
+        if suppress_top:
+            top = None
+        if suppress_bottom:
+            bottom = None
         if not any((top, left, bottom, right)):
             return
 

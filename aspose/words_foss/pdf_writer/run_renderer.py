@@ -9,6 +9,8 @@ import re
 from typing import Optional, Tuple, Union
 
 from fpdf import FPDF
+# ponytail: fpdf2 bidi/line-break internals require regression checks when upgrading fpdf2.
+from fpdf.line_break import MultiLineBreak
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.pdf_writer.color import parse_color
@@ -70,7 +72,7 @@ class RunRenderer:
         # the number.
         has_tab = any("\t" in (r.text or "") for r in runs)
         # For non-left alignment, use multi_cell which supports align
-        if align != "L" or (has_tab and is_toc):
+        if align != "L" or (has_tab and is_toc) or pdf.text_shaping:
             self.render_formatted_runs_aligned(
                 pdf, runs, align=align, line_h_override=line_h_override, is_toc=is_toc, pf=pf
             )
@@ -327,6 +329,8 @@ class RunRenderer:
         """Wrap styled Unicode runs using actual glyph widths, retaining every character."""
         if width <= 0:
             raise ValueError("No usable text width")
+        if pdf.text_shaping:
+            return RunRenderer._wrap_shaped_segments(pdf, segments, width, first_width)
         saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else ""), pdf.font_size_pt)
         rows, row, used = [], [], 0.0
         available = width if first_width is None else max(0.0, first_width)
@@ -364,6 +368,31 @@ class RunRenderer:
             if saved_font[0]:
                 pdf.set_font(*saved_font)
         return rows
+
+    @staticmethod
+    def _wrap_shaped_segments(pdf: FPDF, segments: list, width: float, first_width) -> list:
+        """Use fpdf2\'s shaping-aware line breaker, including fallback-font metrics."""
+        saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else ""), pdf.font_size_pt)
+        fragments = []
+        try:
+            for index, (run, text, _, size, _) in enumerate(segments):
+                apply_run_font(pdf, run.font, default_size=size)
+                for fragment in pdf._preload_bidirectional_text(text, False):
+                    fragment.link = index  # Keep source-run identity across native fragment clones.
+                    fragments.append(fragment)
+            breaker = MultiLineBreak(fragments, width, margins=(0, 0),
+                                     first_line_indent=0 if first_width is None else width - first_width)
+            rows = []
+            while line := breaker.get_line():
+                row = []
+                for fragment in line.get_ordered_fragments():
+                    run, _, _, size, link = segments[fragment.link]
+                    row.append((run, fragment.string, fragment.get_width(), size, link))
+                rows.append(row)
+            return rows or [[]]
+        finally:
+            if saved_font[0]:
+                pdf.set_font(*saved_font)
 
     def _render_segment_row(
         self,

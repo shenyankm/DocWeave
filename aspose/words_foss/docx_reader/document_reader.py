@@ -9,7 +9,7 @@ ShapeParserMixin, respectively.
 
 import posixpath
 import zipfile
-import warnings
+from aspose.words_foss.diagnostics import warn
 from io import BytesIO
 from pathlib import Path
 from typing import Optional, Union, BinaryIO, Iterator
@@ -182,14 +182,26 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 self._footer_data.append((ftr_xml, ftr_rels))
 
         unsupported = {W_NS + name for name in (
-            "footnoteReference", "endnoteReference", "commentReference", "object", "altChunk"
+            "footnoteReference", "endnoteReference", "commentReference", "object", "altChunk",
+            "ins", "del", "moveFrom", "moveTo", "fldSimple", "sdt", "oMath", "oMathPara"
         )}
         roots = [self._document_xml] + [root for root, _ in self._header_data + self._footer_data]
         found = {node.tag[len(W_NS):] for root in roots for node in root.iter()
                  if node.tag in unsupported}
         if found:
-            warnings.warn("DOCX constructs are not retained: " + ", ".join(sorted(found)),
-                          DocumentLoadWarning, stacklevel=3)
+            warn("DOCX constructs are not fully retained: " + ", ".join(sorted(found)),
+                 DocumentLoadWarning, stacklevel=3, location="word/document.xml and headers/footers")
+
+        references = list(self._document_xml.iter(W_NS + "headerReference")) + list(
+            self._document_xml.iter(W_NS + "footerReference"))
+        for kind in ("headerReference", "footerReference"):
+            refs = [node for node in references if node.tag == W_NS + kind]
+            if (any(node.get(W_NS + "type", "default") != "default" for node in refs)
+                    or len({node.get(R_NS + "id") for node in refs}) > 1):
+                warn("Per-section, first-page or even-page headers/footers are flattened by "
+                     "the light document model", DocumentLoadWarning, stacklevel=3,
+                     code="load.header_footer_flattened", location="word/document.xml/sectPr")
+                break
 
     def _parse_numbering(self) -> None:
         """Parse numbering definitions from numbering.xml."""

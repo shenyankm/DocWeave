@@ -1,14 +1,9 @@
-"""
-RTF File Reader - Reads RTF files saved in OLE2/DOC binary format.
-
-Many RTF files produced by Microsoft Word are actually stored in the
-Word 97-2003 binary format (OLE2). This reader delegates to DocFileReader
-for parsing, providing transparent RTF support alongside DOC and DOCX.
-"""
+"""Read OLE2/DOC files carrying an .rtf suffix, not standard text RTF."""
 
 from pathlib import Path
 from typing import Optional, Union, BinaryIO, Iterator
 
+from aspose.words_foss._io import check_input_size, read_bounded
 from aspose.words_foss.doc_reader import DocFileReader
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.docx_reader import (
@@ -24,8 +19,8 @@ class RtfFileReader:
     Reads RTF files (OLE2-format) and produces the same data structures
     as DocumentReader (for .docx) and DocFileReader (for .doc).
 
-    Delegates to DocFileReader since many .rtf files from Word
-    are stored in the OLE2 binary format.
+    Standard text RTF is rejected with a native-conversion hint.
+    An OLE2 file renamed to .rtf is handled by DocFileReader.
     """
 
     def __init__(self):
@@ -33,14 +28,24 @@ class RtfFileReader:
 
     def load_file(self, filepath: Union[str, Path]) -> None:
         """Load .rtf from file path."""
-        self._delegate.load_file(filepath)
+        check_input_size(Path(filepath).stat().st_size)
+        with Path(filepath).open("rb") as stream:
+            self.load_stream(stream)
 
     def load_stream(self, stream: BinaryIO) -> None:
         """Load .rtf from stream."""
-        self._delegate.load_stream(stream)
+        self.load_bytes(read_bounded(stream))
 
     def load_bytes(self, data: bytes) -> None:
         """Load .rtf from bytes."""
+        check_input_size(len(data))
+        if not data.startswith(b"\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1"):
+            raise ValueError(
+                "Standard text RTF is not supported by the builtin reader. "
+                "Use aspose.words_foss.libreoffice.convert_to_pdf(original_path, output_path) "
+                "or the CLI --backend libreoffice for PDF conversion. "
+                "Only OLE2/DOC-backed .rtf files can be loaded into the light document model."
+            )
         self._delegate.load_bytes(data)
 
     def _iterate_body_elements(self) -> Iterator[Union[ParagraphData, TableData]]:
