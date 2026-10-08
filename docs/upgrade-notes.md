@@ -171,8 +171,10 @@ python ApiExamples/template_report.py template.docx context.json report.docx rep
 ## 7. 工程与性能验证
 
 - 增加 `py.typed`；发行版本提升为 `26.7.0.post2`，支持 Python 3.10–3.14（<3.15）。
-- GitHub Actions：Linux / Windows / macOS × Python 3.10–3.14。
-  验证源码测试/示例、构建 wheel、卸载 editable 包，并从源码目录外验证已安装 wheel。
+- GitHub Actions 精简为 4 个组合：Linux Python 3.10/3.14、Windows 3.14、macOS 3.14。
+  保留版本两端和三平台覆盖，中间 Python 版本不在每次提交中运行。
+  每组构建 wheel、卸载 editable 包，在源码目录外检查已安装 wheel，并仅跑一次完整测试/示例；
+  不再重复运行源码测试，字体/许可/typing/实际导入位置检查保留。
   Windows 不支持的 POSIX 进程边界测试会显式 skip，不宣称跨平台提供相同隔离级别。
 - `scripts/check_wheel.py` 校验真正从 site-packages 导入、版本、typing 标记、
   四个字体样式与 OFL 许可资源。

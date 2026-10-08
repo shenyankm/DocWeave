@@ -201,7 +201,7 @@ See [upgrade notes](docs/upgrade-notes.md#5-可选多语言塑形) for usage and
 
 ### Native and System Requirements
 
-- Requires Python 3.10–3.14 (`pyproject.toml` caps at `<3.15`). CI is configured for each supported version on Linux, Windows and macOS; this does not establish that the matrix has passed. Actual local verification results and untested platforms are listed in the [optimization report](docs/optimization-report.md).
+- Requires Python 3.10–3.14 (`pyproject.toml` caps at `<3.15`). CI uses four representative combinations: Linux with Python 3.10/3.14, Windows with 3.14, and macOS with 3.14. Each builds and checks the installed wheel, then runs the full regression suite and examples once outside the checkout; intermediate Python versions are not tested on every push. This configuration does not establish that the matrix has passed. Actual local verification results and untested platforms are listed in the [optimization report](docs/optimization-report.md).
 
 ### Development Dependencies
 
