@@ -3,7 +3,7 @@
 [![Unofficial fork](https://img.shields.io/badge/status-unofficial_enhanced_fork-orange.svg)](#fork-status-and-upstream-differences) [![Code license: MIT](https://img.shields.io/badge/code_license-MIT-blue.svg)](LICENSE) [![Font license: OFL-1.1](https://img.shields.io/badge/font_license-OFL--1.1-blue.svg)](aspose/words_foss/pdf_writer/fonts/OFL.txt)
 
 > **非官方增强版说明：** 本仓库基于官方 Aspose.Words FOSS for Python 项目进行增强，
-> 不是 Aspose 官方发布版。当前主要增强是中文/Unicode PDF 导出；字体、排版、依赖和
+> 不是 Aspose 官方发布版。当前增强包括中文/Unicode PDF、排版修复、诊断及受限转换入口；字体、依赖和
 > 许可证构成与所基于的官方版本存在差异。请安装本仓库的 `dev` 分支，并以本文档和
 > 本仓库测试为准；官方 PyPI 包和官方文档不能代表本增强版的行为。
 
@@ -26,6 +26,7 @@ Library code remains MIT-licensed; bundled PDF fonts are separately OFL-1.1-lice
 - [Installation](#installation)
 - [Dependencies](#dependencies)
 - [Quick Start](#quick-start)
+- [Enhanced Conversion and Safety](docs/enhanced-conversion.md)
 - [Additional Examples](#additional-examples)
 - [API Reference](#api-reference)
 - [Documentation & Resources](#documentation--resources)
@@ -46,9 +47,12 @@ release**. Fork changes are maintained independently on
 | Chinese / Unicode PDF text | Latin-1 conversion replaced unsupported characters, including Chinese, with `?` | Preserves Unicode and common Simplified/Traditional Chinese, mixed Latin text, and punctuation |
 | PDF fonts | Word font names mapped to built-in PDF core fonts | Bundled Document Sans SC fonts are subset-embedded; no system-font installation is needed |
 | Font styling and layout | Core serif/sans/monospace substitution and x-height scaling | One Unicode family for all text, including code blocks; dedicated bold and derived oblique faces. Original font families, monospace metrics, and pagination can differ |
-| Runtime dependency | Declared `fpdf2>=2.7.5` | Requires `fpdf2>=2.8.1`, verified with the renderer's `text=` API |
-| Tests | API example suite | Adds Chinese DOCX/PDF regression tests for text preservation, font embedding, styles, tables, headers/footers, and two-page output; PDF checks use the `pypdf` dev dependency |
-| Distribution and licensing | MIT-licensed library code | MIT code plus OFL-1.1 font resources; four font files add approximately 41 MiB before compression |
+| Layout | Approximate paragraph height; space-oriented highlight wrapping | Glyph-width wrapping for Chinese highlights/aligned runs; measured paragraph height and largest-run line height |
+| Diagnostics and safety | Limited loss diagnostics and unrestricted reads | Missing-glyph/fallback and explicit unsupported-option warnings; bounded reads, guarded resources, atomic main-file output |
+| Optional conversion | Built-in LDM renderer | Separate original-file LibreOffice entry point and bounded single-job POSIX CLI |
+| Runtime dependency | Declared `fpdf2>=2.7.5` | Requires `fpdf2>=2.8.9` for WOFF fonts; hardened XML and image checks use existing transitive dependencies explicitly |
+| Tests | API example suite | Adds Unicode, independent raster/layout, diagnostics, limits and subprocess failure regression tests |
+| Distribution and licensing | MIT-licensed library code | `aspose-words-foss-enhanced` / `26.7.0.post1`; MIT code plus OFL-1.1 fonts; full-coverage WOFF resources total about 25 MiB |
 
 This is a targeted PDF enhancement, not full Word layout compatibility or a replacement for the
 commercial product. Existing unsupported formats/options remain unsupported; see
@@ -89,8 +93,8 @@ flowchart TD
 
 - Open any supported input with a single `Document(filepath)` constructor — the concrete reader is
   chosen automatically from the `.docx`/`.doc`/`.rtf`/`.md`/`.txt` file extension.
-- Read DOCX with a pure-Python parser built on the standard library `zipfile`/`xml.etree` modules —
-  no compiled dependencies.
+- Read DOCX with a pure-Python parser using `zipfile` and entity-protected `defusedxml`;
+  embedded raster-image dimensions are checked with Pillow.
 - Read legacy Word 97-2003 `.doc` binary files via `olefile`, and RTF documents through the same
   OLE2 delegation path.
 - Parse Markdown on import with `MarkdownReader`, not just read it as literal text — headings, lists,
@@ -137,19 +141,20 @@ pip install -e ".[dev]"
 ```
 
 **`pip install aspose-words-foss` installs the upstream PyPI distribution, not this fork.**
-This fork currently retains upstream's distribution name (`aspose-words-foss`), import namespace
-(`aspose.words_foss`), and version (`26.7.0`). Upstream and this fork cannot be installed side by
-side in the same environment; the version string alone does not identify which one is installed.
-Use separate environments and record the source commit. Installing/upgrading the PyPI package can
-replace the enhanced build.
+This fork uses the distinct distribution name **`aspose-words-foss-enhanced`** and version
+**`26.7.0.post1`**, but retains the compatible import namespace **`aspose.words_foss`**.
+It is distributed from this Git repository; do not assume a same-named PyPI package is this fork.
+The shared import namespace still prevents safe side-by-side installation with upstream.
+Use a clean environment (or uninstall upstream first); pip does not detect this namespace collision.
+Installing/upgrading either distribution can overwrite shared modules, and uninstalling either can remove them.
 
 Requires Python 3.10–3.12; runtime dependencies install automatically via pip — see
 [Dependencies](#dependencies) below.
 
-Verify the import (this checks availability, not fork provenance):
+Verify the enhanced version, distribution metadata, and imported upstream revision:
 
 ```bash
-python -c "import aspose.words_foss as aw; print(aw.__version__)"
+python -c "import aspose.words_foss as aw; from importlib.metadata import version; print(aw.__version__, version('aspose-words-foss-enhanced'), aw.__upstream_revision__)"
 ```
 
 ## Dependencies
@@ -157,8 +162,10 @@ python -c "import aspose.words_foss as aw; print(aw.__version__)"
 ### Required Package Dependencies
 
 - `olefile` >=0.46 — reads legacy Word 97-2003 .doc binary files and RTF documents via OLE2 delegation.
-- `fpdf2` >=2.8.1 — backs the built-in PDF renderer.
+- `fpdf2` >=2.8.9 — backs the built-in PDF renderer and compressed WOFF font support.
 - `pydantic` >=2.0.0 — the typed model layer for the parsed document model.
+- `defusedxml` >=0.7.1 — rejects XML entity expansion in DOCX/SVG input.
+- `Pillow` >=10.0.0 — validates raster-image dimensions and supports rendering.
 
 ### Native and System Requirements
 
@@ -166,7 +173,7 @@ python -c "import aspose.words_foss as aw; print(aw.__version__)"
 
 ### Development Dependencies
 
-- `Pillow>=10.0.0` — used by the `dev` extra's example/test tooling for image-containing documents.
+- `PyMuPDF>=1.24.0` — independently rasterizes PDFs and checks text bounds in layout tests.
 - `pytest>=9.0.2` — the test runner used to execute `tests/` and `ApiExamples/`.
 - `pypdf>=5.0.0` — checks PDF links, extracted Unicode text, and embedded fonts in tests.
 
@@ -192,6 +199,10 @@ import aspose.words_foss as aw
 doc = aw.Document("report.docx")
 doc.save("report.pdf", aw.SaveFormat.PDF)
 ```
+
+See [enhanced conversion and safety](docs/enhanced-conversion.md) for fallback fonts, diagnostic
+warnings, input limits, atomic saves, the bounded CLI, and optional original-file LibreOffice rendering.
+These are fork extensions, not upstream API guarantees.
 
 More runnable scripts — covering every input/output format combination, `MarkdownSaveOptions`, PDF
 export, plain-text export, and image-containing documents — are collected in
@@ -611,9 +622,10 @@ shared Light Document Model, summarized in the module-grouped table below.
 - `LdmPdfWriter.write(doc, output_path) -> None`
 - `PdfSaveOptions` — `compliance`, `export_document_structure`, `image_compression`,
   `jpeg_quality`, `zoom_factor`, `zoom_behavior`, `export_bookmarks_outline`, `outline_options`,
-  `display_doc_title` (all applied by the writer); `text_compression`, `embed_full_fonts`,
+  `display_doc_title`, `fallback_fonts`; `compliance` selects the PDF version, not PDF/A or PDF/UA
+  conformance. `text_compression`, `embed_full_fonts`,
   `use_core_fonts`, `font_embedding_mode`, `page_mode`, `color_mode`, `preserve_form_fields`, and
-  `memory_optimization` (accepted but not yet consumed — see
+  `memory_optimization` (accepted but not implemented; explicit assignment warns — see
   [Scope and Limitations](#scope-and-limitations))
 - `ParagraphRenderer`, `RunRenderer`, `TableRenderer`, `ShapeRenderer` — the internal rendering
   pipeline `LdmPdfWriter` drives, built on `fpdf2`
@@ -668,9 +680,9 @@ shared Light Document Model, summarized in the module-grouped table below.
   `{\rtf...}` files. This inherited limitation is unchanged by the PDF enhancement.
 - PDF export substitutes the bundled Document Sans SC family for source fonts, including code
   blocks. Bold uses a dedicated bold face; italic uses a derived oblique face. Original font
-  families, monospace metrics, and exact Word pagination are not preserved. These four static
-  font resources add approximately 41 MiB before package compression. Characters outside the
-  font's coverage (for example, many emoji) are not supported.
+  families, monospace metrics, and exact Word pagination are not preserved. The four full-coverage
+  WOFF resources total approximately 25 MiB. Missing characters warn; configure trusted fallback
+  fonts or treat the warning as an error. Emoji and complex-script rendering are not universally supported.
 - `SaveFormat.DOC` is defined as a save-format constant for API compatibility with the commercial
   product, but `Document.save()` does not implement a DOC writer — `.doc` files can be read, not
   written. Saving with an unsupported target raises `ValueError` (`Markdown`, `Text`, `PDF`, and
@@ -679,10 +691,13 @@ shared Light Document Model, summarized in the module-grouped table below.
   not implemented — the writer raises `NotImplementedError` rather than silently emitting
   non-strict output. Use `ECMA376_2006` or `ISO29500_2008_TRANSITIONAL` instead, both of which this
   edition treats as producing the same, compliant output.
-- Of `PdfSaveOptions`'s 17 fields, 8 — `text_compression`, `embed_full_fonts`, `use_core_fonts`,
+- Eight `PdfSaveOptions` fields — `text_compression`, `embed_full_fonts`, `use_core_fonts`,
   `font_embedding_mode`, `page_mode`, `color_mode`, `preserve_form_fields`, and
   `memory_optimization` — exist for API forward-compatibility with the commercial Aspose.Words
-  API and are not yet consumed by the PDF writer.
+  API and are not applied by the PDF writer; explicit assignments emit `PdfUnsupportedOptionWarning`.
+- Input limits, local-image opt-in, new-file permissions, resource isolation and optional native-backend
+  restrictions are documented in [enhanced conversion and safety](docs/enhanced-conversion.md).
+  These checks are not a complete security sandbox or a full Word compatibility validator.
 
 For DOC writing, strict ISO 29500 compliance, and the additional load/save formats and page-layout
 features beyond this edition's scope, see
