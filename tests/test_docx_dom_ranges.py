@@ -4,7 +4,7 @@ from io import BytesIO
 
 import pytest
 from defusedxml.ElementTree import fromstring
-from test_docx_dom import package, payloads
+from .test_docx_dom import package, payloads
 
 import aspose.words_foss as aw
 from aspose.words_foss.dom import TextRange

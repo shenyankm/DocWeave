@@ -20,7 +20,9 @@ from pypdf import PdfReader
 import aspose.words_foss as aw
 from aspose.words_foss import _io, light_document_model as ldm
 from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import PdfMissingGlyphWarning, PdfUnsupportedOptionWarning
+from aspose.words_foss.pdf_writer import (
+    PdfContentLossWarning, PdfMissingGlyphWarning, PdfUnsupportedOptionWarning,
+)
 from aspose.words_foss.pdf_writer.paragraph_renderer import ParagraphRenderer
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -232,7 +234,8 @@ def test_real_fallback_font_is_embedded_with_its_actual_outline(tmp_path):
     output = tmp_path / "fallback.pdf"
     with warnings.catch_warnings():
         warnings.simplefilter("error", PdfMissingGlyphWarning)
-        aw.Document(source).save(output, options)
+        with pytest.warns(PdfContentLossWarning, match="needs text_shaping=True"):
+            aw.Document(source).save(output, options)
     embedded = []
     for ref in PdfReader(output).pages[0]["/Resources"]["/Font"].values():
         descriptor = ref.get_object()["/DescendantFonts"][0].get_object()["/FontDescriptor"]

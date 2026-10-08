@@ -5,6 +5,7 @@ import pytest
 from pypdf import PdfReader
 
 import aspose.words_foss as aw
+from aspose.words_foss.pdf_writer import PdfFontSubstitutionWarning
 from aspose.words_foss.pdf_writer.text import safe_text
 
 
@@ -22,7 +23,8 @@ def test_chinese_docx_to_pdf(tmp_path):
     output = tmp_path / "chinese.pdf"
     doc = aw.Document(source)
     assert "你好世界，简体中文与繁體中文。English ABC 123" in doc.get_text()
-    doc.save(output, aw.SaveFormat.PDF)
+    with pytest.warns(PdfFontSubstitutionWarning, match="Sources: Cambria, SimSun"):
+        doc.save(output, aw.SaveFormat.PDF)
 
     pdf = PdfReader(output)
     assert len(pdf.pages) == 2
