@@ -22,7 +22,9 @@ from aspose.words_foss.model.enums import (  # noqa: F401 — re-export for aw.P
     Underline,
 )
 
-__version__ = "26.7.0"
+__version__ = "26.7.0.post1"
+__upstream_version__ = "26.7.0"
+__upstream_revision__ = "2d2efee2787cb9e56d071d17f8d7b740dce8b784"
 __all__ = [
     "Document",
     "SaveFormat",

@@ -1,6 +1,6 @@
 [project]
-name = "aspose-words-foss"
-version = "26.7.0"
+name = "aspose-words-foss-enhanced"
+version = "26.7.0.post1"
 description = "Unofficial enhanced fork of Aspose.Words FOSS with Chinese/Unicode PDF export"
 readme = "README.md"
 license = "MIT AND OFL-1.1"
@@ -15,8 +15,10 @@ keywords = [
 requires-python = ">=3.10,<3.13"
 dependencies = [
     "olefile>=0.46",
-    "fpdf2>=2.8.1",
-    "pydantic>=2.0.0"
+    "fpdf2>=2.8.9",
+    "pydantic>=2.0.0",
+    "defusedxml>=0.7.1",
+    "Pillow>=10.0.0"
 ]
 
 classifiers = [
@@ -42,9 +44,9 @@ Upstream = "https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python"
 
 [project.optional-dependencies]
 dev = [
-    "Pillow>=10.0.0",
     "pytest>=9.0.2",
     "pypdf>=5.0.0",
+    "PyMuPDF>=1.24.0",
 ]
 
 [tool.pytest.ini_options]
