@@ -1,0 +1,39 @@
+name: Tests
+on: [push, pull_request]
+permissions:
+  contents: read
+env:
+  PYTHONUTF8: '1'
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e ".[dev,shaping]" build docxtpl
+      - run: python -m pytest tests -q
+      - run: python -m pytest ApiExamples -q --rootdir=ApiExamples -c ApiExamples/pytest.ini
+      - run: python -m build --wheel --outdir wheelhouse
+      - name: Install the wheel, not the checkout
+        shell: bash
+        run: |
+          python -m pip uninstall -y aspose-words-foss-enhanced
+          python -m pip install --no-deps wheelhouse/*.whl
+      - name: Check installed resources and imports
+        working-directory: ${{ runner.temp }}
+        run: python "${{ github.workspace }}/scripts/check_wheel.py"
+      - name: Test installed wheel outside the checkout
+        working-directory: ${{ runner.temp }}
+        run: python -m pytest "${{ github.workspace }}/tests" -q --import-mode=importlib
+      - name: Test examples against the installed wheel
+        working-directory: ${{ runner.temp }}
+        run: python -m pytest "${{ github.workspace }}/ApiExamples" -q --rootdir="${{ github.workspace }}/ApiExamples" -c "${{ github.workspace }}/ApiExamples/pytest.ini" --import-mode=importlib
