@@ -261,49 +261,24 @@ def _render_cell(
 ) -> str:
     """Render a single LDM cell.
 
-    OOXML allows tables to nest inside cells (``w:tc/w:tbl``), and the
-    reader populates ``cell.tables``.  We emit those alongside the
-    cell's paragraphs; per the spec the cell must still end with a
-    paragraph, so a synthetic empty ``<w:p>`` is appended when the
-    cell holds *only* nested tables.
+    Keep the source paragraph/table interleaving; append an empty paragraph
+    only when needed to satisfy the OOXML cell-ending invariant.
     """
     children: list[str] = []
     tcPr = _tcPr(cell)
     if tcPr:
         children.append(tcPr)
 
-    has_content = bool(cell.paragraphs or cell.tables)
-    for p in cell.paragraphs:
-        children.append(
-            render_paragraph(
-                p,
-                rels,
-                num_id_map=num_id_map,
-                image_state=image_state,
-                bookmark_state=bookmark_state,
-                style_pf_map=style_pf_map,
-                style_id_map=style_id_map,
-                style_font_map=style_font_map,
-            )
-        )
-    for t in cell.tables:
-        children.append(
-            render_table(
-                t,
-                rels,
-                num_id_map=num_id_map,
-                image_state=image_state,
-                bookmark_state=bookmark_state,
-                style_pf_map=style_pf_map,
-                style_id_map=style_id_map,
-                style_font_map=style_font_map,
-            )
-        )
+    content = cell.children
+    for child in content:
+        render = render_paragraph if isinstance(child, ldm.Paragraph) else render_table
+        children.append(render(
+            child, rels, num_id_map=num_id_map, image_state=image_state,
+            bookmark_state=bookmark_state, style_pf_map=style_pf_map,
+            style_id_map=style_id_map, style_font_map=style_font_map,
+        ))
 
-    # OOXML requires every w:tc to end with a w:p.  Append a placeholder
-    # paragraph after a trailing nested table, or as the only child if
-    # the cell is empty.
-    needs_trailing_p = (not has_content) or bool(cell.tables)
+    needs_trailing_p = not content or not isinstance(content[-1], ldm.Paragraph)
     if needs_trailing_p:
         children.append(el("w:p"))
     return el("w:tc", None, children)

@@ -2,7 +2,7 @@
 
 import re
 import unicodedata
-from aspose.words_foss.diagnostics import ContentLossWarning, ConversionWarning, document_nodes, header_footer_losses, warn
+from aspose.words_foss.diagnostics import ContentLossWarning, ConversionWarning, document_nodes, header_footer_losses, source_story_losses, warn
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_NAME
@@ -62,7 +62,7 @@ def warn_about_conversion(pdf, doc, options, fallback_families):
             stacklevel=3,
         )
 
-    for code, message in header_footer_losses(doc):
+    for code, message in (*header_footer_losses(doc), *source_story_losses(doc)):
         warn(message, PdfContentLossWarning, stacklevel=3, code="pdf." + code)
     source_fonts, missing, unknown = set(), set(), False
     needs_shaping = False

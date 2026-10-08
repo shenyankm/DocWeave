@@ -62,6 +62,13 @@ def header_footer_losses(doc):
         yield "header_footer_variant", "First-page/even-page header/footer variants are omitted"
 
 
+def source_story_losses(doc):
+    if (any(story.kind in {"footnote", "endnote"} for story in doc.source_stories) or
+            any(getattr(node, "note_references", None) for node in document_nodes(doc))):
+        yield "notes_omitted", ("Footnotes/endnotes and their references/placement are omitted from this output; "
+                               "extracted content, when present, remains available in structured source_stories")
+
+
 def document_nodes(doc):
     """Walk model nodes, including unknown body nodes and text-box paragraphs."""
     from aspose.words_foss import light_document_model as ldm

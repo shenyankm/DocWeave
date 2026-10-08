@@ -12,6 +12,7 @@ from typing import Optional
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss._links import format_link
 from aspose.words_foss._visible_runs import HORIZONTAL_RULE_SHAPE_TYPE
 from aspose.words_foss.docx_reader.constants import (
     PAGE_FIELD_SENTINEL,
@@ -250,6 +251,11 @@ class ParagraphBuilder:
         if tracker.suppress_cached:
             return
         self._extract_drawings(child, para, image_rels)
+        for kind in ("footnote", "endnote"):
+            for reference in child.findall(W_NS + kind + "Reference"):
+                identifier = reference.get(W_NS + "id", "")
+                if identifier:
+                    para.note_references.append(ldm.NoteReference(kind=kind, identifier=identifier))
         run = self._run_builder.build(child, para_style_id)
         if not run.text:
             return
@@ -353,7 +359,8 @@ class ParagraphBuilder:
         para_style_id: str,
     ) -> None:
         run = ldm.Run()
-        run.text = f"[{link_text}]({url})" if url else link_text
+        run.text = format_link(link_text, url) if url else link_text
+        run.is_hyperlink = bool(url)
         run.font = self._font_resolver.resolve(head_rPr, para_style_id)
         para._children.append(run)
 

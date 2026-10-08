@@ -18,13 +18,8 @@ from aspose.words_foss.docx_writer.constants import (
 )
 from aspose.words_foss.docx_writer.xml_utils import el, text_run
 from aspose.words_foss.model.style_identifiers import IDENTIFIER_TO_STYLE_ID
+from aspose.words_foss._links import INLINE_LINK_RE, decode_link
 
-# Known limitation: the label group uses ``[^\]]+`` so labels with a
-# nested ``]`` (e.g. ``"[a [b]](url)"``) don't match and the run is
-# left as literal text.  This isn't a regression — the readers don't
-# produce those either — but a future fix could switch to a manual
-# bracket-matching scan if real fixtures show up.
-_MD_LINK_RE = re.compile(r"^\[([^\]]+)\]\(([^)]+)\)(\t.+)?$")
 _HEX_COLOR_RE = re.compile(r"Color \[A=(?P<a>\d+), R=(?P<r>\d+), G=(?P<g>\d+), B=(?P<b>\d+)\]")
 _RAW_HEX_RE = re.compile(r"^[0-9A-Fa-f]{6}$")
 
@@ -429,11 +424,14 @@ def render_run(
     if run.text == PAGE_FIELD_SENTINEL:
         return _render_page_field_run(run)
     if not instr:
-        m = _MD_LINK_RE.match(run.text)
-        if m and _URL_RE.match(m.group(2)):
-            parts = _render_hyperlink_run(m.group(1), m.group(2), run, rels, base_font=base_font)
-            if m.group(3):
-                suffix_run = ldm.Run(text=m.group(3), font=run.font)
-                parts += _render_plain_run(suffix_run, base_font=base_font)
-            return parts
+        token, separator, suffix = run.text.partition("\t")
+        match = INLINE_LINK_RE.fullmatch(token)
+        if match:
+            label, target = decode_link(match)
+            if _URL_RE.match(target):
+                parts = _render_hyperlink_run(label, target, run, rels, base_font=base_font)
+                if separator:
+                    suffix_run = ldm.Run(text=separator + suffix, font=run.font)
+                    parts += _render_plain_run(suffix_run, base_font=base_font)
+                return parts
     return _render_plain_run(run, base_font=base_font, instr=instr)

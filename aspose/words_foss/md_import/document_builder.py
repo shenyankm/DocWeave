@@ -445,10 +445,7 @@ class MarkdownDocumentBuilder:
             return
         font = self._snapshot_font()
         children = self.current_paragraph._children
-        if children and isinstance(children[-1], ldm.Run) and children[-1].font == font:
-            children[-1].text += display
-        else:
-            children.append(ldm.Run(text=display, font=font))
+        children.append(ldm.Run(text=display, font=font, is_hyperlink=True))
 
     # ------------------------------------------------------------------
     # Footnotes

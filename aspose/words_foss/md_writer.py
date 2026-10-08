@@ -14,7 +14,8 @@ from pathlib import Path
 from typing import NamedTuple, Optional
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.diagnostics import ContentLossWarning, document_nodes, warn
+from aspose.words_foss._links import INLINE_LINK_RE
+from aspose.words_foss.diagnostics import ContentLossWarning, document_nodes, source_story_losses, warn
 from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_runs
 from aspose.words_foss.md_import.document_builder import (
     _link_destination,
@@ -175,6 +176,11 @@ class LdmMarkdownWriter:
         if any(isinstance(node, ldm.UnknownNode) for node in document_nodes(doc)):
             warn("Unknown document nodes are omitted from Markdown", ContentLossWarning,
                  code="markdown.unknown_node")
+        for code, message in source_story_losses(doc):
+            warn(message, ContentLossWarning, code="markdown." + code)
+        if any(isinstance(node, ldm.Cell) and node.tables for node in document_nodes(doc)):
+            warn("Nested tables are flattened to ordered cell text in Markdown", ContentLossWarning,
+                 code="markdown.nested_table_flattened")
         self._list_indents.clear()
         self._reference_links.clear()
         self._image_counter = 0
@@ -736,19 +742,7 @@ class LdmMarkdownWriter:
     # Run conversion
     # ------------------------------------------------------------------
 
-    # Regex for pre-rendered inline links: [text](url)
-    # Destination and title exactly as the spec spells them: a bracketed
-    # destination or one that holds no whitespace, then at most one quoted
-    # title.  Anything looser turns text that only looks like a link -- an
-    # unquoted title, a stray paren -- into a reference and tears it in half.
-    # An image is left inline: its reference form would need a definition of
-    # its own, and MarkdownImageWriter writes the source in place instead.
-    _INLINE_LINK_RE = re.compile(
-        r"(?<!!)\[((?:\\.|[^\[\]\\])+)\]"
-        r"\((<[^<>\n]*>|(?:\\.|[^\s()\\]|\((?:\\.|[^()\\])*\))*)"
-        r"((?:[ \t]+(?:\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|\((?:\\.|[^()\\])*\)))?)"
-        r"[ \t]*\)"
-    )
+    _INLINE_LINK_RE = INLINE_LINK_RE
 
     def _convert_runs(
         self,
@@ -1298,16 +1292,24 @@ class LdmMarkdownWriter:
             return self._convert_table_as_html(table)
 
         # Determine number of columns
-        num_cols = max(len(row.cells) for row in table.rows)
+        num_cols = max((sum(span for _, _, span in ldm.iter_grid_cells(row))
+                        for row in table.rows), default=0)
+        if not num_cols:
+            return ""
+        if any(cell.cell_format.grid_span > 1 or cell.cell_format.horizontal_merge or
+               cell.cell_format.vertical_merge for row in table.rows for cell in row.cells):
+            warn("Merged cells are expanded to a rectangular Markdown grid; merge geometry is lost",
+                 ContentLossWarning, code="markdown.table_merge")
 
         # Extract cell texts and alignments
         cell_data: list[list[tuple[str, str]]] = []
         for row in table.rows:
             row_cells: list[tuple[str, str]] = []
-            for cell in row.cells:
+            for cell, _, span in ldm.iter_grid_cells(row):
                 text = self._extract_cell_text(cell)
                 align = self._resolve_cell_alignment(cell)
                 row_cells.append((text, align))
+                row_cells.extend(("", align) for _ in range(span - 1))
             cell_data.append(row_cells)
 
         # Column widths
@@ -1347,46 +1349,30 @@ class LdmMarkdownWriter:
         return "\n".join(lines)
 
     def _extract_cell_text(self, cell: ldm.Cell) -> str:
-        parts: list[str] = []
-        for para in cell.paragraphs:
-            if para._children:
-                # Preserve XML element order using content_sequence
-                para_parts: list[str] = []
-                for item in para._children:
-                    if isinstance(item, ldm.Shape) and item.has_image and item.image_data:
-                        para_parts.append(self._render_image(item))
-                    elif isinstance(item, ldm.Run):
-                        text = item.text or ""
-                        if text:
-                            fmt = self._get_run_formatting(item)
-                            para_parts.append(
-                                self._apply_formatting(
-                                    text, fmt, False, style_name=item.font.style_name
-                                )
-                            )
-                if para_parts:
-                    parts.append("".join(para_parts))
-            else:
-                # Legacy path: images first, then text runs
-                for item in para._children:
-                    if isinstance(item, ldm.Shape) and item.has_image and item.image_data:
-                        parts.append(self._render_image(item))
-                run_parts: list[str] = []
-                for run in visible_runs(para):
-                    text = run.text or ""
-                    if text:
-                        fmt = self._get_run_formatting(run)
-                        text = self._apply_formatting(
-                            text, fmt, False, style_name=run.font.style_name
-                        )
-                        run_parts.append(text)
-                if run_parts:
-                    parts.append("".join(run_parts))
+        def paragraphs(current):
+            for child in current.children:
+                if isinstance(child, ldm.Paragraph):
+                    yield child
+                else:
+                    for row in child.rows:
+                        for nested, _, _ in ldm.iter_grid_cells(row):
+                            yield from paragraphs(nested)
 
-        result = " ".join(parts)
-        result = result.replace("|", "\\|")
-        result = result.replace("\n", " ").replace("\r", " ")
-        return result.strip()
+        parts = []
+        for para in paragraphs(cell):
+            visible = {id(run) for run in visible_runs(para) if not run.font.hidden}
+            para_parts = []
+            for item in para._children:
+                if isinstance(item, ldm.Shape) and item.has_image and item.image_data:
+                    para_parts.append(self._render_image(item))
+                elif isinstance(item, ldm.Run) and id(item) in visible and item.text:
+                    para_parts.append(self._apply_formatting(
+                        item.text, self._get_run_formatting(item), False,
+                        style_name=item.font.style_name,
+                    ))
+            if para_parts:
+                parts.append("".join(para_parts))
+        return " ".join(parts).replace("|", "\\|").replace("\n", " ").replace("\r", " ").strip()
 
     @staticmethod
     def _cell_alignment(cell: ldm.Cell) -> str:

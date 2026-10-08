@@ -10,13 +10,14 @@ def _paragraph(node: ldm.Paragraph, location: str) -> dict:
     runs = [{"text": apply_caps(text, run.font), "link": link, "bold": run.font.bold,
              "italic": run.font.italic, "size": run.font.size}
             for run in visible_runs(node) if not run.font.hidden
-            for text, link in extract_link_segments(run.text)]
+            for text, link in (extract_link_segments(run.text) if run.is_hyperlink else [(run.text, None)])]
     result = {
         "type": "paragraph", "location": location,
         "text": "".join(run["text"] for run in runs), "style": pf.style_name,
         "heading_level": pf.outline_level + 1 if pf.is_heading else None,
         "list": node.list_format.model_dump() if node.list_format else None,
         "runs": runs,
+        "note_references": [reference.model_dump() for reference in node.note_references],
         "images": [{"alternative_text": item.alternative_text,
                     "width_pt": item.width, "height_pt": item.height}
                    for item in node._children if isinstance(item, ldm.Shape) and item.has_image],
@@ -38,6 +39,8 @@ def _block(node, location: str) -> dict:
                     "grid_span": cell.cell_format.grid_span,
                     "horizontal_merge": cell.cell_format.horizontal_merge,
                     "vertical_merge": cell.cell_format.vertical_merge,
+                    "blocks": [_block(child, f"{path}.children[{i}]")
+                               for i, child in enumerate(cell.children)],
                     "paragraphs": [_paragraph(p, f"{path}.paragraphs[{i}]")
                                    for i, p in enumerate(cell.paragraphs)],
                     "tables": [_block(t, f"{path}.tables[{i}]")
@@ -60,6 +63,11 @@ def export_document(doc: ldm.Document, source: str | None) -> dict:
                 "blocks": [_block(node, f"{path}.headers_footers[{i}].children[{j}]")
                            for j, node in enumerate(hf.children)],
             })
-    # ponytail: the LDM separates cell paragraphs/tables; source interleaving and page coordinates are unavailable.
+    source_stories = [{
+        "kind": story.kind, "part_name": story.part_name, "identifier": story.identifier,
+        "references": story.references,
+        "blocks": [_block(node, f"source_stories[{i}].children[{j}]")
+                   for j, node in enumerate(story.children)],
+    } for i, story in enumerate(doc.source_stories)]
     return {"schema_version": 1, "source": source, "blocks": blocks,
-            "headers_footers": headers_footers}
+            "headers_footers": headers_footers, "source_stories": source_stories}

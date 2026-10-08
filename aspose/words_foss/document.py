@@ -27,7 +27,9 @@ from typing import Optional, Union, BinaryIO
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._io import atomic_output, check_input_size, read_bounded
 from aspose.words_foss.models import ConversionOptions
-from aspose.words_foss.diagnostics import ConversionDiagnostic, collect_diagnostics
+from aspose.words_foss.diagnostics import (
+    ContentLossWarning, ConversionDiagnostic, collect_diagnostics, source_story_losses, warn,
+)
 from aspose.words_foss.reader_factory import create_reader
 from aspose.words_foss.saving import (
     MarkdownSaveOptions,
@@ -456,7 +458,7 @@ class Document:
                 docx_options = save_format_or_options if isinstance(save_format_or_options, OoxmlSaveOptions) else None
                 return LdmDocxWriter(docx_options).write_to_bytes(doc)
             if fmt == SaveFormat.TEXT:
-                return doc.text.encode("utf-8")
+                return self._render_text(doc).encode("utf-8")
             raise ValueError("Unsupported save format; supported formats: Markdown, Text, PDF, DOCX")
 
     def to_dict(self) -> dict:
@@ -509,13 +511,16 @@ class Document:
         with atomic_output(output_path) as temporary:
             temporary.write_text(markdown, encoding=encoding, newline="")
 
+    def _render_text(self, doc):
+        for code, message in source_story_losses(doc):
+            warn(message, ContentLossWarning, code="text." + code)
+        return doc.text
+
     def _save_as_text(self, output_path: Path, doc: ldm.Document) -> None:
-        """Extract plain text from the LDM and save."""
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        # Preserve the LDM's exact line endings on Windows by disabling
-        # universal-newline translation.
+        """Extract body text, including tables; publish only after loss checks."""
+        text = self._render_text(doc)
         with atomic_output(output_path) as temporary:
-            temporary.write_text(doc.text, encoding="utf-8", newline="")
+            temporary.write_text(text, encoding="utf-8", newline="")
 
     def _save_as_pdf(
         self,

@@ -5,7 +5,8 @@ from typing import Optional, Tuple
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._visible_runs import visible_runs
-from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_SIZE_PT, INLINE_LINK_RE
+from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_SIZE_PT
+from aspose.words_foss._links import INLINE_LINK_RE, decode_link
 from aspose.words_foss.pdf_writer.color import parse_color
 
 def safe_text(text: str) -> str:
@@ -15,12 +16,14 @@ def safe_text(text: str) -> str:
 
 def extract_link_segments(text: str) -> list[Tuple[str, Optional[str]]]:
     """Split ``text`` into ``(chunk, url)`` segments around Markdown links."""
+    if "[" not in text:
+        return [(text, None)]
     segments: list[Tuple[str, Optional[str]]] = []
     idx = 0
     for m in INLINE_LINK_RE.finditer(text):
         if m.start() > idx:
             segments.append((text[idx : m.start()], None))
-        display, url = m.group(1), m.group(2)
+        display, url = decode_link(m)
         segments.append((display, url))
         idx = m.end()
     if idx < len(text):
@@ -39,9 +42,16 @@ def plain_text(para: ldm.Paragraph) -> str:
     """Return paragraph text with Markdown link syntax stripped and ``w:caps`` applied."""
     return "".join(
         apply_caps(chunk, run.font)
-        for run in visible_runs(para)
+        for run in visible_runs(para) if not run.font.hidden
         for chunk, _ in extract_link_segments(run.text or "")
     )
+
+
+def source_plain_text(para: ldm.Paragraph) -> str:
+    """Visible source text without interpreting ordinary runs as Markdown links."""
+    return "".join(apply_caps(chunk, run.font) for run in visible_runs(para) if not run.font.hidden
+                   for chunk, _ in (extract_link_segments(run.text) if run.is_hyperlink
+                                    else [(run.text, None)]))
 
 
 def cell_text(cell: ldm.Cell) -> str:

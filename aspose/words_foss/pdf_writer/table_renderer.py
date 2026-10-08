@@ -187,22 +187,7 @@ class TableRenderer:
 
     @staticmethod
     def _row_cells(row):
-        col, i = 0, 0
-        while i < len(row.cells):
-            cell = row.cells[i]
-            span = cell.cell_format.grid_span
-            i += 1
-            if cell.cell_format.horizontal_merge == 1:
-                paragraphs, tables = list(cell.paragraphs), list(cell.tables)
-                while i < len(row.cells) and row.cells[i].cell_format.horizontal_merge == 2:
-                    following = row.cells[i]
-                    span += following.cell_format.grid_span
-                    paragraphs.extend(following.paragraphs)
-                    tables.extend(following.tables)
-                    i += 1
-                cell = cell.model_copy(update={"paragraphs": paragraphs, "tables": tables})
-            yield cell, col, span
-            col += span
+        return ldm.iter_grid_cells(row)
 
     def _layout_row(self, pdf, row, widths):
         layout = []
@@ -225,7 +210,17 @@ class TableRenderer:
             text = safe_text(cell_text(cell))
             height = max(self._measure_text_width(pdf, text, cell), DEFAULT_FONT_SIZE_PT * MIN_ROW_HEIGHT_FACTOR)
             return [_CellLine(height, rotated_text=text)]
-        for para in cell.paragraphs:
+        for child in cell.children:
+            if isinstance(child, ldm.Table):
+                count = max((sum(c.cell_format.grid_span for c in row.cells)
+                             for row in child.rows), default=0)
+                if count:
+                    widths = self._compute_col_widths(child, count, width)
+                    for i, row in enumerate(child.rows):
+                        layout = self._layout_row(pdf, row, widths)
+                        lines.append(_CellLine(self._row_height(row, layout), nested=(child, i, layout)))
+                continue
+            para = child
             first_line = len(lines)
             segments = []
             align = FPDF_ALIGN.get(para.paragraph_format.alignment, "L")
@@ -270,15 +265,6 @@ class TableRenderer:
                 lines.append(_CellLine(para.paragraph_format.space_after * PT_TO_MM))
             if len(lines) > first_line:
                 lines[first_line].paragraph = para
-        # ponytail: the LDM loses paragraph/table interleaving in cells; nested tables follow cell paragraphs.
-        for table in cell.tables:
-            count = max((sum(c.cell_format.grid_span for c in row.cells) for row in table.rows), default=0)
-            if not count:
-                continue
-            widths = self._compute_col_widths(table, count, width)
-            for i, row in enumerate(table.rows):
-                layout = self._layout_row(pdf, row, widths)
-                lines.append(_CellLine(self._row_height(row, layout), nested=(table, i, layout)))
         reset_font(pdf)
         return lines
 

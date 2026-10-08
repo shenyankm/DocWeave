@@ -58,6 +58,7 @@ class LdmBuilderMixin:
         if self._doc_default_rPr is not None:
             doc.doc_defaults_font = self._fonts_builder.build(self._doc_default_rPr)
 
+        self._populate_source_stories(doc)
         self._populate_headers_footers(doc)
         return doc
 
@@ -156,14 +157,24 @@ class LdmBuilderMixin:
         if getattr(self, "_paragraph_builder", None) is None:
             self._install_builders()
 
+    def _populate_source_stories(self, doc):
+        for kind, name, identifier, root, references in self._source_story_data:
+            _, children = self._build_part_children(
+                [(root, self._part_images[name])],
+                anchor_mode=kind if kind in {"header", "footer"} else "body",
+                hyperlink_rels=self._part_links[name],
+            )
+            doc.source_stories.append(ldm.SourceStory(
+                kind=kind, part_name=name, identifier=identifier,
+                references=references, children=children,
+            ))
+
     def _populate_headers_footers(self, doc: ldm.Document) -> None:
-        """Build header/footer children and attach them to every section."""
-        hdr_paras, hdr_children = self._build_part_children(
-            self._header_data, anchor_mode="header"
-        )
-        ftr_paras, ftr_children = self._build_part_children(
-            self._footer_data, anchor_mode="footer"
-        )
+        """Keep legacy conversion semantics; source_stories retains section variants."""
+        hdr_children = [child for story in doc.source_stories if story.kind == "header"
+                        for child in story.children]
+        ftr_children = [child for story in doc.source_stories if story.kind == "footer"
+                        for child in story.children]
         for sec in doc.sections:
             if hdr_children:
                 sec.headers_footers.append(
@@ -179,13 +190,18 @@ class LdmBuilderMixin:
         parts: list[tuple[ET.Element, dict[str, str]]],
         *,
         anchor_mode: str,
+        hyperlink_rels=None,
     ) -> tuple[list[ldm.Paragraph], list[ldm.BodyChild]]:
         paragraphs: list[ldm.Paragraph] = []
         children: list[ldm.BodyChild] = []
         self._anchor_y_base_mode = anchor_mode  # type: ignore[attr-defined]
+        previous_links, previous_images = self._rels, self._doc_image_rels
         try:
+            if hyperlink_rels is not None:
+                self._rels = hyperlink_rels
             for part_xml, part_rels in parts:
-                for elem in part_xml:
+                self._doc_image_rels = part_rels
+                for elem in self._resolve_body_children(part_xml):
                     if elem.tag == f"{W_NS}p":
                         p = self._paragraph_builder.build(elem, part_rels)
                         paragraphs.append(p)
@@ -193,6 +209,7 @@ class LdmBuilderMixin:
                     elif elem.tag == f"{W_NS}tbl":
                         children.append(self._table_builder.build(elem))
         finally:
+            self._rels, self._doc_image_rels = previous_links, previous_images
             self._anchor_y_base_mode = "body"  # type: ignore[attr-defined]
         return paragraphs, children
 

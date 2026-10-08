@@ -243,10 +243,13 @@ class CellBuilder:
         if tcPr is not None:
             cell.cell_format = self._build_cell_format(tcPr, default_paddings)
 
-        for p_elem in tc_elem.findall(f"{W_NS}p"):
-            cell.paragraphs.append(self._paragraph_builder(p_elem))
-        for nested_tbl in tc_elem.findall(f"{W_NS}tbl"):
-            cell.tables.append(self._table_builder.build(nested_tbl))
+        for child in self._ctx._resolve_body_children(tc_elem):
+            if child.tag == f"{W_NS}p":
+                cell.paragraphs.append(self._paragraph_builder(child))
+                cell.content_order.append("paragraph")
+            elif child.tag == f"{W_NS}tbl":
+                cell.tables.append(self._table_builder.build(child))
+                cell.content_order.append("table")
         return cell
 
     def _build_cell_format(

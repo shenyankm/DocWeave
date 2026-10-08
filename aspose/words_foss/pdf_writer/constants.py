@@ -7,6 +7,8 @@ across the pdf_writer sub-modules.
 
 import re
 
+from aspose.words_foss._links import INLINE_LINK_RE as INLINE_LINK_RE
+
 from aspose.words_foss.model.enums import ParagraphAlignment
 from aspose.words_foss.saving import PdfCompliance
 
@@ -117,9 +119,6 @@ COLOR_RE = re.compile(
 
 # Hex color strings like "#007DA4" or "007DA4"
 HEX_COLOR_RE = re.compile(r"^#?([0-9A-Fa-f]{6})$")
-
-# Inline Markdown link syntax: "[display](url)"
-INLINE_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 # ---------------------------------------------------------------------------
 # Lookup dicts

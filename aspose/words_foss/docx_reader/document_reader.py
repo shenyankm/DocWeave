@@ -7,7 +7,8 @@ and shape parsing are provided by the LdmBuilderMixin and
 ShapeParserMixin, respectively.
 """
 
-import posixpath
+from aspose.words_foss._opc import relationships_path, resolve_target
+from aspose.words_foss._links import format_link
 import zipfile
 from aspose.words_foss.diagnostics import warn
 from io import BytesIO
@@ -67,6 +68,9 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         self._doc_image_rels: dict[str, str] = {}  # rId -> "word/media/..."
         self._header_data: list[tuple[ET.Element, dict[str, str]]] = []
         self._footer_data: list[tuple[ET.Element, dict[str, str]]] = []
+        self._part_links: dict[str, dict[str, str]] = {}
+        self._part_images: dict[str, dict[str, str]] = {}
+        self._source_story_data = []
         # Theme font mapping: theme name -> resolved font name
         self._theme_fonts: dict[str, str] = {}
         # Theme color mapping: scheme color name (accent1, dk1, lt1, hlink,
@@ -105,6 +109,8 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
     def _load_from_zip(self, zf: zipfile.ZipFile) -> None:
         """Extract and parse XML from DOCX archive."""
         validate_docx_archive(zf)
+        self.__dict__.clear()
+        self.__init__()
         namelist = set(zf.namelist())
 
         # Load all media files (images)
@@ -118,74 +124,109 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         with zf.open("word/document.xml") as f:
             self._document_xml = parse(f).getroot()
 
-        # Parse theme (for font resolution)
-        if "word/theme/theme1.xml" in namelist:
-            with zf.open("word/theme/theme1.xml") as f:
-                self._parse_theme(parse(f).getroot())
-
-        # Parse styles.xml (optional)
-        if "word/styles.xml" in namelist:
-            with zf.open("word/styles.xml") as f:
-                self._styles_xml = parse(f).getroot()
-            self._build_style_id_map()
-            self._parse_doc_defaults()
-
-        # Parse settings.xml (optional)
-        if "word/settings.xml" in namelist:
-            with zf.open("word/settings.xml") as f:
-                self._settings_xml = parse(f).getroot()
-
-        # Parse numbering.xml (optional)
-        if "word/numbering.xml" in namelist:
-            with zf.open("word/numbering.xml") as f:
-                self._numbering_xml = parse(f).getroot()
-            self._parse_numbering()
-
-        # Parse document relationships (hyperlinks + images + headers/footers)
-        rels_path = "word/_rels/document.xml.rels"
-        header_targets: list[str] = []
-        footer_targets: list[str] = []
-        if rels_path in namelist:
-            with zf.open(rels_path) as f:
-                rels_root = parse(f).getroot()
-            for rel in rels_root.findall(f"{_PKG_RELS_NS}Relationship"):
-                rid = rel.get("Id", "")
-                target = rel.get("Target", "")
-                rel_type = rel.get("Type", "")
-                target_mode = rel.get("TargetMode", "")
-                if not rid or not target:
-                    continue
-                if target_mode == "External":
+        relationships = self._read_relationships(zf, "word/document.xml", namelist)
+        targets = {}
+        stories = []
+        for rid, rel_type, target, mode in relationships:
+            kind = rel_type.rsplit("/", 1)[-1]
+            if mode == "External":
+                if kind == "hyperlink":
                     self._rels[rid] = target
-                elif rel_type.endswith("/image"):
-                    raw = f"word/{target}" if not target.startswith("/") else target.lstrip("/")
-                    self._doc_image_rels[rid] = posixpath.normpath(raw)
-                elif rel_type.endswith("/header"):
-                    header_targets.append(f"word/{target}")
-                elif rel_type.endswith("/footer"):
-                    footer_targets.append(f"word/{target}")
+                continue
+            if kind not in {"theme", "styles", "settings", "numbering", "image",
+                            "header", "footer", "footnotes", "endnotes"}:
+                continue
+            name = resolve_target("word/document.xml", target)
+            if kind == "image":
+                self._doc_image_rels[rid] = name
+            elif kind in {"header", "footer", "footnotes", "endnotes"}:
+                stories.append((kind, rid, name))
+            else:
+                if kind in targets:
+                    raise ValueError("Duplicate document relationship: " + kind)
+                targets[kind] = name
 
-        # Parse header XML files and their rels
-        for hdr_path in header_targets:
-            if hdr_path in namelist:
-                with zf.open(hdr_path) as f:
-                    hdr_xml = parse(f).getroot()
-                hdr_rels = self._parse_part_image_rels(zf, hdr_path, namelist)
-                self._header_data.append((hdr_xml, hdr_rels))
+        for kind, fallback in (("theme", "word/theme/theme1.xml"), ("styles", "word/styles.xml"),
+                               ("settings", "word/settings.xml"), ("numbering", "word/numbering.xml")):
+            name = targets.get(kind, fallback)
+            if name not in namelist:
+                continue
+            with zf.open(name) as stream:
+                root = parse(stream).getroot()
+            if kind == "theme":
+                self._parse_theme(root)
+            elif kind == "styles":
+                self._styles_xml = root
+                self._build_style_id_map()
+                self._parse_doc_defaults()
+            elif kind == "settings":
+                self._settings_xml = root
+            else:
+                self._numbering_xml = root
+                self._parse_numbering()
 
-        # Parse footer XML files and their rels
-        for ftr_path in footer_targets:
-            if ftr_path in namelist:
-                with zf.open(ftr_path) as f:
-                    ftr_xml = parse(f).getroot()
-                ftr_rels = self._parse_part_image_rels(zf, ftr_path, namelist)
-                self._footer_data.append((ftr_xml, ftr_rels))
+        reference_map = {}
+        active = {}
+        body = self._document_xml.find(W_NS + "body")
+        section_properties = []
+        if body is not None:
+            for element in self._resolve_body_children(body):
+                section = element if element.tag == W_NS + "sectPr" else element.find(W_NS + "pPr/" + W_NS + "sectPr")
+                if section is not None:
+                    section_properties.append(section)
+        for index, section in enumerate(section_properties):
+            explicit = {}
+            for node in section:
+                if node.tag in {W_NS + "headerReference", W_NS + "footerReference"}:
+                    key = (node.tag[len(W_NS):], node.get(W_NS + "type", "default"))
+                    explicit[key] = node.get(R_NS + "id", "")
+            active.update(explicit)
+            for key, rid in active.items():
+                reference_map.setdefault(rid, []).append({
+                    "section": index, "variant": key[1],
+                    "inherited": key not in explicit,
+                })
+
+        seen_stories = set()
+        for kind, rid, name in stories:
+            if name not in namelist:
+                continue
+            if (kind, name) in seen_stories:
+                if kind in {"header", "footer"}:
+                    entry = next(item for item in self._source_story_data if item[0] == kind and item[1] == name)
+                    entry[4].extend(reference_map.get(rid, []))
+                continue
+            seen_stories.add((kind, name))
+            with zf.open(name) as stream:
+                root = parse(stream).getroot()
+            image_rels, links = self._part_resources(zf, name, namelist)
+            self._part_images[name] = image_rels
+            self._part_links[name] = links
+            if kind in {"header", "footer"}:
+                self._source_story_data.append((kind, name, None, root, reference_map.get(rid, [])))
+                parts = self._header_data if kind == "header" else self._footer_data
+                parts.append((root, image_rels))
+            else:
+                identifiers = set()
+                for note in root.findall(W_NS + kind[:-1]):
+                    identifier = note.get(W_NS + "id", "")
+                    if note.get(W_NS + "type", "normal") != "normal" or identifier.startswith("-"):
+                        continue
+                    if not identifier.isdecimal() or identifier in identifiers:
+                        raise ValueError("Invalid or duplicate note ID")
+                    identifiers.add(identifier)
+                    self._source_story_data.append((kind[:-1], name, identifier, note, []))
+        for name in self._doc_image_rels.values():
+            if name in namelist and name not in self._media:
+                data = zf.read(name)
+                validate_image(data)
+                self._media[name] = data
 
         unsupported = {W_NS + name for name in (
             "footnoteReference", "endnoteReference", "commentReference", "object", "altChunk",
             "ins", "del", "moveFrom", "moveTo", "fldSimple", "sdt", "oMath", "oMathPara"
         )}
-        roots = [self._document_xml] + [root for root, _ in self._header_data + self._footer_data]
+        roots = [self._document_xml] + [item[3] for item in self._source_story_data]
         found = {node.tag[len(W_NS):] for root in roots for node in root.iter()
                  if node.tag in unsupported}
         if found:
@@ -374,21 +415,40 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         self, zf: zipfile.ZipFile, part_path: str, namelist: set
     ) -> dict[str, str]:
         """Return {rId: media_path} for image rels of a given part (header/footer)."""
-        dirname, basename = part_path.rsplit("/", 1)
-        rels_path = f"{dirname}/_rels/{basename}.rels"
-        result: dict[str, str] = {}
-        if rels_path not in namelist:
-            return result
-        with zf.open(rels_path) as f:
-            rels_root = parse(f).getroot()
-        for rel in rels_root.findall(f"{_PKG_RELS_NS}Relationship"):
-            rid = rel.get("Id", "")
-            target = rel.get("Target", "")
-            rel_type = rel.get("Type", "")
-            if rid and target and rel_type.endswith("/image"):
-                full = posixpath.normpath(f"{dirname}/{target}")
-                result[rid] = full
+        return self._part_resources(zf, part_path, namelist)[0]
+
+    @staticmethod
+    def _read_relationships(zf, part_path, namelist):
+        name = relationships_path(part_path)
+        if name not in namelist:
+            return []
+        with zf.open(name) as stream:
+            root = parse(stream).getroot()
+        if root.tag != _PKG_RELS_NS + "Relationships":
+            raise ValueError("Expected an OPC relationships part")
+        result, ids = [], set()
+        for node in root.findall(_PKG_RELS_NS + "Relationship"):
+            rid, target = node.get("Id", ""), node.get("Target", "")
+            if not rid or rid in ids:
+                raise ValueError("Empty or duplicate relationship ID")
+            ids.add(rid)
+            if target:
+                result.append((rid, node.get("Type", ""), target, node.get("TargetMode", "")))
         return result
+
+    def _part_resources(self, zf, part_path, namelist):
+        images, links = {}, {}
+        for rid, rel_type, target, mode in self._read_relationships(zf, part_path, namelist):
+            if rel_type.endswith("/image") and mode != "External":
+                name = resolve_target(part_path, target)
+                images[rid] = name
+                if name in namelist and name not in self._media:
+                    data = zf.read(name)
+                    validate_image(data)
+                    self._media[name] = data
+            elif rel_type.endswith("/hyperlink") and mode == "External":
+                links[rid] = target
+        return images, links
 
     def _iterate_body_elements(self) -> Iterator[Union[ParagraphData, TableData]]:
         """Iterate over document body elements in order."""
@@ -464,7 +524,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                         link_text_parts.append(t_elem.text or "")
                 link_text = "".join(link_text_parts)
                 if link_text and url:
-                    run_data = RunData(text=f"[{link_text}]({url})")
+                    run_data = RunData(text=format_link(link_text, url))
                     data.runs.append(run_data)
                 elif link_text:
                     run_data = RunData(text=link_text)

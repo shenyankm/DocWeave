@@ -17,7 +17,7 @@ from dataclasses import dataclass
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._io import atomic_output
-from aspose.words_foss.diagnostics import ContentLossWarning, document_nodes, header_footer_losses, warn
+from aspose.words_foss.diagnostics import ContentLossWarning, document_nodes, header_footer_losses, source_story_losses, warn
 from aspose.words_foss.saving import (
     CompressionLevel,
     OoxmlCompliance,
@@ -53,7 +53,7 @@ def _warn_about_unsupported_constructs(doc: ldm.Document) -> None:
     if any(isinstance(node, ldm.UnknownNode) for node in document_nodes(doc)):
         warn("Unknown document nodes are omitted from DOCX", DocxWriterLossyWarning,
              stacklevel=3, code="docx.unknown_node")
-    for code, message in header_footer_losses(doc):
+    for code, message in (*header_footer_losses(doc), *source_story_losses(doc)):
         warn(message, DocxWriterLossyWarning, stacklevel=3, code="docx." + code)
 
 

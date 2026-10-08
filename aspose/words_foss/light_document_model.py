@@ -71,6 +71,9 @@ def _walk_children(node: object):
     container is covered. Derived properties (``Body.paragraphs``) are skipped
     deliberately: they are views over ``children`` and would double-count.
     """
+    if isinstance(node, Cell):
+        yield from node.children
+        return
     for child in getattr(node, "_children", None) or ():
         if type(child).__name__ in _NODE_TYPE_BY_CLASS:
             yield child
@@ -487,6 +490,7 @@ class ImageData(BaseModel):
 class Run(BaseModel, NodeCastMixin):
     type: str = Field(default="Run", alias="_type")
     text: str = ""
+    is_hyperlink: bool = False
     font: Font = Field(default_factory=Font)
 
     model_config = {"populate_by_name": True}
@@ -637,6 +641,11 @@ def _coerce_child_node(item: Any) -> ChildNode | None:
 # ─────────────────────────────────────────────
 
 
+class NoteReference(BaseModel):
+    kind: Literal["footnote", "endnote"]
+    identifier: str
+
+
 class Paragraph(BaseModel, NodeCastMixin):
     """A paragraph whose children — ``Run``, ``BookmarkStart`` / ``End``,
     ``FieldStart`` / ``Separator`` / ``End`` and inline ``Shape`` —
@@ -654,6 +663,7 @@ class Paragraph(BaseModel, NodeCastMixin):
     list_format: ListFormat | None = None
     list_label: Optional[ListLabel] = None
 
+    note_references: list[NoteReference] = Field(default_factory=list)
     _children: list[ChildNode] = PrivateAttr(default_factory=list)
 
     model_config = {"populate_by_name": True}
@@ -783,8 +793,36 @@ class Cell(BaseModel, NodeCastMixin):
     cell_format: CellFormat = Field(default_factory=CellFormat)
     paragraphs: list[Paragraph] = Field(default_factory=list)
     tables: list[Table] = Field(default_factory=list)
+    content_order: list[Literal["paragraph", "table"]] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
+
+    @model_validator(mode="before")
+    @classmethod
+    def _absorb_children(cls, data):
+        if isinstance(data, dict) and "children" in data:
+            data = dict(data)
+            children = [_parse_body_child(child) for child in data.pop("children")]
+            if any(not isinstance(child, (Paragraph, Table)) for child in children):
+                raise ValueError("Cell children must be paragraphs or tables")
+            data["paragraphs"] = [child for child in children if isinstance(child, Paragraph)]
+            data["tables"] = [child for child in children if isinstance(child, Table)]
+            data["content_order"] = ["paragraph" if isinstance(child, Paragraph) else "table"
+                                     for child in children]
+        return data
+
+    @property
+    def children(self) -> list[Paragraph | Table]:
+        """Ordered content; legacy list constructors retain paragraph-then-table order."""
+        paragraphs, tables = iter(self.paragraphs), iter(self.tables)
+        children = []
+        for kind in self.content_order:
+            child = next(paragraphs if kind == "paragraph" else tables, None)
+            if child is not None:
+                children.append(child)
+        children.extend(paragraphs)
+        children.extend(tables)
+        return children
 
 
 class RowFormat(BaseModel):
@@ -821,6 +859,32 @@ class Row(BaseModel, NodeCastMixin):
         if pw is not None and "preferred_width" not in data:
             data["preferred_width"] = pw
         return data
+
+
+def iter_grid_cells(row):
+    """Yield (cell, column, span), combining legacy horizontal-merge continuations."""
+    column, index = 0, 0
+    while index < len(row.cells):
+        cell = row.cells[index]
+        span = cell.cell_format.grid_span
+        index += 1
+        if cell.cell_format.horizontal_merge == 1:
+            children = list(cell.children)
+            while index < len(row.cells) and row.cells[index].cell_format.horizontal_merge == 2:
+                following = row.cells[index]
+                span += following.cell_format.grid_span
+                children.extend(following.children)
+                index += 1
+            cell = cell.model_copy(update={
+                "paragraphs": [child for child in children if isinstance(child, Paragraph)],
+                "tables": [child for child in children if isinstance(child, Table)],
+                "content_order": ["paragraph" if isinstance(child, Paragraph) else "table"
+                                  for child in children],
+            })
+        if column + span > MAX_TABLE_COLUMNS:
+            raise ValueError("Table grid exceeds the column limit")
+        yield cell, column, span
+        column += span
 
 
 class Table(BaseModel, NodeCastMixin):
@@ -1103,6 +1167,16 @@ class DocList(BaseModel):
 #   BuiltInProperties, TextColumns
 
 
+class SourceStory(BaseModel):
+    """Extracted source content, not a promise that conversion writers can render it."""
+
+    kind: Literal["footnote", "endnote", "header", "footer"]
+    part_name: str
+    identifier: str | None = None
+    references: list[dict[str, Any]] = Field(default_factory=list)
+    children: list[BodyChild] = Field(default_factory=list)
+
+
 class Document(BaseModel):
     type: str = Field(default="Document", alias="_type")
     default_tab_stop: float = 36.0
@@ -1113,6 +1187,7 @@ class Document(BaseModel):
     styles: list[Style] = Field(default_factory=list)
     lists: list[DocList] = Field(default_factory=list)
     sections: list[Section] = Field(default_factory=list)
+    source_stories: list[SourceStory] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
 
@@ -1213,8 +1288,19 @@ class Document(BaseModel):
 
     @property
     def text(self) -> str:
-        """Plain text of the whole document (body paragraphs only)."""
-        return "\n".join(p.text for p in self.all_paragraphs if p.text)
+        """Body text, including nested table cells in content order; no source stories."""
+        def paragraphs(children):
+            for child in children:
+                if isinstance(child, Paragraph):
+                    yield child
+                elif isinstance(child, Table):
+                    for row in child.rows:
+                        for cell in row.cells:
+                            yield from paragraphs(cell.children)
+        from aspose.words_foss.pdf_writer.text import source_plain_text as plain_text
+
+        return "\n".join(text for section in self.sections
+                         for p in paragraphs(section.body.children) if (text := plain_text(p)))
 
     def get_list(self, list_id: int) -> DocList | None:
         """Look up a list definition by ID."""
