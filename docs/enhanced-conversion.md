@@ -1,6 +1,8 @@
 # 增强版转换、诊断与安全边界
 
-本页描述本 fork 的 `26.7.0.post1`，不是官方 Aspose 的功能保证。
+本页描述本 fork 的 `26.7.0.post2`，不是官方 Aspose 的功能保证。
+新增内存输出、结构化内容、原包定点替换和塑形的用法见 [升级说明](upgrade-notes.md)；
+实际测试及性能结果见 [优化核验报告](optimization-report.md)。
 
 ## 中文排版和字体
 
@@ -12,7 +14,7 @@
 - 四个完整字体从 TTF 无损压缩为 WOFF：资源约 **41.1 MiB → 25.0 MiB**，减少约 **39%**。
   字形映射、数量和宽度信息保留；PDF 内仍嵌入标准字体子集。只注册文档出现的字体样式。
   这是安装体积优化，不承诺下载体积同等下降（wheel 原本已 ZIP 压缩）。
-- 尚未实现语言标点禁则、完整复杂文字塑形、源字体精确匹配或 Word 的完整分页规则。
+- 复杂文字塑形可通过可选 `[shaping]` 依赖和 `PdfSaveOptions.text_shaping=True` 开启，复用 fpdf2/HarfBuzz；还需部署适合该语言的可信 fallback 字体。尚未实现语言标点禁则、源字体精确匹配或 Word 的完整分页规则。
 
 ### 缺字、降级和 fallback
 
@@ -37,11 +39,14 @@ aw.Document("report.docx").save("report.pdf", options)
 | `PdfMissingGlyphWarning` | 主字体和 fallback 都缺字；提示缺失码点 |
 | `PdfFontSubstitutionWarning` | 源字体被 Document Sans SC 替代，可能改变布局 |
 | `PdfUnsupportedOptionWarning` | 显式设置尚未实现的 PDF 选项，或请求 PDF/A、PDF/UA 合规 |
-| `PdfConversionWarning` | 其他可检测的 PDF 内容降级，如未知模型节点被丢弃 |
-| `aw.loading.DocumentLoadWarning` | DOCX 的脚注/尾注引用、评论引用、OLE object、altChunk 不被轻量模型保留 |
+| `PdfContentLossWarning` | 未知模型节点、页眉页脚变体、超高不可拆行等已知内容或布局降级；未启用塑形的复杂文字也会提示 |
+| `aw.loading.DocumentLoadWarning` | 脚注/尾注、评论、对象、altChunk、修订、简单字段、内容控件、公式以及多种页眉页脚不能完整保留 |
+| `DocxWriterLossyWarning` | 未知模型节点、不同章节或不支持类型的页眉页脚不能完整写回 |
+| `aw.ContentLossWarning` | 已知内容/布局损失的公共基类；用于统一过滤加载、DOCX、Markdown、PDF 的已知损失 |
 
 默认值不会仅因选项尚未实现而报警；显式赋值即使等于默认值也会提示。
 这些诊断只覆盖已检测到的情况，不是全面的 Word 兼容性检查。可用 Python `warnings` 分类过滤或升级为错误。
+公开 `Document.diagnostics` 列表保存加载、`save()` 和 `to_bytes()` 的结构化记录，包含 `code`、`severity`、`location`、`message`；即使 Python warning 被忽略或升级为错误，已有诊断仍会记录。定位信息是已知部件/模型位置，不是假定页码。
 
 ## 输入和输出边界
 
@@ -54,6 +59,7 @@ aw.Document("report.docx").save("report.pdf", options)
 | 单 ZIP 部件/图片数据 | 64 MiB |
 | DOCX 总展开大小 | 256 MiB |
 | 单张光栅图片 | 25,000,000 像素 |
+| 单个 DOCX gridSpan / 输出表格网格列数 | 1,024 |
 
 DOCX 禁止重复/加密 ZIP 条目、不安全条目路径和 XML 实体扩展。SVG 不允许外部图片引用，
 只接受内部引用及内嵌光栅图片。超限会抛出错误；大文件业务需先评估资源需求再调整源码中的上限。
@@ -85,8 +91,9 @@ python -m aspose.words_foss.convert report.docx report.pdf \
 RSS watchdog，约每 0.1 秒检查，**可能短暂超过阈值，不是硬内存配额**。macOS 需要系统 `ps`。
 `--memory-mb 0` 显式关闭内存检查。该 CLI 目前只支持 POSIX；Windows 仍可使用普通库 API。
 
-`--strict` 将缺字和上述 DOCX 加载损失提示升级为错误，但不因正常字体替换而失败。
-`--fallback-font /trusted/font.ttf` 可以重复指定，只用于内置 PDF 后端。
+`--strict` 将缺字及 `ContentLossWarning`（已知加载/写出损失）升级为错误，但不因正常字体替换而失败。它不是完整保真验证器。
+`--fallback-font /trusted/font.ttf` 可以重复指定；它与 `--text-shaping` 都只适用于内置后端的 `.pdf` 输出，其他格式会拒绝这些参数。
+`--text-shaping` 需从本仓库安装 `[shaping]`，安装命令见 [升级说明](upgrade-notes.md#5-可选多语言塑形)。
 普通 `Document.save()` 没有进程超时/内存限制；服务端请使用此入口或自己的任务隔离层。
 CLI 不是 Web 服务、队列或全局并发控制器；应用需限制同时启动的作业数，并配置容器内存/磁盘/网络配额。
 
@@ -106,10 +113,10 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 
 需自行安装 LibreOffice，`soffice`/`libreoffice` 在 PATH 上；也识别 macOS 标准应用安装位置。
 此路径传入**原始 DOC/DOCX/RTF 字节**，不经过可能丢信息的 LDM 重建。每个任务使用私有用户配置目录，
-验证进程状态及 PDF 头/结束标记后才发布文件。支持一般文本 RTF 不代表内置 RTF reader 已修复。
+验证进程状态及 PDF 头/结束标记后才发布文件。内置 RTF reader 仍只支持 OLE2/DOC-backed 文件；现在会对标准文本 RTF 明确报错并提示此入口。
 
 这是独立可选入口，不改变 `Document.save()` 默认后端。高保真仍受 LibreOffice 兼容性和部署的
-**系统字体**影响；它不直接使用本库 WOFF 字体。`--strict` 和 `--fallback-font` 不适用于该后端。
+**系统字体**影响；它不直接使用本库 WOFF 字体。`--strict`、`--fallback-font` 和 `--text-shaping` 不适用于该后端。
 本仓库既测试协议/异常，也提供真实渲染测试。已在 macOS / LibreOffice 26.2.6 验证中文 DOCX、标准文本 RTF、
 原始 DOCX 脚注和受限 CLI；脚注内容在轻量模型中丢失、在原文件转换中保留。未安装 LibreOffice 的环境跳过真实测试。
 这些用例证明入口可用和已测内容保留，不证明所有文档与 Microsoft Word 视觉一致。

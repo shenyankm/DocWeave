@@ -27,6 +27,8 @@ Library code remains MIT-licensed; bundled PDF fonts are separately OFL-1.1-lice
 - [Dependencies](#dependencies)
 - [Quick Start](#quick-start)
 - [Enhanced Conversion and Safety](docs/enhanced-conversion.md)
+- [Upgrade Notes](docs/upgrade-notes.md)
+- [Optimization and Verification Report](docs/optimization-report.md)
 - [Additional Examples](#additional-examples)
 - [API Reference](#api-reference)
 - [Documentation & Resources](#documentation--resources)
@@ -52,7 +54,7 @@ release**. Fork changes are maintained independently on
 | Optional conversion | Built-in LDM renderer | Separate original-file LibreOffice entry point and bounded single-job POSIX CLI |
 | Runtime dependency | Declared `fpdf2>=2.7.5` | Requires `fpdf2>=2.8.9` for WOFF fonts; hardened XML and image checks use existing transitive dependencies explicitly |
 | Tests | API example suite | Adds Unicode, independent raster/layout, diagnostics, limits and subprocess failure regression tests |
-| Distribution and licensing | MIT-licensed library code | `aspose-words-foss-enhanced` / `26.7.0.post1`; MIT code plus OFL-1.1 fonts; full-coverage WOFF resources total about 25 MiB |
+| Distribution and licensing | MIT-licensed library code | `aspose-words-foss-enhanced` / `26.7.0.post2`; MIT code plus OFL-1.1 fonts; full-coverage WOFF resources total about 25 MiB |
 
 This is a targeted PDF enhancement, not full Word layout compatibility or a replacement for the
 commercial product. Existing unsupported formats/options remain unsupported; see
@@ -67,7 +69,7 @@ flowchart TD
     direction TB
     i1["An existing DOCX document"]
     i2["An existing DOC (Word 97-2003) document"]
-    i3["An existing RTF document"]
+    i3["An OLE2/DOC-backed .rtf file"]
     i4["An existing Markdown file"]
     i5["An existing plain-text file"]
   end
@@ -75,7 +77,7 @@ flowchart TD
   subgraph Capabilities["Core Capabilities"]
     direction TB
     c1["Load and parse DOC, DOCX, RTF, Markdown, and plain-text documents"]
-    c2["DOCX round-trip editing via the Light Document Model"]
+    c2["Supported DOCX editing via the Light Document Model"]
     c3["Markdown export with configurable headings, lists, and tables"]
     c4["PDF export via a built-in paragraph, table, and shape renderer"]
   end
@@ -95,14 +97,16 @@ flowchart TD
   chosen automatically from the `.docx`/`.doc`/`.rtf`/`.md`/`.txt` file extension.
 - Read DOCX with a pure-Python parser using `zipfile` and entity-protected `defusedxml`;
   embedded raster-image dimensions are checked with Pillow.
-- Read legacy Word 97-2003 `.doc` binary files via `olefile`, and RTF documents through the same
-  OLE2 delegation path.
+- Read legacy Word 97-2003 `.doc` binary files via `olefile`, including OLE2/DOC files carrying an
+  `.rtf` suffix. Standard text RTF is rejected with a LibreOffice PDF-conversion hint.
 - Parse Markdown on import with `MarkdownReader`, not just read it as literal text — headings, lists,
   emphasis, tables, block quotes, fenced code blocks, links, and base64-embedded images all become
   proper document-model nodes, so a loaded `.md` file converts to DOCX or PDF like any other input.
-- Round-trip DOCX editing: `DocumentReader` builds a shared Light Document Model from an existing
-  `.docx`, and `LdmDocxWriter` writes it back out, preserving headers/footers, inline shapes and
-  images, bookmarks, and custom paragraph styles.
+- Supported DOCX editing: `DocumentReader` builds a shared Light Document Model, and `LdmDocxWriter`
+  reconstructs DOCX with default headers/footers, inline shapes/images, bookmarks, complex-field
+  markers, grid spans and custom paragraph styles. This is **not arbitrary lossless round-tripping**:
+  footnotes, comments, tracked changes and header/footer variants can be lost. Known losses warn.
+  For bounded literal edits that retain original package parts, use `docx_edit.replace_text()`.
 - Convert image-containing documents — inline images, captioned images, images in tables, and
   images in headers/footers — to every output format: images embed as base64 data URIs in
   Markdown by default, render through the built-in `ShapeRenderer` in PDF, and round-trip
@@ -119,7 +123,11 @@ flowchart TD
 - Configure DOCX packaging through `OoxmlSaveOptions`: compression level, ECMA-376/ISO 29500
   Transitional compliance, and pretty-printed XML.
 - Inspect the parsed document model directly — sections, paragraphs, runs, tables, styles, and
-  numbered/bulleted lists are all typed Pydantic models reachable from `Document.light_document_model`.
+  numbered/bulleted lists are typed Pydantic models reachable from `Document.light_document_model`.
+- Render to memory with `Document.to_bytes(format_or_options)`, export ordered JSON-safe content
+  with `Document.to_dict()`, and inspect structured warnings via `Document.diagnostics`.
+- Keep mixed text, links and images inside PDF table grids; repeat leading header rows and split
+  oversized rows at content-line boundaries. These improvements do not promise Word-identical layout.
 
 ## Installation
 
@@ -142,13 +150,13 @@ pip install -e ".[dev]"
 
 **`pip install aspose-words-foss` installs the upstream PyPI distribution, not this fork.**
 This fork uses the distinct distribution name **`aspose-words-foss-enhanced`** and version
-**`26.7.0.post1`**, but retains the compatible import namespace **`aspose.words_foss`**.
+**`26.7.0.post2`**, but retains the compatible import namespace **`aspose.words_foss`**.
 It is distributed from this Git repository; do not assume a same-named PyPI package is this fork.
 The shared import namespace still prevents safe side-by-side installation with upstream.
 Use a clean environment (or uninstall upstream first); pip does not detect this namespace collision.
 Installing/upgrading either distribution can overwrite shared modules, and uninstalling either can remove them.
 
-Requires Python 3.10–3.12; runtime dependencies install automatically via pip — see
+Requires Python 3.10–3.14; runtime dependencies install automatically via pip — see
 [Dependencies](#dependencies) below.
 
 Verify the enhanced version, distribution metadata, and imported upstream revision:
@@ -167,9 +175,21 @@ python -c "import aspose.words_foss as aw; from importlib.metadata import versio
 - `defusedxml` >=0.7.1 — rejects XML entity expansion in DOCX/SVG input.
 - `Pillow` >=10.0.0 — validates raster-image dimensions and supports rendering.
 
+### Optional Text Shaping
+
+Install this fork with the `shaping` extra to enable HarfBuzz-based shaping and bidirectional text:
+
+```bash
+pip install "aspose-words-foss-enhanced[shaping] @ git+https://github.com/shenyankm/Aspose.Words-FOSS-for-Python.git@dev"
+```
+
+Then set `PdfSaveOptions.text_shaping = True` (or use CLI `--text-shaping`).
+Deploy trusted fallback fonts covering the target language; the extra does not supply fonts.
+See [upgrade notes](docs/upgrade-notes.md#5-可选多语言塑形) for usage and limitations.
+
 ### Native and System Requirements
 
-- Requires Python 3.10 or later (tested through 3.12; `pyproject.toml` caps at `<3.13`).
+- Requires Python 3.10–3.14 (`pyproject.toml` caps at `<3.15`). CI is configured for each supported version on Linux, Windows and macOS; this does not establish that the matrix has passed. Actual local verification results and untested platforms are listed in the [optimization report](docs/optimization-report.md).
 
 ### Development Dependencies
 
@@ -200,6 +220,16 @@ doc = aw.Document("report.docx")
 doc.save("report.pdf", aw.SaveFormat.PDF)
 ```
 
+```python
+from dataclasses import asdict
+
+pdf_bytes = doc.to_bytes(aw.SaveFormat.PDF)  # no intermediate file
+content = doc.to_dict()                   # ordered body blocks + model locations
+warnings_report = [asdict(item) for item in doc.diagnostics]
+```
+
+See [upgrade notes](docs/upgrade-notes.md) for original-package edits, optional text shaping,
+structured output, benchmarks and template integration.
 See [enhanced conversion and safety](docs/enhanced-conversion.md) for fallback fonts, diagnostic
 warnings, input limits, atomic saves, the bounded CLI, and optional original-file LibreOffice rendering.
 These are fork extensions, not upstream API guarantees.
@@ -241,6 +271,7 @@ doc.save("report.pdf", pdf_opts)
 | `working_with_pdf_save_options.py` | PDF export from all input formats |
 | `working_with_txt_save_options.py` | Plain-text export and `get_text()` |
 | `working_with_images.py` | Image-containing documents to all output formats |
+| `template_report.py` | Trusted DOCX templates and JSON context via optional `docxtpl`, followed by PDF export |
 
 ### Extract Plain Text
 
@@ -382,9 +413,22 @@ doc.save("report.pdf", aw.SaveFormat.PDF)    # link becomes a real clickable PDF
 
 `Document` is the primary entry point: construct it from a file path, then call `save()` with a
 `SaveFormat` constant or a `MarkdownSaveOptions` / `PdfSaveOptions` / `OoxmlSaveOptions` instance —
-the target format is otherwise inferred from the output file's extension. The library ships 146
-public types across the DOC/DOCX/RTF/Markdown/Text readers, the DOCX/Markdown/PDF writers, and the
-shared Light Document Model, summarized in the module-grouped table below.
+the target format is otherwise inferred from the output file's extension.
+The DOC/DOCX/RTF/Markdown/Text readers, DOCX/Markdown/PDF writers, and shared Light Document Model
+are summarized in the module-grouped table below.
+
+### Fork Extension APIs
+
+| API | Behavior and boundary |
+|---|---|
+| `Document.to_bytes(format_or_options)` | Returns DOCX/PDF/Markdown/TEXT bytes; an explicit format is required. TEXT is UTF-8; Markdown honors its encoding option. External Markdown image files require `save()` instead. |
+| `Document.to_dict()` | Returns JSON-safe content with `schema_version`, `source`, ordered `blocks`, `headers_footers`, and a snapshot of `diagnostics`. Locations are model paths, not page coordinates; source paths and text may be sensitive. |
+| `Document.diagnostics` | Accumulates `ConversionDiagnostic` records from loading and each save/render, including detected warnings before failure. Repeated conversions can add repeated records; this is not a complete fidelity audit. |
+| `ConversionDiagnostic` | Frozen dataclass with `code`, `severity`, `location`, and `message`; use `dataclasses.asdict()` for JSON serialization. |
+| `ConversionWarning` / `ContentLossWarning` | Public warning bases available under `aspose.words_foss`; content-loss filters do not catch missing glyphs, which require `PdfMissingGlyphWarning` separately. |
+| `docx_edit.replace_text(source, destination, replacements)` | Separate original-package edit API; returns replacement count. Literal matches must fit inside one `w:t` node, and every key must occur. Retains unknown parts; not a sanitizer. |
+
+Examples and complete boundaries are in [upgrade notes](docs/upgrade-notes.md).
 
 <details>
 <summary>View the Supported Public API Surface</summary>
@@ -660,8 +704,12 @@ shared Light Document Model, summarized in the module-grouped table below.
 
 ## Documentation & Resources
 
-- **This fork:** this README, [`ApiExamples/`](ApiExamples/), and
+- **This fork:** this README, [upgrade notes](docs/upgrade-notes.md),
+  [conversion and safety](docs/enhanced-conversion.md), [`ApiExamples/`](ApiExamples/), and
   [`tests/test_pdf_unicode.py`](tests/test_pdf_unicode.py) describe the enhanced behavior.
+- **Verification:** [optimization report](docs/optimization-report.md) separates the initial
+  post2 test/wheel results from the later missing-glyph optimization checks. The
+  [post1 verification report](docs/verification-report.md) is historical, not current validation.
 - **[Fork issues](https://github.com/shenyankm/Aspose.Words-FOSS-for-Python/issues)** — report
   enhancement-specific bugs and requests here, not to the official project as if this were its release.
 - **[Official upstream repository](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python)**
@@ -677,7 +725,7 @@ shared Light Document Model, summarized in the module-grouped table below.
 ## Scope and Limitations
 
 - RTF loading delegates to the DOC/OLE2 reader; it is not a general parser for text-based
-  `{\rtf...}` files. This inherited limitation is unchanged by the PDF enhancement.
+  `{\rtf...}` files. Such input now fails explicitly; use the original-file LibreOffice PDF path.
 - PDF export substitutes the bundled Document Sans SC family for source fonts, including code
   blocks. Bold uses a dedicated bold face; italic uses a derived oblique face. Original font
   families, monospace metrics, and exact Word pagination are not preserved. The four full-coverage
@@ -709,10 +757,20 @@ a separate commercial product. It is not this fork and is not guaranteed to be a
 Install the development dependencies and run the example test suite:
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev,shaping]" docxtpl
 python -m pytest tests/ -v
 python -m pytest ApiExamples/ -v --rootdir=ApiExamples -c ApiExamples/pytest.ini
 ```
+
+The `shaping` extra and `docxtpl` are optional at runtime; install them above to exercise their
+optional tests/examples rather than skipping them. For reproducible performance measurements:
+
+```bash
+python scripts/benchmark.py --repeat 3 > benchmark.json
+```
+
+See the [optimization report](docs/optimization-report.md) for measured results and
+[upgrade notes](docs/upgrade-notes.md#7-工程与性能验证) for installed-wheel verification.
 
 Run an individual example script directly:
 
