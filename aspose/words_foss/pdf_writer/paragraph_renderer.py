@@ -398,7 +398,7 @@ class ParagraphRenderer:
             text = self._plain_text_from_runs(runs)
             with w._tag(pdf, "/Code"):
                 pdf.set_fill_color(*CODE_BLOCK_BG_RGB)
-                pdf.set_font("Courier", size=code_size)
+                pdf.set_font(DEFAULT_FONT_NAME, size=code_size)
                 usable_w = w._page_width - w._page_margin_left - w._page_margin_right
                 pdf.multi_cell(
                     w=usable_w,

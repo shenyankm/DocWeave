@@ -22,64 +22,11 @@ DEFAULT_MARGIN_MM = 20.0
 # Font / text sizing
 # ---------------------------------------------------------------------------
 
-DEFAULT_FONT_NAME = "Helvetica"
+DEFAULT_FONT_NAME = "DocumentSansSC"
 DEFAULT_FONT_SIZE_PT = 11.0
-
-# Word font name → fpdf2 core family (case-insensitive substring match).
-FPDF_FONT_FAMILY_MAP: tuple[tuple[tuple[str, ...], str], ...] = (
-    (("courier", "consolas", "menlo", "monaco", "monospace", "lucida console",
-      "andale mono", "dejavu sans mono", "liberation mono"), "Courier"),
-    (("times", "serif", "georgia", "cambria", "garamond", "palatino",
-      "bookman", "minion", "century", "constantia", "didot",
-      "liberation serif", "dejavu serif", "freeserif", "noto serif"), "Times"),
-    (("symbol",), "Symbol"),
-    (("wingdings", "webdings", "dingbat", "zapf"), "ZapfDingbats"),
-    (("helvetica", "arial", "sans", "calibri", "carlito", "verdana",
-      "tahoma", "geneva", "trebuchet", "lucida sans", "segoe",
-      "open sans", "roboto", "liberation sans", "dejavu sans",
-      "noto sans", "freesans"), "Helvetica"),
-)
 
 # Points to mm conversion factor
 PT_TO_MM = 0.352778
-
-# x-height per 1000-em. Used to rescale a run's point size when the requested
-# font is substituted with a different fpdf2 core family, so the rendered
-# x-height stays visually close to the source. Most specific triggers first —
-# first match wins.
-#
-# Sources:
-#   * PostScript core 14 — XHeight from Adobe AFM files
-#     (https://github.com/tecnickcom/tc-font-core14-afms).
-#   * Common system fonts — measured ratios at
-#     https://jkorpela.fi/x-height.html (value * 1000).
-# Only fonts with a published value are listed; for unknown names the lookup
-# falls through to ratio = 1.0 (no scaling).
-FONT_X_HEIGHT_MAP: tuple[tuple[tuple[str, ...], int], ...] = (
-    # Serif
-    (("times new roman",), 448),
-    (("georgia",), 481),
-    (("cambria",), 466),
-    (("times",), 450),
-    # Monospace
-    (("courier new",), 423),
-    (("courier",), 426),
-    # Sans-serif
-    (("arial",), 519),
-    (("calibri",), 466),
-    (("verdana",), 545),
-    (("tahoma",), 545),
-    (("trebuchet",), 523),
-    (("comic sans",), 532),
-    (("helvetica",), 523),
-)
-
-# x-height of fpdf2's three text core families (PostScript AFM XHeight).
-CORE_FAMILY_X_HEIGHT: dict[str, int] = {
-    "Helvetica": 523,
-    "Times": 450,
-    "Courier": 426,
-}
 
 # Line-height multiplier for natural leading (size_pt * PT_TO_MM * this).
 LINE_HEIGHT_FACTOR = 1.4

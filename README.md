@@ -77,6 +77,8 @@ flowchart TD
   through `MarkdownSaveOptions`.
 - Export to PDF with `LdmPdfWriter` — a built-in paragraph, table, and shape renderer (backed by
   `fpdf2`) that needs no external PDF engine or system fonts, configurable through `PdfSaveOptions`.
+  Bundled Unicode fonts support common Simplified/Traditional Chinese, Latin text, and punctuation;
+  PDF font subsets are embedded automatically.
 - Extract plain text from any loaded document with `Document.get_text()`, or save it directly with
   `SaveFormat.TEXT`.
 - Configure DOCX packaging through `OoxmlSaveOptions`: compression level, ECMA-376/ISO 29500
@@ -112,7 +114,7 @@ python -c "import aspose_words_foss; print('aspose_words_foss OK')"
 ### Required Package Dependencies
 
 - `olefile` >=0.46 — reads legacy Word 97-2003 .doc binary files and RTF documents via OLE2 delegation.
-- `fpdf2` >=2.7.5 — backs the built-in PDF renderer.
+- `fpdf2` >=2.8.1 — backs the built-in PDF renderer.
 - `pydantic` >=2.0.0 — the typed model layer for the parsed document model.
 
 ### Native and System Requirements
@@ -122,7 +124,8 @@ python -c "import aspose_words_foss; print('aspose_words_foss OK')"
 ### Development Dependencies
 
 - `Pillow>=10.0.0` — used by the `dev` extra's example/test tooling for image-containing documents.
-- `pytest>=9.0.2` — the test runner used to execute `ApiExamples/`.
+- `pytest>=9.0.2` — the test runner used to execute `tests/` and `ApiExamples/`.
+- `pypdf>=5.0.0` — checks PDF links, extracted Unicode text, and embedded fonts in tests.
 
 None of these are required to install or use the published package; they apply only when
 installing with `pip install -e ".[dev]"` for local development and testing.
@@ -612,6 +615,11 @@ shared Light Document Model, summarized in the module-grouped table below.
 
 ## Scope and Limitations
 
+- PDF export substitutes the bundled Document Sans SC family for source fonts, including code
+  blocks. Bold uses a dedicated bold face; italic uses a derived oblique face. Original font
+  families, monospace metrics, and exact Word pagination are not preserved. These four static
+  font resources add approximately 41 MiB before package compression. Characters outside the
+  font's coverage (for example, many emoji) are not supported.
 - `SaveFormat.DOC` is defined as a save-format constant for API compatibility with the commercial
   product, but `Document.save()` does not implement a DOC writer — `.doc` files can be read, not
   written. Saving with an unsupported target raises `ValueError` (`Markdown`, `Text`, `PDF`, and
@@ -636,6 +644,7 @@ Install the development dependencies and run the example test suite:
 
 ```bash
 pip install -e ".[dev]"
+python -m pytest tests/ -v
 python -m pytest ApiExamples/ -v --rootdir=ApiExamples -c ApiExamples/pytest.ini
 ```
 
@@ -653,3 +662,7 @@ output is written to `ApiExamples/output/` (git-ignored).
 This project is licensed under the [MIT License](LICENSE). The MIT License permits use, copying,
 modification, distribution, sublicensing, and commercial use, provided its copyright and permission
 notice are retained. The software is provided without warranty.
+
+Bundled PDF font resources are separately licensed under the
+[SIL Open Font License 1.1](aspose/words_foss/pdf_writer/fonts/OFL.txt), not MIT.
+See their [provenance and modifications](aspose/words_foss/pdf_writer/fonts/README.md).

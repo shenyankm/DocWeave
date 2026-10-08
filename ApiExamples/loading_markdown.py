@@ -160,11 +160,15 @@ class LoadingMarkdown(DocsExamplesBase):
         assert rels_xml.count(f'Target="{PRODUCT_URL}"') >= 1
 
         # Same check on the PDF: two real clickable link annotations, not styled text.
-        import pdfplumber
+        from pypdf import PdfReader
 
-        with pdfplumber.open(pdf_path) as pdf:
-            links = [link for page in pdf.pages for link in page.hyperlinks]
-        assert len([link for link in links if link["uri"] == PRODUCT_URL]) == 2
+        pdf = PdfReader(pdf_path)
+        links = [
+            ref.get_object().get("/A", {}).get("/URI")
+            for page in pdf.pages
+            for ref in page.get("/Annots", [])
+        ]
+        assert links.count(PRODUCT_URL) == 2
 
 
 if __name__ == "__main__":

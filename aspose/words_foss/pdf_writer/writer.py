@@ -25,6 +25,7 @@ from aspose.words_foss.pdf_writer.constants import (
     DEFAULT_MARGIN_MM,
     PT_TO_MM,
 )
+from aspose.words_foss.pdf_writer.font import register_fonts
 from aspose.words_foss.pdf_writer.page_bands import install_page_footer, install_page_header
 from aspose.words_foss.pdf_writer.paragraph_renderer import ParagraphRenderer
 from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
@@ -177,6 +178,7 @@ class LdmPdfWriter:
                 page_h_mm = ps.page_height * PT_TO_MM
 
         pdf = FPDF(unit="mm", format=(page_w_mm, page_h_mm))
+        register_fonts(pdf)
         # Apply PDF version from compliance setting
         version = COMPLIANCE_TO_VERSION.get(self.options.compliance)
         if version:

@@ -1,48 +1,19 @@
-"""Font application and reset helpers for the PDF writer."""
+"""Font registration, application and reset helpers for the PDF writer."""
 
+from pathlib import Path
 
 from fpdf import FPDF
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.pdf_writer.color import set_text_color
-from aspose.words_foss.pdf_writer.constants import (
-    CORE_FAMILY_X_HEIGHT,
-    DEFAULT_FONT_NAME,
-    DEFAULT_FONT_SIZE_PT,
-    FONT_X_HEIGHT_MAP,
-    FPDF_FONT_FAMILY_MAP,
-)
+from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE_PT
 
 
-def _resolve_fpdf_family(font_name: str) -> str:
-    """Pick the closest fpdf2 core family for an LDM font name."""
-    name_lower = font_name.lower()
-    if not name_lower:
-        return DEFAULT_FONT_NAME
-    for triggers, family in FPDF_FONT_FAMILY_MAP:
-        if any(t in name_lower for t in triggers):
-            return family
-    return DEFAULT_FONT_NAME
-
-
-def _source_xheight(name_lower: str) -> int | None:
-    for triggers, xheight in FONT_X_HEIGHT_MAP:
-        if any(t in name_lower for t in triggers):
-            return xheight
-    return None
-
-
-def _size_ratio(name_lower: str, target_family: str) -> float:
-    """Scale factor to apply when rendering ``name_lower`` as ``target_family``.
-
-    Matches the source font's x-height against the target family's, so the
-    rendered glyph height stays visually close to the requested font.
-    """
-    src = _source_xheight(name_lower)
-    tgt = CORE_FAMILY_X_HEIGHT.get(target_family)
-    if src is None or not tgt:
-        return 1.0
-    return src / tgt
+def register_fonts(pdf: FPDF) -> None:
+    """Register bundled Unicode fonts before any page/header/footer is rendered."""
+    font_dir = Path(__file__).with_name("fonts")
+    for style, suffix in (("", "Regular"), ("B", "Bold"), ("I", "Oblique"), ("BI", "BoldOblique")):
+        pdf.add_font(DEFAULT_FONT_NAME, style, str(font_dir / f"DocumentSansSC-{suffix}.ttf"))
 
 
 def apply_run_font(pdf: FPDF, font: ldm.Font, default_size: float = DEFAULT_FONT_SIZE_PT) -> str:
@@ -56,16 +27,9 @@ def apply_run_font(pdf: FPDF, font: ldm.Font, default_size: float = DEFAULT_FONT
         style += "U"
 
     size = font.size if font.size > 0 else default_size
-
-    name_lower = (font.name or "").lower()
-    font_name = _resolve_fpdf_family(name_lower)
-    size *= _size_ratio(name_lower, font_name)
-
-    pdf.set_font(font_name, style=style, size=size)
-
-    # Apply text color
+    # ponytail: one Unicode family replaces source fonts; add font matching for layout fidelity.
+    pdf.set_font(DEFAULT_FONT_NAME, style=style, size=size)
     set_text_color(pdf, font.color)
-
     return style
 
 

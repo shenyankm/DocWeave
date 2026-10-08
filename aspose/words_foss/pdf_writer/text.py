@@ -8,44 +8,9 @@ from aspose.words_foss._visible_runs import visible_runs
 from aspose.words_foss.pdf_writer.constants import INLINE_LINK_RE
 from aspose.words_foss.pdf_writer.color import parse_color
 
-# Built-in PDF fonts are latin-1 only; transliterate common typographic
-# punctuation before encoding so it survives.
-_LATIN1_FALLBACK = {
-    "\u2018": "'",  # LEFT SINGLE QUOTATION MARK
-    "\u2019": "'",  # RIGHT SINGLE QUOTATION MARK / apostrophe
-    "\u201a": ",",  # SINGLE LOW-9 QUOTATION MARK
-    "\u201b": "'",  # SINGLE HIGH-REVERSED-9 QUOTATION MARK
-    "\u201c": '"',  # LEFT DOUBLE QUOTATION MARK
-    "\u201d": '"',  # RIGHT DOUBLE QUOTATION MARK
-    "\u201e": ",,",  # DOUBLE LOW-9 QUOTATION MARK
-    "\u2013": "-",  # EN DASH
-    "\u2014": "--",  # EM DASH
-    "\u2015": "--",  # HORIZONTAL BAR
-    "\u2026": "...",  # HORIZONTAL ELLIPSIS
-    # Bullet glyphs absent from Latin-1 collapse to MIDDLE DOT.
-    "\u2022": "\u00b7",  # BULLET
-    "\u2023": "\u00b7",  # TRIANGULAR BULLET
-    "\u2043": "\u00b7",  # HYPHEN BULLET
-    "\uf0b7": "\u00b7",  # Symbol-font bullet (Word lvlText)
-    "\uf0a7": "\u00b7",  # Wingdings diamond (sub-bullet)
-    "\u2009": " ",  # THIN SPACE
-    "\u200a": " ",  # HAIR SPACE
-    "\u200b": "",  # ZERO WIDTH SPACE
-    "\u00a0": " ",  # NO-BREAK SPACE -> regular space (also in latin-1 but normalise)
-    "\u2011": "-",  # NON-BREAKING HYPHEN
-    "\u2212": "-",  # MINUS SIGN
-    "\u2122": "(TM)",  # TRADE MARK SIGN
-}
-
-
 def safe_text(text: str) -> str:
-    """Transliterate so *text* survives the latin-1 built-in PDF fonts."""
-    if not text:
-        return text
-    for src, dst in _LATIN1_FALLBACK.items():
-        if src in text:
-            text = text.replace(src, dst)
-    return text.encode("latin-1", errors="replace").decode("latin-1")
+    """Preserve Unicode, mapping Word symbol-font bullets to real codepoints."""
+    return text.replace("\uf0b7", "\u2022").replace("\uf0a7", "\u25aa")
 
 
 def extract_link_segments(text: str) -> list[Tuple[str, Optional[str]]]:
