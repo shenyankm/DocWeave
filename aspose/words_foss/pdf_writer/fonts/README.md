@@ -30,6 +30,14 @@ size decreased from approximately 41.1 MiB to 25.0 MiB; this does not imply
 the same reduction in already ZIP-compressed wheel downloads. WOFF needs
 fpdf2 2.8.9 or newer; the PDF embeds ordinary font subsets, not WOFF data.
 
+The WOFF tables were subsequently recompressed offline with Zopfli 0.4.3
+(one iteration), reducing the four resources from 26,226,992 to 25,838,944
+bytes (approximately 24.6 MiB). Every decoded table is byte-identical,
+including glyphs, metrics, names and license records. The format remains
+standard WOFF with zlib decoding; Zopfli is not a runtime or build dependency.
+The reproducible probe and measurements are recorded in
+[`woff-recompression.json`](../../../../docs/benchmarks/woff-recompression.json).
+
 All source glyphs were retained; the resources are not limited to the
 characters used in the regression test. This provides common Simplified
 and Traditional Chinese characters plus Latin text and punctuation.

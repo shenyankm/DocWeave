@@ -1,0 +1,29 @@
+{
+  "style": "Regular",
+  "source_bytes": 6317140,
+  "woff2_bytes": 4192996,
+  "compression_s": 25.069647874996008,
+  "glyphs_checked": 31036,
+  "cmap_and_metrics_equal": true,
+  "glyph_coordinates_equal": true,
+  "font_and_pdf_ms": {
+    "woff": [
+      115.88745900371578,
+      122.67629200505326,
+      119.04058300569886
+    ],
+    "woff2": [
+      17108.69575000106,
+      17233.59975000494,
+      17449.43020899518
+    ]
+  },
+  "scope": "single-style isolated experiment; no production dependency or resources changed",
+  "sample_render_pixels_equal": true,
+  "versions": {
+    "fpdf2": "2.8.9",
+    "fonttools": "4.66.1",
+    "Brotli": "1.2.0",
+    "pypdf": "6.19.0"
+  }
+}
