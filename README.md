@@ -444,19 +444,10 @@ These are the main implemented entry points, not an exhaustive catalog of intern
   Supported inline images do not imply arbitrary image/shape placement or complete OOXML round-trip fidelity.
 - Markdown merged grids/nested tables lose geometry; the parser implements a selected CommonMark/GFM subset.
   Tab indentation retains inherited flat `+4` behavior, not column-based tab stops.
-- Strict OOXML output raises `NotImplementedError`. `ECMA376_2006` and `ISO29500_2008_TRANSITIONAL`
-  use the same output; `Zip64Mode.ALWAYS` behaves like `IF_NECESSARY`, not forced ZIP64 records.
-- PDF/A and PDF/UA conformance are not implemented. Explicit unused PDF fields warn:
-  `embed_full_fonts`, `use_core_fonts`, `font_embedding_mode`,
-  `color_mode`, `preserve_form_fields`, and `memory_optimization`.
-- PDF `text_compression` controls page content streams (`NONE` / `FLATE`), independently of font/image
-  compression. `page_mode` requests a viewer opening mode; the default is `USE_OUTLINES`.
-  Readers may ignore this preference; it does not create outlines, layers, or attachments.
-- PDF outline gaps are compacted by default; `create_missing_outline_levels=True` inserts empty
-  intermediate entries. `expanded_outline_levels` accepts integers 0–9: 0 collapses all items, 1 expands
-  the first PDF tree level, and so on. Readers may override the stored opening state.
-- Markdown `image_resolution` is unused; `export_as_html=NON_COMPATIBLE_TABLES` behaves like `NONE`.
-  Attribute presence is not evidence that an option affects output.
+- Save-option support, rejected requests, and fallback behavior are maintained in the
+  [field audit](docs/enhanced-conversion.md#保存选项逐字段审计), including Strict OOXML, ZIP64,
+  PDF compression/viewer/outline settings, and Markdown image/HTML options.
+- PDF/A and PDF/UA conformance are not implemented; explicit unsupported PDF options warn.
 - Defaults: input/individual ZIP part/image data **64 MiB**, expanded DOCX **256 MiB**, **10,000** ZIP entries,
   raster images **25,000,000** pixels, and table grid/span width **1,024** columns. Unsafe/duplicate/encrypted
   ZIP entries and XML entity expansion are rejected; SVG external resources are restricted.

@@ -431,19 +431,9 @@ render_report("template.docx", context, "report.docx", "report.pdf")
   数学公式、浮动内容及页眉页脚变体仍有限制。支持内联图片不等于任意形状/图片定位或完整 OOXML 保真。
 - Markdown 的合并网格与嵌套表格会丢失几何；parser 仅实现选定 CommonMark/GFM 子集。
   Tab 缩进沿用固定 `+4`，不是按列位置计算的 tab stop。
-- Strict OOXML 写出抛出 `NotImplementedError`。`ECMA376_2006` 与 `ISO29500_2008_TRANSITIONAL`
-  使用同一输出；`Zip64Mode.ALWAYS` 等同于 `IF_NECESSARY`，不强制生成 ZIP64 记录。
-- 未实现 PDF/A、PDF/UA 合规。显式设置以下未使用 PDF 字段会报警：
-  `embed_full_fonts`、`use_core_fonts`、`font_embedding_mode`、
-  `color_mode`、`preserve_form_fields`、`memory_optimization`。
-- PDF `text_compression` 控制页面内容流压缩（`NONE` / `FLATE`），不控制字体或图片压缩。
-  `page_mode` 请求阅读器打开模式，默认为 `USE_OUTLINES`；阅读器可能忽略该偏好，
-  它不会自动创建大纲、图层或附件。
-- PDF 大纲默认压缩缺失层级；`create_missing_outline_levels=True` 插入空白中间项。
-  `expanded_outline_levels` 接受 0–9 的整数：0 全部折叠，1 展开 PDF 树的首层，依此类推。
-  阅读器可能覆盖文件中保存的初始展开状态。
-- Markdown `image_resolution` 未使用；`export_as_html=NON_COMPATIBLE_TABLES` 等同于 `NONE`。
-  属性存在不意味着它影响输出。
+- 保存选项的支持、拒绝和退回行为统一见[逐字段审计](docs/enhanced-conversion.md#保存选项逐字段审计)，
+  包含 Strict OOXML、ZIP64、PDF 压缩/阅读器/大纲及 Markdown 图片/HTML 选项。
+- 未实现 PDF/A、PDF/UA 合规；显式设置不支持的 PDF 选项会报警。
 - 默认上限：输入/单 ZIP 部件/图片数据 **64 MiB**、DOCX 总展开大小 **256 MiB**、**10,000** 个 ZIP 条目、
   单光栅图 **25,000,000** 像素、表格网格/跨度宽度 **1,024** 列。
   拒绝不安全路径、重复/加密 ZIP 条目及 XML 实体扩展；SVG 外部资源受到限制。

@@ -342,14 +342,14 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 | 字段 | 当前行为/限制 | 证据或复验入口 |
 |---|---|---|
 | `compliance` | 只设置 PDF 版本；PDF/A、PDF/UA 请求警告，非标准认证 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
-| `export_document_structure` | 结构输出开关；完整辅助技术/标准验收仍待决策 D02 | [test_pdf_structure_pages.py](../tests/test_pdf_structure_pages.py) |
+| `export_document_structure` | 结构输出开关；完整辅助技术与 PDF/UA 标准验收未完成 | [test_pdf_structure_pages.py](../tests/test_pdf_structure_pages.py) |
 | `image_compression` | AUTO 保留有意义的透明像素；显式 JPEG 合成白底并诊断透明度损失，严格模式可拒绝 | [test_pdf_image_compression_contract.py](../tests/test_pdf_image_compression_contract.py) |
 | `jpeg_quality` | 0..100 整数，布尔/非整数/越界拒绝；作用于 JPEG 编码，AUTO 的透明图片保留原字节 | [test_pdf_image_compression_contract.py](../tests/test_pdf_image_compression_contract.py)、[复验](benchmarks/pdf-image-compression-contract.json) |
 | `text_compression` | NONE/FLATE 页面内容流，字体/图片流独立 | [test_pdf_stream_options.py](../tests/test_pdf_stream_options.py) |
 | `embed_full_fonts` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
 | `use_core_fonts` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
 | `font_embedding_mode` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
-| `page_mode` | 写入 PDF PageMode；阅读器可以忽略 | [test_pdf_stream_options.py](../tests/test_pdf_stream_options.py) |
+| `page_mode` | 写入 PDF PageMode，默认 USE_OUTLINES；不自动创建大纲/图层/附件，阅读器可以忽略 | [test_pdf_stream_options.py](../tests/test_pdf_stream_options.py) |
 | `color_mode` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
 | `export_bookmarks_outline` | 书签输出；显式 outline 层级优先 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
 | `outline_options` | 下表六项；不是完整 Word TOC 契约 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
@@ -366,7 +366,7 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 | 字段 | 当前行为/限制 | 证据或复验入口 |
 |---|---|---|
 | `save_format` | 只支持 DOCX；其他值在输出前拒绝 | [test_save_option_formats.py](../tests/test_save_option_formats.py) |
-| `compliance` | Transitional/ECMA 路径；STRICT 明确拒绝 | [test_bounded_conversion.py](../tests/test_bounded_conversion.py) |
+| `compliance` | ECMA376_2006 与 ISO29500_2008_TRANSITIONAL 使用同一输出；Strict 抛出 NotImplementedError | [test_bounded_conversion.py](../tests/test_bounded_conversion.py) |
 | `compression_level` | 四档 ZIP deflate；不是内容精简 | [ApiExamples/working_with_ooxml_save_options.py](../ApiExamples/working_with_ooxml_save_options.py) |
 | `zip_64_mode` | NEVER/IF_NECESSARY；ALWAYS 仍等同按需，但现在警告 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |
 | `pretty_format` | XML 缩进；语义与全部部件仍待矩阵复核 | [ApiExamples/working_with_ooxml_save_options.py](../ApiExamples/working_with_ooxml_save_options.py) |
@@ -397,11 +397,11 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 | 字段 | 当前行为/限制 | 证据或复验入口 |
 |---|---|---|
 | `headings_outline_levels` | 非负整数，拒绝 bool；标题深度大于六的值按现有规则夹紧 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
-| `expanded_outline_levels` | 大纲展开范围 0..9 整数，拒绝 bool | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
+| `expanded_outline_levels` | 大纲展开范围 0..9 整数，拒绝 bool；0 全折叠，1 展开 PDF 树首层，依此类推；阅读器可覆盖初始状态 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
 | `default_bookmarks_outline_level` | 0..9 整数，拒绝 bool；0 且空映射保留 export_bookmarks_outline 退回规则，非商业版完全相同契约 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
 | `bookmarks_outline_levels` | 字符串名称到 0..9 整数的 Mapping，显式 0 省略该书签，隐藏名称仍跳过；每次保存重新校验 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
 | `create_outlines_for_headings_in_tables` | bool；表格标题输出导航 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
-| `create_missing_outline_levels` | bool；缺层导航补层，先验证请求层级防止无界分配 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
+| `create_missing_outline_levels` | bool；默认压缩缺失层级，True 插入空白中间项；先验证请求层级防止无界分配 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
 
 ### 选项验收边界
 
