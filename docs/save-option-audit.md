@@ -6,6 +6,13 @@
 后续标量及内容专项按各行记录核对，不能升级为全矩阵已通过。
 支持枚举值不等于对应功能已实现：有效但未实现值仍按表中限制处理。
 
+三个保存选项类的 12 个 bool 字段只接受 `True` / `False`；字符串（包括 `"false"`）、
+0/1、None 和其他对象在赋值时抛出 `ValueError`，保留原值及 PDF 显式请求集合。
+直接 `ConversionOptions` 的八个 bool 字段在构造和后续赋值时使用相同规则。
+公开实例字段仍保存在原字典键下，默认值、复制和有效输出行为保留。
+见[布尔契约与真实输出复验](benchmarks/boolean-save-contract.json)；未实现的 PDF 开关
+即使接受 bool 也仍然产生原有 unsupported_option 诊断，不作为功能完成。
+
 ## PdfSaveOptions
 
 | 字段 | 当前行为/限制 | 证据或复验入口 |
@@ -50,7 +57,7 @@
 | `export_images_as_base64` | 无 images_folder 时始终内联；有目录时选择内联/外部 | [test_conversion_api.py](../tests/test_conversion_api.py) |
 | `images_folder` | 同名不同内容分配序号，已有文件及目标符号链接保留；普通失败回滚新图片，占用标记保护待提交图片；非断电安全多文件事务 | [test_markdown_image_rollback.py](../tests/test_markdown_image_rollback.py)、[test_markdown_image_collisions.py](../tests/test_markdown_image_collisions.py) |
 | `images_folder_alias` | 外部图片链接目录别名 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
-| `export_underline_formatting` | 下划线 HTML 标记 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
+| `export_underline_formatting` | 普通 Markdown 使用 `++` 扩展标记，HTML 表格使用 u 标签；不是所有 Markdown 阅读器都支持该扩展 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py)、[实际输出](../tests/test_boolean_save_contract.py) |
 | `link_export_mode` | 自动/内联/引用链接 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `export_as_html` | TABLES 走已有 HTML 路径；NON_COMPATIBLE_TABLES 仍等同 NONE，但现在警告 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |
 | `empty_paragraph_export_mode` | 空行、HTML br 或省略 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |

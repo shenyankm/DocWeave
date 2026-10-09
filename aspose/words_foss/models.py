@@ -38,7 +38,7 @@ class CodeBlockStyle(Enum):
 
 @dataclass
 class ConversionOptions:
-    """Options for controlling DOCX to Markdown conversion."""
+    """DOCX to Markdown options; boolean switches reject non-bools on assignment."""
 
     heading_style: HeadingStyle = HeadingStyle.ATX
     list_marker: ListMarker = ListMarker.DASH
@@ -63,6 +63,11 @@ class ConversionOptions:
     paragraph_break: str = "\n"
     style_map: dict[str, str] = field(default_factory=dict)
     export_notes: bool = False
+
+    def __setattr__(self, name, value):
+        if ConversionOptions.__annotations__.get(name) is bool and not isinstance(value, bool):
+            raise ValueError(f"{name} must be a bool")
+        object.__setattr__(self, name, value)
 
     def __post_init__(self) -> None:
         # Accept the legacy lowercase string spellings as well as members.

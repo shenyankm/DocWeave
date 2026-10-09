@@ -1,0 +1,158 @@
+{
+  "baseline_commit": "dc9a97922e656831c23c918c15c814db39752ed6",
+  "scope": "A1 bool switches in three public save-option classes and direct ConversionOptions; not complete save-options or ecosystem acceptance",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "installed_cwd": "/tmp"
+  },
+  "fields": {
+    "PdfSaveOptions": [
+      "export_document_structure",
+      "embed_full_fonts",
+      "use_core_fonts",
+      "export_bookmarks_outline",
+      "preserve_form_fields",
+      "memory_optimization",
+      "display_doc_title",
+      "text_shaping"
+    ],
+    "OoxmlSaveOptions": [
+      "pretty_format"
+    ],
+    "MarkdownSaveOptions": [
+      "export_images_as_base64",
+      "export_underline_formatting",
+      "export_notes"
+    ],
+    "ConversionOptions": [
+      "export_underline",
+      "export_strikethrough",
+      "export_headers_footers",
+      "preserve_emphasis",
+      "table_pipe_style",
+      "escape_special_chars",
+      "export_images_as_base64",
+      "export_notes"
+    ]
+  },
+  "reproduction": {
+    "test": "tests/test_boolean_save_contract.py",
+    "old_installed": "141 failed, 26 passed, 2 warnings in 0.79s",
+    "source_related": "336 passed, 11 warnings in 3.04s"
+  },
+  "contract": {
+    "accepted": "True and False only; strings including false/true, None, integer 0/1 and other non-bools rejected with field-specific ValueError at assignment",
+    "state": "Previous value, public instance dictionary key and PDF explicit-request set remain intact on rejected assignment; valid explicit PDF values still tracked",
+    "direct": "Eight ConversionOptions bool fields validate during dataclass construction and later assignment; rejected mutation leaves existing writer usable",
+    "compatibility": "Default values, deepcopy and valid output behavior preserved. Unsupported PDF bool options remain unsupported and diagnosed. This does not add implementations or bool-string coercion."
+  },
+  "real_effect_probe": {
+    "before": {
+      "export_document_structure": {
+        "string_accepted": true,
+        "observed_switch_enabled": true
+      },
+      "export_underline_formatting": {
+        "string_accepted": true,
+        "observed_switch_enabled": true
+      },
+      "pretty_format": {
+        "string_accepted": true,
+        "observed_switch_enabled": true
+      }
+    },
+    "after": {
+      "export_document_structure": {
+        "string_accepted": false,
+        "error": "export_document_structure must be a bool",
+        "original_value": false
+      },
+      "export_underline_formatting": {
+        "string_accepted": false,
+        "error": "export_underline_formatting must be a bool",
+        "original_value": false
+      },
+      "pretty_format": {
+        "string_accepted": false,
+        "error": "pretty_format must be a bool",
+        "original_value": false
+      }
+    },
+    "source": "import json,sys\nfrom io import BytesIO\nfrom pathlib import Path\nfrom zipfile import ZipFile\nfrom docx import Document as NativeDocument\nfrom pypdf import PdfReader\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-boolean-proof');root.mkdir(exist_ok=True)\nsource=root/'source.docx'\nif not source.exists():\n d=NativeDocument();d.add_paragraph().add_run('Underlined text').underline=True;d.save(source)\ndoc=aw.Document(source);result={}\nfor kind,field in ((aw.saving.PdfSaveOptions,'export_document_structure'),(aw.saving.MarkdownSaveOptions,'export_underline_formatting'),(aw.saving.OoxmlSaveOptions,'pretty_format')):\n options=kind()\n try:\n  setattr(options,field,'false');raw=doc.to_bytes(options)\n  if field=='export_document_structure':enabled='/StructTreeRoot' in PdfReader(BytesIO(raw),strict=True).trailer['/Root']\n  elif field=='export_underline_formatting':enabled='++Underlined text++' in raw.decode()\n  else:\n   with ZipFile(BytesIO(raw)) as z:enabled=b'<w:body>\\r\\n' in z.read('word/document.xml')\n  result[field]={'string_accepted':True,'observed_switch_enabled':enabled}\n except ValueError as exc:result[field]={'string_accepted':False,'error':str(exc),'original_value':getattr(options,field)}\nPath(sys.argv[1]).write_text(json.dumps(result,indent=2)+'\\n');print(json.dumps(result))\n",
+    "input_sha256": "321d834d9da8b9b5fa9819852aaa816b5f8d2f657de061cf18c1e952a8dab9f4",
+    "interpretation": "Same actual python-docx input. String false enables PDF structure, ordinary Markdown underline extension and DOCX indentation in old wheel; new wheel rejects all three assignments and retains False."
+  },
+  "coverage": [
+    "All twelve saving and eight direct bool fields reject five representative wrong types; direct constructor and mutation paths",
+    "Valid false/true assignments retain public instance storage and deepcopy; PDF explicit diagnostics preserved",
+    "Real DOCX PDF StructTreeRoot inspected with strict pypdf; Markdown underline marker observed; DOCX XML formatting inspected and text/underline independently reread with python-docx",
+    "Existing enum/format/unsupported-option/notes/PDF diagnostic tests included in source integration"
+  ],
+  "common_pdf": {
+    "result": "Five fixed inputs, 113 pages: complete size/words/pixels/drawings/images records equal to preceding outline wheel",
+    "record_sha256": "470e8cdaff77bbda91c1becbd1c2f56348e4f51bbd67c74512b7e3418b4a6dcc",
+    "baseline_record": "pdf-outline-contract.json common_pdf"
+  },
+  "common_markdown": {
+    "result": "Fresh isolated installation of preceding outline wheel, identical inputs/environment/default configuration: all five complete content/size/source/diagnostic records equal",
+    "baseline_module": "/tmp/docweave-boolean-baseline-dc9a979/site-packages/aspose/words_foss/__init__.py",
+    "records": [
+      {
+        "name": "small",
+        "source_sha256": "e5c217ce9ab6e2de6ecadb6380699947826ceb39463fe7ccc055092f2ac0d703",
+        "markdown_bytes": 44,
+        "markdown_sha256": "390e64a3a33bd9d47b707dbf42478a2a62b84dbb72d08c525d575a38aa9400b1",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "hundred_pages",
+        "source_sha256": "4a58a34bdddd09e80f992dbc7c0055ab4a07ceea21146304564bd4e81b922d4c",
+        "markdown_bytes": 244286,
+        "markdown_sha256": "e36e62629bfaad7dd778d5936269dfddc522dbbd13db0a9cc9946d4bc6d68fad",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "image_table",
+        "source_sha256": "a1dae1a70968e0640b959f3fcc09b0a7c363f97556a5b54311be7b068e2bd8c2",
+        "markdown_bytes": 19478,
+        "markdown_sha256": "a9f49bd6762f0a9a301a64c101455cbecd3dca417adcf55d1ccdbb8bfcb67f28",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "repeated_images",
+        "source_sha256": "a19f56933135f9820b43e3e90f3ac091d5e3aed0db48a5a932abc4eedf7df3a2",
+        "markdown_bytes": 23159,
+        "markdown_sha256": "06463be1fce92e9c2a5b20c3d36c0e8a2a73f87f420cc2282cef6847d99b51e7",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "mixed_styles",
+        "source_sha256": "db06ae569aba30457f3e83782be91d96dca3786684a6d878a767c3e97b48ff26",
+        "markdown_bytes": 16530,
+        "markdown_sha256": "4087e7cff57911ca214f9115d85c4b90b4790bf2091bb2fe7694dbc9bd882ff1",
+        "diagnostic_codes": []
+      }
+    ],
+    "probe_source": "import hashlib,json,sys,warnings\nfrom pathlib import Path\nimport aspose.words_foss as aw\nrecords=[]\nfor name in (\"small\",\"hundred_pages\",\"image_table\",\"repeated_images\",\"mixed_styles\"):\n source=Path(\"/tmp/docweave-current-performance\")/(name+\".docx\")\n with warnings.catch_warnings(record=True) as caught:\n  warnings.simplefilter(\"always\")\n  doc=aw.Document(source)\n  raw=doc.to_bytes(\"md\")\n records.append({\"name\":name,\"source_sha256\":hashlib.sha256(source.read_bytes()).hexdigest(),\"markdown_bytes\":len(raw),\"markdown_sha256\":hashlib.sha256(raw).hexdigest(),\"diagnostic_codes\":[d.code for d in doc.diagnostics]})\nPath(sys.argv[1]).write_text(json.dumps({\"module\":aw.__file__,\"records\":records},indent=2)+\"\\n\")\n"
+  },
+  "examples": "31 passed, 13 warnings in 9.05s",
+  "wheel": {
+    "bytes": 26490998,
+    "sha256": "ade7cdd2b208923e45e25c04c359cf5ff61fa95fb15151394e4bcce986ceebf9",
+    "source_py_files_matched": 125,
+    "check": "scripts/check_wheel.py passes from /tmp using actual site-packages"
+  },
+  "limits": [
+    "Full installed regression passes; this does not prove cross-platform CI or remaining feature/compatibility acceptance",
+    "No fresh native Word/LibreOffice comparison or actual PDF reader UI check",
+    "Ordinary Markdown underline ++ extension is not universally supported; no output syntax change in this phase",
+    "Other scalars, full save-options and A1/A4 acceptance remain incomplete",
+    "No new speed/RSS or size reduction claim"
+  ],
+  "installed_regression": {
+    "result": "2290 passed, 187 warnings in 414.47s (0:06:54); no skipped or deselected tests",
+    "command": "PYPANDOC_PANDOC=/tmp/docweave-pandoc-arm64/pandoc /tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests -q --import-mode=importlib --tb=short",
+    "boundary": "Full current tests run outside checkout against the final installed wheel; does not establish actual native Word/LibreOffice or PDF-reader UI equivalence"
+  }
+}

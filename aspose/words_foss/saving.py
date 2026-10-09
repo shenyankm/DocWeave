@@ -6,6 +6,8 @@ matching the public save API.
 Enum members are ``IntEnum``s valued as in ``aspose.words.saving``. The
 lowercase string spellings earlier releases used are still accepted when
 assigned to a save-option field.
+Boolean switches accept only ``True`` or ``False``; ambiguous values fail on
+assignment without changing the previous value.
 """
 
 from enum import IntEnum
@@ -48,6 +50,26 @@ class _EnumField:
 
     def __set__(self, obj: Any, value: Any) -> None:
         setattr(obj, self._slot, coerce_enum(self._enum_cls, value))
+
+
+class _BoolField:
+    """Reject ambiguous switches while preserving public instance storage."""
+
+    def __init__(self, default: bool) -> None:
+        self._default = default
+
+    def __set_name__(self, owner: type, name: str) -> None:
+        self._name = name
+
+    def __get__(self, obj: Any, objtype: Optional[type] = None) -> Any:
+        if obj is None:
+            return self
+        return obj.__dict__.get(self._name, self._default)
+
+    def __set__(self, obj: Any, value: Any) -> None:
+        if not isinstance(value, bool):
+            raise ValueError(f"{self._name} must be a bool")
+        obj.__dict__[self._name] = value
 
 
 class TableContentAlignment(IntEnum):
@@ -207,6 +229,14 @@ class PdfSaveOptions:
     page_mode = _EnumField(PdfPageMode, PdfPageMode.USE_OUTLINES)
     color_mode = _EnumField(ColorMode, ColorMode.NORMAL)
     zoom_behavior = _EnumField(PdfZoomBehavior, PdfZoomBehavior.NONE)
+    export_document_structure = _BoolField(False)
+    embed_full_fonts = _BoolField(False)
+    use_core_fonts = _BoolField(False)
+    export_bookmarks_outline = _BoolField(True)
+    preserve_form_fields = _BoolField(False)
+    memory_optimization = _BoolField(False)
+    display_doc_title = _BoolField(False)
+    text_shaping = _BoolField(False)
 
     def __setattr__(self, name, value):
         object.__setattr__(self, name, value)
@@ -345,6 +375,7 @@ class OoxmlSaveOptions:
     compliance = _EnumField(OoxmlCompliance, OoxmlCompliance.ECMA376_2006)
     compression_level = _EnumField(CompressionLevel, CompressionLevel.NORMAL)
     zip_64_mode = _EnumField(Zip64Mode, Zip64Mode.NEVER)
+    pretty_format = _BoolField(False)
 
     def __init__(self, save_format: "int | str | None" = None):
         from aspose.words_foss.document import SaveFormat, _coerce_save_format
@@ -382,6 +413,9 @@ class MarkdownSaveOptions:
     empty_paragraph_export_mode = _EnumField(
         MarkdownEmptyParagraphExportMode, MarkdownEmptyParagraphExportMode.EMPTY_LINE
     )
+    export_images_as_base64 = _BoolField(False)
+    export_underline_formatting = _BoolField(False)
+    export_notes = _BoolField(False)
 
     def __init__(self):
         self.table_content_alignment = TableContentAlignment.AUTO

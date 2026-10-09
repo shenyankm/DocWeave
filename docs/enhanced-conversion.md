@@ -25,6 +25,21 @@
 诊断；默认设置不增加警告。需要拒绝这些退回行为时，可将 `ConversionWarning` 升级为错误，
 输出前失败会保留原主文件。`--strict` 针对内容损失，并非拒绝所有选项退回的通用开关。
 
+### 布尔保存开关
+
+`PdfSaveOptions` 的八个、`MarkdownSaveOptions` 的三个及 `OoxmlSaveOptions.pretty_format`
+布尔字段仅接受 `True` / `False`。字符串（包括 `"false"` / `"true"`）、0/1、None 和其他
+非布尔值在赋值时抛出 `ValueError`，不改变原属性，也不污染 PDF 显式请求诊断集合。
+直接 `ConversionOptions` 的八个布尔字段在构造和赋值时同样拒绝错误类型。
+从配置读取这些开关时，调用方应先完成有明确规则的解析，不要依赖 Python 的一般真值判断。
+
+此前非空字符串 `"false"` 会启用 PDF 结构、Markdown 下划线或 DOCX 美化输出；
+现在不会接受该赋值。默认值、公开实例字典字段、复制及有效 True/False 的实际行为保留。
+尚未实现的 PDF 开关继续发出 unsupported_option 诊断，类型通过不意味着功能已支持。
+普通 Markdown 的下划线使用 `++text++` 扩展语法，HTML 表格使用 u 标签；
+普通 Markdown 扩展不是跨阅读器兼容保证。本次未改变该输出语法。
+真实 DOCX、独立 pypdf/ZIP/python-docx 回读及前后记录见[布尔契约](benchmarks/boolean-save-contract.json)。
+
 ### PDF 打开缩放因子
 
 `PdfSaveOptions.zoom_factor` 仅在 `zoom_behavior=ZOOM_FACTOR` 时消费，接受有限非负
