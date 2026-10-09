@@ -177,7 +177,9 @@ class Node:
     def child_nodes(self):
         return tuple(self._document._wrap(self._part_name, child)
                      for child in _elements(self._element)
-                     if child.localName not in _PROPERTY_ROOTS or child.namespaceURI != W)
+                     if child.namespaceURI != W or (
+                         child.localName not in _PROPERTY_ROOTS and
+                         not (_is(self._element, "tbl") and _is(child, "tblGrid"))))
 
     def get_child_nodes(self, node_type=NodeType.ANY, deep=False):
         found = []
@@ -284,11 +286,20 @@ class Node:
         parent._changed()
         return self
 
-    def clone(self):
+    def clone(self, deep: bool = True):
+        """Copy this node detached, retaining its owner and direct formatting."""
+        if not isinstance(deep, bool):
+            raise TypeError("deep must be a boolean")
         self._structural_editable()
         if not _safe_structure(self._element):
             raise NotImplementedError("Cloning complex content requires resource import support")
         cloned = self._element.cloneNode(deep=True)
+        if not deep and not isinstance(self, Run):
+            # OOXML property subtrees are formatting, not composite DOM children.
+            for child in list(cloned.childNodes):
+                if (child.nodeType != XmlNode.ELEMENT_NODE or child.namespaceURI != W or
+                        child.localName not in _PROPERTY_ROOTS | {"tblGrid"}):
+                    cloned.removeChild(child)
         _bind_namespace_context(self._element, cloned)
         return self._document._wrap(self.part_name, cloned)
 
@@ -474,7 +485,7 @@ class Hyperlink(Node):
 
     @property
     def target(self):
-        from aspose.words_foss.docx_writer.constants import REL_HYPERLINK, R_URI
+        from aspose.words_foss.docx_writer.constants import R_URI, REL_HYPERLINK
         from aspose.words_foss.dom.resources import relationship_root
 
         rid = self._element.getAttributeNS(R_URI, "id")

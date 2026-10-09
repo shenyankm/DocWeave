@@ -1,24 +1,19 @@
 {
   "schema": 1,
-  "source": "corpus/commercial-26.9-dom.docx",
-  "source_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001",
-  "origin": "independently generated with python-docx 1.2.0: ALPHA bold + tail, BETA, one-cell table CELL",
-  "probe": "../probes/run_dom_structure.py",
-  "independent_reader": "../probes/inspect_dom_structure.py",
   "baseline": {
     "version": "26.9.0",
     "python": "3.13.15",
     "license": "evaluation artifacts retained"
   },
   "current": {
-    "version": "26.7.0.post2",
     "python": "3.14.7",
-    "baseline_commit": "4a74ec6835bc3f1588e9040c8f095294ec2f0ced",
-    "candidate": "working-tree nodes.py change",
-    "wheel_sha256": "21721f6e47cd0b2a5b55005497f86398e1a214ecf3a0562fb7882c1825e1bd0e",
-    "wheel_size": 26491522
+    "source_base": "54b5730a17bbf4ccdeea47405cf8413da76a34b2",
+    "candidate": "working tree clone-depth change",
+    "wheel_sha256": "968d42759852b701c6d60a1d6494f9c4591ab13db6ee3cc724bb2a6c7400400c"
   },
-  "status": "bounded actual structure observations; full DOM and rendering unverified",
+  "source": "corpus/commercial-26.9-dom.docx",
+  "probe": "../probes/run_dom_structure.py",
+  "independent_reader": "../probes/inspect_dom_structure.py",
   "reports": {
     "commercial": {
       "schema": 1,
@@ -49,7 +44,7 @@
             }
           },
           "saved_docx": "move_to_end.docx",
-          "saved_sha256": "ed42733fa307bdc0784133f442a48764878c6b1020af5d63839c8d8ee316cd19"
+          "saved_sha256": "1c4027c3cf1a20e549e1b66f52ef0f90c456d0e5ccb61ef020024006f66a394f"
         },
         {
           "scenario": "insert_before",
@@ -72,7 +67,7 @@
             }
           },
           "saved_docx": "insert_before.docx",
-          "saved_sha256": "a7a53dd63b86e7b9041cda17ba827d9f5ff5124891f02b5415c6867f7e02a1ae"
+          "saved_sha256": "720936907a1f060bbf2e309c13a5b4b8273e03ecde13f8d8106759202de51673"
         },
         {
           "scenario": "clone_deep",
@@ -99,7 +94,7 @@
             }
           },
           "saved_docx": "clone_deep.docx",
-          "saved_sha256": "afc008a0364a61ad70e883bc3eddba6d6e31e87feeefb63cd6c523a568e7c99d"
+          "saved_sha256": "43ade124b5fa269423113d97747379242c9ff30782afa6a0c724f426e4073674"
         },
         {
           "scenario": "clone_shallow",
@@ -125,7 +120,7 @@
             }
           },
           "saved_docx": "clone_shallow.docx",
-          "saved_sha256": "00762448db0c192c8172ba4545cfc3c1d21363a83c479d052327438196442670"
+          "saved_sha256": "f3a86fbda411bc823e2939f2d41acc65d371020ec94a53d61955749ca42eec48"
         },
         {
           "scenario": "remove",
@@ -150,7 +145,7 @@
             }
           },
           "saved_docx": "remove.docx",
-          "saved_sha256": "61b8092e1f0a9f71162c3d24194cdeca31ac56ef5a7219d0d98f6f7e4f371add"
+          "saved_sha256": "f41fd9674c9f84ba5a0136de84c87d85b6c525b1ca8b2511f647e743632a0fda"
         },
         {
           "scenario": "remove_detached",
@@ -172,7 +167,7 @@
             "message": "Proxy error(InvalidOperationException): Cannot remove because there is no parent."
           },
           "saved_docx": "remove_detached.docx",
-          "saved_sha256": "62456e1498378e80536806ec9d136095c9359ead0a5a167d0705925eea10738f"
+          "saved_sha256": "64875af02f1e5db82edc1396480c4f2181803803700270f23eec4624f268e3ea"
         },
         {
           "scenario": "cross_document_append",
@@ -194,7 +189,7 @@
             "message": "Proxy error(ArgumentException): The newChild was created from a different document than the one that created this node."
           },
           "saved_docx": "cross_document_append.docx",
-          "saved_sha256": "95711906f29e85fdfc2cf2c4f6ce3e0b9ed10ace5b792b93b22798bcbe0684dc"
+          "saved_sha256": "5a394d2eeba76ef6ff2d24d2f6d8c76a19890dbaefe76bd368289ebf745ff18f"
         },
         {
           "scenario": "cross_document_import",
@@ -221,7 +216,7 @@
             }
           },
           "saved_docx": "cross_document_import.docx",
-          "saved_sha256": "1b0344a909bd9e2bc2cec9ac54b293bb95cf63f0532f0fc815bf44eb01b42743"
+          "saved_sha256": "fce4dc596707c28e9807662a9c31270e3b895819c0fa916d7cf2b776087469b8"
         },
         {
           "scenario": "illegal_parent",
@@ -243,7 +238,7 @@
             "message": "Proxy error(ArgumentException): Cannot insert a node of this type at this location."
           },
           "saved_docx": "illegal_parent.docx",
-          "saved_sha256": "f7ad437224e63a7b03af355fe7ab93ff65930f63fa4e28ffb1076cf9b71101c2"
+          "saved_sha256": "1263c3f97827a7669ef8b0485eec9ead40244e77f142ed0e7c92d7f074b330a3"
         },
         {
           "scenario": "cycle",
@@ -265,11 +260,11 @@
             "message": "Proxy error(ArgumentException): Cannot add a node to self."
           },
           "saved_docx": "cycle.docx",
-          "saved_sha256": "1fcf958281a233a4c205392654f9b0025e7d179f7cb1bbeecadbcaf0d5b814df"
+          "saved_sha256": "7804e42e1e85fd967c0222b916df86e1911630f9adc894ab4cfe744820a6a204"
         }
       ]
     },
-    "current_before": {
+    "current": {
       "schema": 1,
       "module": "aspose.words_foss",
       "source_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001",
@@ -365,249 +360,13 @@
             ]
           },
           "outcome": {
-            "status": "raised",
-            "exception_type": "TypeError",
-            "message": "Node.clone() takes 1 positional argument but 2 were given"
-          },
-          "saved_docx": "clone_shallow.docx",
-          "saved_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001"
-        },
-        {
-          "scenario": "remove",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "BETA"
-            ]
-          },
-          "outcome": {
             "status": "returned",
             "result": {
-              "returns_none": false,
-              "returns_self": true,
-              "parent_is_none": true,
-              "owner_unchanged": true
-            }
-          },
-          "saved_docx": "remove.docx",
-          "saved_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001"
-        },
-        {
-          "scenario": "remove_detached",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "outcome": {
-            "status": "raised",
-            "exception_type": "ValueError",
-            "message": "Node has no parent"
-          },
-          "saved_docx": "remove_detached.docx",
-          "saved_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001"
-        },
-        {
-          "scenario": "cross_document_append",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "outcome": {
-            "status": "raised",
-            "exception_type": "ValueError",
-            "message": "Cross-document/part insertion requires resource import and is unsupported"
-          },
-          "saved_docx": "cross_document_append.docx",
-          "saved_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001"
-        },
-        {
-          "scenario": "cross_document_import",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "outcome": {
-            "status": "raised",
-            "exception_type": "AttributeError",
-            "message": "'DocxDocument' object has no attribute 'import_node'"
-          },
-          "saved_docx": "cross_document_import.docx",
-          "saved_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001"
-        },
-        {
-          "scenario": "illegal_parent",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "outcome": {
-            "status": "raised",
-            "exception_type": "ValueError",
-            "message": "Invalid parent/child node types"
-          },
-          "saved_docx": "illegal_parent.docx",
-          "saved_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001"
-        },
-        {
-          "scenario": "cycle",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "outcome": {
-            "status": "raised",
-            "exception_type": "ValueError",
-            "message": "Cannot insert a node into itself or its descendant"
-          },
-          "saved_docx": "cycle.docx",
-          "saved_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001"
-        }
-      ]
-    },
-    "current_after": {
-      "schema": 1,
-      "module": "aspose.words_foss",
-      "source_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001",
-      "adapter": "commercial first_section.body/as_paragraph/document; local DocxDocument.body/owner_document; deep clone uses explicit True vs local default",
-      "scope": "ten plain-DOCX scenarios, evaluation artifacts retained; no full DOM claim",
-      "records": [
-        {
-          "scenario": "move_to_end",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "BETA",
-              "ALPHA tail"
-            ]
-          },
-          "outcome": {
-            "status": "returned",
-            "result": {
-              "returned_same_node": true,
-              "parent_is_body": true
-            }
-          },
-          "saved_docx": "move_to_end.docx",
-          "saved_sha256": "8f76bb17f7e931e9f8907aac5ca90ff31be821896c47d2731c9a6edceddc0b7c"
-        },
-        {
-          "scenario": "insert_before",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "BETA",
-              "ALPHA tail"
-            ]
-          },
-          "outcome": {
-            "status": "returned",
-            "result": {
-              "returned_inserted_node": true
-            }
-          },
-          "saved_docx": "insert_before.docx",
-          "saved_sha256": "57e962d444adec0098672e0e700bcd063270e36db7ed4dca9dca0179ff2613ae"
-        },
-        {
-          "scenario": "clone_deep",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA",
-              "CLONE tail"
-            ]
-          },
-          "outcome": {
-            "status": "returned",
-            "result": {
-              "detached_before_insert": true,
+              "copy_text": "",
+              "child_count": 0,
               "same_owner": true,
-              "source_text": "ALPHA tail",
-              "copy_text": "CLONE tail"
+              "detached": true
             }
-          },
-          "saved_docx": "clone_deep.docx",
-          "saved_sha256": "411c18ecafcada63716c0762b8fd29b0337ea5e77034deb2f9e4bb3f9354fac0"
-        },
-        {
-          "scenario": "clone_shallow",
-          "before": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "after": {
-            "labelled_paragraphs": [
-              "ALPHA tail",
-              "BETA"
-            ]
-          },
-          "outcome": {
-            "status": "raised",
-            "exception_type": "TypeError",
-            "message": "Node.clone() takes 1 positional argument but 2 were given"
           },
           "saved_docx": "clone_shallow.docx",
           "saved_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001"
@@ -927,164 +686,7 @@
         ]
       }
     ],
-    "current_before": [
-      {
-        "scenario": "move_to_end",
-        "all_native_paragraphs": [
-          "BETA",
-          "ALPHA tail"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "insert_before",
-        "all_native_paragraphs": [
-          "BETA",
-          "ALPHA tail"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "clone_deep",
-        "all_native_paragraphs": [
-          "ALPHA tail",
-          "BETA",
-          "CLONE tail"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          },
-          {
-            "text": "CLONE tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "clone_shallow",
-        "all_native_paragraphs": [
-          "ALPHA tail",
-          "BETA"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "remove",
-        "all_native_paragraphs": [
-          "ALPHA tail",
-          "BETA"
-        ],
-        "matches_memory": false,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "remove_detached",
-        "all_native_paragraphs": [
-          "ALPHA tail",
-          "BETA"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "cross_document_append",
-        "all_native_paragraphs": [
-          "ALPHA tail",
-          "BETA"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "cross_document_import",
-        "all_native_paragraphs": [
-          "ALPHA tail",
-          "BETA"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "illegal_parent",
-        "all_native_paragraphs": [
-          "ALPHA tail",
-          "BETA"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      },
-      {
-        "scenario": "cycle",
-        "all_native_paragraphs": [
-          "ALPHA tail",
-          "BETA"
-        ],
-        "matches_memory": true,
-        "table_cell": "CELL",
-        "font_checks": [
-          {
-            "text": "ALPHA tail",
-            "first_run_bold": true
-          }
-        ]
-      }
-    ],
-    "current_after": [
+    "current": [
       {
         "scenario": "move_to_end",
         "all_native_paragraphs": [
@@ -1236,101 +838,233 @@
       }
     ]
   },
-  "outputs": {
-    "archive": "corpus/commercial-26.9-dom-outputs.zip",
-    "sha256": "62cea1d3825e68ab7d0c485fbc26f0e9151f2ba0a36756bfc148310bef7c0165"
+  "limits": [
+    "Ten plain-DOCX structure scenarios and five node kinds at both depths. Observed counts/ownership and Run text/font match; full formatting, resources and rendering acceptance remains pending.",
+    "Complex ranges/resources, cross-document import, return/error contracts, rendering and all overloads remain incomplete.",
+    "Both implementations reject None, integers 0/1, strings and lists with TypeError for deep; exception messages and other values remain unverified."
+  ],
+  "archive": "corpus/dom-clone-depth.zip",
+  "archive_sha256": "23a16a347f23aaac2ca250e15b5bec9ba8e8b7711d4a41d886bd0f04d7674641",
+  "argument_observations": {
+    "values": [
+      "None",
+      "0",
+      "1",
+      "'false'",
+      "[]"
+    ],
+    "commercial_exception_types": [
+      "TypeError",
+      "TypeError",
+      "TypeError",
+      "TypeError",
+      "TypeError"
+    ],
+    "current_exception_types": [
+      "TypeError",
+      "TypeError",
+      "TypeError",
+      "TypeError",
+      "TypeError"
+    ]
   },
-  "capability_observations": {
-    "aspose.words.Node.clone": {
-      "samples": [
-        "clone_deep",
-        "clone_shallow"
-      ],
-      "baseline_behavior": "deep clone detached with same owner; shallow clone has zero children and empty text",
-      "current_implementation": "Node.clone(deep=True/False) supports simple paragraph/Run/table/row/cell copying; original-document ownership and direct formatting retained",
-      "gap": "complex nodes/resources/ranges, other node kinds, full formatting and rendering remain unverified",
-      "dependencies": [
-        "ownership",
-        "formats",
-        "resource relationships"
-      ],
-      "approach": "extend complete node cloning after resource/range semantics are defined",
-      "exit_criteria": "both depths, all node kinds, independent source/copy edits, resources, save and render verified",
-      "supplementary_evidence": "dom-clone-depth.json",
-      "delivery": "local_candidate_wheel_tests_passed; remote_platform_ci_pending"
+  "node_depth_probe": "../probes/run_clone_depth.py",
+  "node_depth_reports": {
+    "commercial": {
+      "module": "aspose.words",
+      "source_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001",
+      "records": [
+        {
+          "kind": "paragraph",
+          "deep": false,
+          "node_type": 8,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 0
+        },
+        {
+          "kind": "paragraph",
+          "deep": true,
+          "node_type": 8,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 2
+        },
+        {
+          "kind": "run",
+          "deep": false,
+          "node_type": 21,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": null,
+          "text": "ALPHA",
+          "bold": true
+        },
+        {
+          "kind": "run",
+          "deep": true,
+          "node_type": 21,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": null,
+          "text": "ALPHA",
+          "bold": true
+        },
+        {
+          "kind": "table",
+          "deep": false,
+          "node_type": 5,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 0
+        },
+        {
+          "kind": "table",
+          "deep": true,
+          "node_type": 5,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 1
+        },
+        {
+          "kind": "row",
+          "deep": false,
+          "node_type": 6,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 0
+        },
+        {
+          "kind": "row",
+          "deep": true,
+          "node_type": 6,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 1
+        },
+        {
+          "kind": "cell",
+          "deep": false,
+          "node_type": 7,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 0
+        },
+        {
+          "kind": "cell",
+          "deep": true,
+          "node_type": 7,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 1
+        }
+      ]
     },
-    "aspose.words.Node.remove": {
-      "samples": [
-        "remove",
-        "remove_detached"
-      ],
-      "baseline_behavior": "returns None and retains document; detached removal raises RuntimeError/InvalidOperationException",
-      "current_implementation": "Node.remove() persistence fixed, still returns self and detached removal raises ValueError",
-      "gap": "return/exception differ; complex structures restricted",
-      "dependencies": [
-        "ranges",
-        "relationships",
-        "table validity"
-      ],
-      "approach": "retain failure-before-mutation checks; expand complex removal and settle Python exception mapping",
-      "exit_criteria": "all supported nodes, complex ranges, save/render and exact agreed return/error behavior verified"
-    },
-    "aspose.words.DocumentBase.import_node": {
-      "samples": [
-        "cross_document_import"
-      ],
-      "baseline_behavior": "copies with destination ownership and no parent, original remains attached and unchanged",
-      "current_implementation": "DocxDocument.import_node absent",
-      "gap": "cross-document/part style/list/resource import absent",
-      "dependencies": [
-        "OPC relationships",
-        "style/list mapping",
-        "ownership"
-      ],
-      "approach": "implement node/resource import with collision mapping and atomic failure",
-      "exit_criteria": "all overloads, depths, format modes and resources verified through save and render"
-    },
-    "aspose.words.CompositeNode.append_child": {
-      "samples": [
-        "move_to_end",
-        "cross_document_append",
-        "illegal_parent",
-        "cycle"
-      ],
-      "baseline_behavior": "moves existing node and returns it; rejects foreign-document, invalid-type and cyclic insertion",
-      "current_implementation": "shared Node.insert_before; tested plain movement works",
-      "gap": "restricted structures and different exceptions; section hierarchy incomplete",
-      "dependencies": [
-        "ownership",
-        "hierarchy",
-        "ranges",
-        "table validity"
-      ],
-      "approach": "extend unified ownership and legal parent/child validation",
-      "exit_criteria": "all allowed combinations, complex ranges, cross-part semantics, negative cases and persistence verified"
-    },
-    "aspose.words.CompositeNode.insert_before": {
-      "samples": [
-        "insert_before"
-      ],
-      "baseline_behavior": "moves sibling before reference and returns inserted node",
-      "current_implementation": "Node.insert_before, tested plain move works",
-      "gap": "null/reference/self and complex structures not fully compared",
-      "dependencies": [
-        "CompositeNode.append_child"
-      ],
-      "approach": "share insertion validation and test all reference/container combinations",
-      "exit_criteria": "all legal containers, reference/null/self cases, errors, complex structures and persistence verified"
+    "current": {
+      "module": "aspose.words_foss",
+      "source_sha256": "e093fcba2d8309bae27231b8458cc14d6648806a4ffa83234c683aebbbb29001",
+      "records": [
+        {
+          "kind": "paragraph",
+          "deep": false,
+          "node_type": 8,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 0
+        },
+        {
+          "kind": "paragraph",
+          "deep": true,
+          "node_type": 8,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 2
+        },
+        {
+          "kind": "run",
+          "deep": false,
+          "node_type": 21,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": null,
+          "text": "ALPHA",
+          "bold": true
+        },
+        {
+          "kind": "run",
+          "deep": true,
+          "node_type": 21,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": null,
+          "text": "ALPHA",
+          "bold": true
+        },
+        {
+          "kind": "table",
+          "deep": false,
+          "node_type": 5,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 0
+        },
+        {
+          "kind": "table",
+          "deep": true,
+          "node_type": 5,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 1
+        },
+        {
+          "kind": "row",
+          "deep": false,
+          "node_type": 6,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 0
+        },
+        {
+          "kind": "row",
+          "deep": true,
+          "node_type": 6,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 1
+        },
+        {
+          "kind": "cell",
+          "deep": false,
+          "node_type": 7,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 0
+        },
+        {
+          "kind": "cell",
+          "deep": true,
+          "node_type": 7,
+          "detached": true,
+          "same_owner": true,
+          "content_child_count": 1
+        }
+      ]
     }
   },
-  "validation": {
-    "removal_regression_before": "5 failed, 41 deselected",
-    "source_DOM_tests": "142 passed in 1.69s",
-    "installed_DOM_tests": "142 passed in 0.68s",
-    "installed_resources": "check_wheel.py passed",
-    "independent_before": "remove in-memory state contradicted saved document",
-    "independent_after": "all ten cases agree with saved content; table CELL and labelled first-run bold preserved",
-    "failed_current_operations": "all original package payloads unchanged",
-    "remaining": "return values, error types, shallow clone/import, complex structures and rendering remain incomplete"
+  "verification": {
+    "installed_full_suite": {
+      "passed": 2455,
+      "skipped": 2,
+      "seconds": 344.45
+    },
+    "installed_dom_suite": {
+      "passed": 96
+    },
+    "installed_examples": {
+      "passed": 31
+    },
+    "ruff": "passed",
+    "platform_ci": "pending_for_this_change",
+    "full_dom_acceptance": false
   }
 }

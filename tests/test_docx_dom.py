@@ -187,6 +187,61 @@ def test_ordered_structure_and_parent_ownership(tmp_path):
     assert list(root.find(f'{{{W}}}body'))[-1].tag == f'{{{W}}}sectPr'
 
 
+@pytest.mark.parametrize("kind", ["paragraph", "run", "table", "row", "cell"])
+def test_clone_depth_preserves_formatting_and_owner(tmp_path, kind):
+    source = tmp_path / "clone.docx"
+    package(source, '<w:p><w:pPr><w:ind w:left="340"/></w:pPr>'
+            '<w:r><w:rPr><w:b/></w:rPr><w:t>ALPHA</w:t></w:r></w:p>'
+            '<w:tbl><w:tblPr><w:tblW w:w="2400" w:type="dxa"/></w:tblPr>'
+            '<w:tblGrid><w:gridCol w:w="2400"/></w:tblGrid>'
+            '<w:tr><w:trPr><w:trHeight w:val="400"/></w:trPr>'
+            '<w:tc><w:tcPr><w:tcW w:w="2400" w:type="dxa"/></w:tcPr>'
+            '<w:p><w:r><w:t>CELL</w:t></w:r></w:p></w:tc></w:tr></w:tbl><w:sectPr/>')
+    doc = aw.DocxDocument(source)
+    paragraph, table = doc.body.paragraphs[0], doc.body.tables[0]
+    node = {"paragraph": paragraph, "run": paragraph.runs[0], "table": table,
+            "row": table.rows[0], "cell": table.rows[0].cells[0]}[kind]
+    original = node.xml
+    copied = node.clone(False)
+    assert copied.parent_node is None and copied.owner_document is doc
+    assert copied.part_name == node.part_name and node.xml == original
+    root = fromstring(copied.xml)
+    properties = {"paragraph": "pPr", "run": "rPr", "table": "tblPr", "row": "trPr", "cell": "tcPr"}
+    assert root.find(f'{{{W}}}{properties[kind]}') is not None
+    if kind == "run":
+        assert copied.text == "ALPHA" and copied.font.bold
+        copied.text = "COPY"
+        assert node.text == "ALPHA"
+    else:
+        assert copied.child_nodes == ()
+        assert not any(child.tag in {f'{{{W}}}{name}' for name in ("p", "r", "tr", "tc", "tbl")} for child in root)
+    if kind == "table":
+        assert root.find(f'{{{W}}}tblGrid/{{{W}}}gridCol').get(f'{{{W}}}w') == "2400"
+    assert doc.to_bytes() == source.read_bytes()
+    assert node.clone(True).xml == node.clone().xml
+    if kind in {"paragraph", "run"}:
+        parent = doc.body if kind == "paragraph" else paragraph
+        parent.append_child(copied)
+        reopened = aw.DocxDocument(BytesIO(doc.to_bytes()))
+        if kind == "paragraph":
+            saved = reopened.body.paragraphs[-1]
+            assert saved.text == "" and not saved.runs
+            assert fromstring(saved.xml).find(f'{{{W}}}pPr/{{{W}}}ind').get(f'{{{W}}}left') == "340"
+        else:
+            assert reopened.body.paragraphs[0].runs[-1].text == "COPY"
+            assert reopened.body.paragraphs[0].runs[-1].font.bold
+
+
+@pytest.mark.parametrize("value", [None, 0, 1, "false", []])
+def test_clone_rejects_non_boolean_depth_without_mutation(tmp_path, value):
+    source = tmp_path / "clone.docx"
+    package(source, '<w:p><w:r><w:t>ALPHA</w:t></w:r></w:p>')
+    doc = aw.DocxDocument(source)
+    with pytest.raises(TypeError, match="boolean"):
+        doc.body.paragraphs[0].clone(value)
+    assert doc.to_bytes() == source.read_bytes()
+
+
 @pytest.mark.parametrize("kind", ["paragraph", "run", "table", "cell_paragraph", "header_paragraph"])
 def test_first_edit_removal_persists_and_preserves_unaffected_parts(tmp_path, kind):
     source = tmp_path / "source.docx"
