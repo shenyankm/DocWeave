@@ -10522,7 +10522,13 @@
         "capability": "aspose.words.DocumentBase.import_node",
         "scope": "partial plain-DOCX cases; not all node kinds or overloads"
       },
-      "baseline_behavior": "partially_observed; see bounded behavior evidence"
+      "baseline_behavior": "partially_observed; see bounded behavior evidence",
+      "style_conflict_evidence": {
+        "file": "style-import-conflicts-26.9.json",
+        "scope": "247 default-mode deep paragraph import cases; seven native source changes and two native roundtrip changes",
+        "current_alternative_entrypoint": "DocxDocument.import_node",
+        "delivery": "ancestor safety guard fixed; 166 cases remain unsupported; full import and rendering unverified"
+      }
     },
     {
       "id": "aspose.words.Document.include_textboxes_footnotes_endnotes_in_stat",
@@ -11996,7 +12002,13 @@
         "capability": "aspose.words.DocumentBase.import_node",
         "scope": "partial plain-DOCX cases; not all node kinds or overloads"
       },
-      "baseline_behavior": "partially_observed; see bounded behavior evidence"
+      "baseline_behavior": "partially_observed; see bounded behavior evidence",
+      "style_conflict_evidence": {
+        "file": "style-import-conflicts-26.9.json",
+        "scope": "247 default-mode deep paragraph import cases; seven native source changes and two native roundtrip changes",
+        "current_alternative_entrypoint": "DocxDocument.import_node",
+        "delivery": "ancestor safety guard fixed; 166 cases remain unsupported; full import and rendering unverified"
+      }
     },
     {
       "id": "aspose.words.DocumentBase.index_of",

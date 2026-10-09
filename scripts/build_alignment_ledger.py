@@ -90,6 +90,13 @@ def build(declarations, baseline, current, observations=None, formats=None):
                 "current_alternative_entrypoint": "DocxDocument Run.effective_font." + property_name,
             }
             records[-1]["baseline_behavior"] = "partially_observed; canonical Font getter alignment remains incomplete"
+        if name in {"aspose.words.Document.import_node", "aspose.words.DocumentBase.import_node"}:
+            records[-1]["style_conflict_evidence"] = {
+                "file": "style-import-conflicts-26.9.json",
+                "scope": "247 default-mode deep paragraph import cases; seven native source changes and two native roundtrip changes",
+                "current_alternative_entrypoint": "DocxDocument.import_node",
+                "delivery": "ancestor safety guard fixed; 166 cases remain unsupported; full import and rendering unverified",
+            }
     assert len({item["id"] for item in records}) == len(records)
     return {"schema": 1, "baseline_version": declarations["version"], "current_runtime_version": current["runtime_version"],
             "record_defaults": declarations["capability_defaults"],

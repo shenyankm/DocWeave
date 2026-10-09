@@ -94,6 +94,65 @@ def test_conflicting_base_does_not_partially_commit_new_style():
     assert target.to_bytes() == before
 
 
+@pytest.mark.parametrize("kind", [WD_STYLE_TYPE.PARAGRAPH, WD_STYLE_TYPE.CHARACTER])
+def test_identical_immediate_base_does_not_hide_conflicting_ancestor(kind):
+    def make(bold):
+        raw = Document()
+        ancestor = raw.styles.add_style("Ancestor", kind)
+        ancestor.font.bold = bold
+        base = raw.styles.add_style("Base", kind)
+        base.base_style = ancestor
+        style = raw.styles.add_style("Derived", kind) if bold else base
+        if bold:
+            style.base_style = base
+        paragraph = raw.add_paragraph("IMPORT")
+        if kind == WD_STYLE_TYPE.PARAGRAPH:
+            paragraph.style = style
+        else:
+            paragraph.runs[0].style = style
+        stream = BytesIO()
+        raw.save(stream)
+        return aw.DocxDocument(BytesIO(stream.getvalue()))
+
+    source, target = make(True), make(False)
+    before_source, before_target = source.to_bytes(), target.to_bytes()
+    with pytest.raises(NotImplementedError, match="conflicting base"):
+        target.import_node(source.body.paragraphs[0], True)
+    assert source.to_bytes() == before_source and target.to_bytes() == before_target
+
+
+def test_conflict_in_later_conditional_table_style_is_not_ignored():
+    def make(color, derived):
+        raw = Document()
+        ancestor = raw.styles.add_style("Ancestor", WD_STYLE_TYPE.TABLE)
+        for region, fill in (("firstRow", "0000FF"), ("lastRow", color)):
+            conditional = OxmlElement("w:tblStylePr")
+            conditional.set(f"{{{W}}}type", region)
+            cell = OxmlElement("w:tcPr")
+            shading = OxmlElement("w:shd")
+            shading.set(f"{{{W}}}fill", fill)
+            cell.append(shading)
+            conditional.append(cell)
+            ancestor.element.append(conditional)
+        base = raw.styles.add_style("Base", WD_STYLE_TYPE.TABLE)
+        base.base_style = ancestor
+        style = raw.styles.add_style("Derived", WD_STYLE_TYPE.TABLE) if derived else base
+        if derived:
+            style.base_style = base
+        table = raw.add_table(rows=1, cols=1)
+        table.style = style
+        table.cell(0, 0).text = "CELL"
+        stream = BytesIO()
+        raw.save(stream)
+        return aw.DocxDocument(BytesIO(stream.getvalue()))
+
+    source, target = make("FF0000", True), make("00FF00", False)
+    before_source, before_target = source.to_bytes(), target.to_bytes()
+    with pytest.raises(NotImplementedError, match="conflicting base"):
+        target.import_node(source.body.tables[0], True)
+    assert source.to_bytes() == before_source and target.to_bytes() == before_target
+
+
 @pytest.mark.parametrize("value", [0, 1, None, "USE_DESTINATION_STYLES"])
 def test_mode_requires_enum(value):
     source, target = document(), document()

@@ -112,11 +112,15 @@ def import_node(destination, node, deep, mode):
             else:
                 mapped = map_style(dependency, dependency_kind)
             if relation == "basedOn" and mapped in target_styles.styles:
-                base = source_styles.styles[dependency]
-                target_base = target_styles.styles[mapped]
-                for properties in ("pPr", "rPr", "tblPr", "tcPr", "trPr"):
-                    a, b = _find(base, properties), _find(target_base, properties)
-                    if (a.toxml() if a else None) != (b.toxml() if b else None):
+                source_bases = source_styles._chain(dependency, kind)
+                target_bases = target_styles._chain(mapped, kind)
+                if any(not _safe_structure(base, properties=True) for base in source_bases + target_bases):
+                    raise NotImplementedError("Importing complex base-style dependencies requires resource translation")
+                # shortcut: compare full ancestry XML until all effective style properties can be translated.
+                for properties in ("pPr", "rPr", "tblPr", "tcPr", "trPr", "tblStylePr"):
+                    a = [item.toxml() for base in source_bases for item in _elements(base) if _is(item, properties)]
+                    b = [item.toxml() for base in target_bases for item in _elements(base) if _is(item, properties)]
+                    if a != b:
                         raise NotImplementedError("Importing a new style over a conflicting base requires effective-format translation")
             _set_word_attribute(reference, "val", mapped)
         root.appendChild(imported)

@@ -185,7 +185,9 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "corpus/commercial-26.9-format-outputs.zip", "corpus/commercial-26.9-literal-text.zip",
              "corpus/commercial-26.9-literal-outputs.zip", "import-node-26.9.json", "import-node-current.json",
              "corpus/import-node-26.9.zip", "corpus/import-node-current.zip",
-             "style-toggles-26.9.json", "style-toggles-current.json", "corpus/style-toggles-26.9.zip"]
+             "style-toggles-26.9.json", "style-toggles-current.json", "corpus/style-toggles-26.9.zip",
+             "style-import-conflicts-26.9.json", "corpus/style-import-conflicts-26.9.zip",
+             "corpus/style-import-conflict-outputs.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -197,11 +199,17 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_format_outputs"] == 100 and result["behavioral_acceptance"] is False
     assert result["checked_import_outputs"] == 168
     assert result["checked_style_inputs"] == 745
+    assert result["checked_style_import_outputs"] == 741
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]
     assert len(font_rows) == 2
     assert all(row["behavior_evidence"]["file"] == "style-toggles-26.9.json" for row in font_rows)
     assert all("canonical Font getter alignment remains incomplete" in row["baseline_behavior"] for row in font_rows)
+    import_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
+                   if row["id"] in {"aspose.words.Document.import_node", "aspose.words.DocumentBase.import_node"}]
+    assert len(import_rows) == 2
+    assert all(row["style_conflict_evidence"]["file"] == "style-import-conflicts-26.9.json" for row in import_rows)
+    assert all("166 cases remain unsupported" in row["style_conflict_evidence"]["delivery"] for row in import_rows)
     archive = tmp_path / "corpus" / "commercial-26.9-literal-outputs.zip"
     archive.write_bytes(archive.read_bytes() + b"corruption")
     with pytest.raises(AssertionError):
@@ -266,6 +274,33 @@ def test_style_evidence_rejects_changed_digest_missing_case_and_fabricated_match
     report["records"].pop()
     path.write_text(json.dumps(report))
     with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+def test_style_import_evidence_rejects_forged_layers_and_changed_outputs(tmp_path):
+    import json
+    from shutil import copyfile
+
+    root = Path(__file__).parents[1]
+    check = runpy.run_path(str(root / "scripts" / "verify_commercial_baseline.py"))["verify_style_imports"]
+    source = root / "docs" / "benchmarks"
+    (tmp_path / "corpus").mkdir()
+    for name in ("style-import-conflicts-26.9.json", "corpus/style-import-conflicts-26.9.zip",
+                 "corpus/style-import-conflict-outputs.zip"):
+        copyfile(source / name, tmp_path / name)
+    assert check(tmp_path) == 741
+    path = tmp_path / "style-import-conflicts-26.9.json"
+    original = path.read_bytes()
+    report = json.loads(original)
+    row = report["independent_checks"]["commercial"][0]["styles"][0]
+    row["font"]["bold"] = not row["font"]["bold"]
+    path.write_text(json.dumps(report))
+    with pytest.raises(AssertionError, match="independent observation"):
+        check(tmp_path)
+    path.write_bytes(original)
+    archive = tmp_path / "corpus" / "style-import-conflict-outputs.zip"
+    archive.write_bytes(archive.read_bytes() + b"corruption")
+    with pytest.raises(AssertionError, match="outputs digest"):
         check(tmp_path)
 
 

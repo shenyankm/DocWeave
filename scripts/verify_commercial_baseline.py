@@ -103,6 +103,66 @@ def verify_style_toggles(root):
     return len(report["records"])
 
 
+def verify_style_imports(root):
+    report = json.loads((root / "style-import-conflicts-26.9.json").read_text())
+    corpus = (root / report["corpus"]["archive"]).read_bytes()
+    raw_outputs = (root / report["outputs"]["archive"]).read_bytes()
+    assert digest(corpus) == report["corpus"]["sha256"], "style import corpus digest mismatch"
+    assert digest(raw_outputs) == report["outputs"]["sha256"], "style import outputs digest mismatch"
+    probes = Path(__file__).parents[1] / "docs" / "probes"
+    generate = runpy.run_path(str(probes / "import_style_conflicts.py"))["inputs"]
+    expected = {key + "/" + phase + ".docx" for key, phase, _ in generate()}
+    keys = {name.split("/")[0] for name in expected}
+    inspect = runpy.run_path(str(probes / "inspect_style_imports.py"))["inspect_document"]
+    assert len(expected) == 494 and len(keys) == report["corpus"]["input_pairs"] == 247
+    checked, phases = 0, {}
+    with ZipFile(BytesIO(corpus)) as inputs, ZipFile(BytesIO(raw_outputs)) as outputs:
+        assert len(inputs.namelist()) == len(expected) and set(inputs.namelist()) == expected
+        assert len(outputs.namelist()) == report["outputs"]["files"] == 741
+        for phase in ("commercial", "before", "candidate"):
+            observed = report["reports"][phase]
+            assert observed["corpus_sha256"] == report["corpus"]["sha256"]
+            rows = {row["case"]: row for row in observed["records"]}
+            assert len(rows) == len(observed["records"]) == 247 and set(rows) == keys
+            phases[phase] = rows
+            recorded = {row["case"]: row for row in report["independent_checks"][phase]}
+            assert len(recorded) == 247 and set(recorded) == keys
+            for key, row in rows.items():
+                for source in ("source", "destination"):
+                    assert digest(inputs.read(key + "/" + source + ".docx")) == row["inputs"][source]
+                data = outputs.read(phase + "/" + row["output"])
+                assert digest(data) == row["output_sha256"]
+                actual = {"case": key, "output": row["output"], **inspect(BytesIO(data))}
+                assert actual == recorded[key], "style import independent observation mismatch"
+                if row["outcome"] == "raised":
+                    assert phase != "commercial" and row["destination_unchanged"] is True
+                else:
+                    assert row["outcome"] == "returned" and "reopened_format" in row
+                checked += 1
+    native = phases["commercial"]
+    for phase in ("before", "candidate"):
+        read = report["official_candidate_rereads"][phase]
+        assert read["version"] == "26.9.0" and read["licensed"] is False
+        observed = {row["case"]: row for row in read["records"]}
+        returned = {key for key, row in phases[phase].items() if row["outcome"] == "returned"}
+        assert len(observed) == len(read["records"]) and set(observed) == returned
+        assert all(row["output_sha256"] == phases[phase][key]["output_sha256"] for key, row in observed.items())
+        mismatches = sorted(key for key, row in observed.items() if row["format"] != native[key]["reopened_format"])
+        assert mismatches == sorted(report["reread_mismatches"][phase])
+        if phase == "candidate":
+            assert not mismatches
+    assert sorted(report["native_source_changes"]) == sorted(key for key, row in native.items() if row["source_format"] != row["imported_format"])
+    assert sorted(report["native_roundtrip_changes"]) == sorted(key for key, row in native.items() if row["imported_format"] != row["reopened_format"])
+    repeated = {row["case"]: row for row in report["repeat_without_source_getter"]}
+    assert len(repeated) == len(report["repeat_without_source_getter"]) and set(repeated) == set(report["native_roundtrip_changes"])
+    for key, row in repeated.items():
+        assert row["no_source_getter_before_import"] is True
+        assert row["imported_bold"] == native[key]["imported_format"]["bold"]
+        assert row["reopened_bold"] == native[key]["reopened_format"]["bold"]
+    assert report["validation"]["full_import_acceptance"] is False and report["validation"]["rendering_acceptance"] is False
+    return checked
+
+
 def verify(root):
     def read(name):
         return json.loads((root / name).read_text())
@@ -143,9 +203,11 @@ def verify(root):
                 assert data.decode().replace("\r\n", "\n") == row["markdown"]
     imports = verify_import_outputs(root)
     toggles = verify_style_toggles(root)
+    style_imports = verify_style_imports(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
             "checked_style_inputs": toggles,
+            "checked_style_import_outputs": style_imports,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 
