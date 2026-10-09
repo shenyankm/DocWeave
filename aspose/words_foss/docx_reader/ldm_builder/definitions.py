@@ -59,6 +59,7 @@ def _tsp_build_font(rPr: ET.Element) -> ldm.Font:
     size = rPr.find(f"{W_NS}sz")
     if size is not None:
         font.size = parse_font_size(size.get(f"{W_NS}val", ""))
+        font.size_explicit = True
     return font
 
 

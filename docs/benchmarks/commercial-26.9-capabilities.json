@@ -16121,6 +16121,13 @@
         "implementation": "partial_alternative_dom_api",
         "tests": "tests/test_style_font_edits.py",
         "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
+      },
+      "model_json_origin_gap": {
+        "status": "open",
+        "evidence": "font-default-presence-26.9.json outputs; eight character-style inputs with JSON enabled emit w:b/w:i val=0 where source had no declaration",
+        "cause": "full model JSON validation populates model_fields_set; sparse Boolean source origin is not retained",
+        "impact": "direct false can change later basedOn inheritance; effective-value checks alone do not establish origin preservation",
+        "full_acceptance": false
       }
     },
     {
@@ -16286,6 +16293,13 @@
         "implementation": "partial_alternative_dom_api",
         "tests": "tests/test_style_font_edits.py",
         "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
+      },
+      "model_json_origin_gap": {
+        "status": "open",
+        "evidence": "font-default-presence-26.9.json outputs; eight character-style inputs with JSON enabled emit w:b/w:i val=0 where source had no declaration",
+        "cause": "full model JSON validation populates model_fields_set; sparse Boolean source origin is not retained",
+        "impact": "direct false can change later basedOn inheritance; effective-value checks alone do not establish origin preservation",
+        "full_acceptance": false
       }
     },
     {
@@ -16521,16 +16535,26 @@
           "native zero, negative, invalid-text and overflow recovery not implemented as native recovery",
           "complex-script szCs, complete inheritance contexts and full layout unaccepted",
           "large signed-range/native wraparound behavior unresolved",
-          "conversion of absent rPrDefault creates an empty group; unrelated implicit Derived style size changes from native 11pt to native reread 10pt in 22 direct-run cases; target Run size remains correct"
+          "before-fix implicit Derived size migration in 22 cases is retained as historical evidence; correction validated by font-default-presence-26.9.json"
         ],
         "native_current_rereads": 66
       },
       "implicit_default_roundtrip_gap": {
-        "evidence": "font-size-loading-26.9.json:docweave_roundtrip.native_reread",
-        "status": "open",
-        "scope": "22 positive direct-run cases retain target run size but source Derived implicit size 11pt becomes 10pt after LDM DOCX conversion",
-        "cause": "writer emits empty rPrDefault despite source group absence; presence provenance not retained by current conversion model",
-        "impact": "future inherited style/run creation or edits may change default size; raw DOM roundtrip preserves source group absence"
+        "evidence": "font-default-presence-26.9.json",
+        "status": "implemented_and_bounded_tests_passed",
+        "scope": "87 reused inputs; 348 DOCX/Flat OPC outputs with/without model JSON; default-group presence and Run/Derived effective ordinary sizes plus direct declaration state independently checked and native cold reread",
+        "implementation": "Document.doc_defaults_rpr_present preserves absent/empty groups; Font.size_explicit preserves direct ordinary size origin including equal values; inherited size resolves 11pt absent versus 10pt present",
+        "tests": [
+          "tests/test_font_default_presence.py",
+          "tests/test_commercial_api_inventory.py"
+        ],
+        "native_current_rereads": 348,
+        "pdf_size_measurements": 21,
+        "full_acceptance": false,
+        "limits": [
+          "legacy JSON without provenance retains previous writer policy",
+          "complete font-property origin, complex-script szCs, malformed recovery and full rendering not accepted"
+        ]
       }
     },
     {
@@ -306875,7 +306899,7 @@
           "CELL": true
         },
         "literal_markup_present": false,
-        "first_paragraph_prefix": "\ufeff"
+        "first_paragraph_prefix": "﻿"
       }
     },
     {

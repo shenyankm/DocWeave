@@ -69,6 +69,8 @@ class LdmBuilderMixin:
 
         if self._doc_default_rPr is not None:
             doc.doc_defaults_font = self._fonts_builder.build(self._doc_default_rPr)
+        doc.doc_defaults_rpr_present = (self._styles_xml is not None and
+                                       self._styles_xml.find(f"{W_NS}docDefaults/{W_NS}rPrDefault") is not None)
 
         self._populate_source_stories(doc)
         self._populate_headers_footers(doc)

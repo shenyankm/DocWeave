@@ -341,6 +341,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
               "corpus/style-import-projections.zip"]
     names += ["font-size-loading-26.9.json", "corpus/font-size-loading-26.9.zip",
               "corpus/font-size-loading-26.9-outputs.zip", "corpus/font-size-loading-current.zip"]
+    names += ["font-default-presence-26.9.json", "corpus/font-default-presence-current.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -953,3 +954,63 @@ def test_font_size_loading_evidence_accepts_frozen_outputs():
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / 'scripts/verify_commercial_baseline.py'))['verify_font_size_loading']
     assert check(root / 'docs/benchmarks') == 126
+
+
+@pytest.mark.parametrize('change', [None, 'native_size', 'source_hash', 'presence', 'coverage', 'xml_direct_size'])
+def test_font_default_presence_evidence_checks_independent_outputs(tmp_path, change):
+    import hashlib
+    import json
+    import shutil
+    from io import BytesIO
+    from xml.etree import ElementTree as ET
+    from zipfile import ZipFile
+
+    root = Path(__file__).parents[1]
+    source = root / 'docs/benchmarks'
+    report = json.loads((source / 'font-default-presence-26.9.json').read_text())
+    (tmp_path / 'corpus').mkdir()
+    for filename in report['sources']:
+        shutil.copyfile(source / filename, tmp_path / filename)
+        corpus = json.loads((source / filename).read_text())['corpus']
+        shutil.copyfile(source / corpus, tmp_path / corpus)
+    output_path = tmp_path / report['outputs']
+    shutil.copyfile(source / report['outputs'], output_path)
+    row = report['records'][0]
+    if change == 'native_size':
+        report['native_reread']['records'][0]['run_size'] += .5
+    elif change == 'source_hash':
+        row['source_sha256'] = 'forged'
+    elif change == 'presence':
+        row['rpr_default_present'] = not row['rpr_default_present']
+    elif change == 'coverage':
+        report['records'][0] = report['records'][1]
+    elif change == 'xml_direct_size':
+        w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+        with ZipFile(output_path) as archive:
+            outputs = {name: archive.read(name) for name in archive.namelist()}
+        with ZipFile(BytesIO(outputs[row['output']])) as archive:
+            parts = {name: archive.read(name) for name in archive.namelist()}
+        document = ET.fromstring(parts['word/document.xml'])
+        run = next(r for r in document.iter(w + 'r') if ''.join(t.text or '' for t in r.iter(w + 't')) == 'IMPORT')
+        properties = run.find(w + 'rPr')
+        if properties is None:
+            properties = ET.SubElement(run, w + 'rPr')
+        ET.SubElement(properties, w + 'sz', {w + 'val': str(int(row['expected_run_size'] * 2))})
+        parts['word/document.xml'] = ET.tostring(document)
+        stream = BytesIO()
+        with ZipFile(stream, 'w') as archive:
+            for name, data in parts.items():
+                archive.writestr(name, data)
+        outputs[row['output']] = stream.getvalue()
+        with ZipFile(output_path, 'w') as archive:
+            for name, data in outputs.items():
+                archive.writestr(name, data)
+        row['output_sha256'] = hashlib.sha256(outputs[row['output']]).hexdigest()
+        report['outputs_sha256'] = hashlib.sha256(output_path.read_bytes()).hexdigest()
+    (tmp_path / 'font-default-presence-26.9.json').write_text(json.dumps(report))
+    check = runpy.run_path(str(root / 'scripts/verify_commercial_baseline.py'))['verify_font_default_presence']
+    if change is None:
+        assert check(tmp_path) == 348
+    else:
+        with pytest.raises(AssertionError):
+            check(tmp_path)

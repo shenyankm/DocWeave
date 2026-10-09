@@ -105,6 +105,7 @@ class FontBuilder:
     def build(self, rPr: ET.Element) -> ldm.Font:
         """Translate one ``<w:rPr>`` into a value-only :class:`ldm.Font`."""
         font = ldm.Font()
+        font.size_explicit = False
         self._apply_name(rPr, font)
         self._apply_size(rPr, font)
         apply_onoff_attrs(font, rPr, RUN_ONOFF_FLAGS)
@@ -147,6 +148,7 @@ class FontBuilder:
         size = rPr.find(f"{W_NS}sz")
         if size is not None:
             font.size = parse_font_size(size.get(f"{W_NS}val", ""))
+            font.size_explicit = True
 
     @staticmethod
     def _apply_underline(rPr: ET.Element, font: ldm.Font) -> None:
@@ -452,6 +454,7 @@ class FontResolver:
             base.color = COLOR_EMPTY
         if not base.highlight_color:
             base.highlight_color = COLOR_EMPTY
+        base.size_explicit = rPr is not None and rPr.find(f"{W_NS}sz") is not None
         return base
 
     def _inherited_font(self, table_id: str, style_id: str, character_id: str) -> ldm.Font:
@@ -464,6 +467,11 @@ class FontResolver:
                 base.color = COLOR_EMPTY
             if not base.highlight_color:
                 base.highlight_color = COLOR_EMPTY
+
+        if "size" not in base.model_fields_set:
+            present = (ctx._styles_xml is not None and
+                       ctx._styles_xml.find(f"{W_NS}docDefaults/{W_NS}rPrDefault") is not None)
+            base.size = 10.0 if present else 11.0
 
         for inherited in (table_id, style_id, character_id):
             if inherited:
@@ -487,6 +495,9 @@ class FontResolver:
             if field not in _set:
                 continue
             value = getattr(override, field)
+            # Zero means unspecified; JSON validation fills model_fields_set.
+            if field == "size" and value == 0:
+                continue
             if field in ("color", "highlight_color") and value == COLOR_EMPTY:
                 continue
             setattr(base, field, value)

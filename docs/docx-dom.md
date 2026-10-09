@@ -125,6 +125,10 @@ for style in editable.styles:
   66 个正值字号的 DOM、转换模型和保存重开已对照；零/负值及损坏值仍按本项目规则拒绝，
   与官方恢复行为不同，复杂文字字号和完整排版未验收。没有声明字号时使用受测普通字号默认值：有 `rPrDefault` 为 10pt，
   没有该组为 11pt。直接值 getter 仍返回 `None`，读取不会写入 XML。
+  转换模型也保留默认组存在状态和普通字号直接声明来源；
+  [348 个 DOCX/Flat OPC/模型 JSON 输出](benchmarks/font-default-presence-26.9.json)
+  经独立 XML 与官方包实际回读，缺失组不再迁移为 10pt 空组，继承字号保持未直接设置。
+  旧模型 JSON 没有来源标记时仍按旧生成规则处理，详见[转换说明](enhanced-conversion.md)。
 - 段落/字符样式的这三项编辑已按 1482 次固定官方观察验证；尚无新增、删除、重命名或
   修改继承关系接口，不提供完整 Style/Font API。表格/列表字体编辑和嵌套 rStyle 修改拒绝。
 - 段落样式的 `paragraph_format.alignment` 沿文档默认和 basedOn 链解析，未声明时为

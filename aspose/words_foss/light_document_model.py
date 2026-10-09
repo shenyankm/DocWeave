@@ -281,6 +281,7 @@ class TabStopCollection(BaseModel):
 class Font(BaseModel):
     name: str = ""
     size: float = 0.0
+    size_explicit: bool | None = None
     bold: bool = False
     italic: bool = False
     underline: int = 0
@@ -1226,6 +1227,7 @@ class Document(BaseModel):
     page_color: str = ""
     page_count: int = 0
     doc_defaults_font: Optional[Font] = None
+    doc_defaults_rpr_present: bool | None = None
 
     styles: list[Style] = Field(default_factory=list)
     lists: list[DocList] = Field(default_factory=list)

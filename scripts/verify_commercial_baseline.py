@@ -774,13 +774,20 @@ def verify_style_toggles(root):
     return len(report["records"])
 
 
-def saved_font_sizes(raw):
+def font_size_parts(raw):
     from xml.etree import ElementTree as ET
 
+    if raw.startswith(b"PK"):
+        with ZipFile(BytesIO(raw)) as package:
+            return tuple(ET.fromstring(package.read("word/" + name + ".xml")) for name in ("document", "styles"))
+    package = "{http://schemas.microsoft.com/office/2006/xmlPackage}"
+    parts = {part.get(package + "name"): part for part in ET.fromstring(raw)}
+    return tuple(parts["/word/" + name + ".xml"].find(package + "xmlData")[0] for name in ("document", "styles"))
+
+
+def saved_font_sizes(raw):
     w = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
-    with ZipFile(BytesIO(raw)) as package:
-        document = ET.fromstring(package.read("word/document.xml"))
-        styles = ET.fromstring(package.read("word/styles.xml"))
+    document, styles = font_size_parts(raw)
     paragraph = next(p for p in document.iter(w + "p") if "".join(t.text or "" for t in p.iter(w + "t")) == "IMPORT")
     run = next(r for r in paragraph.iter(w + "r") if "".join(t.text or "" for t in r.iter(w + "t")) == "IMPORT")
     def size(element):
@@ -804,6 +811,62 @@ def saved_font_sizes(raw):
     if direct is not None:
         resolved = direct
     return style_size, resolved
+
+
+def verify_font_default_presence(root):
+    report = json.loads((root / "font-default-presence-26.9.json").read_text())
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    sources = ("font-defaults-26.9.json", "font-default-matrix-26.9.json", "font-size-loading-26.9.json")
+    assert report["sources"] == list(sources)
+    originals = {}
+    for filename in sources:
+        source = json.loads((root / filename).read_text())
+        raw = (root / source["corpus"]).read_bytes()
+        assert digest(raw) == source["corpus_sha256"]
+        with ZipFile(BytesIO(raw)) as archive:
+            for row in source["records"]:
+                expected = row.get("loaded", row)
+                if "run_size" in expected and 0 < expected["run_size"] < 1000:
+                    data = archive.read(row["input"])
+                    assert digest(data) == row["sha256"]
+                    originals[filename, row["input"]] = row, expected, data
+    assert len(originals) == 87
+    rows = {(r["source_report"], r["input"], r["format"], r["json_roundtrip"]): r for r in report["records"]}
+    assert len(rows) == len(report["records"]) == 348
+    assert set(rows) == {(filename, name, fmt, use_json) for filename, name in originals
+                         for fmt in ("docx", "flat_opc") for use_json in (False, True)}
+    native = report["native_reread"]
+    assert native["version"] == "26.9.0" and native["licensed"] is False
+    observed = {r["output"]: r for r in native["records"]}
+    assert len(observed) == len(native["records"]) == 348
+    raw = (root / report["outputs"]).read_bytes()
+    assert digest(raw) == report["outputs_sha256"]
+    w = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    def declarations(data):
+        document, styles = font_size_parts(data)
+        paragraph = next(p for p in document.iter(w + "p") if "".join(t.text or "" for t in p.iter(w + "t")) == "IMPORT")
+        run = next(r for r in paragraph.iter(w + "r") if "".join(t.text or "" for t in r.iter(w + "t")) == "IMPORT")
+        derived = next(s for s in styles.findall(w + "style") if s.get(w + "styleId") == "Derived")
+        return (styles.find(w + "docDefaults/" + w + "rPrDefault") is not None,
+                run.find(w + "rPr/" + w + "sz") is not None, derived.find(w + "rPr/" + w + "sz") is not None)
+    with ZipFile(BytesIO(raw)) as archive:
+        assert len(archive.namelist()) == 348 and set(archive.namelist()) == set(observed) == {r["output"] for r in rows.values()}
+        for key, row in rows.items():
+            source, expected, original = originals[key[:2]]
+            filename, name, fmt, use_json = key
+            assert type(use_json) is bool
+            assert row["output"] == (filename.removesuffix(".json") + "/" + name.removesuffix(".docx") +
+                                      f"/{fmt}-{int(use_json)}." + ("docx" if fmt == "docx" else "xml"))
+            assert row["source_sha256"] == source["sha256"]
+            data = archive.read(row["output"])
+            assert data.startswith(b"PK") is (fmt == "docx")
+            assert digest(data) == row["output_sha256"]
+            state = declarations(original)
+            assert declarations(data) == state and row["rpr_default_present"] is state[0]
+            style_size, run_size = saved_font_sizes(data)
+            assert style_size == expected["style_size"] == row["expected_style_size"] == observed[row["output"]]["style_size"]
+            assert run_size == expected["run_size"] == row["expected_run_size"] == observed[row["output"]]["run_size"]
+    return len(rows)
 
 
 def verify_font_size_loading(root):
@@ -1345,6 +1408,7 @@ def verify(root):
     character_roundtrips = verify_character_indent_roundtrips(root)
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     font_sizes = verify_font_size_loading(root)
+    default_presence = verify_font_default_presence(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -1352,6 +1416,7 @@ def verify(root):
             "checked_style_inputs": toggles,
             "checked_style_import_outputs": style_imports,
             "checked_font_size_loading_inputs": font_sizes,
+            "checked_font_default_presence_outputs": default_presence,
             "checked_font_default_inputs": defaults,
             "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,

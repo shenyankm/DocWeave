@@ -208,7 +208,7 @@ def render_rPr(
             children.append(el("w:color", {"w:val": "auto"}))
     if font.kerning != base.kerning:
         children.append(el("w:kern", {"w:val": pt_to_half_pt(font.kerning)}))
-    if font.size != base.size and font.size > 0:
+    if font.size > 0 and (font.size != base.size or font.size_explicit is True):
         sz = pt_to_half_pt(font.size)
         children.append(el("w:sz", {"w:val": sz}))
         children.append(el("w:szCs", {"w:val": sz}))

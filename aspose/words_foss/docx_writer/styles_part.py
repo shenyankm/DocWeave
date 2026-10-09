@@ -30,6 +30,14 @@ _HEADING_NAME_RE = re.compile(r"[Hh]eading\s*(\d+)")
 CHARACTER_FONT_PREFIX = "\0character:"
 
 
+def _effective_default_font(doc: ldm.Document) -> ldm.Font:
+    font = doc.doc_defaults_font.model_copy(deep=True) if doc.doc_defaults_font is not None else ldm.Font()
+    if font.size <= 0:
+        present = doc.doc_defaults_font is not None or doc.doc_defaults_rpr_present is not False
+        font.size = 10.0 if present else 11.0
+    return font
+
+
 def build_style_font_map(doc: ldm.Document) -> dict[str, ldm.Font]:
     """Paragraph fonts plus sparse character chains for diff-based rPr emission."""
     out: dict[str, ldm.Font] = {}
@@ -39,6 +47,8 @@ def build_style_font_map(doc: ldm.Document) -> dict[str, ldm.Font]:
         canonical = style.name.replace(" ", "").lower()
         if canonical:
             out[canonical] = style.font
+    if doc.doc_defaults_rpr_present is not None and "normal" not in out:
+        out["normal"] = _effective_default_font(doc)
     characters = {style.name: style for style in doc.styles if style.type == 2}
     for name in characters:
         chain = []
@@ -393,6 +403,7 @@ def _custom_style(
 def _docDefaults(
     normal_pf: Optional[ldm.ParagraphFormat],
     doc_defaults_font: Optional[ldm.Font] = None,
+    rpr_default_present: bool = True,
 ) -> str:
     """Document-level defaults.
 
@@ -420,7 +431,7 @@ def _docDefaults(
         "w:docDefaults",
         None,
         [
-            el("w:rPrDefault", None, rPr_body or el("w:rPr")),
+            el("w:rPrDefault", None, rPr_body or el("w:rPr")) if rpr_default_present else "",
             el("w:pPrDefault", None, pPrDefault_body) if pPrDefault_body else el("w:pPrDefault"),
         ],
     )
@@ -595,7 +606,9 @@ def render_styles_xml(doc: ldm.Document) -> str:
     style_font_map = build_style_font_map(doc)
     referenced_ids = _collect_referenced_style_ids(doc, style_id_map)
 
-    children: list[str] = [_docDefaults(docDefaults_pf, doc.doc_defaults_font), latent_styles()]
+    rpr_present = doc.doc_defaults_font is not None or doc.doc_defaults_rpr_present is not False
+    effective_defaults = _effective_default_font(doc) if doc.doc_defaults_rpr_present is not None else doc.doc_defaults_font
+    children: list[str] = [_docDefaults(docDefaults_pf, doc.doc_defaults_font, rpr_present), latent_styles()]
     seen_ids: set[str] = set()
 
     for style in doc.styles:
@@ -604,7 +617,7 @@ def render_styles_xml(doc: ldm.Document) -> str:
             continue
         seen_ids.add(sid)
         children.append(
-            _custom_style(style, style_pf_map, docDefaults_pf, style_id_map, style_font_map, doc.doc_defaults_font)
+            _custom_style(style, style_pf_map, docDefaults_pf, style_id_map, style_font_map, effective_defaults)
         )
 
     # Word always wants a Normal style row to exist, even if nothing

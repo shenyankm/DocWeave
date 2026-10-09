@@ -269,9 +269,22 @@ DOCX/Flat OPC 中被读取的段落缩进、段间距/行间距、编号缩进�
 不再静默回退为默认字号；缺失属性仍可继承。
 [固定官方观察](benchmarks/font-size-loading-26.9.json)记录了不同的损坏输入恢复结果，
 本项目尚未实现这些恢复语义；复杂文字 `szCs`、完整字体继承和布局仍未验收。
-66 个正值目标 Run 的转换输出已由官方包实际回读；其中 22 个直接 Run 输入的
-空缺 `rPrDefault` 在转换保存后成为空组，隐式样式字号从 11pt 变为 10pt，
-属于尚未修复的默认格式迁移问题。原包 DOM 保存保留该组的缺失状态。
+66 个正值目标 Run 的转换输出已由官方包实际回读。此前缺失 `rPrDefault` 在转换后
+成为空组、隐式样式字号从 11pt 变为 10pt 的问题已修复；
+[87 个既有输入的 348 个输出](benchmarks/font-default-presence-26.9.json)覆盖 DOCX、
+Flat OPC 和模型 JSON，独立 XML 及官方回读核对默认组、Run/样式字号与直接声明状态。
+
+转换模型的 `Document.doc_defaults_rpr_present` 保留默认组是否存在；`False` 表示缺失，
+`True` 表示存在（包括空组），`None` 表示旧 JSON 或新建模型没有来源信息，沿用原有
+生成默认组的规则。缺失组的普通继承字号为 11pt，存在但没有普通字号的组为 10pt；
+原始 `doc_defaults_font` 仍只保留已声明的属性。新设置默认字体时会生成默认组。
+`Font.size_explicit` 的 `True`／`False` 分别记录当前层声明／继承的普通字号；`None`
+沿用旧模型按值差异输出的规则。若编辑后要显式写入与继承值相同的字号，设置该标记为
+`True`；改变字号值仍会写出。来源标记随模型 JSON 保存，旧 JSON 无法恢复丢失的来源信息。
+这两个标记只覆盖受测默认组与普通字号，不代表全部字体属性的设置来源已完整保留；
+字符样式经过完整模型 JSON 后，未声明的粗体/斜体仍可能成为显式 `False`，影响后续
+继承关系编辑；此来源保留缺口已列入能力台账，不能将本次字号验证推广为全部字体属性。
+21 个简单样本的 PDF 字号独立测量通过，完整分页、字形和商业渲染等价仍未验收。
 
 DOCX/Flat OPC 的字符单位缩进保留到模型，但尚未换算为排版点值。加载时汇总 `leftChars/rightChars`、
 `startChars/endChars`、`firstLineChars/hangingChars`，发出 `load.character_indents_ignored`
