@@ -8,6 +8,7 @@ ShapeParserMixin, respectively.
 """
 
 from aspose.words_foss._opc import relationships_path, resolve_target
+from aspose.words_foss._flat_opc import decode, is_flat_opc
 from aspose.words_foss._links import format_link
 import zipfile
 from aspose.words_foss.diagnostics import warn
@@ -94,8 +95,8 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
     def load_file(self, filepath: Union[str, Path]) -> None:
         """Load DOCX from file path."""
         check_input_size(Path(filepath).stat().st_size)
-        with zipfile.ZipFile(str(filepath), "r") as zf:
-            self._load_from_zip(zf)
+        with Path(filepath).open("rb") as stream:
+            self.load_stream(stream)
 
     def load_stream(self, stream: BinaryIO) -> None:
         """Load DOCX from stream."""
@@ -104,6 +105,8 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
     def load_bytes(self, data: bytes) -> None:
         """Load DOCX from bytes."""
         check_input_size(len(data))
+        if is_flat_opc(data):
+            data = decode(data)
         with zipfile.ZipFile(BytesIO(data), "r") as zf:
             self._load_from_zip(zf)
 

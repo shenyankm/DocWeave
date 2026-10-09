@@ -27,6 +27,7 @@ from typing import Optional, Union, BinaryIO
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._io import atomic_output, check_input_size, read_bounded
+from aspose.words_foss._flat_opc import is_flat_opc
 from aspose.words_foss.models import ConversionOptions
 from aspose.words_foss.diagnostics import (
     ContentLossWarning, ConversionDiagnostic, ConversionWarning, collect_diagnostics, source_story_losses, warn,
@@ -60,6 +61,10 @@ class LoadFormat(IntEnum):
     AUTO = 0
     DOC = 10
     DOCX = 20
+    FLAT_OPC = 24
+    FLAT_OPC_MACRO_ENABLED = 25
+    FLAT_OPC_TEMPLATE = 26
+    FLAT_OPC_TEMPLATE_MACRO_ENABLED = 27
     RTF = 30
     TEXT = 62
     MARKDOWN = 63
@@ -69,6 +74,10 @@ _LOAD_FORMAT_ALIASES = {
     "auto": LoadFormat.AUTO,
     "doc": LoadFormat.DOC,
     "docx": LoadFormat.DOCX,
+    "flat_opc": LoadFormat.FLAT_OPC,
+    "flat_opc_macro_enabled": LoadFormat.FLAT_OPC_MACRO_ENABLED,
+    "flat_opc_template": LoadFormat.FLAT_OPC_TEMPLATE,
+    "flat_opc_template_macro_enabled": LoadFormat.FLAT_OPC_TEMPLATE_MACRO_ENABLED,
     "rtf": LoadFormat.RTF,
     "text": LoadFormat.TEXT,
     "txt": LoadFormat.TEXT,
@@ -94,6 +103,10 @@ def _coerce_load_format(value: object) -> "Optional[LoadFormat]":
 _LOAD_FORMAT_TO_SUFFIX = {
     LoadFormat.DOC: ".doc",
     LoadFormat.DOCX: ".docx",
+    LoadFormat.FLAT_OPC: ".flatopc",
+    LoadFormat.FLAT_OPC_MACRO_ENABLED: ".flatopc",
+    LoadFormat.FLAT_OPC_TEMPLATE: ".flatopc",
+    LoadFormat.FLAT_OPC_TEMPLATE_MACRO_ENABLED: ".flatopc",
     LoadFormat.RTF: ".rtf",
     LoadFormat.TEXT: ".txt",
     LoadFormat.MARKDOWN: ".md",
@@ -306,6 +319,8 @@ class Document:
         fmt = _coerce_load_format(load_options.load_format) if load_options else None
         if fmt is not None and fmt != LoadFormat.AUTO:
             return _LOAD_FORMAT_TO_SUFFIX.get(fmt, ".docx")
+        if is_flat_opc(data):
+            return ".flatopc"
         return _detect_format_from_bytes(data[:8])
 
     @property

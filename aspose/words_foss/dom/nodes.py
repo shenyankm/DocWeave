@@ -3,6 +3,7 @@
 from math import isfinite
 from xml.dom import Node as XmlNode
 
+from aspose.words_foss._opc import bind_namespace_context as _bind_namespace_context
 from aspose.words_foss.light_document_model import NodeType
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -28,32 +29,6 @@ def _new(node, name):
     if node.namespaceURI == W and not node.prefix:
         element = node.ownerDocument.createElementNS(W, name)
     return element
-
-
-def _namespace_bindings(node):
-    bindings = {}
-    ancestor = node
-    while ancestor is not None and ancestor.nodeType == XmlNode.ELEMENT_NODE:
-        for i in range(ancestor.attributes.length):
-            attribute = ancestor.attributes.item(i)
-            if attribute.namespaceURI == XMLNS:
-                prefix = "" if attribute.name == "xmlns" else attribute.localName
-                bindings.setdefault(prefix, attribute.value)
-        ancestor = ancestor.parentNode
-    bindings.setdefault("", "")
-    bindings[node.prefix or ""] = node.namespaceURI or ""
-    for i in range(node.attributes.length):
-        attribute = node.attributes.item(i)
-        if attribute.prefix and attribute.namespaceURI not in {XML, XMLNS}:
-            bindings[attribute.prefix] = attribute.namespaceURI
-    return bindings
-
-
-def _bind_namespace_context(source, target, parent=None):
-    destination = _namespace_bindings(parent) if parent is not None else {}
-    for prefix, uri in _namespace_bindings(source).items():
-        if prefix != "xml" and destination.get(prefix) != uri:
-            target.setAttributeNS(XMLNS, f"xmlns:{prefix}" if prefix else "xmlns", uri)
 
 
 def _validate_text(value):

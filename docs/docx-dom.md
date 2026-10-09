@@ -4,6 +4,18 @@
 它以原始 OOXML 为唯一权威状态，节点是 XML 的类型化视图，不维护另一份同步模型。
 **这是可逐步扩展的基础 DOM，不是完整 Aspose.Words DOM，也不是 Word 排版引擎。**
 
+`DocxDocument` 也可从路径或二进制流加载 Flat OPC XML 包。四种文档、宏文档、模板、宏模板
+变体均还原 XML 与二进制部件，保留祖先命名空间及主部件 Content Type；沿用原包 DOM 的
+编辑边界。`save()` / `to_bytes()` 输出 ZIP OOXML 包，需使用与主部件类型对应的
+`.docx` / `.docm` / `.dotx` / `.dotm` 扩展名；不输出 Flat OPC XML，也不保留输入 XML 的字面序列化。
+宏部件仅作为原始资源保留，不执行宏。签名包仍按原有边界拒绝修改。
+
+现有 `Document` 转换入口也能识别 Flat OPC 字节/流，路径可使用 `.xml`，或显式指定
+`LoadFormat.FLAT_OPC`、`FLAT_OPC_MACRO_ENABLED`、`FLAT_OPC_TEMPLATE`、
+`FLAT_OPC_TEMPLATE_MACRO_ENABLED`。显式 `TEXT` 保留字面文本行为。
+它仍经过 LDM，具有现有内容损失边界；需要保留未知部件的编辑应使用 `DocxDocument`。
+四种原生试用样本与部件比较记录见 [加载验证](benchmarks/flat-opc-loading.json)。
+
 ## 读取、格式与跨 Run 替换
 
 ```python

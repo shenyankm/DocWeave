@@ -1,0 +1,83 @@
+{
+  "output_archive": "corpus/flat-opc-loading.zip",
+  "output_archive_sha256": "92be0ab247f570d73ce7282a97c1cca79dfcc85a33c06331813bf0c507205113",
+  "schema": 1,
+  "scope": "Flat OPC input reconstruction and local DOM edit; not full format or rendering parity",
+  "baseline": {
+    "product": "Aspose.Words for Python via .NET",
+    "version": "26.9.0",
+    "mode": "official trial; watermark and size limits retained",
+    "platform": "macOS arm64",
+    "python": "3.13.15",
+    "original_document": "corpus/commercial-26.9-dom.docx"
+  },
+  "candidate": {
+    "python": "3.14.7",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "module": "/private/tmp/docweave-target-3.14/lib/python3.14/site-packages/aspose/words_foss/__init__.py",
+    "validation": "installed wheel, outside checkout"
+  },
+  "fixture": "../../tests/fixtures/flat-opc-26.9.zip",
+  "fixture_sha256": "181a790eb3a5566360b868691a508e3eedbfe3b6cdb0a0bb87e6f64b346b51bf",
+  "records": [
+    {
+      "format": "FLAT_OPC",
+      "source_sha256": "fa33ce6c9f72e41471e69acc1e6a0713053df607de215e589f13ba0a007a478e",
+      "main_content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml",
+      "table_count": 1,
+      "modified_parts": [
+        "word/document.xml"
+      ],
+      "other_parts_byte_identical": true,
+      "edit_reloaded": true
+    },
+    {
+      "format": "FLAT_OPC_MACRO_ENABLED",
+      "source_sha256": "f2ca77fe5033873d61828c4d614f1cf45d91ee4af383bc6dac1a4e0a4123199d",
+      "main_content_type": "application/vnd.ms-word.document.macroEnabled.main+xml",
+      "table_count": 1,
+      "modified_parts": [
+        "word/document.xml"
+      ],
+      "other_parts_byte_identical": true,
+      "edit_reloaded": true
+    },
+    {
+      "format": "FLAT_OPC_TEMPLATE",
+      "source_sha256": "cf58dc483c69bc17bb2a4377133fd9d078735b213b1be10d04cf170f3ced837a",
+      "main_content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml",
+      "table_count": 1,
+      "modified_parts": [
+        "word/document.xml"
+      ],
+      "other_parts_byte_identical": true,
+      "edit_reloaded": true
+    },
+    {
+      "format": "FLAT_OPC_TEMPLATE_MACRO_ENABLED",
+      "source_sha256": "a9c026cff946a782f2b6e019b3ddbe00be06396e76e730f1a8bdfdc817803f75",
+      "main_content_type": "application/vnd.ms-word.template.macroEnabledTemplate.main+xml",
+      "table_count": 1,
+      "modified_parts": [
+        "word/document.xml"
+      ],
+      "other_parts_byte_identical": true,
+      "edit_reloaded": true
+    }
+  ],
+  "remaining": [
+    "Flat OPC XML output",
+    "full macro/template behavior",
+    "complex-structure coverage",
+    "load-option mismatch semantics",
+    "visual rendering parity",
+    "existing LDM/DOM unsupported capabilities"
+  ],
+  "verification": {
+    "flat_opc_tests": "34 passed",
+    "installed_wheel_workspace_tests": "2418 passed, 2 skipped; includes 6 unpublished API inventory tests",
+    "installed_wheel_examples": "31 passed",
+    "ruff_changed_parser_and_tests": "passed",
+    "git_diff_check": "passed"
+  }
+}

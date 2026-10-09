@@ -8,6 +8,7 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 from defusedxml.minidom import parseString
 
 from aspose.words_foss import _io
+from aspose.words_foss._flat_opc import decode, is_flat_opc
 from aspose.words_foss._io import (
     atomic_output,
     check_input_size,
@@ -27,6 +28,8 @@ class DocxPackage:
                 data = read_bounded(stream)
         self._trees = {}
         self._dirty = set()
+        if is_flat_opc(data):
+            data = decode(data)
         with ZipFile(BytesIO(data)) as archive:
             validate_docx_archive(archive)
             self._entries = archive.infolist()
