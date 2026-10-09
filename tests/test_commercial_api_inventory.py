@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial"])
+@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering"])
 def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, name):
     from zipfile import ZipInfo
 
@@ -19,7 +19,7 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     monkeypatch.setattr(ZipInfo, "__init__", windows_info)
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))[name]
-    assert check(root / "docs/benchmarks") in {18, 1296}
+    assert check(root / "docs/benchmarks") in {10, 18, 1296}
 
 
 def test_pagination_evidence_rejects_forged_setter_result(tmp_path):
@@ -279,7 +279,10 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
-    names += ["first-paragraph-trial-26.9.json", "corpus/first-paragraph-trial-26.9.zip", "corpus/first-paragraph-trial-26.9-outputs.zip",
+    names += ["pagination-rendering-26.9.json", "corpus/pagination-rendering-26.9.zip",
+              "corpus/pagination-rendering-26.9-commercial.zip", "corpus/pagination-rendering-26.9-current.zip",
+              "corpus/pagination-rendering-before-padding-fix.zip",
+              "first-paragraph-trial-26.9.json", "corpus/first-paragraph-trial-26.9.zip", "corpus/first-paragraph-trial-26.9-outputs.zip",
               "first-paragraph-page-break-26.9.json", "corpus/first-paragraph-page-break-26.9.zip", "corpus/first-paragraph-page-break-26.9-outputs.zip",
               "paragraph-pagination-26.9.json", "corpus/paragraph-pagination-26.9.zip", "corpus/paragraph-pagination-26.9-outputs.zip",
               "style-paragraph-format-26.9.json", "corpus/style-paragraph-format-26.9.zip", "corpus/style-paragraph-format-26.9-outputs.zip",
@@ -309,6 +312,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_paragraph_pagination_outputs"] == 1296
     assert result["checked_unresolved_first_paragraph_outputs"] == 4
     assert result["checked_trial_first_paragraph_outputs"] == 18
+    assert result["checked_pagination_rendering_pairs"] == 10
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]

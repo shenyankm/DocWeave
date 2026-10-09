@@ -1,7 +1,7 @@
 # 增强版转换、诊断与安全边界
 
 本页描述本 fork 的 `26.7.0.post2`，不是官方 Aspose 的功能保证。
-新增内存输出、结构化内容、原包定点替换和塑形的用法见 [升级说明](upgrade-notes.md)；
+内存输出、结构化内容和模板用法见 [项目 README](../README.zh-CN.md)，原包编辑见 [DOM 指南](docx-dom.md)；
 同类项目的参考方向见 [生态对比](ecosystem-adoption.md)，固定商业基准、差距和复验材料见
 [商业对齐计划](commercial-alignment-plan.md)。
 
@@ -130,8 +130,8 @@ CR/LF/TAB 使用字符引用，保留文本并避免空行拆开图片。正文�
 
 [复验记录](benchmarks/markdown-image-links.json)包含真实 DOCX、独立 Markdown token 和 Pandoc HTML 对照。
 `markdown-it-py 4.2.0` 的图片 alt 渲染会漏掉 `text_special` token 中的转义标点；
-本轮使用其解析 token 验证语法，另用 Pandoc 3.8.3 核对 HTML，未改写独立工具来制造一致结果。
-具体 Markdown 阅读器行为仍需调用方验证；本轮未进行浏览器或原生 Office 界面验收。
+该复验使用解析 token 检查语法，并用 Pandoc 3.8.3 核对 HTML。
+具体 Markdown 阅读器行为仍需调用方验证；记录不包含浏览器或原生 Office 界面验收。
 
 ## PDF 图片压缩
 
@@ -141,6 +141,46 @@ AUTO 即使请求较低 JPEG 质量，也保留含透明像素图片的原字节
 `pdf.image_transparency_lost` 内容损失诊断，严格模式保留原输出并拒绝转换。
 白底合成不承诺在其他背景上保持外观，见[复验记录](benchmarks/pdf-image-compression-contract.json)。
 
+## PDF 排版契约
+
+表格保留逐 Run 格式、图片及段落/子表格的交错顺序；单元格 `children` 有序视图与
+`content_order` 序列化兼容旧 `paragraphs` / `tables` 构造。换页重复连续前导表头，
+可容纳的行整体移动，超高行按内容行拆分；不可满足的行高、cantSplit 或单元格分页要求会报警。
+过高的不可拆嵌套表格、无法容纳的表头或旋转内容明确失败。水平跨度保留，垂直合并仍为
+网格/边线近似；Markdown 展平嵌套表格并报告损失。它们不保证 Word 的完整表格排版。
+
+源上下标标志已用于正文、表格、页眉页脚、列表正文、标题、引用和代码块的富文本绘制，包含塑形路径。
+缩放、基线偏移、装饰线及链接区域采用 fpdf2 度量；自动行高预留上标空间，固定行高保留源值。
+代码块保留逐 run 字号、颜色、粗斜体、装饰和上下标，背景在换页/换栏后逐行绘制。
+混合上下标旋转单元格仍会报告转换损失。度量不承诺与 Word 一致，见
+[上下标验收](benchmarks/vertical-positions.json)与[代码块验收](benchmarks/code-runs.json)。
+富文本正文和代码块的两端对齐会伸展自动换行行中的空格，链接与装饰同步伸展；
+段末保持自然宽度。手动换行按文档级 `do_not_expand_shift_return`（默认 `False`）处理：
+DOCX 读取并写出 `w:compat/w:doNotExpandShiftReturn`；设为 `True` 后手动换行不伸展。
+普通及嵌套表格单元格复用相同两端对齐规则，列表编号保持自然宽度；
+普通单元格段落应用左右及首行缩进，图片按可用宽度缩放。禁用自动换行仍保留显式换行，
+超宽行会被固定单元格裁剪。负缩进限制在单元格内边界，旋转/文本框混排及 CJK 字符分布仍有限制。
+见[两端对齐验收](benchmarks/justification.json)、[手动换行验收](benchmarks/shift-return.json)
+及[表格对齐验收](benchmarks/cell-justification.json)。
+LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼容模式，缺失/格式无效时按 12。
+旧模式小于 15 时，左对齐流式表格按首单元格边距外移；居中/右对齐忽略表格缩进。
+这会改变此前忽略旧模式的 PDF 横坐标；设为 15 可使用现代位置。该字段不代表完整版本兼容，
+浮动/嵌套定位和边框度量仍有限制，见[表格定位验收](benchmarks/table-compatibility.json)。
+
+表格、单元格与表格样式的四侧边距以 pt 为单位：`None` 表示未设置/继承，`0` 表示显式零边距。
+DOCX 读写保留零值，PDF 测量与绘制采用单元格覆盖、表格默认、渲染器回退的相同顺序；
+DOCX 表格默认边距包括已支持的样式继承。表格上下边距是单元格内部间距，不再额外增加表外空白。
+旧 LDM JSON 若用 `0` 表示默认间距，应改为 `null`；显式零值现在会改变布局。
+条件表格样式及行级边距例外仍未实现，见[边距验收](benchmarks/cell-margins.json)。
+`Table.bidi` 保留已支持的 DOCX RTL 表格方向，镜像视觉列、对齐及边框，同时保留逻辑内容顺序。
+`start/end` 边距归一为 left/right 字段，DOCX 输出 left/right。普通 Markdown 报告方向丢失，
+HTML 表格使用 `dir="rtl"`；表格方向不会自动启用文字塑形。
+Word 与 LibreOffice 对照及边界见[方向验收](benchmarks/table-direction.json)。
+小字号及短旋转单元格的最小行高已修正单位；受影响的行会变矮，页/栏断点可能改变，
+见[行高验收](benchmarks/row-height-units.json)。
+打包字体预存字形名称以减少初始化工作，保留全部字形与度量；wheel 增大约 0.86%，
+实测收益依文档而异，见[字体基准](benchmarks/font-glyph-names.json)。
+
 ## 中文排版和字体
 
 - 高亮文本、混合字体运行的居中/右对齐段落按实际字形宽度换行，保留显式换行与链接。
@@ -148,7 +188,7 @@ AUTO 即使请求较低 JPEG 质量，也保留含透明像素图片的原字节
 - 纯文字段落高度在隔离状态下试运行实际渲染器，包含首行/续行缩进、段前/段后间距和 Code/Quote 的有效字号；普通混合字号段落行高容纳最大字号。
 - 左右缩进持续作用于续行及跨页/跨栏后的文字；首行缩进只作用于首行，可为负值（悬挂缩进）。
   `keep_together` 在下一完整页/栏能容纳时整体移动，超出完整区域的长段落仍允许拆分。图文绕排高度仍是近似估算。
-- 四个完整字体从 TTF 无损压缩为 WOFF：资源约 **41.1 MiB → 25.0 MiB**，减少约 **39%**。
+- 四个完整字体从 TTF 无损压缩为 WOFF：当前四个 WOFF 资源合计约 **24.6 MiB**。
   字形映射、数量和宽度信息保留；PDF 内仍嵌入标准字体子集。只注册文档出现的字体样式。
   这是安装体积优化，不承诺下载体积同等下降（wheel 原本已 ZIP 压缩）。
 - 复杂文字塑形可通过可选 `[shaping]` 依赖和 `PdfSaveOptions.text_shaping=True` 开启，复用 fpdf2/HarfBuzz；还需部署适合该语言的可信 fallback 字体。尚未实现语言标点禁则、源字体精确匹配或 Word 的完整分页规则。
@@ -184,6 +224,20 @@ aw.Document("report.docx").save("report.pdf", options)
 默认值不会仅因选项尚未实现而报警；显式赋值即使等于默认值也会提示。
 这些诊断只覆盖已检测到的情况，不是全面的 Word 兼容性检查。可用 Python `warnings` 分类过滤或升级为错误。
 公开 `Document.diagnostics` 列表保存加载、`save()` 和 `to_bytes()` 的结构化记录，包含 `code`、`severity`、`location`、`message`；即使 Python warning 被忽略或升级为错误，已有诊断仍会记录。定位信息是已知部件/模型位置，不是假定页码。
+记录不会自动清空，重复转换可能追加重复项；按次统计可在操作前调用 `doc.diagnostics.clear()`。
+构造失败时处理抛出的异常，不能读取尚未返回的 Document。诊断上下文隔离不代表同一可变文档或 writer 可并发使用。
+
+## 参考 DOCX 样式
+
+设置 `OoxmlSaveOptions.reference_docx = "brand.docx"`，生成 DOCX 时应用参考文件中受支持的样式定义。
+run 字体读取时先应用字符样式继承，再应用直接格式；写出时省略匹配的继承值，使参考字符样式生效，
+同样覆盖链接和 PAGE 域。LDM 尚不能区分恰好等于原继承值的显式直接格式，换参考样式后该值可能随样式改变；
+完整 Word toggle 语义仍未保证。
+未显式指定段落样式的 DOCX 段落现在使用 XML 标记的默认段落样式，而非按 Normal 名称猜测；
+正文、表格和页眉页脚共用此解析规则。LDM `Style.is_default` 保留默认标记，旧模型缺少字段仍兼容。
+按样式显示名匹配，并重映射 ID 和 basedOn 引用；正文样式及超链接关系保持有效。已有直接格式优先。
+不导入参考正文、图片、页眉页脚和页面设置。样式经过现有 LDM reader/writer，未支持的 OOXML 属性
+不会原样保留；这不是原包模板复制或无损样式导入。
 
 ## 输入和输出边界
 
@@ -230,7 +284,13 @@ RSS watchdog，约每 0.1 秒检查，**可能短暂超过阈值，不是硬内�
 
 `--strict` 将缺字及 `ContentLossWarning`（已知加载/写出损失）升级为错误，但不因正常字体替换而失败。它不是完整保真验证器。
 `--fallback-font /trusted/font.ttf` 可以重复指定；它与 `--text-shaping` 都只适用于内置后端的 `.pdf` 输出，其他格式会拒绝这些参数。
-`--text-shaping` 需从本仓库安装 `[shaping]`，安装命令见 [升级说明](upgrade-notes.md#5-可选多语言塑形)。
+`--text-shaping` 需安装 `[shaping]` 并部署可信字体：
+
+```bash
+python -m pip install "aspose-words-foss-enhanced[shaping] @ git+https://github.com/shenyankm/DocWeave.git@dev"
+```
+
+实际绘制和行宽/行高测量同时启用 shaping。实现使用 fpdf2 内部 bidi/断行 API，升级 fpdf2 后须复验。
 普通 `Document.save()` 没有进程超时/内存限制；服务端请使用此入口或自己的任务隔离层。
 CLI 不是 Web 服务、队列或全局并发控制器；应用需限制同时启动的作业数，并配置容器内存/磁盘/网络配额。
 

@@ -30325,6 +30325,23 @@
           "first-paragraph page_break_before normalization unresolved; see first-paragraph-page-break-26.9.json",
           "direct paragraph format uses explicit/unset semantics and permits None; differs from native resolved interface"
         ]
+      },
+      "pagination_rendering_evidence": {
+        "file": "pagination-rendering-26.9.json",
+        "scope": "10 False/True PDFs across five owned regular-font ASCII fixtures; nonfirst-page assignment, origins, advances and 144dpi black ink",
+        "current_alternative_entrypoint": "DocxDocument Style.paragraph_format edits -> to_light_document -> LdmPdfWriter",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.0,
+        "tests": "tests/test_pagination_rendering.py",
+        "delivery": "bounded native trial rendering comparison; full rendering and canonical API acceptance remain incomplete",
+        "limits": [
+          "trial first page and colored watermark excluded",
+          "font metadata, complex scripts, images, tables, automatic wrapping and arbitrary fonts unverified"
+        ]
       }
     },
     {
@@ -30346,6 +30363,23 @@
         "limits": [
           "first-paragraph page_break_before normalization unresolved; see first-paragraph-page-break-26.9.json",
           "direct paragraph format uses explicit/unset semantics and permits None; differs from native resolved interface"
+        ]
+      },
+      "pagination_rendering_evidence": {
+        "file": "pagination-rendering-26.9.json",
+        "scope": "10 False/True PDFs across five owned regular-font ASCII fixtures; nonfirst-page assignment, origins, advances and 144dpi black ink",
+        "current_alternative_entrypoint": "DocxDocument Style.paragraph_format edits -> to_light_document -> LdmPdfWriter",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.0,
+        "tests": "tests/test_pagination_rendering.py",
+        "delivery": "bounded native trial rendering comparison; full rendering and canonical API acceptance remain incomplete",
+        "limits": [
+          "trial first page and colored watermark excluded",
+          "font metadata, complex scripts, images, tables, automatic wrapping and arbitrary fonts unverified"
         ]
       }
     },
@@ -30468,6 +30502,23 @@
         "tests": "tests/test_first_paragraph_trial.py",
         "limits": "licensed behavior and final rendering remain unverified; first-paragraph difference remains unresolved",
         "implementation": "retain explicit source flag; do not imitate unlicensed watermark effects"
+      },
+      "pagination_rendering_evidence": {
+        "file": "pagination-rendering-26.9.json",
+        "scope": "10 False/True PDFs across five owned regular-font ASCII fixtures; nonfirst-page assignment, origins, advances and 144dpi black ink",
+        "current_alternative_entrypoint": "DocxDocument Style.paragraph_format edits -> to_light_document -> LdmPdfWriter",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.0,
+        "tests": "tests/test_pagination_rendering.py",
+        "delivery": "bounded native trial rendering comparison; full rendering and canonical API acceptance remain incomplete",
+        "limits": [
+          "trial first page and colored watermark excluded",
+          "font metadata, complex scripts, images, tables, automatic wrapping and arbitrary fonts unverified"
+        ]
       }
     },
     {
@@ -30619,6 +30670,23 @@
         "limits": [
           "first-paragraph page_break_before normalization unresolved; see first-paragraph-page-break-26.9.json",
           "direct paragraph format uses explicit/unset semantics and permits None; differs from native resolved interface"
+        ]
+      },
+      "pagination_rendering_evidence": {
+        "file": "pagination-rendering-26.9.json",
+        "scope": "10 False/True PDFs across five owned regular-font ASCII fixtures; nonfirst-page assignment, origins, advances and 144dpi black ink",
+        "current_alternative_entrypoint": "DocxDocument Style.paragraph_format edits -> to_light_document -> LdmPdfWriter",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.0,
+        "tests": "tests/test_pagination_rendering.py",
+        "delivery": "bounded native trial rendering comparison; full rendering and canonical API acceptance remain incomplete",
+        "limits": [
+          "trial first page and colored watermark excluded",
+          "font metadata, complex scripts, images, tables, automatic wrapping and arbitrary fonts unverified"
         ]
       }
     },

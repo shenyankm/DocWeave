@@ -13,10 +13,11 @@ from .test_pdf_shaping import arabic_font
 
 def glyphs(raw):
     with pymupdf.open(stream=raw, filetype='pdf') as pdf:
-        return sorted((char['c'], *char['bbox']) for page in pdf
+        return sorted(((char['c'], *char['bbox']) for page in pdf
                       for block in page.get_text('rawdict')['blocks']
                       for line in block.get('lines', []) for span in line['spans']
-                      for char in span['chars'] if not char['c'].isspace())
+                      for char in span['chars'] if not char['c'].isspace()),
+                  key=lambda item: (item[0], round(item[2], 2), round(item[1], 2)))
 
 
 @pytest.mark.parametrize('parts', [
@@ -83,6 +84,7 @@ def test_bold_bidi_boundaries_match_native_paragraph():
             for index, part in enumerate(('سلام ', 'ABC', ' عالم ', '123', ' نهاية'))])]))])
     actual = LdmPdfWriter(options).write_to_bytes(model)
     native = FPDF(format=(600 * PT_TO_MM, 300 * PT_TO_MM))
+    native.c_margin = 0  # Compare glyphs at the actual Word paragraph origin.
     try:
         native.set_margins(25 * PT_TO_MM, 25 * PT_TO_MM, 25 * PT_TO_MM)
         native.set_auto_page_break(True, margin=25 * PT_TO_MM)

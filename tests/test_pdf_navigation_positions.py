@@ -42,12 +42,12 @@ def assert_navigation_matches_content(raw):
         assert link["page"] == target_page
         # Destinations use line tops; the DOCX heading's leading shifts its glyph bounds by 3.15 pt.
         assert abs(link["to"].y - word[1]) < 5
-        assert 0 <= word[0] - link["to"].x < 5
+        assert -0.05 <= word[0] - link["to"].x < 5
         assert len(parsed.outline) == 1
         destination = parsed.outline[0]
         assert parsed.get_destination_page_number(destination) == target_page
         assert abs(float(parsed.pages[target_page].mediabox.height) - float(destination.top) - word[1]) < 5
-        assert 0 <= word[0] - float(destination.left) < 5
+        assert -0.05 <= word[0] - float(destination.left) < 5
         return target_page, word, len(pdf)
 
 

@@ -178,6 +178,7 @@ def test_shaped_rtl_punctuation_matches_native_glyph_positions():
             ldm.Paragraph(children=[ldm.Run(text=text, font=ldm.Font(size=28))])]))])
     raw = LdmPdfWriter(options).write_to_bytes(model)
     native = FPDF(format=(400 * PT_TO_MM, 250 * PT_TO_MM))
+    native.c_margin = 0  # Word text begins at the declared paragraph margin.
     try:
         native.set_margins(20 * PT_TO_MM, 20 * PT_TO_MM, 20 * PT_TO_MM)
         native.set_auto_page_break(True, margin=20 * PT_TO_MM)

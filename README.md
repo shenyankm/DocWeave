@@ -190,6 +190,8 @@ doc.save("report-rebuilt.docx", docx_options)
 
 Options describe implemented behavior, not full commercial API compatibility. DOCX options affect the
 **rebuilding conversion path**, not `DocxDocument` original-package saves.
+Use `OoxmlSaveOptions.reference_docx` for supported reference styles; see the
+[style contract and limits](docs/enhanced-conversion.md#参考-docx-样式).
 
 ## Original-Package DOCX Editing
 
@@ -319,46 +321,8 @@ Chinese, Latin text, and punctuation. It uses a dedicated bold face and derived 
 WOFF resources total about **24.6 MiB**. Original font families, monospace metrics, and exact pagination
 are not preserved. Missing glyphs warn; source-font substitution may change layout.
 
-Source superscript/subscript flags are rendered in body, table, page-band, list, heading, quote and code
-formatted runs, including shaped text. Glyph scaling/rise, decorations and links follow fpdf2 metrics;
-automatic line advance reserves superscript ascent, while fixed spacing retains the source value.
-Code paragraphs retain per-run size, color, bold/oblique styles, decorations and script positions;
-backgrounds are painted per row after page/column breaks. Mixed-position rotated cells still report
-a conversion loss. These metrics are not Word-identical; see the
-[script validation](docs/benchmarks/vertical-positions.json) and
-[code-run validation](docs/benchmarks/code-runs.json).
-Justified rich-text and Code paragraphs stretch spaces on soft-wrapped rows, including links and
-decorations. Final rows remain natural. Manual-break rows follow the document-wide
-`do_not_expand_shift_return` flag (default `False`): DOCX reads/writes `w:doNotExpandShiftReturn`
-inside `w:compat`. Set it to `True` to retain natural manual-break rows. Ordinary and nested table
-cells use the same justification rules; list labels retain natural widths. Ordinary cell paragraphs
-apply left/right and first-line indents, including image sizing. Disabling automatic wrapping retains
-explicit breaks; fixed cells clip overwide visual lines. Negative outdents are bounded by the inner
-cell edge. Rotated/textbox mixed layout and CJK character distribution remain limited; see
-[justification validation](docs/benchmarks/justification.json),
-[manual-break validation](docs/benchmarks/shift-return.json), and
-[table-cell validation](docs/benchmarks/cell-justification.json).
-LDM `compatibility_mode` defaults to 15. DOCX reads/writes the official-URI setting and uses 12 when
-it is absent or malformed. Modes below 15 outdent left-aligned flow tables by the first cell's padding;
-center/right tables ignore table indents. This changes PDF positions previously ignoring legacy modes;
-set 15 for modern placement. The field does not guarantee full version compatibility. Floating/nested
-placement and border metrics remain limited; see [table-placement validation](docs/benchmarks/table-compatibility.json).
-
-Table, cell, and table-style margins are in pt: `None` means unset/inherited and `0` means an explicit
-zero margin. DOCX preserves zero values. PDF measurement and painting share cell overrides, table
-defaults, then renderer fallbacks; supported DOCX style inheritance supplies table defaults.
-Table top/bottom margins are inside cells and no longer add space outside the table.
-Old LDM JSON using `0` for default spacing must use `null` instead; explicit zeros now affect layout.
-Conditional table styles and row-level margin exceptions remain unsupported;
-see [margin validation](docs/benchmarks/cell-margins.json).
-`Table.bidi` preserves supported DOCX right-to-left table direction, mirrors visual columns/alignment/borders,
-and retains logical content order. `start`/`end` cell margins normalize to left/right fields; DOCX writes left/right.
-Plain Markdown reports direction loss; HTML tables use `dir="rtl"`. Table direction alone does not enable text shaping.
-See [direction validation](docs/benchmarks/table-direction.json) for Word and LibreOffice comparisons and limits.
-Small-font and short rotated-cell row minima now use consistent units; affected rows become shorter and
-page/column breaks may change. See [row-height validation](docs/benchmarks/row-height-units.json).
-Bundled fonts store glyph names to reduce initialization work while preserving all glyphs and metrics.
-This increases wheel size about 0.86%; measured benefits vary by document. See [font benchmark](docs/benchmarks/font-glyph-names.json).
+Rich-text, table layout, compatibility settings, and migration limits are documented in the
+[PDF layout contracts](docs/enhanced-conversion.md#pdf-排版契约).
 
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
@@ -535,7 +499,9 @@ python scripts/benchmark.py --repeat 3 > benchmark.json
 ```
 
 For wheel verification, install it in a separate environment and run `scripts/check_wheel.py` and pytest
-with `--import-mode=importlib` from outside this checkout; see [upgrade notes](docs/upgrade-notes.md).
+with `--import-mode=importlib` from outside this checkout, using absolute script/test paths.
+Confirm imports come from site-packages and packaged fonts, license, and typing resources are present.
+Run `ApiExamples` separately; installing extras or configuring CI does not establish a passing result.
 Benchmarks record import/parse/layout/serialization/write time, RSS, PDF bytes, and pages in cold workers.
 Historical measurements apply to their recorded environment and inputs; measure the current commit before claiming a speedup.
 
@@ -546,7 +512,7 @@ Historical measurements apply to their recorded environment and inputs; measure 
 | [Chinese README](README.zh-CN.md) | Corresponding Chinese usage guide |
 | [DOCX DOM guide](docs/docx-dom.md) | Ranges, formatting inheritance, resources, merges, and preservation rules |
 | [Conversion and safety](docs/enhanced-conversion.md) | Fonts, diagnostics, limits, CLI, and LibreOffice |
-| [Upgrade notes](docs/upgrade-notes.md) | Structured output, APIs, templates, and packaging |
+| [Save-option audit](docs/save-option-audit.md) | Implemented behavior, unsupported requests, and evidence |
 | [Ecosystem comparison](docs/ecosystem-adoption.md) | Python alternatives, adopted ideas, and evidence pointers |
 | [Commercial alignment](docs/commercial-alignment-plan.md) | Fixed baseline, complete scope, gaps, and verification |
 | [Issues](https://github.com/shenyankm/DocWeave/issues) | Fork-specific bugs and requests |
@@ -563,20 +529,3 @@ Library code is under the [MIT License](LICENSE); retain the copyright and permi
 Bundled fonts are separately under [SIL OFL-1.1](aspose/words_foss/pdf_writer/fonts/OFL.txt), not MIT;
 see [font provenance and modifications](aspose/words_foss/pdf_writer/fonts/README.md).
 The software is provided without warranty. Optional integrations have their own licenses and deployment requirements.
-
-### Reference DOCX styles
-
-Set `OoxmlSaveOptions.reference_docx = "brand.docx"` to apply supported reference style definitions
-when generating DOCX. Style display names match existing output styles; IDs and based-on links
-are remapped so body references and hyperlink relationships remain valid. Existing direct
-formatting takes precedence. The reference body, media, headers/footers and page setup are not imported.
-Styles pass through the existing LDM reader/writer, so unsupported OOXML properties are not preserved.
-This does not provide raw template copying or a lossless style import.
-Run fonts now resolve character-style inheritance before direct formatting. DOCX output omits
-matching inherited values so reference character styles can take effect, including links and PAGE fields.
-Explicit direct values equal to the original inherited value are not distinguishable in the LDM
-and may follow a replacement reference style. Complete Word toggle semantics are not guaranteed.
-DOCX paragraphs without an explicit style use the XML-marked default paragraph style, including
-custom defaults and their base chains. LDM `Style.is_default` preserves the marker; older models remain accepted.
-
-Python alternatives and adopted ideas: [ecosystem comparison](docs/ecosystem-adoption.md).

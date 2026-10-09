@@ -56,7 +56,6 @@ def body_list_model(columns=1, widow=True):
 @pytest.mark.parametrize("widow", [False, True])
 @pytest.mark.parametrize("shaping", [False, True])
 def test_body_list_hanging_indents_survive_pages_and_columns(columns, widow, shaping):
-    from aspose.words_foss.pdf_writer.constants import PT_TO_MM
 
     doc = body_list_model(columns, widow)
     snapshot = doc.model_dump()
@@ -78,14 +77,14 @@ def test_body_list_hanging_indents_survive_pages_and_columns(columns, widow, sha
             for word in words:
                 if word[4] == f"BODY{i}" or word[4].startswith(f"LINE{i}_"):
                     assert word[0] - left(word) == pytest.approx(
-                        24 + 12 * level + 1 / PT_TO_MM, abs=0.05
+                        24 + 12 * level, abs=0.05
                     )
                     assert word[2] <= left(word) + col_width - 6 + 0.05
             assert all(
                 sum(w[4] == f"LINE{i}_{j:02}" for w in words) == 1 for j in range(25)
             )
         after = next(w for w in words if w[4] == "AFTER")
-        assert after[0] - left(after) == pytest.approx(1 / PT_TO_MM, abs=0.05)
+        assert after[0] - left(after) == pytest.approx(0, abs=0.05)
     assert_page_tags(raw)
     assert doc.model_dump() == snapshot
 
@@ -155,7 +154,6 @@ def test_public_docx_body_list_hanging_indent_reaches_pdf():
     from io import BytesIO
     import aspose.words_foss as aw
     from aspose.words_foss.docx_writer import LdmDocxWriter
-    from aspose.words_foss.pdf_writer.constants import PT_TO_MM
 
     doc = body_list_model(2)
     doc.lists = [
@@ -178,6 +176,6 @@ def test_public_docx_body_list_hanging_indent_reaches_pdf():
                 if word[4] == f"BODY{i}" or word[4].startswith(f"LINE{i}_"):
                     base = 157.5 if word[0] > 150 else 20
                     assert word[0] - base == pytest.approx(
-                        24 + 12 * level + 1 / PT_TO_MM, abs=0.05
+                        24 + 12 * level, abs=0.05
                     )
     assert_page_tags(raw)

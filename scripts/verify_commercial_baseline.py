@@ -147,6 +147,62 @@ def verify_first_paragraph_trial(root):
     return len(rows)
 
 
+def verify_pagination_rendering(root):
+    report = json.loads((root / "pagination-rendering-26.9.json").read_text())
+    assert report["commercial_environment"]["version"] == "26.9.0"
+    assert report["commercial_environment"]["licensed"] is False
+    assert report["full_rendering_acceptance"] is False
+    assert report["tolerances"] == {"text_origin_pt": 0.02, "text_advance_pt": 0.02, "black_ink_difference_ratio": 0.01}
+    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/pagination_rendering.py"))
+    generated = {name: (prop, data) for name, prop, data in probe["inputs"]()}
+    rows = report["records"]
+    assert len(rows) == 10 and len(generated) == 5
+    assert {(r["input"], r["value"]) for r in rows} == {(name, value) for name in generated for value in (False, True)}
+    archives = {}
+    for key in ("corpus", "commercial_outputs", "current_outputs", "before_outputs"):
+        data = (root / report[key]).read_bytes()
+        assert digest(data) == report[key + "_sha256"]
+        with ZipFile(BytesIO(data)) as archive:
+            archives[key] = {name: archive.read(name) for name in archive.namelist()}
+    assert set(archives["corpus"]) == set(generated)
+    for key in ("commercial_outputs", "current_outputs", "before_outputs"):
+        assert set(archives[key]) == {r["output"] for r in rows}
+    for row in rows:
+        prop, expected = generated[row["input"]]
+        data = archives["corpus"][row["input"]]
+        assert row["property"] == prop and digest(data) == row["input_sha256"]
+        with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(expected)) as source:
+            assert {name: actual.read(name) for name in actual.namelist()} == {name: source.read(name) for name in source.namelist()}
+        for key, snapshot, sha in (("commercial_outputs", "native_snapshot", "output_sha256"),
+                                   ("current_outputs", "current_snapshot", "current_output_sha256"),
+                                   ("before_outputs", "before_snapshot", "before_output_sha256")):
+            raw = archives[key][row["output"]]
+            assert digest(raw) == row[sha]
+            assert probe["pdf_snapshot"](raw) == row[snapshot]
+        native, current = row["native_snapshot"], row["current_snapshot"]
+        assert native["page_sizes"] == current["page_sizes"]
+        assert set(native["lines"]) == set(current["lines"])
+        for label, line in native["lines"].items():
+            own = current["lines"][label]
+            assert line["page"] == own["page"]
+            if label != "BEFORE":
+                assert max(abs(a - b) for a, b in zip(line["origin"], own["origin"], strict=True)) <= 0.02
+                assert abs(line["advance"] - own["advance"]) <= 0.02 and line["size"] == own["size"]
+        for key, field in (("current_outputs", "black_ink_difference"), ("before_outputs", "before_black_ink_difference")):
+            ratios = probe["ink_difference"](archives["commercial_outputs"][row["output"]], archives[key][row["output"]])
+            assert ratios == row[field]
+        assert max(row["black_ink_difference"]) <= 0.01
+        assert max(row["before_black_ink_difference"]) > 0.01
+    ledger = json.loads((root / "commercial-26.9-capabilities.json").read_text())
+    linked = [record for record in ledger["records"] if "pagination_rendering_evidence" in record]
+    assert {record["id"] for record in linked} == {"aspose.words.ParagraphFormat." + row["property"] for row in rows}
+    for record in linked:
+        evidence = record["pagination_rendering_evidence"]
+        assert evidence["file"] == "pagination-rendering-26.9.json" and evidence["tolerances"] == report["tolerances"]
+        assert evidence["observed_black_ink_difference_ratio"] == max(max(row["black_ink_difference"]) for row in rows)
+    return len(rows)
+
+
 def verify_format_outputs(report, archive_path):
     raw = archive_path.read_bytes()
     assert digest(raw) == report["outputs"]["sha256"], "format archive digest mismatch"
@@ -710,6 +766,7 @@ def verify(root):
     pagination = verify_paragraph_pagination(root)
     first_paragraph = verify_first_paragraph_page_break(root)
     first_trial = verify_first_paragraph_trial(root)
+    pagination_rendering = verify_pagination_rendering(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -726,6 +783,7 @@ def verify(root):
             "checked_paragraph_pagination_outputs": pagination,
             "checked_unresolved_first_paragraph_outputs": first_paragraph,
             "checked_trial_first_paragraph_outputs": first_trial,
+            "checked_pagination_rendering_pairs": pagination_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

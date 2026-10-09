@@ -25,6 +25,21 @@
 导出与官方包回读见 [保存验证](benchmarks/flat-opc-saving.json)。
 未以这些普通样本验收复杂宏、模板全部语义或视觉排版。
 
+## 单文本节点字面替换
+
+```python
+from aspose.words_foss.docx_edit import replace_text
+
+count = replace_text("original.docx", "edited.docx", {"客户公司": "新的客户公司"})
+```
+
+此窄接口同时替换 `word/` XML 部件内单个 `w:t` 节点中的字面文本，不跨 Run、段落，
+不支持正则或格式编辑。所有 key 必须出现；重叠 key 优先较长值，新文本不会再次参与替换。
+返回匹配总数。未修改 XML 字节及其他部件 payload 保留，ZIP 重新打包，不保证整个文件字节相同。
+源和目标可相同，失败保留原目标。沿用 ZIP/大小检查，禁止 DTD，仅接受 UTF-8 XML，
+拒绝签名包及包含 Tab、换行或非法 XML 字符的替换值。宏和外部关系仍保留，不能用于安全清洗。
+跨普通 Run 替换及局部格式编辑使用下述 DOM 接口。
+
 ## 读取、格式与跨 Run 替换
 
 ```python
@@ -115,7 +130,11 @@ for style in editable.styles:
 - `keep_with_next`、`keep_together`、`page_break_before`、`widow_control` 支持段落直接值、
   样式继承值和有效值；前三项默认 `False`，孤行控制默认 `True`。直接值为 `None` 表示未设置，
   可用 `None` 清除；样式继承 setter 只接受 `bool`。324 个非首段输入、1296 次官方编辑已对照
-  保存/重开和本项目 LDM 属性，未验收最终分页像素。官方试用包会在加载时关闭受测首段的显式
+  保存/重开和本项目 LDM 属性。另有 [10 个原生 PDF 对照](benchmarks/pagination-rendering-26.9.json)，
+  覆盖四个开关的 False/True、两侧孤行和分页位置；普通字体 ASCII、固定 12pt 行距的非首页面
+  原点/字宽容差为 0.02pt，144dpi 黑色像素差比例上限 1%，受测页面实测为 0。
+  排除试用首页面和彩色水印；字体描述元数据、复杂文字、表格/图片和自动换行仍未验收。
+  官方试用包会在加载时关闭受测首段的显式
   段前分页；18 个加载/新建对照观察表明，首段值变化与加入试用提示段落同时出现，
   已有前置段落时保留。持许可证的对照仍未执行，本项目保留原始值，差异继续记为未决。
 - 读取不改变部件。样式句柄按 ID 读取当前相关部件，部件替换后不会继续编辑旧树。
@@ -309,7 +328,7 @@ ldm_snapshot = editable.to_light_document()
 也可以将 `editable.to_bytes()` 交给 `aw.Document(BytesIO(...))` 继续现有转换。
 
 现有 `aw.Document`、`Document.light_document_model`、`Document.save()` 以及
-`docx_edit.replace_text()` 的调用方式保持兼容；内容顺序/提取改进见 [升级说明](upgrade-notes.md)。
+内容顺序、提取和结构化输出契约见 [项目 README](../README.zh-CN.md#结构化内容与诊断)。
 不能把转换路径的保存当作原包保真保存。
 
 ## 保存契约与安全边界
@@ -331,13 +350,7 @@ ldm_snapshot = editable.to_light_document()
 - 宏、嵌入对象和外部关系照原样保留，不执行、不联网，**不是安全清洗或脱敏器**。
 - 同一个可变文档不可并发编辑。关系仅随受支持的图片/链接操作更新；主题、编号、域结果和排版缓存不更新。
 
-## 后续实施顺序
-
-1. 基础文本范围与有效格式已实现；后续补齐主题字体/颜色、编号和表格条件样式规则。
-2. 图片/超链接关系管理已实现；跨文档/part 导入仍按需求评估。
-3. 简单水平网格合并已实现；后续补齐垂直合并、行列编辑及分节/页眉页脚写回语义。
-4. 按业务需求增加内容控件、批注、脚注、复杂域和修订操作。
-5. 页面坐标、精确分页与字段计算单独评估渲染引擎，不将基础 DOM 承诺成完整排版引擎。
+后续范围、依赖与验收条件统一见 [商业对齐计划](commercial-alignment-plan.md)。
 
 测试位于 `tests/test_docx_dom.py`、`tests/test_docx_dom_ranges.py`、`tests/test_docx_dom_styles.py`、
 `tests/test_docx_dom_resources.py`、`tests/test_content_integrity.py` 和 `tests/test_dom_libreoffice_integration.py`；

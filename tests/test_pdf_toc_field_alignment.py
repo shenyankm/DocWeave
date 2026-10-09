@@ -182,20 +182,20 @@ def test_center_decimal_selection_respects_order_and_clear(shaping, cleared):
         chars = field_chars(pdf[0])
         if cleared:
             actual = max(c["bbox"][2] for c in chars)
-            expected = 300 - 20 - 6 - 72 / 25.4
+            expected = 300 - 20 - 6
         else:
             actual = (min(c["bbox"][0] for c in chars) + max(c["bbox"][2] for c in chars)) / 2
             expected = 160
         assert actual == pytest.approx(expected, abs=0.05)
 
 
-@pytest.mark.parametrize("position", [13, 260])
+@pytest.mark.parametrize("position,alignment", [(13, 1), (260, 0)])
 @pytest.mark.parametrize("shaping", [False, True])
-def test_outside_left_field_preserves_existing_target(tmp_path, position, shaping):
+def test_near_left_or_right_field_preserves_existing_target(tmp_path, position, alignment, shaping):
     from aspose.words_foss import Document
     from aspose.words_foss.docx_writer import LdmDocxWriter
 
-    model = aligned_toc_model(0)
+    model = aligned_toc_model(alignment)
     model.sections[0].body.children[0].paragraph_format.tab_stops.tab_stops[0].position = position
     source = tmp_path / "outside-left.docx"
     LdmDocxWriter().write(model, source)

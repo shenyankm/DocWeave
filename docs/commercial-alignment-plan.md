@@ -148,6 +148,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [隐式字号观察](benchmarks/font-default-matrix-26.9.json) | 16 个段落/字符样式输入，区分缺少默认组、空组及显式/复杂字号 |
 | [样式段落格式观察](benchmarks/style-paragraph-format-26.9.json) | 27 个继承输入、108 次基本对齐编辑及官方原始输出 |
 | [段落分页属性](benchmarks/paragraph-pagination-26.9.json) | 324 个非首段输入、1296 次样式/直接值编辑，24 次非法 setter 观察 |
+| [分页渲染对照](benchmarks/pagination-rendering-26.9.json) | 五个自有输入、10 个原生/当前 PDF；非首页面位置、字宽及黑色像素，完整排版仍未验收 |
 | [首段分页未决差异](benchmarks/first-paragraph-page-break-26.9.json) | 4 次编辑输出及 [18 个试用对照](benchmarks/first-paragraph-trial-26.9.json)；首段变化伴随提示插入，持许可证对照仍缺失 |
 | [保存状态观察](benchmarks/style-save-state-26.9.json) | 商业试用包的内存/重开状态，区分水印内容 |
 | [样式导入投影](benchmarks/style-import-projections.json) | 当前导入的基准、输入输出 SHA 与独立格式读取 |
@@ -161,23 +162,11 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 这些文件由回归测试或复验器使用，不能把它们当作重复阶段日志删除。
 
 安装包测试需在源码目录外运行，并检查实际导入位置、字体、许可和 typing 资源；
-方法见 [升级与安装核验](upgrade-notes.md#7-安装包核验)。具体提交的跨平台结果以
+方法见 [开发与安装核验](../README.zh-CN.md#开发与测试)。具体提交的跨平台结果以
 [GitHub Actions](https://github.com/shenyankm/DocWeave/actions) 为准，不能用旧 SHA 的成功代替。
 
-最近生产提交 `678885f` 的最终安装包在源码目录外完整测试 **6731 passed、2 skipped**（384.30 秒），
-示例 **31 passed**（5.61 秒），分页属性/基本对齐/证据专项 **1456 passed**（29.01 秒）。
-环境为 Mac/Python 3.14.7，本轮两个生产模块与被测 wheel 字节一致，安装资源检查通过。
-普通字号 getter 按 21 个固定官方输入校准；基本样式对齐按 108 次官方编辑观察校准，
-四个分页标志按 1296 次非首段编辑观察校准，并验证进入 LDM 的值。
-读取不物化 XML，保存不改变内存格式；首段段前分页与试用提示插入的干扰已有 18 个受控观察，持许可证行为仍未确认。
-复杂文字选择、其余段落属性与最终视觉分页仍未验收。这些是本轮固定观察，
-不作为全能力完成率，也不替代渲染验收或后续提交的结果。
-
-首段复验使用 `docs/probes/first_paragraph_trial.py`：15 个加载输入覆盖首段、空/有文段落、
-表格和节前置，以及三种节类型；3 个新建/保存对照直接记录提示段落出现前后的值。
-官方[许可说明](https://docs.aspose.com/words/python-net/licensing/)确认试用水印在加载和保存时加入，
-但未规定本次观察到的属性变化。该现象因此归为试用干扰下的未决行为，不能推断持许可证结果，
-也不能以重写原始 XML 来关闭差距。新证据、原包保留、Windows ZIP 元数据及伪造证据拒绝专项在源码目录外 **50 passed**
-（22.36 秒）。Windows CI 的 ZIP 原始字节误比已改为逐部件比较，冻结样本和输出的 SHA 校验仍保留。
-生产代码未变化，
-不重复执行 `678885f` 已通过的完整生产回归。
+格式 getter/setter 的固定观察见上表，不能替代最终渲染验收。首段复验生成器为
+[`first_paragraph_trial.py`](probes/first_paragraph_trial.py)：15 个加载输入及 3 个新建/保存对照，
+覆盖提示段落出现前后的值。官方[许可说明](https://docs.aspose.com/words/python-net/licensing/)确认
+试用水印在加载和保存时加入，但未规定本次观察到的属性变化；持许可证结果仍未确认。
+历史测试成绩和修复过程从 Git 历史查询，不作为当前工作树或后续提交的通过证明。

@@ -85,4 +85,4 @@
 - HTML 合并跨度、格式标签与嵌套顺序已修复，见[复验记录](benchmarks/html-table-integrity.json)；字段动作/目标、语义注锚点、非图片形状和 Word 完整样式/布局仍未支持，相关损失明确诊断。不能把这些局部样本或 TABLES 枚举有效视为全语义验收通过。
 - `models.ConversionOptions` 是直接 writer 的额外接口，五个共享枚举已验证；其余字段不属于上述 46 项，仍需单独核对，不能宣称全部选项已通过。
 - 图片副产物普通异常回滚、已有文件保留和受控线程并发已验证，见[记录](benchmarks/markdown-image-rollback.json)；本机独立进程占用、失败与强制终止后的再次导出见[进程复验](benchmarks/markdown-image-processes.json)。中断仍有残留；自动恢复、断电及网络文件系统整体发布/恢复未验收。
-- ZIP64 强制输出、选择性 HTML 表格及图片重采样本轮未实现；新诊断说明现有退回路径，不计为功能完成。
+- ZIP64 强制输出、选择性 HTML 表格及图片重采样尚未实现；新诊断说明现有退回路径，不计为功能完成。

@@ -65,8 +65,8 @@ def assert_toc_content_and_bounds(raw, tokens, columns):
                     continue
                 column = 1 if columns == 2 and word[0] > 157.5 else 0
                 left = 20 + column * (width + 15)
-                assert word[0] >= left + 12 + 72 / 25.4 - 0.05
-                assert word[2] <= left + width - 6 - 72 / 25.4 + 0.05
+                assert word[0] >= left + 12 - 0.05
+                assert word[2] <= left + width - 6 + 0.05
                 assert 20 - 0.05 <= word[1] < word[3] <= 160 + 0.05
                 if word[4] == "999":
                     number = (page_index, word, column, left)
@@ -76,7 +76,7 @@ def assert_toc_content_and_bounds(raw, tokens, columns):
         assert number[0] == last[0] and number[2] == last[2]
         assert number[1][0] - last[1][2] >= 72 / 25.4 - 0.05
         assert number[1][2] == pytest.approx(
-            number[3] + width - 6 - 72 / 25.4, abs=0.05
+            number[3] + width - 6, abs=0.05
         )
         # A 14/16 pt pair has different boxes; separate rows have a full line-height gap.
         assert abs(number[1][1] - last[1][1]) < 3

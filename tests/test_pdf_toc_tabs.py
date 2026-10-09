@@ -119,7 +119,7 @@ def test_custom_toc_tab_survives_title_page_and_column_breaks(shaping):
         assert number[2] == pytest.approx(left + 100, abs=0.05)
         for _, word in records[:-1]:
             title_left = 157.5 if word[0] > 157.5 else 20
-            assert word[0] >= title_left + 12 + 72 / 25.4 - 0.05
+            assert word[0] >= title_left + 12 - 0.05
             assert word[2] < title_left + 100 - 0.05
 
 
@@ -130,7 +130,7 @@ def test_toc_field_selection_ignores_clear_and_uses_position_order(shaping, mode
     paragraph = model.sections[0].body.children[0]
     if mode == "cleared":
         paragraph.paragraph_format.tab_stops.tab_stops[0].is_clear = True
-        expected = 300 - 20 - 6 - 72 / 25.4
+        expected = 300 - 20 - 6
     else:
         paragraph.paragraph_format.tab_stops.tab_stops = [
             ldm.TabStop(position=220, alignment=2),

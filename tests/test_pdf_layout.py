@@ -65,6 +65,7 @@ def test_height_uses_font_metrics_and_explicit_line_breaks():
     text = "中文正文" * 30 + "\n第二行"
     paragraph = ldm.Paragraph(children=[ldm.Run(text=text, font=ldm.Font(size=11))])
     pdf = FPDF()
+    pdf.c_margin = 0  # Measure the full paragraph width, without FPDF cell padding.
     register_fonts(pdf)
     pdf.add_page()
     pdf.set_font("DocumentSansSC", size=11)

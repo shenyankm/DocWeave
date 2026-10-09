@@ -26,8 +26,17 @@ def justified_model(style="Normal", *, text=WORDS, mixed=False, widow=True, colu
     return model, paragraph
 
 
-def lines(page):
-    return [line for block in page.get_text("dict")["blocks"] for line in block.get("lines", [])]
+def lines(page, columns=1):
+    rows = {}
+    # PDF extraction can split a visual row at wide justified gaps or font boundaries.
+    for block in page.get_text("dict")["blocks"]:
+        for line in block.get("lines", []):
+            for span in line["spans"]:
+                column = int(columns == 2 and span["origin"][0] >= page.rect.width / 2)
+                rows.setdefault((column, round(span["origin"][1], 2)), []).append(span)
+    return [{"spans": spans, "bbox": (min(s["bbox"][0] for s in spans), min(s["bbox"][1] for s in spans),
+                                       max(s["bbox"][2] for s in spans), max(s["bbox"][3] for s in spans))}
+            for _, spans in sorted(rows.items())]
 
 
 def render(model, shaping=False):
@@ -48,7 +57,7 @@ def test_justified_soft_rows_reach_margin_and_final_row_stays_natural(style, sha
         assert len(rows) >= 2
         assert [word[4] for page in pdf for word in page.get_text("words")] == WORDS.split()
         for row in rows[:-1]:
-            assert row["bbox"][2] == pytest.approx(200 - 72 / 25.4, abs=0.05)
+            assert row["bbox"][2] == pytest.approx(200, abs=0.05)
         assert rows[-1]["bbox"][2] < 190
         if mixed:
             assert {span["size"] for row in rows for span in row["spans"]} == {12, 16}
@@ -63,7 +72,7 @@ def test_explicit_breaks_keep_short_rows_natural(style, shaping):
     with pymupdf.open(stream=render(model, shaping), filetype="pdf") as pdf:
         rows = lines(pdf[0])
         assert rows[0]["bbox"][2] < 120
-        assert rows[1]["bbox"][2] == pytest.approx(200 - 72 / 25.4, abs=0.05)
+        assert rows[1]["bbox"][2] == pytest.approx(200, abs=0.05)
 
 
 @pytest.mark.parametrize("shaping", [False, True])
@@ -106,12 +115,12 @@ def test_justification_survives_page_and_column_breaks(columns, shaping):
         assert len(pdf) > 1
         assert [word[4] for page in pdf for word in page.get_text("words")] == text.split()
         width = (180 - (columns - 1) * 12) / columns
-        rows = [line for page in pdf for line in lines(page)]
+        rows = [line for page in pdf for line in lines(page, columns)]
         for row in rows[:-1]:
             if " " in "".join(span["text"] for span in row["spans"]):
-                assert row["bbox"][2] - row["bbox"][0] == pytest.approx(width - 2 * 72 / 25.4, abs=0.05)
+                assert row["bbox"][2] - row["bbox"][0] == pytest.approx(width, abs=0.05)
             else:
-                assert row["bbox"][2] - row["bbox"][0] <= width - 2 * 72 / 25.4 + 0.05
+                assert row["bbox"][2] - row["bbox"][0] <= width + 0.05
 
 
 @pytest.mark.parametrize("shaping", [False, True])
@@ -120,9 +129,9 @@ def test_first_line_indent_preserves_justified_right_edge(shaping):
     paragraph.paragraph_format.first_line_indent = 12
     with pymupdf.open(stream=render(model, shaping), filetype="pdf") as pdf:
         rows = lines(pdf[0])
-        assert rows[0]["bbox"][0] == pytest.approx(20 + 12 + 72 / 25.4, abs=0.05)
+        assert rows[0]["bbox"][0] == pytest.approx(20 + 12, abs=0.05)
         for row in rows[:-1]:
-            assert row["bbox"][2] == pytest.approx(200 - 72 / 25.4, abs=0.05)
+            assert row["bbox"][2] == pytest.approx(200, abs=0.05)
 
 
 @pytest.mark.parametrize("linked", [False, True])
@@ -170,5 +179,5 @@ def test_public_docx_justified_code_reaches_margin(tmp_path):
     aw.Document(source).save(target)
     with pymupdf.open(target) as pdf:
         rows = lines(pdf[0])
-        assert rows[0]["bbox"][2] == pytest.approx(200 - 72 / 25.4, abs=0.05)
+        assert rows[0]["bbox"][2] == pytest.approx(200, abs=0.05)
         assert rows[-1]["bbox"][2] < 190

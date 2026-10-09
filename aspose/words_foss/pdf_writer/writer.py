@@ -233,6 +233,8 @@ class LdmPdfWriter:
                 page_h_mm = ps.page_height * PT_TO_MM
 
         pdf = FPDF(unit="mm", format=(page_w_mm, page_h_mm))
+        # Word paragraph indents already define text origins; FPDF cell padding adds a spurious millimeter.
+        pdf.c_margin = 0
         if self.options.export_document_structure:
             pdf.struct_builder = TableStructureBuilder(pdf)
         cleanup.callback(close_fonts, pdf)
@@ -248,6 +250,7 @@ class LdmPdfWriter:
                 validate_image(node.image_data.image_bytes)
         self._measurement_writer = None
         self._measurement_pdf = FPDF()
+        self._measurement_pdf.c_margin = 0
         if self.options.text_shaping:
             self._measurement_pdf.set_text_shaping(True)
         self._measurement_pdf.fonts.update(pdf.fonts)
@@ -618,6 +621,7 @@ class LdmPdfWriter:
 
         if self._measurement_pdf is None:
             self._measurement_pdf = FPDF()
+            self._measurement_pdf.c_margin = 0
             if self.options.text_shaping:
                 self._measurement_pdf.set_text_shaping(True)
             register_fonts(self._measurement_pdf, fallback_fonts=self.options.fallback_fonts)
@@ -658,6 +662,7 @@ class LdmPdfWriter:
             return 0.0
         if self._measurement_pdf is None:
             self._measurement_pdf = FPDF()
+            self._measurement_pdf.c_margin = 0
             if self.options.text_shaping:
                 self._measurement_pdf.set_text_shaping(True)
             register_fonts(self._measurement_pdf, fallback_fonts=self.options.fallback_fonts)

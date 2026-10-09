@@ -17,7 +17,7 @@ import aspose.words_foss as aw
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.pdf_writer import LdmPdfWriter
 from aspose.words_foss.saving import PdfSaveOptions
-from .test_pdf_justification import justified_model, WORDS
+from .test_pdf_justification import justified_model, lines, WORDS
 
 
 def source_docx(value=None, *, style="Code", trailing=False):
@@ -59,8 +59,9 @@ def test_public_docx_settings_render_and_round_trip(value, disabled, style, shap
             if disabled:
                 assert end < 120
             else:
-                assert end == pytest.approx(200 - 72 / 25.4, abs=0.05)
-            assert next(word[2] for word in words if word[4] == "FIVE") == pytest.approx(200 - 72 / 25.4, abs=0.05)
+                assert end == pytest.approx(200, abs=0.05)
+            rows = [row for page in pdf for row in lines(page)]
+            assert rows[1]["bbox"][2] == pytest.approx(200, abs=0.05)
             assert words[-1][2] < 190
             assert [word[4] for word in words] == ["SHORT", "LINE"] + WORDS.split()
 
@@ -87,7 +88,7 @@ def test_trailing_manual_break_still_follows_setting(disabled, shaping):
         if disabled:
             assert end < 120
         else:
-            assert end == pytest.approx(200 - 72 / 25.4, abs=0.05)
+            assert end == pytest.approx(200, abs=0.05)
 
 
 @pytest.mark.parametrize("disabled", [False, True])

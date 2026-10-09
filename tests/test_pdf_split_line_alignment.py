@@ -69,9 +69,9 @@ def test_split_line_ends_at_effective_right_text_edge(kind, columns, shaping, lo
         assert set(words) == (
             {"TITLE", "123"} if location == "body" else {"TITLE", "123", "BODY"}
         )
-        assert words["TITLE"][0] == pytest.approx(20 + 24 + 72 / 25.4, abs=0.05)
+        assert words["TITLE"][0] == pytest.approx(20 + 24, abs=0.05)
         width = (260 - 15 * (columns - 1)) / columns if location == "body" else 260
-        assert words["123"][2] == pytest.approx(20 + width - 6 - 72 / 25.4, abs=0.05)
+        assert words["123"][2] == pytest.approx(20 + width - 6, abs=0.05)
         assert words["123"][0] > words["TITLE"][2]
         if location == "body":
             assert words["123"][1] == pytest.approx(20, abs=0.05)
@@ -113,5 +113,5 @@ def test_public_docx_split_line_keeps_right_text_inset(tmp_path, kind, shaping):
         assert len(pdf) == 1
         words = {word[4]: word for word in pdf[0].get_text("words")}
         assert set(words) == {"TITLE", "123"}
-        assert words["123"][2] == pytest.approx(300 - 20 - 6 - 72 / 25.4, abs=0.05)
+        assert words["123"][2] == pytest.approx(300 - 20 - 6, abs=0.05)
         assert words["123"][0] > words["TITLE"][2]

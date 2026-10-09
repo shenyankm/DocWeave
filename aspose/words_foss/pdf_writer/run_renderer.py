@@ -397,8 +397,9 @@ class RunRenderer:
             return
         dash, gap, shift, width = styles[leader]
         size = (run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT) * PT_TO_MM
-        x1 += width * size / 2
-        x2 -= width * size / 2
+        # Leave half a stroke of clear space after accounting for the line caps.
+        x1 += width * size
+        x2 -= width * size
         if x2 <= x1:
             return
         metric = getattr(pdf, "_text_baseline_size", None)
@@ -518,9 +519,8 @@ class RunRenderer:
         paragraph_text = "".join(segment[1] for segment in segments)
         if not paragraph_text:
             return [[]]
-        contextual = any(left[1] and right[1] and not left[1][-1].isspace()
-                         and not right[1][0].isspace()
-                         for left, right in zip(segments, segments[1:]))
+        # Whole and fragmented runs must use the same exact advances at wrap thresholds.
+        contextual = True
         saved_vpos = pdf.char_vpos
         saved_color = pdf.text_color
         saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else "") + ("S" if pdf.strikethrough else ""), pdf.font_size_pt)
