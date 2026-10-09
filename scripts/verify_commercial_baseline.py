@@ -774,6 +774,103 @@ def verify_style_toggles(root):
     return len(report["records"])
 
 
+def import_pixels_painted(pdf):
+    import pymupdf
+
+    return any(any(value < 200 for value in page.get_pixmap(
+        clip=pymupdf.Rect(word[:4]), matrix=pymupdf.Matrix(2, 2), alpha=False).samples)
+        for page in pdf for word in page.get_text('words') if word[4] == 'IMPORT')
+
+
+def verify_font_boolean_contexts(root):
+    report = json.loads((root / 'font-boolean-contexts-26.9.json').read_text())
+    assert report['version'] == '26.9.0' and report['licensed'] is False
+    assert report['full_format_acceptance'] is report['rendering_acceptance'] is False
+    generated = {name: (field, list(values), raw) for name, field, values, raw in
+                 runpy.run_path(str(Path(__file__).parents[1] / 'docs/probes/font_boolean_contexts.py'))['inputs']()}
+    corpus = (root / report['corpus']).read_bytes()
+    assert digest(corpus) == report['corpus_sha256']
+    assert len(generated) == len(report['records']) == 891
+    with ZipFile(BytesIO(corpus)) as archive:
+        assert set(archive.namelist()) == set(generated) == {r['input'] for r in report['records']}
+        for row in report['records']:
+            field, values, raw = generated[row['input']]
+            source = archive.read(row['input'])
+            assert digest(source) == row['sha256']
+            with ZipFile(BytesIO(source)) as actual, ZipFile(BytesIO(raw)) as rebuilt:
+                assert {n: actual.read(n) for n in actual.namelist()} == {n: rebuilt.read(n) for n in rebuilt.namelist()}
+            assert (row['field'], row['values']) == (field, values)
+            default, paragraph, character, direct = values
+            expected = (bool(default) or (paragraph ^ character) if paragraph is not None and character is not None
+                        else paragraph if paragraph is not None else character if character is not None else bool(default))
+            assert row['value'] is (expected if direct is None else direct)
+    before = []
+    for row in report['records']:
+        default, paragraph, character, direct = row['values']
+        previous = (direct if direct is not None else character if character is not None
+                    else paragraph if paragraph is not None else bool(default))
+        if row['value'] is not previous:
+            before.append(row['input'])
+    comparison = report['docweave_getter_comparison']
+    assert len(before) == 66 and sorted(before) == sorted(comparison['before_mismatches'])
+    assert comparison['after_mismatches'] == []
+    pdf_report = json.loads((root / 'font-hidden-rendering-26.9.json').read_text())
+    assert pdf_report['version'] == '26.9.0' and pdf_report['licensed'] is False
+    assert pdf_report['rendering_acceptance'] is False
+    outputs = (root / pdf_report['outputs']).read_bytes()
+    assert digest(outputs) == pdf_report['outputs_sha256']
+    hidden = {row['input']: row for row in report['records'] if row['field'] == 'hidden'}
+    assert len(pdf_report['records']) == len(hidden) == 81
+    import pymupdf
+    differences = []
+    with ZipFile(BytesIO(outputs)) as archive:
+        assert {row['input'] for row in pdf_report['records']} == set(hidden)
+        assert set(archive.namelist()) == {row['output'] for row in pdf_report['records']}
+        for row in pdf_report['records']:
+            raw = archive.read(row['output'])
+            assert digest(raw) == row['sha256']
+            with pymupdf.open(stream=raw, filetype='pdf') as pdf:
+                assert row['import_visible'] is any('IMPORT' in page.get_text() for page in pdf)
+                if row['import_visible']:
+                    assert import_pixels_painted(pdf)
+            if row['import_visible'] is hidden[row['input']]['value']:
+                differences.append(row['input'])
+    assert sorted(differences) == ['hidden-1-0-1-n.docx', 'hidden-1-1-0-n.docx']
+    return len(generated)
+
+
+def verify_hidden_style_contexts(root):
+    report = json.loads((root / 'hidden-style-contexts-26.9.json').read_text())
+    assert report['version'] == '26.9.0' and report['licensed'] is False
+    assert report['rendering_acceptance'] is False
+    generated = dict(runpy.run_path(str(Path(__file__).parents[1] / 'docs/probes/hidden_style_contexts.py'))['inputs']())
+    source = (root / report['corpus']).read_bytes()
+    outputs = (root / report['outputs']).read_bytes()
+    assert digest(source) == report['corpus_sha256'] and digest(outputs) == report['outputs_sha256']
+    assert len(generated) == len(report['records']) == 32
+    import pymupdf
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(outputs)) as pdfs:
+        assert set(inputs.namelist()) == set(generated) == {r['input'] for r in report['records']}
+        assert set(pdfs.namelist()) == {r['output'] for r in report['records']}
+        for row in report['records']:
+            raw = inputs.read(row['input'])
+            assert digest(raw) == row['source_sha256']
+            with ZipFile(BytesIO(raw)) as actual, ZipFile(BytesIO(generated[row['input']])) as rebuilt:
+                assert {n: actual.read(n) for n in actual.namelist()} == {n: rebuilt.read(n) for n in rebuilt.namelist()}
+            prefix, _, default, paragraph, character, reference = row['input'][:-5].split('-')
+            default, paragraph, character, reference = [v == '1' for v in (default, paragraph, character, reference)]
+            expected = (default or paragraph ^ character) if reference else paragraph
+            rendered = (default ^ paragraph ^ character if prefix == 'explicit' else character) if reference else paragraph
+            assert row['hidden'] is expected and row['visible'] is not rendered
+            raw = pdfs.read(row['output'])
+            assert digest(raw) == row['output_sha256']
+            with pymupdf.open(stream=raw, filetype='pdf') as pdf:
+                assert row['visible'] is any('IMPORT' in page.get_text() for page in pdf)
+                if row['visible']:
+                    assert import_pixels_painted(pdf)
+    return len(generated)
+
+
 def font_size_parts(raw):
     from xml.etree import ElementTree as ET
 
@@ -783,6 +880,81 @@ def font_size_parts(raw):
     package = "{http://schemas.microsoft.com/office/2006/xmlPackage}"
     parts = {part.get(package + "name"): part for part in ET.fromstring(raw)}
     return tuple(parts["/word/" + name + ".xml"].find(package + "xmlData")[0] for name in ("document", "styles"))
+
+
+def saved_hidden_state(raw):
+    w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+    document, styles = font_size_parts(raw)
+    paragraph = next(p for p in document.iter(w + 'p') if ''.join(t.text or '' for t in p.iter(w + 't')) == 'IMPORT')
+    run = next(r for r in paragraph.iter(w + 'r') if ''.join(t.text or '' for t in r.iter(w + 't')) == 'IMPORT')
+    by_id = {s.get(w + 'styleId'): s for s in styles.findall(w + 'style')}
+    def value(element):
+        return None if element is None else element.get(w + 'val', '1') in {'1', 'true', 'on'}
+    def nearest(identifier):
+        seen = set()
+        while identifier in by_id:
+            assert identifier not in seen
+            seen.add(identifier)
+            style = by_id[identifier]
+            declared = value(style.find(w + 'rPr/' + w + 'vanish'))
+            if declared is not None:
+                return declared
+            parent = style.find(w + 'basedOn')
+            identifier = parent.get(w + 'val') if parent is not None else None
+        return None
+    reference = paragraph.find(w + 'pPr/' + w + 'pStyle')
+    identifier = reference.get(w + 'val') if reference is not None else next(
+        (s.get(w + 'styleId') for s in reversed(styles.findall(w + 'style'))
+         if s.get(w + 'type') == 'paragraph' and s.get(w + 'default') in {'1', 'true', 'on'}), None)
+    character = run.find(w + 'rPr/' + w + 'rStyle')
+    p = nearest(identifier)
+    c = nearest(character.get(w + 'val')) if character is not None else None
+    default = bool(value(styles.find(w + 'docDefaults/' + w + 'rPrDefault/' + w + 'rPr/' + w + 'vanish')))
+    getter = default or p ^ c if p is not None and c is not None else p if p is not None else c if c is not None else default
+    rendered = (c if c is not None else p if p is not None else default) if reference is None else (
+        default ^ p ^ c if p is not None and c is not None else getter)
+    direct = value(run.find(w + 'rPr/' + w + 'vanish'))
+    if direct is not None:
+        getter = rendered = direct
+    return getter, not rendered, direct, reference.get(w + 'val') if reference is not None else None
+
+
+def verify_hidden_font_roundtrip(root):
+    report = json.loads((root / 'hidden-font-roundtrip-26.9.json').read_text())
+    inputs = {name: (raw, hidden, visible) for name, raw, hidden, visible in
+              runpy.run_path(str(Path(__file__).parents[1] / 'docs/probes/hidden_font_roundtrip.py'))['inputs'](root)}
+    assert len(inputs) == 113 and report['full_format_acceptance'] is report['rendering_acceptance'] is False
+    expected = {(name, phase, fmt) for name in inputs for phase in ('direct', 'json') for fmt in ('docx', 'flat_opc')}
+    differences = {}
+    for phase, current in (('before', report['before_origin_fix']), ('after', report)):
+        assert len(current['records']) == 452
+        assert {(r['input'], r['phase'], r['format']) for r in current['records']} == expected
+        outputs = (root / current['outputs']).read_bytes()
+        assert digest(outputs) == current['outputs_sha256']
+        native = current['native_reread']
+        assert native['version'] == '26.9.0' and native['licensed'] is False
+        assert native['visible_target_pixels_checked'] is True
+        observed = {r['output']: r for r in native['records']}
+        assert len(observed) == len(native['records']) == 452
+        getter_errors = visible_errors = 0
+        with ZipFile(BytesIO(outputs)) as archive:
+            assert set(archive.namelist()) == set(observed) == {r['output'] for r in current['records']}
+            for row in current['records']:
+                source, hidden, visible = inputs[row['input']]
+                assert digest(source) == row['source_sha256']
+                assert row['expected_hidden'] is hidden and row['expected_visible'] is visible
+                raw = archive.read(row['output'])
+                assert digest(raw) == row['output_sha256']
+                actual = saved_hidden_state(raw)
+                recorded = observed[row['output']]
+                assert recorded['hidden'] is actual[0] and recorded['visible'] is actual[1]
+                getter_errors += actual[0] is not hidden
+                visible_errors += actual[1] is not visible
+                if phase == 'after':
+                    assert actual[2:] == saved_hidden_state(source)[2:]
+        differences[phase] = (getter_errors, visible_errors)
+    assert differences == {'before': (20, 52), 'after': (0, 0)}
+    return len(report['records'])
 
 
 def saved_font_sizes(raw):
@@ -1506,6 +1678,9 @@ def verify(root):
     font_sizes = verify_font_size_loading(root)
     default_presence = verify_font_default_presence(root)
     font_origins = verify_font_json_origin(root)
+    font_booleans = verify_font_boolean_contexts(root)
+    hidden_style_contexts = verify_hidden_style_contexts(root)
+    hidden_roundtrips = verify_hidden_font_roundtrip(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -1515,6 +1690,9 @@ def verify(root):
             "checked_font_size_loading_inputs": font_sizes,
             "checked_font_default_presence_outputs": default_presence,
             "checked_font_json_origin_outputs": font_origins,
+            "checked_font_boolean_inputs": font_booleans,
+            "checked_hidden_style_contexts": hidden_style_contexts,
+            "checked_hidden_font_roundtrips": hidden_roundtrips,
             "checked_font_default_inputs": defaults,
             "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,

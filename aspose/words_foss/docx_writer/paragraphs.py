@@ -489,7 +489,7 @@ def render_pPr(
     children: list[str] = []
 
     style_id = _resolve_style_id(pf, style_id_map)
-    if style_id:
+    if style_id and pf.style_explicit is not False:
         children.append(el("w:pStyle", {"w:val": style_id}))
 
     base_pf = _resolve_base_pf(pf, style_id, style_pf_map)
@@ -742,7 +742,7 @@ def render_paragraph(
                     run_base = base_font.model_copy(deep=True) if base_font is not None else ldm.Font()
                     FontResolver.merge(run_base, character_font)
                     default_font = style_font_map.get(DEFAULT_FONT_KEY, ldm.Font())
-                    for field in ("bold", "italic"):
+                    for field in ("bold", "italic", "hidden"):
                         paragraph_value = (getattr(base_font, field) if base_font is not None and
                                            field in base_font.model_fields_set else None)
                         character_value = (getattr(character_font, field)

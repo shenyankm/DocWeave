@@ -266,7 +266,8 @@ class TableRenderer:
                 right_indent = max(0.0, pf.right_indent * PT_TO_MM)
                 label = (para.list_label.label_string if para.list_label else None) or w._paragraph_renderer._compute_list_label(para.list_format)
                 if label:
-                    size = next((run.font.size for run in visible_runs(para) if run.font.size > 0), DEFAULT_FONT_SIZE_PT)
+                    size = next((run.font.size for run in visible_runs(para)
+                                 if not run.font.render_hidden and run.font.size > 0), DEFAULT_FONT_SIZE_PT)
                     label_run = ldm.Run(text=safe_text(f'{label} '), font=ldm.Font(size=size))
                     apply_run_font(pdf, label_run.font)
                     label_width = pdf.get_string_width(label_run.text)
@@ -321,7 +322,7 @@ class TableRenderer:
                 lines.append(_CellLine(para.paragraph_format.space_before * PT_TO_MM))
             visible = {id(run) for run in visible_runs(para)}
             for item in visible_children(para):
-                if isinstance(item, ldm.Run) and id(item) in visible and not item.font.hidden:
+                if isinstance(item, ldm.Run) and id(item) in visible and not item.font.render_hidden:
                     apply_run_font(pdf, item.font)
                     text = w._run_renderer._resolve_run_text(pdf, item.text).replace("\t", " ").replace("\f", "")
                     for chunk, link in extract_link_segments(apply_caps(text, item.font)):
@@ -630,7 +631,7 @@ class TableRenderer:
         """Get the font from the first non-empty run in a cell."""
         for para in cell.paragraphs:
             for run in visible_runs(para):
-                if run.text:
+                if run.text and not run.font.render_hidden:
                     return run.font
         return None
 

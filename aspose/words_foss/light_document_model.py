@@ -11,6 +11,7 @@ forward references at the bottom of the file.
 from __future__ import annotations
 
 from base64 import b64decode, b64encode
+from collections.abc import Mapping
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
@@ -295,6 +296,8 @@ class Font(BaseModel):
     all_caps: bool = False
     small_caps: bool = False
     hidden: bool = False
+    hidden_explicit: bool | None = None
+    hidden_rendering: bool | None = None
     style_name: str = ""
     style_identifier: int = 0
     shading: Shading = Field(default_factory=Shading)
@@ -321,6 +324,24 @@ class Font(BaseModel):
     locale_id_far_east: int = 0
     # REMOVED: size_bi, double_strike_through, underline_color, scaling,
     #          spacing, position, complex_script, border
+
+    @property
+    def render_hidden(self) -> bool:
+        """Layout visibility can differ from the resolved property getter."""
+        return self.hidden if self.hidden_rendering is None else self.hidden_rendering
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        super().__setattr__(name, value)
+        if name == 'hidden':
+            super().__setattr__('hidden_rendering', None)
+            super().__setattr__('hidden_explicit', True)
+
+    def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False) -> Font:
+        if update is not None and 'hidden' in update and 'hidden_rendering' not in update:
+            update = dict(update, hidden_rendering=None)
+        if update is not None and 'hidden' in update and 'hidden_explicit' not in update:
+            update = dict(update, hidden_explicit=True)
+        return super().model_copy(update=update, deep=deep)
 
     @model_validator(mode="wrap")
     @classmethod
@@ -353,6 +374,8 @@ class Font(BaseModel):
 
 class ParagraphFormat(BaseModel):
     style_name: str = ""
+    style_explicit: bool | None = None
+
     alignment: int = 0  # 0=Left, 1=Center, 2=Right, 3=Justify
     left_indent: float = 0.0
     right_indent: float = 0.0
@@ -396,6 +419,17 @@ class ParagraphFormat(BaseModel):
     # REMOVED: bidi, line_unit_*,
     #          far_east_line_break_control, word_wrap, hanging_punctuation,
     #          mirror_indents
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        super().__setattr__(name, value)
+        if name in ('style_name', 'style_identifier'):
+            super().__setattr__('style_explicit', None)
+
+    def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False) -> ParagraphFormat:
+        if update is not None and 'style_explicit' not in update and any(
+                name in update for name in ('style_name', 'style_identifier')):
+            update = dict(update, style_explicit=None)
+        return super().model_copy(update=update, deep=deep)
 
     @model_validator(mode="before")
     @classmethod

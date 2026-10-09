@@ -1,0 +1,498 @@
+{
+  "version": "26.9.0",
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "licensed": false,
+  "outputs": "corpus/font-hidden-rendering-26.9.zip",
+  "outputs_sha256": "5691111e96b3f54691c9c0a6af4a42da441e50003d49b9f3fbd3d77ff9e7d84f",
+  "records": [
+    {
+      "input": "hidden-n-n-n-n.docx",
+      "output": "hidden-n-n-n-n.pdf",
+      "sha256": "0dc877e9854bba7fe23cbfd693c02c3d3e61029d990ec6ddd3924b85c1a5d082",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-n-n-0.docx",
+      "output": "hidden-n-n-n-0.pdf",
+      "sha256": "91955c548c6382ca103fd34697350cf7f44bbf78e55d9f277b0eb588962bc3ff",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-n-n-1.docx",
+      "output": "hidden-n-n-n-1.pdf",
+      "sha256": "517cf5c94e0d724783d520b82982f2558b12f69117c0758c800e57620b44f262",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-n-0-n.docx",
+      "output": "hidden-n-n-0-n.pdf",
+      "sha256": "1fcb9e9f65162704f9751c2d6a6339340688bb41d29ea1d3b3ed8f95b19933c0",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-n-0-0.docx",
+      "output": "hidden-n-n-0-0.pdf",
+      "sha256": "f341aa226ee71ca131d7000188b17c9c24078e68816345caf12a2480896e46de",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-n-0-1.docx",
+      "output": "hidden-n-n-0-1.pdf",
+      "sha256": "08f88b478d12c938ffa91ec291e703626b950da8d00c03ce6d2a8731b3de18f9",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-n-1-n.docx",
+      "output": "hidden-n-n-1-n.pdf",
+      "sha256": "feef3de6a325903fb46cee24300794942bd726e0a0ac45ac279249988440e676",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-n-1-0.docx",
+      "output": "hidden-n-n-1-0.pdf",
+      "sha256": "374d0d4e74e023394daa230950d4ca5b5e8b06027b9ae33a8e63a5a5cb30c5c6",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-n-1-1.docx",
+      "output": "hidden-n-n-1-1.pdf",
+      "sha256": "98c1bc513e926ee84be5d524efbb95435e073bbff3a9c89073ddf398d1fdfa4d",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-0-n-n.docx",
+      "output": "hidden-n-0-n-n.pdf",
+      "sha256": "67b344f1e346b9638a4593874e7eb2ac1f4fb4b2fad4e260e731eb01f46faced",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-0-n-0.docx",
+      "output": "hidden-n-0-n-0.pdf",
+      "sha256": "be0f4a23dbae8047cdf2a55dc0fa4ffd196332fcad3cc927f6d930caa6b5fe4e",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-0-n-1.docx",
+      "output": "hidden-n-0-n-1.pdf",
+      "sha256": "86ac6029c9a69f3fa29786b68aa7ce4242e5bec74f549aef844cadbdded35329",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-0-0-n.docx",
+      "output": "hidden-n-0-0-n.pdf",
+      "sha256": "4c5aba103efee5beacac69c5891d40d7d7da2f5726b91819786a732695201501",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-0-0-0.docx",
+      "output": "hidden-n-0-0-0.pdf",
+      "sha256": "64f0bb73fbd44b44f9016e636a8aae8bc8e6c8c9b364a77f95d4958c04d6e69d",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-0-0-1.docx",
+      "output": "hidden-n-0-0-1.pdf",
+      "sha256": "0c5df4f50728204f455d198d2887067dc4e7f2c6c59e33b77df8d9281bea47b5",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-0-1-n.docx",
+      "output": "hidden-n-0-1-n.pdf",
+      "sha256": "45573d1749fc73dd3ad5fcaa3f531869c186f337f0f16d893ea9b309f1fb8c5e",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-0-1-0.docx",
+      "output": "hidden-n-0-1-0.pdf",
+      "sha256": "bdb06b005d89f2e668abde8171a2498ecf75e0226e502efdf133c849c7485dc4",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-0-1-1.docx",
+      "output": "hidden-n-0-1-1.pdf",
+      "sha256": "7791e3c93aa9b6cc1be02e87a53e5db82fe560972d1c3cd0073a7dffefbc3526",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-1-n-n.docx",
+      "output": "hidden-n-1-n-n.pdf",
+      "sha256": "a92f37845341269480d2a7ef096fed64cd29a7a969be74cf5cf818c18685b5e3",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-1-n-0.docx",
+      "output": "hidden-n-1-n-0.pdf",
+      "sha256": "94b99728286d52d976c3f4a35e431ce0b04d549b4a11fe78fdafc360ec7dffb6",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-1-n-1.docx",
+      "output": "hidden-n-1-n-1.pdf",
+      "sha256": "f247cc05346dff0d40dc65b1f9d0dd69010907ce6f68bbd0df1e749895452bbe",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-1-0-n.docx",
+      "output": "hidden-n-1-0-n.pdf",
+      "sha256": "b57c198abd6bed61bd4f926f90c374d797259c49e0c3a326b4210036ad800a69",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-1-0-0.docx",
+      "output": "hidden-n-1-0-0.pdf",
+      "sha256": "4d6d09b498c90f7a9f39dae38fbe9a03db20599e555dca77c9231e1ea3a72321",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-1-0-1.docx",
+      "output": "hidden-n-1-0-1.pdf",
+      "sha256": "28df8f071fdf1347dacf4715ec4d31097b9cf71ccdd1ab48c0c208ebb6f13f2d",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-n-1-1-n.docx",
+      "output": "hidden-n-1-1-n.pdf",
+      "sha256": "290e92e1eecc3f354878ea8258774baabada169d8e82345264213ea22e8f9f65",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-1-1-0.docx",
+      "output": "hidden-n-1-1-0.pdf",
+      "sha256": "8f5a1b135cb605168934835cb518a6b7994a47aeb73c2ac79ccec473182d5151",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-n-1-1-1.docx",
+      "output": "hidden-n-1-1-1.pdf",
+      "sha256": "17a9023eed18ab9ba4720841a63243c03b58cc9c4089153374548b72177ce543",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-n-n-n.docx",
+      "output": "hidden-0-n-n-n.pdf",
+      "sha256": "fb9f4bcbc10e32eebf6fe3670923d8763943fa0225e25b6a8bb044fac55c8157",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-n-n-0.docx",
+      "output": "hidden-0-n-n-0.pdf",
+      "sha256": "e09622b4232e158175ffc943c415db18df5e252c0f7db4caf598739600904ec7",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-n-n-1.docx",
+      "output": "hidden-0-n-n-1.pdf",
+      "sha256": "58d50260b31762d721f9a843028efcdf50c7207ef7398aef5fedf51804ce65fc",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-n-0-n.docx",
+      "output": "hidden-0-n-0-n.pdf",
+      "sha256": "1b39a8c93eb35f95e6d2d5867759545c2beb6faebc63862fb02ae2b502e966b2",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-n-0-0.docx",
+      "output": "hidden-0-n-0-0.pdf",
+      "sha256": "76020c6e450ffe579a8534f91cd9b8e908003bf36f2d5b385b3cd6e5b6a97550",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-n-0-1.docx",
+      "output": "hidden-0-n-0-1.pdf",
+      "sha256": "3af37a8350330dc6792ab779dc1efc09f8bf7394344cca782062282a722f2cad",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-n-1-n.docx",
+      "output": "hidden-0-n-1-n.pdf",
+      "sha256": "c3a03602a31fadb9159ca2eeaceabbe9d51942f1b4d5f3311f65eab4c958c677",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-n-1-0.docx",
+      "output": "hidden-0-n-1-0.pdf",
+      "sha256": "8926615a161bc598f932acd85b2f95ab2ec79cc9a879154bc6f53ca094f55320",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-n-1-1.docx",
+      "output": "hidden-0-n-1-1.pdf",
+      "sha256": "51874b5f0a7f0527cddf89c94a0456a5e819288a92a5564057714c0c7ec9113f",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-0-n-n.docx",
+      "output": "hidden-0-0-n-n.pdf",
+      "sha256": "a4cf8fabfb4c9aa4273e5cd3429b784de062a2431cebb6b92c668afa90c49a57",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-0-n-0.docx",
+      "output": "hidden-0-0-n-0.pdf",
+      "sha256": "ce007f6f3c26d772a1afe6d9aa8b968d881a89c298346cd8828e26adbc5a4534",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-0-n-1.docx",
+      "output": "hidden-0-0-n-1.pdf",
+      "sha256": "5fecf84f80b63a0b52112e4be63218d4171420815ccb87a4f1ebbfcba79e8938",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-0-0-n.docx",
+      "output": "hidden-0-0-0-n.pdf",
+      "sha256": "b1370c100d0d45e40707096254aeacf14fc6d6ebf7110fc5d411c98324b84fff",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-0-0-0.docx",
+      "output": "hidden-0-0-0-0.pdf",
+      "sha256": "72fc67d97e54c5850c7c5cecf77e5da63ebc456046c1e1607525ad57276e45e4",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-0-0-1.docx",
+      "output": "hidden-0-0-0-1.pdf",
+      "sha256": "f9b09ed6bcb2f371d90a5d2e1b64df55e6cb0f47107b5ecba77a223dbfd9fb76",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-0-1-n.docx",
+      "output": "hidden-0-0-1-n.pdf",
+      "sha256": "0c8cf51788985f457cf9531f15bcb7a83681a1b12485ea82c5337c6f0628dad7",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-0-1-0.docx",
+      "output": "hidden-0-0-1-0.pdf",
+      "sha256": "9b82b7961c6863e9705cf6b904706368a59ba10a580e0e1a6c4545a3e0bd64d0",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-0-1-1.docx",
+      "output": "hidden-0-0-1-1.pdf",
+      "sha256": "26cf5f97dd8bcb5798f64a1eaec951092762fbe94dcec0e992d9af511a0d8acf",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-1-n-n.docx",
+      "output": "hidden-0-1-n-n.pdf",
+      "sha256": "ef6ee4d0453312153fee46d97b9a293d4d7cef2fc6c67aeee67579a9087f7a0e",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-1-n-0.docx",
+      "output": "hidden-0-1-n-0.pdf",
+      "sha256": "7f1318d0701e4af584e2a2034789c9fdf1d7924c681801f1744410612b0a3806",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-1-n-1.docx",
+      "output": "hidden-0-1-n-1.pdf",
+      "sha256": "be997f8988dc60fdb9bca24a8e4bbbb4ee7dbe5a2703ce7285c2081c71740ea6",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-1-0-n.docx",
+      "output": "hidden-0-1-0-n.pdf",
+      "sha256": "b932d6d1f5f51976bc8070ff740b24803a1dd01b603b9f3a53d8082eb34d3182",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-1-0-0.docx",
+      "output": "hidden-0-1-0-0.pdf",
+      "sha256": "febb502a92e4b8bec754f1cd5bb30ed60fcc1d91291823577c35a5d731551976",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-1-0-1.docx",
+      "output": "hidden-0-1-0-1.pdf",
+      "sha256": "d08a1f3dad989e65e27ca1c5a09387bbaecec7e0f4ea0c3f5569622c322a485d",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-0-1-1-n.docx",
+      "output": "hidden-0-1-1-n.pdf",
+      "sha256": "6d12e551adc095b6c37e49d134c7067cb8e8fc7435d7e22d4b1b4945bfd3c803",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-1-1-0.docx",
+      "output": "hidden-0-1-1-0.pdf",
+      "sha256": "5743fc64315f04b2fe956b7f446c991e0de09df6a94c5633dde92e3fa430cfc3",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-0-1-1-1.docx",
+      "output": "hidden-0-1-1-1.pdf",
+      "sha256": "d94b11d067d24a2e8f4d4cdddecf50f9d6d76a2ecb7c8d99bddccb21d128031a",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-n-n-n.docx",
+      "output": "hidden-1-n-n-n.pdf",
+      "sha256": "a8c0a822d8fb206ca013a0e562ae79b83216e4e675f5837ce8320f614679b237",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-n-n-0.docx",
+      "output": "hidden-1-n-n-0.pdf",
+      "sha256": "81b0949a4e9f5523605b7f090c72dbfc723433be126f4b5a145b1d9926106abb",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-n-n-1.docx",
+      "output": "hidden-1-n-n-1.pdf",
+      "sha256": "1533f6e8b38054809f8d3e44b4a6719e94f3f81e360d85fcfb23c2eea867edea",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-n-0-n.docx",
+      "output": "hidden-1-n-0-n.pdf",
+      "sha256": "b6cf560945e1fd3d308d57d8f40d8d7ef4a3f90ce9c0bf2f21d2d47a100fe1a7",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-n-0-0.docx",
+      "output": "hidden-1-n-0-0.pdf",
+      "sha256": "79992c44324305e31517e49b47d984e6da63034f317b216fe71e842c905dd98a",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-n-0-1.docx",
+      "output": "hidden-1-n-0-1.pdf",
+      "sha256": "06eef6eceb1be30a0a1ce70f2e70287a83169ddd833c7810228e64ef7b8ed5be",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-n-1-n.docx",
+      "output": "hidden-1-n-1-n.pdf",
+      "sha256": "80930416d338eaa40abe03e6191e74948675d1709ff997acf2009d7f2929b8b7",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-n-1-0.docx",
+      "output": "hidden-1-n-1-0.pdf",
+      "sha256": "21c3ecaa8ef91b4cc6ae0b879cb5775e15a7e278c2f0c61e0deecb2e109ad8fe",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-n-1-1.docx",
+      "output": "hidden-1-n-1-1.pdf",
+      "sha256": "306bd6016d2b57857149111182bb6de8a39aa9393a7f83fea8ac04ebcad0a012",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-0-n-n.docx",
+      "output": "hidden-1-0-n-n.pdf",
+      "sha256": "369bd4aa2feb4a9d53a2d39919c32df994381601af6aeb4f76cbba2dce046969",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-0-n-0.docx",
+      "output": "hidden-1-0-n-0.pdf",
+      "sha256": "11b772fbe458992cf48d3caf4309e99809c69c59f6fea5a7549384c6bf616bbf",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-0-n-1.docx",
+      "output": "hidden-1-0-n-1.pdf",
+      "sha256": "b1fad49599680c03feb0517b5860c313133c80800d5b6b08d3f578d2e939731a",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-0-0-n.docx",
+      "output": "hidden-1-0-0-n.pdf",
+      "sha256": "6527c4c4d6b58a1f2490a8ae0ffdb43ab15ac85a2848308b7d1092154fc77e3a",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-0-0-0.docx",
+      "output": "hidden-1-0-0-0.pdf",
+      "sha256": "5e6296e05e9b8fd75f6203ecccc5df6e1ce6ede4cce105bf53565d2bbbf552f7",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-0-0-1.docx",
+      "output": "hidden-1-0-0-1.pdf",
+      "sha256": "9b9fbf1b7f303f5a03b9eef3c1de8e3357848b5c1bec6db1f4e36922a9fe342a",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-0-1-n.docx",
+      "output": "hidden-1-0-1-n.pdf",
+      "sha256": "19b13e8691c65c90deb13e02e68c5925137a213ebc0023ed5ae15c3f6cf2bf64",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-0-1-0.docx",
+      "output": "hidden-1-0-1-0.pdf",
+      "sha256": "4a32cfe36314f15b9e7c188f1706b0b4a9032ba24e8186c03da34327633e262b",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-0-1-1.docx",
+      "output": "hidden-1-0-1-1.pdf",
+      "sha256": "e8e04b6b81d8a83dc7a0162e3390dd7a41b9c15e64372c454911011d9719d3b2",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-1-n-n.docx",
+      "output": "hidden-1-1-n-n.pdf",
+      "sha256": "d314d1fa228ba5a55a6562b2f1a005b30418fdf0427cf692970de10363efbd7c",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-1-n-0.docx",
+      "output": "hidden-1-1-n-0.pdf",
+      "sha256": "a93f5a88c5f94c92c47a168ee7b9a49e40a06e53de8d25ad478ae5f92f517073",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-1-n-1.docx",
+      "output": "hidden-1-1-n-1.pdf",
+      "sha256": "67c4f8bbba7ffe9a59deb2763cb29e581d85b3f44823a3e1017ff8010775dc1a",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-1-0-n.docx",
+      "output": "hidden-1-1-0-n.pdf",
+      "sha256": "45dab163df6f4dd90ed2ca890cd857e677722734d69019b41a60fabdca5ff720",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-1-0-0.docx",
+      "output": "hidden-1-1-0-0.pdf",
+      "sha256": "9b6704e636dfea62ae52356521b4162359d3323c1a667f0abb3378ee103e91f1",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-1-0-1.docx",
+      "output": "hidden-1-1-0-1.pdf",
+      "sha256": "39473c6402278810346f4a6de84362fa66a69dc81047157139c653c55b402080",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-1-1-n.docx",
+      "output": "hidden-1-1-1-n.pdf",
+      "sha256": "80280a0dc7817525b27d21f5e65c29932bfaec1661f6c75a08d9161e135d6c7a",
+      "import_visible": false
+    },
+    {
+      "input": "hidden-1-1-1-0.docx",
+      "output": "hidden-1-1-1-0.pdf",
+      "sha256": "2c0bc3609eaec754f807c38d8cf82fb1056e1a9af04e7fbb37cfea04c41f6293",
+      "import_visible": true
+    },
+    {
+      "input": "hidden-1-1-1-1.docx",
+      "output": "hidden-1-1-1-1.pdf",
+      "sha256": "f51923feee5053e86641b7190a336ae89afbae9dd53e037fb8a3ce6e37f6037b",
+      "import_visible": false
+    }
+  ],
+  "rendering_acceptance": false,
+  "scope": "81 owned hidden-font inputs; native trial PDF target text presence only; watermark retained; no whole-page visual parity acceptance"
+}

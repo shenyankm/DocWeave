@@ -579,11 +579,11 @@ class LdmPdfWriter:
                 break
             if not isinstance(following, ldm.Paragraph) or following.paragraph_format.page_break_before:
                 break
-            if any("\f" in run.text for run in following.runs):
+            if any("\f" in run.text for run in visible_runs(following) if not run.font.render_hidden):
                 break
             following_height = self._estimate_paragraph_height(following, width)
             if not following.paragraph_format.keep_with_next and not following.paragraph_format.keep_together:
-                size = max((run.font.size for run in visible_runs(following)), default=DEFAULT_FONT_SIZE_PT)
+                size = max((run.font.size for run in visible_runs(following) if not run.font.render_hidden), default=DEFAULT_FONT_SIZE_PT)
                 line = self._paragraph_renderer.line_height_mm(size or DEFAULT_FONT_SIZE_PT, following.paragraph_format)
                 following_height = min(following_height, 2 * line + following.paragraph_format.space_before * PT_TO_MM)
             height += following_height

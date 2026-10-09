@@ -136,6 +136,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [默认组与字号来源往返](benchmarks/font-default-presence-26.9.json) | 复用 87 个输入，348 个 DOCX/Flat OPC/模型 JSON 输出经独立 XML 和官方冷回读核对；缺失默认组不再成为空组，Run/样式字号与直接声明状态保留。21 个 PDF 普通字号独立测量；旧 JSON 无法恢复未记录的来源信息，完整字体来源、复杂文字和渲染仍未验收 |
 | [字体 JSON 与粗体/斜体转换](benchmarks/font-json-origin-26.9.json) | 复用 745 个输入；1,490 个 JSON→DOCX/Flat OPC 输出经官方和独立 XML 回读，修复前的 194 个差异降为零。保留稀疏字段设置、Run/字符样式 b/i 直接声明，读取和写出基线复用 DOM 的类别组合规则。最终包专项 900 项、Linux 911 项、31 个示例通过。全套首次 10,318 项通过、2 项失败、2 项跳过，失败来自归档更新中的旧样本，两项在稳定归档上复验通过；未重跑整套。远端 CI 待核对；完整字体、表格上下文及布局未验收 |
 | [隐式字号观察](benchmarks/font-default-matrix-26.9.json) | 16 个段落/字符样式输入，区分缺少默认组、空组及显式/复杂字号 |
+| [其余字体 Boolean 读取](benchmarks/font-boolean-contexts-26.9.json) / [隐藏文字原生 PDF](benchmarks/font-hidden-rendering-26.9.json) | 11 个属性、891 个自有输入；读取类别组合及隐藏渲染修复已通过本阶段专项验收。81 个官方试用 PDF 保存了目标文字可见性；其中 `hidden-1-0-1-n` 和 `hidden-1-1-0-n` 的 getter 为真而 PDF 显示文字，证明读取值不能直接充当渲染策略。独立复验入口为 `verify_font_boolean_contexts`，生成器为 `probes/font_boolean_contexts.py`；属性、81 个 PDF 可见性及模型 JSON 往返专项已通过；新增 [32 个默认样式引用样本](benchmarks/hidden-style-contexts-26.9.json)修复显式/隐式引用的四个渲染差异。隐式引用补丁全套 11,460 项通过、2 项跳过；后续 [452 个隐藏格式往返输出](benchmarks/hidden-font-roundtrip-26.9.json)将 20 个 getter、52 个可见性差异降为零，保留直接声明和隐式引用。最终来源修复安装包专项 2,608 项、Mac 全套（含示例）11,916 项通过、2 项跳过，Linux 专项 2,504 项通过。全套收集后新增的 Windows ZIP 元数据回归与 CLI 平台断言修正另经 830 项专项复验；远端 CI 待完成。完整字体、动态样式编辑、全部格式及全页面视觉等价仍未验收 |
 | [样式段落格式观察](benchmarks/style-paragraph-format-26.9.json) | 27 个继承输入、108 次基本对齐编辑及官方原始输出 |
 | [段落分页属性](benchmarks/paragraph-pagination-26.9.json) | 324 个非首段输入、1296 次样式/直接值编辑，24 次非法 setter 观察 |
 | [分页渲染对照](benchmarks/pagination-rendering-26.9.json) | 五个自有输入、10 个原生/当前 PDF；非首页面位置、字宽及黑色像素，完整排版仍未验收 |
@@ -164,6 +165,8 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 安装包测试需在源码目录外运行，并检查实际导入位置、字体、许可和 typing 资源；
 方法见 [开发与安装核验](../README.zh-CN.md#开发与测试)。具体提交的跨平台结果以
 [GitHub Actions](https://github.com/shenyankm/DocWeave/actions) 为准，不能用旧 SHA 的成功代替。
+
+下一阶段优先修复其余十个 Boolean 属性的保存来源：本地探索性官方冷回读在 3,240 个 DOCX／Flat OPC 输出中观察到 200 个 getter 差异，每个属性 20 个。该新增探索尚未冻结为复验语料，不计为格式验收通过；需保留直接声明、验证模型 JSON 往返并重新核对官方输出。
 
 格式 getter/setter 的固定观察见上表，不能替代最终渲染验收。首段复验生成器为
 [`first_paragraph_trial.py`](probes/first_paragraph_trial.py)：15 个加载输入及 3 个新建/保存对照，

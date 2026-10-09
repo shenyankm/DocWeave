@@ -16073,10 +16073,30 @@
       "declaration": "aspose.words.Font.all_caps",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.auto_color",
@@ -16144,10 +16164,30 @@
       "declaration": "aspose.words.Font.bold_bi",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.border",
@@ -16204,10 +16244,30 @@
       "declaration": "aspose.words.Font.emboss",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.emphasis_mark",
@@ -16224,10 +16284,30 @@
       "declaration": "aspose.words.Font.engrave",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.fill",
@@ -16264,10 +16344,43 @@
       "declaration": "aspose.words.Font.hidden",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 81 native PDFs show two getter/rendering differences; 32 explicit/implicit default style references distinguish four further rendering differences; 452 saved DOCX/Flat OPC outputs before/after model JSON observed through native cold getters and PDF target text/paint checks",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-hidden-rendering-26.9.json",
+        "corpus/font-hidden-rendering-26.9.zip",
+        "hidden-style-contexts-26.9.json",
+        "corpus/hidden-style-contexts-26.9.zip",
+        "corpus/hidden-style-contexts-26.9-outputs.zip",
+        "hidden-font-roundtrip-26.9.json",
+        "corpus/hidden-font-roundtrip-current.zip",
+        "corpus/hidden-font-roundtrip-before-origin-fix.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "verify_hidden_style_contexts: owned inputs and 32 native PDFs, getters and visible target text",
+        "tests/test_font_boolean_contexts.py: default reference presence, JSON/PDF output and cache isolation",
+        "verify_hidden_font_roundtrip: independent XML hidden semantics and declarations, native records, before 20 getter/52 visibility differences, after zero",
+        "tests/test_font_boolean_contexts.py: 452 direct-declaration/reference roundtrips and paragraph style origin edits",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted",
+        "complete dynamic style/DOM editing and other formats remain unaccepted; cold-read PDFs inspected live but not archived; no whole-page parity"
+      ]
     },
     {
       "id": "aspose.words.Font.highlight_color",
@@ -16325,10 +16438,30 @@
       "declaration": "aspose.words.Font.italic_bi",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.kerning",
@@ -16435,10 +16568,30 @@
       "declaration": "aspose.words.Font.no_proofing",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.number_spacing",
@@ -16455,10 +16608,30 @@
       "declaration": "aspose.words.Font.outline",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.position",
@@ -16495,10 +16668,30 @@
       "declaration": "aspose.words.Font.shadow",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.size",
@@ -16590,10 +16783,30 @@
       "declaration": "aspose.words.Font.small_caps",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.snap_to_grid",
@@ -16620,10 +16833,30 @@
       "declaration": "aspose.words.Font.strike_through",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
-      "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
+      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "dependencies": [
+        "DOCX style categories",
+        "LDM Font metadata",
+        "PDF visibility and measurement"
+      ],
+      "scope_confirmation": "published_declaration",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "samples": [
+        "font-boolean-contexts-26.9.json",
+        "corpus/font-boolean-contexts-26.9.zip"
+      ],
+      "validation": [
+        "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
+        "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+      ],
+      "approach": "independent mapping from owned native trial observations",
+      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "limits": [
+        "does not establish other font effects or full layout equivalence",
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+      ]
     },
     {
       "id": "aspose.words.Font.style",

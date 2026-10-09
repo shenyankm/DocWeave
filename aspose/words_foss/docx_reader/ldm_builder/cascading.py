@@ -109,6 +109,7 @@ class FontBuilder:
         font.size_explicit = False
         font.bold_explicit = rPr.find(f"{W_NS}b") is not None
         font.italic_explicit = rPr.find(f"{W_NS}i") is not None
+        font.hidden_explicit = rPr.find(f"{W_NS}vanish") is not None
         self._apply_name(rPr, font)
         self._apply_size(rPr, font)
         apply_onoff_attrs(font, rPr, RUN_ONOFF_FLAGS)
@@ -443,12 +444,12 @@ class FontResolver:
         # Instance-owned cache avoids retaining previous documents through a global method cache.
         self._inherited_font = lru_cache(maxsize=128)(self._inherited_font)
 
-    def resolve(self, rPr: Optional[ET.Element], style_id: str = "") -> ldm.Font:
+    def resolve(self, rPr: Optional[ET.Element], style_id: str = "", implicit_paragraph_style: bool = False) -> ldm.Font:
         """Compose a Font, walking docDefaults, table style, *style_id* chain, then *rPr*."""
         character_style = rPr.find(f"{W_NS}rStyle") if rPr is not None else None
         character_id = character_style.get(f"{W_NS}val", "") if character_style is not None else ""
         table_id = getattr(self._ctx, "_current_table_style_id", "")
-        base = self._inherited_font(table_id, style_id, character_id).model_copy(deep=True)
+        base = self._inherited_font(table_id, style_id, character_id, implicit_paragraph_style).model_copy(deep=True)
         if rPr is not None:
             self.merge(base, self._fonts.build(rPr))
         if not base.style_name:
@@ -460,9 +461,11 @@ class FontResolver:
         base.size_explicit = rPr is not None and rPr.find(f"{W_NS}sz") is not None
         base.bold_explicit = rPr is not None and rPr.find(f"{W_NS}b") is not None
         base.italic_explicit = rPr is not None and rPr.find(f"{W_NS}i") is not None
+        base.hidden_explicit = rPr is not None and rPr.find(f"{W_NS}vanish") is not None
         return base
 
-    def _inherited_font(self, table_id: str, style_id: str, character_id: str) -> ldm.Font:
+    def _inherited_font(self, table_id: str, style_id: str, character_id: str,
+                        implicit_paragraph_style: bool = False) -> ldm.Font:
         ctx = self._ctx
         base = ldm.Font(color=COLOR_EMPTY, highlight_color=COLOR_EMPTY)
 
@@ -480,13 +483,23 @@ class FontResolver:
 
         if table_id:
             self._merge_style_chain(base, table_id)
-        initial = {tag: getattr(base, field) for tag, field in (("b", "bold"), ("i", "italic"))}
+        initial = {tag: getattr(base, field) for tag, field, _ in RUN_ONOFF_FLAGS}
         for inherited in (style_id, character_id):
             if inherited:
                 self._merge_style_chain(base, inherited)
-        for tag, field in (("b", "bold"), ("i", "italic")):
+        for tag, field, _ in RUN_ONOFF_FLAGS:
             setattr(base, field, combine_style_toggle(initial[tag], self._style_toggle(style_id, tag),
                                                       self._style_toggle(character_id, tag)))
+        paragraph = self._style_toggle(style_id, 'vanish')
+        character = self._style_toggle(character_id, 'vanish')
+        rendered = base.hidden
+        if implicit_paragraph_style:
+            rendered = (character if character is not None else paragraph
+                        if paragraph is not None else initial['vanish'])
+        elif paragraph is not None and character is not None:
+            rendered = initial['vanish'] ^ paragraph ^ character
+        if rendered != base.hidden:
+            base.hidden_rendering = rendered
         return base
 
     def _style_toggle(self, style_id: str, tag: str) -> bool | None:

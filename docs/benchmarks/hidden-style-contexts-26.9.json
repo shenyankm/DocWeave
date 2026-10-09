@@ -1,0 +1,270 @@
+{
+  "version": "26.9.0",
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "licensed": false,
+  "corpus": "corpus/hidden-style-contexts-26.9.zip",
+  "corpus_sha256": "bf51fda3b7cf22ba62f0dac53e4641ab4676877e176df9727866d48936a1cebc",
+  "outputs": "corpus/hidden-style-contexts-26.9-outputs.zip",
+  "outputs_sha256": "9bbd5140cf0a04854a0ef42ef3d91a07489e57070ea4514e2771ada7a3d80d51",
+  "records": [
+    {
+      "input": "implicit-default-0-0-0-0.docx",
+      "source_sha256": "6685fd129eee6528079cedec4fbf5f3118023df60c3b2fe4612050ba304f9ce4",
+      "hidden": false,
+      "output": "implicit-default-0-0-0-0.pdf",
+      "output_sha256": "0394f732ea7eaa0a64949b2f1e3f6b1a10f514179ceaa9b6ec9cc67d1ae61751",
+      "visible": true
+    },
+    {
+      "input": "explicit-default-0-0-0-0.docx",
+      "source_sha256": "5d8fc429043853b380ef90ed333e0f17f8ca715d58188d4bedfb3c36d4f40978",
+      "hidden": false,
+      "output": "explicit-default-0-0-0-0.pdf",
+      "output_sha256": "e827a2e1cfe61889b96c45f5792106c9e07f6ea6ef0c13769e93dd36c72541f9",
+      "visible": true
+    },
+    {
+      "input": "implicit-default-0-0-0-1.docx",
+      "source_sha256": "33d21b95a58c0049fc2420e645d93167473bb10849ce84c122d5b842da850087",
+      "hidden": false,
+      "output": "implicit-default-0-0-0-1.pdf",
+      "output_sha256": "a1823b84be5c0261a0eb823674dd018e65fde92b99fa6b43804be742420c6340",
+      "visible": true
+    },
+    {
+      "input": "explicit-default-0-0-0-1.docx",
+      "source_sha256": "681d027b3dc5794726851d64f5c21249d16466b69cc72543a58c70c93e7e2292",
+      "hidden": false,
+      "output": "explicit-default-0-0-0-1.pdf",
+      "output_sha256": "15bb27ffc44362a31e9a7566a98bb21540f650964ef0bc769ca69396cc3243fe",
+      "visible": true
+    },
+    {
+      "input": "implicit-default-0-0-1-0.docx",
+      "source_sha256": "e7d68946a9bf7bc497e98b47e92ae08337e408f3e31c7a4da3e1df684d4ce902",
+      "hidden": false,
+      "output": "implicit-default-0-0-1-0.pdf",
+      "output_sha256": "24e59ffb1489dab3f209ffe2f9a63ebe7e59b10114b41455172f2cf032d58226",
+      "visible": true
+    },
+    {
+      "input": "explicit-default-0-0-1-0.docx",
+      "source_sha256": "4be30b529fa2aab9d3b054e39c7278e7c263f32fe24636a51011c07e33e438da",
+      "hidden": false,
+      "output": "explicit-default-0-0-1-0.pdf",
+      "output_sha256": "9e320dee416a3001ee5134fe3ef07ddccde30b988014ef042f73cea610d33bb7",
+      "visible": true
+    },
+    {
+      "input": "implicit-default-0-0-1-1.docx",
+      "source_sha256": "b4628c67313f8de9b88040a12de1128925b821f14c1e016e9423c16d9fdcfada",
+      "hidden": true,
+      "output": "implicit-default-0-0-1-1.pdf",
+      "output_sha256": "189d288bffb2dba79548569e8d8259732b55358e10a64fa34eab120162416e42",
+      "visible": false
+    },
+    {
+      "input": "explicit-default-0-0-1-1.docx",
+      "source_sha256": "14f892e6283476e2fb1ecc782e6df8f11dc58a93b79532d7ab0943af8ebc3538",
+      "hidden": true,
+      "output": "explicit-default-0-0-1-1.pdf",
+      "output_sha256": "799d8c1f56eea6a6c414f3fae9d0c79fcb9637c3067ee9577d9c24954adebca0",
+      "visible": false
+    },
+    {
+      "input": "implicit-default-0-1-0-0.docx",
+      "source_sha256": "9774ac84ba38401b9f732bbf6a52304e03576b4d64fb9c33e859974c73cd5b60",
+      "hidden": true,
+      "output": "implicit-default-0-1-0-0.pdf",
+      "output_sha256": "7039dbd9abbb87e383aa91cd0f7bf5a77ba1b72e81d49049c19c365d5e00ded7",
+      "visible": false
+    },
+    {
+      "input": "explicit-default-0-1-0-0.docx",
+      "source_sha256": "9e429b78cc5c1418c437cee737fa26967f57614b2d8603c1d248278ea283b316",
+      "hidden": true,
+      "output": "explicit-default-0-1-0-0.pdf",
+      "output_sha256": "ac20c1bed26019feeec1f35e76c3acb5191552c3dcc06a2ae086dd414ca545c5",
+      "visible": false
+    },
+    {
+      "input": "implicit-default-0-1-0-1.docx",
+      "source_sha256": "383dfe39cb4f24b29b72af82898769b0ae8cbf339883ed1f77c9f976fc689b9e",
+      "hidden": true,
+      "output": "implicit-default-0-1-0-1.pdf",
+      "output_sha256": "4a0174032865e5ec25876d86019cc1b2154d5a0a862d3d136894f10bd0ab133d",
+      "visible": true
+    },
+    {
+      "input": "explicit-default-0-1-0-1.docx",
+      "source_sha256": "94f7e980d08100e21bda2a7a30e9259af0b8e1c557fdfbfa93e0d78b6ed33ca6",
+      "hidden": true,
+      "output": "explicit-default-0-1-0-1.pdf",
+      "output_sha256": "4c6632f8143221a55c59c851834e1e13170dd39baf5ccc5607608e1a5dae8f27",
+      "visible": false
+    },
+    {
+      "input": "implicit-default-0-1-1-0.docx",
+      "source_sha256": "647d8dad5172c77374114bf202dd7cd52553252e8e31ec7a49fc460f3e0bab78",
+      "hidden": true,
+      "output": "implicit-default-0-1-1-0.pdf",
+      "output_sha256": "10713408bb12ca48487aece556959781978f4fca4837faa621622b9317b1759b",
+      "visible": false
+    },
+    {
+      "input": "explicit-default-0-1-1-0.docx",
+      "source_sha256": "b998c475a116d0b14592c2c61dce93427ab19459cd0860429c629e9c1d4e7c05",
+      "hidden": true,
+      "output": "explicit-default-0-1-1-0.pdf",
+      "output_sha256": "92cfd4156c3790c81b20e4ad739acf1b1b1faa6006a9342bbfe0e6a998360e5d",
+      "visible": false
+    },
+    {
+      "input": "implicit-default-0-1-1-1.docx",
+      "source_sha256": "ceee8729bdee39fc464e134b75f921db57153c99d54d00b25f6823c6991fde60",
+      "hidden": false,
+      "output": "implicit-default-0-1-1-1.pdf",
+      "output_sha256": "0f48888611324dda920fff0ecb98a818663cf71f4084fdc804663a833d716008",
+      "visible": false
+    },
+    {
+      "input": "explicit-default-0-1-1-1.docx",
+      "source_sha256": "656b560296eecc4b7b2f17ecf4da4eb9767b67e79c20579a5dee5e73e6511750",
+      "hidden": false,
+      "output": "explicit-default-0-1-1-1.pdf",
+      "output_sha256": "78ccea9b71f2d1724437759d6f6d5dffe7755b0f34ec0ec9245d27a1d43c3be2",
+      "visible": true
+    },
+    {
+      "input": "implicit-default-1-0-0-0.docx",
+      "source_sha256": "3fe29601ecf8590c9e4e599850006377e44d28bff1578fec304b95895408e98d",
+      "hidden": false,
+      "output": "implicit-default-1-0-0-0.pdf",
+      "output_sha256": "fbe9387cac3c1b351f29dbde4be1c08e6575db828946efa6b93697dff90706e5",
+      "visible": true
+    },
+    {
+      "input": "explicit-default-1-0-0-0.docx",
+      "source_sha256": "47a1f23fc3d3744a38e0fa9432f9b580180e9df4e07529484eaa7f8a5256027a",
+      "hidden": false,
+      "output": "explicit-default-1-0-0-0.pdf",
+      "output_sha256": "31b98cb0f9d6de3798d118948921dccefc4478fca62d799b46d614f173f0ac03",
+      "visible": true
+    },
+    {
+      "input": "implicit-default-1-0-0-1.docx",
+      "source_sha256": "369910a872a13403ae08245da3c92bf08a68f177fce29c91b210bbb4b5fbe6a9",
+      "hidden": true,
+      "output": "implicit-default-1-0-0-1.pdf",
+      "output_sha256": "3a00fbfce186389db290db4507230100351aae9cd54ed90b9861f5387cc448b2",
+      "visible": true
+    },
+    {
+      "input": "explicit-default-1-0-0-1.docx",
+      "source_sha256": "315ab341dbd8672e94bc4ff1cfaf42596bc66127fa96088660029d730a9ee74b",
+      "hidden": true,
+      "output": "explicit-default-1-0-0-1.pdf",
+      "output_sha256": "81466f4c7064fdd9a01c32cfb2b08b6675d707d58b8df4313c19aff5b42a3c07",
+      "visible": false
+    },
+    {
+      "input": "implicit-default-1-0-1-0.docx",
+      "source_sha256": "02da6013b62d44d842c5e45379e868b08dba2b0765bfb4df92ddd151a3331dd2",
+      "hidden": false,
+      "output": "implicit-default-1-0-1-0.pdf",
+      "output_sha256": "2b9b60dc6cf2da899fdf9cb3d7692bd0845eae80d66a70e4263c3902767ec387",
+      "visible": true
+    },
+    {
+      "input": "explicit-default-1-0-1-0.docx",
+      "source_sha256": "ae3a1726364b2e68927790de3ebdd8d131f5da7534753f55c5d3d97393eaca3e",
+      "hidden": false,
+      "output": "explicit-default-1-0-1-0.pdf",
+      "output_sha256": "6dcbfa3abb3a886a8f6bf1e2f2bbec3f3630b3bbf34560c3a2115620d4c0ac55",
+      "visible": true
+    },
+    {
+      "input": "implicit-default-1-0-1-1.docx",
+      "source_sha256": "b4d923c53c5815ba3927a984c15026036d46c48459fd20b2498b86bd8ec96b3c",
+      "hidden": true,
+      "output": "implicit-default-1-0-1-1.pdf",
+      "output_sha256": "36dc725a876dd3fc7e3f27ae258324fa58c3f72f00194ac8f0fe6e732541ccfd",
+      "visible": false
+    },
+    {
+      "input": "explicit-default-1-0-1-1.docx",
+      "source_sha256": "d515ddc30257546e659a729761b2877671ae3c02eaa6a86e43d43b7a56354c96",
+      "hidden": true,
+      "output": "explicit-default-1-0-1-1.pdf",
+      "output_sha256": "840583c6d5139a55c8e178401f6d7391eb6c6dae82e988579871f7161e5cf637",
+      "visible": true
+    },
+    {
+      "input": "implicit-default-1-1-0-0.docx",
+      "source_sha256": "6451cf6f8fab16b7189581d5344aef06da6d75632ec1b6e17a20737ca76b6c3d",
+      "hidden": true,
+      "output": "implicit-default-1-1-0-0.pdf",
+      "output_sha256": "40b05087613483e8a9a3778b93b95ef61f82a75ef7fae9930393cb5ec632c2a4",
+      "visible": false
+    },
+    {
+      "input": "explicit-default-1-1-0-0.docx",
+      "source_sha256": "715f0788d1c4190dc832a28651a03d62b77e25b303301b81d34b5c68eac16a1f",
+      "hidden": true,
+      "output": "explicit-default-1-1-0-0.pdf",
+      "output_sha256": "58a2bd96732083946364cbcbed92e8516387e62a3be93113745f5d4df60cdae3",
+      "visible": false
+    },
+    {
+      "input": "implicit-default-1-1-0-1.docx",
+      "source_sha256": "ee4ad3e39fdae4acb01c734959ef057ab6ed238a2a76f28e4b76c341efa76af2",
+      "hidden": true,
+      "output": "implicit-default-1-1-0-1.pdf",
+      "output_sha256": "40c84348333daa3673b270ceab5f7c9e97e79f3e301b0c8b2aad06bcf4dd9c5b",
+      "visible": true
+    },
+    {
+      "input": "explicit-default-1-1-0-1.docx",
+      "source_sha256": "0ad5568c3d4c4a457be3f47eba1594141c8c2c2d15a3a2347e2368eb3c7e9275",
+      "hidden": true,
+      "output": "explicit-default-1-1-0-1.pdf",
+      "output_sha256": "d976f0deec1caa7b9f6b6562e962bb8fc82d481f4d72d0bdb2726e588b018d9f",
+      "visible": true
+    },
+    {
+      "input": "implicit-default-1-1-1-0.docx",
+      "source_sha256": "a60fb55f84f893f5f3cac015f611abffb3c846064736ece18cb4491d5f059c6a",
+      "hidden": true,
+      "output": "implicit-default-1-1-1-0.pdf",
+      "output_sha256": "f18aeb2ff5f9ff367720c8fb21652239dc282ca51a701921629717eab3c4d8cb",
+      "visible": false
+    },
+    {
+      "input": "explicit-default-1-1-1-0.docx",
+      "source_sha256": "d1afdf6b73a9bc66136a413b5952f5d87b2cd0756826c0ea34bd24de1e341bfb",
+      "hidden": true,
+      "output": "explicit-default-1-1-1-0.pdf",
+      "output_sha256": "2f579dc1c70fcef39fc19562078b210eaa83c788ac48bbf38148541424ec8f19",
+      "visible": false
+    },
+    {
+      "input": "implicit-default-1-1-1-1.docx",
+      "source_sha256": "59cd5a54e525a90232494d854098b34eacb7aae8d2c0dce9fdcc81bb5d86b437",
+      "hidden": true,
+      "output": "implicit-default-1-1-1-1.pdf",
+      "output_sha256": "3569dadcc10623170f0ec0c50c5f873a0e3401ce4a3870a87a8da043b8a0da79",
+      "visible": false
+    },
+    {
+      "input": "explicit-default-1-1-1-1.docx",
+      "source_sha256": "75e93b71a63c5ff048b8881c6d8ff4553c66351e461280901ae58a9f8e0449f3",
+      "hidden": true,
+      "output": "explicit-default-1-1-1-1.pdf",
+      "output_sha256": "cdc63e524a1fe66621346b05a0982999d764fd214b3919b597411818818a8ee4",
+      "visible": false
+    }
+  ],
+  "rendering_acceptance": false,
+  "scope": "32 explicit/implicit paragraph style references with default P/C declarations; getters and trial PDF target text only"
+}

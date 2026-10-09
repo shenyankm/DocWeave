@@ -79,7 +79,7 @@ def warn_about_conversion(pdf, doc, options, fallback_families):
         if isinstance(node, ldm.Cell) and node.cell_format.orientation:
             positions = {("sup" if run.font.superscript else "sub" if run.font.subscript else "normal")
                          for run in document_nodes(node)
-                         if isinstance(run, ldm.Run) and run.text and not run.font.hidden}
+                         if isinstance(run, ldm.Run) and run.text and not run.font.render_hidden}
             script_layout_loss |= len(positions) > 1 and bool(positions - {"normal"})
         if (
             isinstance(node, ldm.Paragraph)
@@ -96,7 +96,7 @@ def warn_about_conversion(pdf, doc, options, fallback_families):
                            if code not in coverage and code not in fallback_coverage)
         if isinstance(node, ldm.UnknownNode):
             unknown = True
-        if not isinstance(node, ldm.Run) or node.font.hidden:
+        if not isinstance(node, ldm.Run) or node.font.render_hidden:
             continue
         font = node.font
         if font.name and font.name != DEFAULT_FONT_NAME:

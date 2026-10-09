@@ -50,7 +50,7 @@ def build_style_font_map(doc: ldm.Document) -> dict[str, ldm.Font]:
         canonical = style.name.replace(" ", "").lower()
         if canonical:
             font = style.font.model_copy(deep=True)
-            for field in ("bold", "italic"):
+            for field in ("bold", "italic", "hidden"):
                 current, seen, declared = style.name, set(), False
                 while current in paragraphs and current not in seen:
                     seen.add(current)
@@ -66,7 +66,7 @@ def build_style_font_map(doc: ldm.Document) -> dict[str, ldm.Font]:
             out[canonical] = font
     if doc.doc_defaults_rpr_present is not None and "normal" not in out:
         out["normal"] = _effective_default_font(doc)
-        out["normal"].__pydantic_fields_set__.difference_update({"bold", "italic"})
+        out["normal"].__pydantic_fields_set__.difference_update({"bold", "italic", "hidden"})
     characters = {style.name: style for style in doc.styles if style.type == 2}
     for name in characters:
         chain = []

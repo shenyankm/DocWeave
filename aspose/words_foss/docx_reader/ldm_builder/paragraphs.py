@@ -67,11 +67,12 @@ class RunBuilder:
     def __init__(self, font_resolver: FontResolver):
         self._font_resolver = font_resolver
 
-    def build(self, r_elem: ET.Element, para_style_id: str = "") -> ldm.Run:
+    def build(self, r_elem: ET.Element, para_style_id: str = "",
+              implicit_paragraph_style: bool = False) -> ldm.Run:
         """Translate one ``<w:r>`` into a Run; *para_style_id* feeds the font cascade."""
         run = ldm.Run()
         run.text = _collect_run_text(r_elem)
-        run.font = self._font_resolver.resolve(r_elem.find(f"{W_NS}rPr"), para_style_id)
+        run.font = self._font_resolver.resolve(r_elem.find(f"{W_NS}rPr"), para_style_id, implicit_paragraph_style)
         return run
 
 
@@ -155,10 +156,13 @@ class ParagraphBuilder:
 
         para = ldm.Paragraph(source_location=self._ctx._source_locations.get(p_elem))
         pPr = p_elem.find(f"{W_NS}pPr")
-        para_style_id = self._read_style_id(pPr) or self._default_style_id
+        explicit_style_id = self._read_style_id(pPr)
+        implicit_paragraph_style = not explicit_style_id
+        para_style_id = explicit_style_id or self._default_style_id
 
         para.paragraph_format = self._pf_resolver.resolve(pPr, para_style_id)
         self._apply_paragraph_meta(para.paragraph_format, para_style_id)
+        para.paragraph_format.style_explicit = bool(explicit_style_id)
         self._apply_list_format(para, pPr, para_style_id)
 
         tracker = _FieldTracker()
@@ -169,11 +173,11 @@ class ParagraphBuilder:
             elif tag == f"{W_NS}bookmarkEnd":
                 self._handle_bookmark_end(child, para)
             elif tag == f"{W_NS}r":
-                self._handle_run(child, para, tracker, para_style_id, image_rels)
+                self._handle_run(child, para, tracker, para_style_id, image_rels, implicit_paragraph_style)
             elif tag == f"{W_NS}hyperlink":
-                self._handle_hyperlink(child, para, para_style_id, tracker, image_rels)
+                self._handle_hyperlink(child, para, para_style_id, tracker, image_rels, implicit_paragraph_style)
         if not para._children:
-            mark = self._font_resolver.resolve(None, para_style_id)
+            mark = self._font_resolver.resolve(None, para_style_id, implicit_paragraph_style)
             if para.paragraph_break_font is not None:
                 self._font_resolver.merge(mark, para.paragraph_break_font)
             para.paragraph_break_font = mark
@@ -247,10 +251,11 @@ class ParagraphBuilder:
         tracker: _FieldTracker,
         para_style_id: str,
         image_rels: dict[str, str],
+        implicit_paragraph_style: bool = False,
     ) -> None:
         fld_char = child.find(f"{W_NS}fldChar")
         if fld_char is not None:
-            self._handle_field_char(fld_char, child, para, tracker, para_style_id)
+            self._handle_field_char(fld_char, child, para, tracker, para_style_id, implicit_paragraph_style)
             return
         instr = child.find(f"{W_NS}instrText")
         if instr is not None:
@@ -261,7 +266,7 @@ class ParagraphBuilder:
             return
         self._extract_drawings(child, para, image_rels)
         if any(item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference"} for item in child):
-            source_run = self._run_builder.build(child, para_style_id)
+            source_run = self._run_builder.build(child, para_style_id, implicit_paragraph_style)
             fragment = ET.Element(W_NS + "r")
             def flush():
                 text = _collect_run_text(fragment)
@@ -283,7 +288,7 @@ class ParagraphBuilder:
                     fragment.append(item)
             flush()
             return
-        run = self._run_builder.build(child, para_style_id)
+        run = self._run_builder.build(child, para_style_id, implicit_paragraph_style)
         if not run.text:
             return
         para._children.append(run)
@@ -295,6 +300,7 @@ class ParagraphBuilder:
         para: ldm.Paragraph,
         tracker: _FieldTracker,
         para_style_id: str,
+        implicit_paragraph_style: bool = False,
     ) -> None:
         ft = fld_char.get(f"{W_NS}fldCharType", "")
         if ft == "begin":
@@ -305,18 +311,19 @@ class ParagraphBuilder:
             is_page = tracker.on_separate()
             para._children.append(ldm.FieldSeparator())
             if is_page:
-                sentinel = self._build_page_sentinel(run_elem, para_style_id)
+                sentinel = self._build_page_sentinel(run_elem, para_style_id, implicit_paragraph_style)
                 para._children.append(sentinel)
             return
         if ft == "end":
             tracker.on_end()
             para._children.append(ldm.FieldEnd())
 
-    def _build_page_sentinel(self, run_elem: ET.Element, para_style_id: str) -> ldm.Run:
+    def _build_page_sentinel(self, run_elem: ET.Element, para_style_id: str,
+                             implicit_paragraph_style: bool = False) -> ldm.Run:
         sentinel = ldm.Run()
         sentinel.text = PAGE_FIELD_SENTINEL
         sentinel.font = self._font_resolver.resolve(
-            run_elem.find(f"{W_NS}rPr"), para_style_id
+            run_elem.find(f"{W_NS}rPr"), para_style_id, implicit_paragraph_style
         )
         return sentinel
 
@@ -346,6 +353,7 @@ class ParagraphBuilder:
         para_style_id: str,
         tracker: _FieldTracker,
         image_rels: dict[str, str],
+        implicit_paragraph_style: bool = False,
     ) -> None:
         url = self._resolve_hyperlink_url(child)
         head_runs, tail_runs = self._split_at_first_tab(child)
@@ -355,7 +363,7 @@ class ParagraphBuilder:
                    for r in head_runs for kind in ("footnote", "endnote")):
                 for r in head_runs:
                     start = len(para._children)
-                    self._handle_run(r, para, tracker, para_style_id, image_rels)
+                    self._handle_run(r, para, tracker, para_style_id, image_rels, implicit_paragraph_style)
                     for run in para._children[start:]:
                         if isinstance(run, ldm.Run) and url:
                             run.text = format_link(run.text, url)
@@ -365,10 +373,10 @@ class ParagraphBuilder:
             link_text = "".join(_collect_run_text(r) for r in head_runs)
             if link_text:
                 head_rPr = head_runs[0].find(f"{W_NS}rPr")
-                self._append_link_run(para, link_text, url, head_rPr, para_style_id)
+                self._append_link_run(para, link_text, url, head_rPr, para_style_id, implicit_paragraph_style)
 
         for r_elem in tail_runs:
-            self._handle_run(r_elem, para, tracker, para_style_id, image_rels)
+            self._handle_run(r_elem, para, tracker, para_style_id, image_rels, implicit_paragraph_style)
 
     def _resolve_hyperlink_url(self, child: ET.Element) -> str:
         r_id = child.get(f"{R_NS}id", "")
@@ -395,11 +403,12 @@ class ParagraphBuilder:
         url: str,
         head_rPr: Optional[ET.Element],
         para_style_id: str,
+        implicit_paragraph_style: bool = False,
     ) -> None:
         run = ldm.Run()
         run.text = format_link(link_text, url) if url else link_text
         run.is_hyperlink = bool(url)
-        run.font = self._font_resolver.resolve(head_rPr, para_style_id)
+        run.font = self._font_resolver.resolve(head_rPr, para_style_id, implicit_paragraph_style)
         para._children.append(run)
 
     @staticmethod

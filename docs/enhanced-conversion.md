@@ -70,6 +70,29 @@
 真实 DOCX、独立 pypdf 导航和受控分配探针见[复验记录](benchmarks/pdf-outline-contract.json)。
 实际阅读器导航操作及完整保存矩阵仍未验收。
 
+### PDF 隐藏文字与读取值
+
+DOCX 的 `Font.hidden` 读取值与最终 PDF 可见性并非总是相同。固定 26.9.0 的
+[81 个官方输出](benchmarks/font-hidden-rendering-26.9.json)中，有两个默认字体、段落和
+字符样式组合的 getter 为真，而 PDF 仍显示目标文字。LDM 用 `hidden_rendering`
+保存这种继承差异，`render_hidden` 返回 PDF 使用的状态；
+[32 个默认样式引用样本](benchmarks/hidden-style-contexts-26.9.json)还区分显式引用
+和隐式使用默认段落样式，两者不能在解析时合并。缺少该元数据的旧模型使用
+`hidden`。直接给 `hidden` 赋值（包括赋回同一值），或 `model_copy(update={"hidden": ...})`，
+会清除继承的渲染差异。模型 JSON 往返保留该状态。
+
+`hidden_explicit` 保留 Run 的直接隐藏声明；`ParagraphFormat.style_explicit` 保留
+段落样式是否被显式引用。给段落的 `style_name` 或 `style_identifier` 赋值，或通过
+`model_copy(update=...)` 修改它们，会清除隐式来源标记。
+[452 个 DOCX／Flat OPC 往返输出](benchmarks/hidden-font-roundtrip-26.9.json)经官方冷回读与
+PDF 转换，属性差异从 20 个、目标文字可见性差异从 52 个降为零；直接声明与
+段落样式引用另经独立 XML 检查。官方冷回读的可见目标字形也经栅格化检查，
+冷回读 PDF 未归档，不代表全页面视觉等价。
+
+PDF 的正文、表格、旋转单元格、文本测量和诊断使用同一状态，隐藏的文字、字号和
+分页符不参与可见文本布局。此专项尚不证明动态样式编辑、其他字体效果、全部格式的
+来源保留或全页面视觉等价；含形状的旋转单元格仍明确拒绝。
+
 ### Markdown 页眉页脚损失
 
 Markdown 当前只导出默认页眉/页脚中顶层段落的图片，省略文字、表格、注引用、横线和变体图片。

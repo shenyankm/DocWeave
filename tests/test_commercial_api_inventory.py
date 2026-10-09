@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_paragraph_character_reads", "verify_paragraph_character_inheritance_edits", "verify_character_indent_roundtrips", "verify_font_size_loading"])
+@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_paragraph_character_reads", "verify_paragraph_character_inheritance_edits", "verify_character_indent_roundtrips", "verify_font_size_loading", "verify_font_boolean_contexts", "verify_hidden_style_contexts", "verify_hidden_font_roundtrip"])
 def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, name):
     from zipfile import ZipInfo
 
@@ -19,7 +19,7 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     monkeypatch.setattr(ZipInfo, "__init__", windows_info)
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))[name]
-    assert check(root / "docs/benchmarks") in {10, 18, 24, 61, 122, 126, 144, 216, 360, 1296}
+    assert check(root / "docs/benchmarks") in {10, 18, 24, 32, 61, 122, 126, 144, 216, 360, 452, 891, 1296}
 
 
 
@@ -344,6 +344,12 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     names += ["font-default-presence-26.9.json", "corpus/font-default-presence-current.zip"]
     names += ["font-json-origin-26.9.json", "corpus/font-json-origin-current.zip",
               "corpus/font-json-origin-before-cascade-fix.zip"]
+    names += ["font-boolean-contexts-26.9.json", "corpus/font-boolean-contexts-26.9.zip",
+              "font-hidden-rendering-26.9.json", "corpus/font-hidden-rendering-26.9.zip"]
+    names += ["hidden-style-contexts-26.9.json", "corpus/hidden-style-contexts-26.9.zip",
+              "corpus/hidden-style-contexts-26.9-outputs.zip"]
+    names += ["hidden-font-roundtrip-26.9.json", "corpus/hidden-font-roundtrip-current.zip",
+              "corpus/hidden-font-roundtrip-before-origin-fix.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)

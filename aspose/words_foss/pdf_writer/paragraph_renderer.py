@@ -183,7 +183,7 @@ class ParagraphRenderer:
 
         self._render_paragraph_relative_shapes(pdf, para, paragraph_top_y)
 
-        if not in_band and any("\f" in (run.text or "") for run in visible_runs(para)):
+        if not in_band and any("\f" in (run.text or "") for run in visible_runs(para) if not run.font.render_hidden):
             pdf.add_page()
 
     @contextmanager
@@ -398,6 +398,7 @@ class ParagraphRenderer:
         align: str,
     ) -> None:
         """Apply paragraph margins, including after page/column changes."""
+        runs = [run for run in runs if not run.font.render_hidden]
         w = self._writer
         previous = w._paragraph_insets
         left = pf.left_indent * PT_TO_MM
@@ -714,5 +715,6 @@ class ParagraphRenderer:
         return "".join(
             apply_caps(chunk, run.font)
             for run in runs
+            if not run.font.render_hidden
             for chunk, _ in extract_link_segments(run.text or "")
         )

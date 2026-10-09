@@ -42,14 +42,14 @@ def plain_text(para: ldm.Paragraph) -> str:
     """Return paragraph text with Markdown link syntax stripped and ``w:caps`` applied."""
     return "".join(
         apply_caps(chunk, run.font)
-        for run in visible_runs(para) if not run.font.hidden
+        for run in visible_runs(para) if not run.font.render_hidden
         for chunk, _ in extract_link_segments(run.text or "")
     )
 
 
 def source_plain_text(para: ldm.Paragraph) -> str:
     """Visible source text without interpreting ordinary runs as Markdown links."""
-    return "".join(apply_caps(chunk, run.font) for run in visible_runs(para) if not run.font.hidden
+    return "".join(apply_caps(chunk, run.font) for run in visible_runs(para) if not run.font.render_hidden
                    for chunk, _ in (extract_link_segments(run.text) if run.is_hyperlink
                                     else [(run.text, None)]))
 
@@ -76,6 +76,8 @@ def is_pure_page_break(para: ldm.Paragraph) -> bool:
     visible = False
     saw_form_feed = False
     for run in visible_runs(para):
+        if run.font.render_hidden:
+            continue
         text = run.text or ""
         for ch in text:
             if ch == "\f":
