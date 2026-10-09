@@ -774,6 +774,92 @@ def verify_style_toggles(root):
     return len(report["records"])
 
 
+def saved_font_sizes(raw):
+    from xml.etree import ElementTree as ET
+
+    w = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    with ZipFile(BytesIO(raw)) as package:
+        document = ET.fromstring(package.read("word/document.xml"))
+        styles = ET.fromstring(package.read("word/styles.xml"))
+    paragraph = next(p for p in document.iter(w + "p") if "".join(t.text or "" for t in p.iter(w + "t")) == "IMPORT")
+    run = next(r for r in paragraph.iter(w + "r") if "".join(t.text or "" for t in r.iter(w + "t")) == "IMPORT")
+    def size(element):
+        return None if element is None else int(element.get(w + "val")) / 2
+    resolved = size(styles.find(w + "docDefaults/" + w + "rPrDefault/" + w + "rPr/" + w + "sz"))
+    if resolved is None:
+        resolved = 10 if styles.find(w + "docDefaults/" + w + "rPrDefault") is not None else 11
+    chain, identifier = [], "Derived"
+    by_id = {style.get(w + "styleId"): style for style in styles.findall(w + "style")}
+    while identifier:
+        assert identifier not in chain and identifier in by_id
+        chain.append(identifier)
+        base = by_id[identifier].find(w + "basedOn")
+        identifier = base.get(w + "val") if base is not None else None
+    for identifier in reversed(chain):
+        direct = size(by_id[identifier].find(w + "rPr/" + w + "sz"))
+        if direct is not None:
+            resolved = direct
+    style_size = resolved
+    direct = size(run.find(w + "rPr/" + w + "sz"))
+    if direct is not None:
+        resolved = direct
+    return style_size, resolved
+
+
+def verify_font_size_loading(root):
+    report = json.loads((root / "font-size-loading-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    generated = {name: (scope, value, data) for name, scope, value, data in
+                 runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/font_size_loading.py"))["inputs"]()}
+    source, outputs = ((root / report[key]).read_bytes() for key in ("corpus", "outputs"))
+    assert digest(source) == report["corpus_sha256"] and digest(outputs) == report["outputs_sha256"]
+    rows = {row["input"]: row for row in report["records"]}
+    assert len(rows) == len(report["records"]) == len(generated) == 126 and set(rows) == set(generated)
+    measured = (12, 12, 12.5, 12, None, 50, 12, 6, 36, 72, 72, 12, 12, None, None,
+                0, -1, 0, 0, 0, 0, 0, 0, -.5, -.5, 12, None, .5, 11.5, 6, 6, 0,
+                None, -1, 12, None, 12, 12.5, 11, 0, 108, None)
+    with ZipFile(BytesIO(source)) as corpus, ZipFile(BytesIO(outputs)) as saved:
+        assert len(corpus.namelist()) == 126 and set(corpus.namelist()) == set(rows)
+        expected_outputs = {row["output"] for row in rows.values() if "output" in row}
+        assert len(saved.namelist()) == len(expected_outputs) == 105 and set(saved.namelist()) == expected_outputs
+        for name, row in rows.items():
+            scope, value, expected_source = generated[name]
+            data = corpus.read(name)
+            assert row["scope"] == scope and row["value"] == value and digest(data) == row["sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(expected_source)) as expected:
+                assert {key: actual.read(key) for key in actual.namelist()} == {key: expected.read(key) for key in expected.namelist()}
+            expected_size = measured[int(name[-7:-5])]
+            if expected_size is None:
+                assert row["load_error"] == "RuntimeError" and "output" not in row and "loaded" not in row
+                continue
+            assert "load_error" not in row and "save_error" not in row and row["output"] == name
+            raw = saved.read(name)
+            assert digest(raw) == row["output_sha256"]
+            style_size, resolved = saved_font_sizes(raw)
+            assert resolved == expected_size == row["loaded"]["run_size"] == row["after_save"]["run_size"] == row["cold"]["run_size"]
+            assert style_size == row["loaded"]["style_size"] == row["after_save"]["style_size"] == row["cold"]["style_size"]
+    current = report["docweave_roundtrip"]
+    assert current["full_acceptance"] is False and current["native_reread"]["version"] == "26.9.0"
+    assert current["native_reread"]["licensed"] is False
+    raw = (root / current["outputs"]).read_bytes()
+    assert digest(raw) == current["outputs_sha256"]
+    positive = {name for name, row in rows.items() if "loaded" in row and 0 < row["loaded"]["run_size"] < 1000}
+    records = {row["input"]: row for row in current["records"]}
+    native = {row["input"]: row for row in current["native_reread"]["records"]}
+    assert len(records) == len(current["records"]) == len(native) == len(current["native_reread"]["records"]) == 66
+    assert set(records) == set(native) == positive
+    with ZipFile(BytesIO(raw)) as archive:
+        assert len(archive.namelist()) == 66 and set(archive.namelist()) == positive
+        for name in positive:
+            data = archive.read(name)
+            assert digest(data) == records[name]["output_sha256"]
+            style_size, run_size = saved_font_sizes(data)
+            assert run_size == native[name]["run_size"] == rows[name]["loaded"]["run_size"]
+            assert style_size == native[name]["style_size"]
+    return len(rows)
+
+
 def verify_font_defaults(root):
     report = json.loads((root / "font-defaults-26.9.json").read_text())
     raw = (root / report["corpus"]).read_bytes()
@@ -1258,12 +1344,14 @@ def verify(root):
     character_inheritance_edits = verify_paragraph_character_inheritance_edits(root)
     character_roundtrips = verify_character_indent_roundtrips(root)
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
+    font_sizes = verify_font_size_loading(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
             "checked_style_inputs": toggles,
             "checked_style_import_outputs": style_imports,
+            "checked_font_size_loading_inputs": font_sizes,
             "checked_font_default_inputs": defaults,
             "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,

@@ -6,6 +6,7 @@ from xml.dom import Node as XmlNode
 
 from aspose.words_foss._opc import bind_namespace_context as _bind_namespace_context
 from aspose.words_foss.light_document_model import NodeType
+from aspose.words_foss.utils.xml_helpers import parse_font_size
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 XML = "http://www.w3.org/XML/1998/namespace"
@@ -113,13 +114,7 @@ def _size_value(value):
 def _read_size(element):
     if element is None:
         return None
-    value = element.getAttributeNS(W, "val")
-    if not value.isascii() or not value.isdecimal() or len(value) > 20:
-        raise ValueError("Expected an OOXML half-point integer font size")
-    half_points = int(value)
-    if not 0 < half_points <= 2**64 - 1:
-        raise ValueError("Invalid OOXML font size")
-    return half_points / 2
+    return parse_font_size(element.getAttributeNS(W, "val"))
 
 
 # Moving/deleting complex content needs relationship and range semantics first.

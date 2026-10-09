@@ -16499,11 +16499,38 @@
         "delivery": "implemented in alternate DOM; full canonical API and formatting acceptance remain incomplete"
       },
       "malformed_font_size_gap": {
-        "current": "DOM half-point read validates values; conversion FontBuilder._apply_size catches invalid integer text and leaves the previous/default value",
-        "implementation": "aspose/words_foss/docx_reader/ldm_builder/cascading.py:FontBuilder._apply_size",
-        "native_recovery": "not_measured",
+        "current": "consumed ordinary sizes use one decoder; malformed/empty/nonpositive/out-of-range values fail privately instead of silently inheriting; raw-package save preserves original XML",
+        "native_recovery": "observed_in_font-size-loading-26.9.json; ordinary recovery often yields zero or negative sizes; unknown suffixes/whitespace produce RuntimeError",
+        "status": "partial_policy_difference_open",
+        "impact": "strict refusal differs from native recovery for malformed/nonpositive values; large unsigned values and complete native error semantics remain unresolved"
+      },
+      "font_size_loading_evidence": {
+        "file": "font-size-loading-26.9.json",
+        "implementation": [
+          "aspose/words_foss/utils/xml_helpers.py:parse_font_size",
+          "aspose/words_foss/dom/nodes.py:_read_size",
+          "aspose/words_foss/dom/importing.py:_nearest_style_property",
+          "aspose/words_foss/docx_reader/ldm_builder/cascading.py:FontBuilder._apply_size",
+          "aspose/words_foss/docx_reader/ldm_builder/definitions.py:_tsp_build_font"
+        ],
+        "tests": "tests/test_font_size_loading.py",
+        "scope": "126 owned direct/style/docDefaults inputs and 105 native save/cold outputs; 66 positive ordinary-size reads, model conversions and DOCX roundtrips match observed getters; three independent PDF size measurements; conditional table decoding tested locally without native context acceptance",
+        "implementation_status": "partial_positive_ordinary_size_decoding",
+        "full_acceptance": false,
+        "limits": [
+          "native zero, negative, invalid-text and overflow recovery not implemented as native recovery",
+          "complex-script szCs, complete inheritance contexts and full layout unaccepted",
+          "large signed-range/native wraparound behavior unresolved",
+          "conversion of absent rPrDefault creates an empty group; unrelated implicit Derived style size changes from native 11pt to native reread 10pt in 22 direct-run cases; target Run size remains correct"
+        ],
+        "native_current_rereads": 66
+      },
+      "implicit_default_roundtrip_gap": {
+        "evidence": "font-size-loading-26.9.json:docweave_roundtrip.native_reread",
         "status": "open",
-        "impact": "malformed font-size conversion may silently inherit/default; requires native behavior measurement and explicit loss/rejection policy"
+        "scope": "22 positive direct-run cases retain target run size but source Derived implicit size 11pt becomes 10pt after LDM DOCX conversion",
+        "cause": "writer emits empty rPrDefault despite source group absence; presence provenance not retained by current conversion model",
+        "impact": "future inherited style/run creation or edits may change default size; raw DOM roundtrip preserves source group absence"
       }
     },
     {

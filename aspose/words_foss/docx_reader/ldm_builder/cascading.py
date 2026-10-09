@@ -9,6 +9,7 @@ import re
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss.utils.xml_helpers import parse_font_size
 from aspose.words_foss.docx_reader.constants import (
     COLOR_EMPTY,
     W_NS,
@@ -143,13 +144,9 @@ class FontBuilder:
 
     @staticmethod
     def _apply_size(rPr: ET.Element, font: ldm.Font) -> None:
-        val = find_val(rPr, "sz")
-        if not val:
-            return
-        try:
-            font.size = int(val) / _HALF_PT_DIVISOR
-        except ValueError:
-            pass
+        size = rPr.find(f"{W_NS}sz")
+        if size is not None:
+            font.size = parse_font_size(size.get(f"{W_NS}val", ""))
 
     @staticmethod
     def _apply_underline(rPr: ET.Element, font: ldm.Font) -> None:

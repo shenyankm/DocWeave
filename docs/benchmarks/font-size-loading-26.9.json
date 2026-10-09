@@ -1,0 +1,2879 @@
+{
+  "module": "aspose.words",
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "corpus": "corpus/font-size-loading-26.9.zip",
+  "corpus_sha256": "8b764368b060d7813db21eac7c5ce1ede36145fa443302fbbafee9f3d0f21a1e",
+  "outputs": "corpus/font-size-loading-26.9-outputs.zip",
+  "outputs_sha256": "0f84baf3444839e6075539e580a15b0a9b81c081c48f68c41d9703178d44131d",
+  "records": [
+    {
+      "input": "run-00.docx",
+      "scope": "run",
+      "value": "24",
+      "sha256": "51f4416858455ae3abf7232b9d24ce07f12fc5ebfd621afbfb9b3cbbda427769",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-00.docx",
+      "output_sha256": "00bfe8421ca52490d8e0a02470e87b16239643299f95d7d74fb50b0da2027110"
+    },
+    {
+      "input": "run-01.docx",
+      "scope": "run",
+      "value": "24.0",
+      "sha256": "377fd8891249a20ef49cb18e2f4eaf3899ba4571efdd3eece0d68f9728272570",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-01.docx",
+      "output_sha256": "00bfe8421ca52490d8e0a02470e87b16239643299f95d7d74fb50b0da2027110"
+    },
+    {
+      "input": "run-02.docx",
+      "scope": "run",
+      "value": "25.5",
+      "sha256": "3ca02ada7c374932cc0bd1195a723acfad2022aa39b7d7503e36635d8df79e85",
+      "loaded": {
+        "run_size": 12.5,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.5,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.5,
+        "style_size": 11.0
+      },
+      "output": "run-02.docx",
+      "output_sha256": "d2cb639c08103a7a85bddeae8f42305a4efa9b8051a95cea8687a019ec35e93e"
+    },
+    {
+      "input": "run-03.docx",
+      "scope": "run",
+      "value": "+24",
+      "sha256": "1541ae657624d03a90fd62df281305a076e9936341094aec4025fdc25a602a70",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-03.docx",
+      "output_sha256": "00bfe8421ca52490d8e0a02470e87b16239643299f95d7d74fb50b0da2027110"
+    },
+    {
+      "input": "run-04.docx",
+      "scope": "run",
+      "value": " 24 ",
+      "sha256": "f12782203a2b4f7cd728d29b42017446c6064f3b65dae01c34d455086479b5f7",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "run-05.docx",
+      "scope": "run",
+      "value": "1e2",
+      "sha256": "42867df205e44647799c10ef3c678ec8876101574d2388b81e07528e3055af45",
+      "loaded": {
+        "run_size": 50.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 50.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 50.0,
+        "style_size": 11.0
+      },
+      "output": "run-05.docx",
+      "output_sha256": "323344dd2a33868f59d3f879579748b6fd02ae43338d8f07997e7f782916cf04"
+    },
+    {
+      "input": "run-06.docx",
+      "scope": "run",
+      "value": "12pt",
+      "sha256": "bd060217a6963dc86a4bd150912a493116e46baa4d2a2d983d89ae1b9b89b6d1",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-06.docx",
+      "output_sha256": "9e90825a515d220c01c4d72aa9ac2905d78b40b44dde4dbe34882ac64c13f929"
+    },
+    {
+      "input": "run-07.docx",
+      "scope": "run",
+      "value": "6.25pt",
+      "sha256": "9107e62c48e3192d0bf74de00075ead4941993536f49bbd42067d4e6bdab4ecc",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "output": "run-07.docx",
+      "output_sha256": "aeb5c795c30a21e5641ad1c0283dd153352ace777eac3133c488617d98b7a8e0"
+    },
+    {
+      "input": "run-08.docx",
+      "scope": "run",
+      "value": "0.5in",
+      "sha256": "bada395f3ff70f2b44688e4bb2a21089d315525f8d9e1ace2bf46440518081c4",
+      "loaded": {
+        "run_size": 36.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 36.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 36.0,
+        "style_size": 11.0
+      },
+      "output": "run-08.docx",
+      "output_sha256": "294d86e54bceff05e3c416b0c2e4c2da99c5c4b0d5e5157e47f666fb236d0112"
+    },
+    {
+      "input": "run-09.docx",
+      "scope": "run",
+      "value": "2.54cm",
+      "sha256": "0127662a4bedc6baa520251e2b99ee27dc2740c532541d54b4e5f3992e586e5e",
+      "loaded": {
+        "run_size": 72.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 72.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 72.0,
+        "style_size": 11.0
+      },
+      "output": "run-09.docx",
+      "output_sha256": "8183fbaa5deb6d75e41f5bdfcea552efbe704af4e9f0bd5dd5c2bf8d8f49b78d"
+    },
+    {
+      "input": "run-10.docx",
+      "scope": "run",
+      "value": "25.4mm",
+      "sha256": "964a7772b6676b9cffacf22bb4e777ea4cd0ed5f2721e31717e245815d5d3f7f",
+      "loaded": {
+        "run_size": 72.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 72.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 72.0,
+        "style_size": 11.0
+      },
+      "output": "run-10.docx",
+      "output_sha256": "96e1bd770ed0ded5159687305ec719e78a3bfeb40a14358cf615d1d70a8af386"
+    },
+    {
+      "input": "run-11.docx",
+      "scope": "run",
+      "value": "1pc",
+      "sha256": "affff4578a5401cae74101dd6469c991e1d6f7e4a252177dcdf6c6d8eeff25c7",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-11.docx",
+      "output_sha256": "57775fd79d1f35533dd1d8732e4e9c4f3bff66ba90328d75d7fe666c8125ea80"
+    },
+    {
+      "input": "run-12.docx",
+      "scope": "run",
+      "value": "1pi",
+      "sha256": "b26d82fcc4a5ad048d67fcc34af4f92684977f7498807a75242649a09633f42b",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-12.docx",
+      "output_sha256": "71a36cc29ed28bb03939e3dd3ee348daad74e0d2382d8fd845b6afe76de02e27"
+    },
+    {
+      "input": "run-13.docx",
+      "scope": "run",
+      "value": "24hp",
+      "sha256": "086f029e38d7eee59f18322b66197e1c6435c529241cedec080a789fa8f69aa1",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "run-14.docx",
+      "scope": "run",
+      "value": "24twip",
+      "sha256": "6f1551ae257c94172434a8633c0294d26d4ae53d01ec88c3e3bbe16306a54bb6",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "run-15.docx",
+      "scope": "run",
+      "value": "0",
+      "sha256": "2f25c310e18c482f64d3ae72d92c5b86a90f56d4241e9f04f66f847d48fd259a",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-15.docx",
+      "output_sha256": "a37c7eef859c6960178bcaaa4a2e8e3eba34be4f642e48325d7bb3baca26067a"
+    },
+    {
+      "input": "run-16.docx",
+      "scope": "run",
+      "value": "-2",
+      "sha256": "4606143ade1b4e099d3062aa4a71fd0a0e5665356243ae16f3cc56e4c4509abc",
+      "loaded": {
+        "run_size": -1.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": -1.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": -1.0,
+        "style_size": 11.0
+      },
+      "output": "run-16.docx",
+      "output_sha256": "be46e1e36a5c366b11d61d4c34429c10f9dd75054e87e48667d7b5c64234ec42"
+    },
+    {
+      "input": "run-17.docx",
+      "scope": "run",
+      "value": "PRIVATE FONT VALUE",
+      "sha256": "3abde00cd1957def1e39c07042ab47987c2a1a8765706563c79eda388778163a",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-17.docx",
+      "output_sha256": "a37c7eef859c6960178bcaaa4a2e8e3eba34be4f642e48325d7bb3baca26067a"
+    },
+    {
+      "input": "run-18.docx",
+      "scope": "run",
+      "value": "2_4",
+      "sha256": "8613ddb0ad50eaaa8c27e2077dff1c5e19344afe5deb53f949ee4e40c3bdb798",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-18.docx",
+      "output_sha256": "a37c7eef859c6960178bcaaa4a2e8e3eba34be4f642e48325d7bb3baca26067a"
+    },
+    {
+      "input": "run-19.docx",
+      "scope": "run",
+      "value": "٢٤",
+      "sha256": "7d242cb54db53332ade6d43f7814bf070be372ae850b6c4545e70152044cde89",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-19.docx",
+      "output_sha256": "a37c7eef859c6960178bcaaa4a2e8e3eba34be4f642e48325d7bb3baca26067a"
+    },
+    {
+      "input": "run-20.docx",
+      "scope": "run",
+      "value": "",
+      "sha256": "7293821d430fd509ff5eda1c2d235fe444b3d0c6dca845b841f88e230b9dda9e",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-20.docx",
+      "output_sha256": "a37c7eef859c6960178bcaaa4a2e8e3eba34be4f642e48325d7bb3baca26067a"
+    },
+    {
+      "input": "run-21.docx",
+      "scope": "run",
+      "value": "NaN",
+      "sha256": "8c32270026eb56cf25f8802c3f1fe9cd2255b365781a85f68c025538b8a06e6f",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-21.docx",
+      "output_sha256": "a37c7eef859c6960178bcaaa4a2e8e3eba34be4f642e48325d7bb3baca26067a"
+    },
+    {
+      "input": "run-22.docx",
+      "scope": "run",
+      "value": "Infinity",
+      "sha256": "d78531199c6125b062259749892e67b6fa727977c3b2199db98e6991f936be00",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-22.docx",
+      "output_sha256": "a37c7eef859c6960178bcaaa4a2e8e3eba34be4f642e48325d7bb3baca26067a"
+    },
+    {
+      "input": "run-23.docx",
+      "scope": "run",
+      "value": "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "sha256": "fa53bdc550d9270bed6be663d123554f0587956244e153ff34bc3ec72062a396",
+      "loaded": {
+        "run_size": -0.5,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": -0.5,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": -0.5,
+        "style_size": 11.0
+      },
+      "output": "run-23.docx",
+      "output_sha256": "5189336ed1dfa7ad1d786e02176b11b469ef0330d09cb34ff8b8a691e953254b"
+    },
+    {
+      "input": "run-24.docx",
+      "scope": "run",
+      "value": "18446744073709551615",
+      "sha256": "5e2bdde2ee8c2d938eeb3f9eaf06fc6f7af08ead023e01da7d7b7bc98db0b43d",
+      "loaded": {
+        "run_size": -0.5,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": -0.5,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": -0.5,
+        "style_size": 11.0
+      },
+      "output": "run-24.docx",
+      "output_sha256": "5189336ed1dfa7ad1d786e02176b11b469ef0330d09cb34ff8b8a691e953254b"
+    },
+    {
+      "input": "run-25.docx",
+      "scope": "run",
+      "value": "+24.0",
+      "sha256": "dae11521c5d7f85db21b1ddd5403237c7f3a4e96c5032a8c8f181b1fedf720eb",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-25.docx",
+      "output_sha256": "00bfe8421ca52490d8e0a02470e87b16239643299f95d7d74fb50b0da2027110"
+    },
+    {
+      "input": "run-26.docx",
+      "scope": "run",
+      "value": "24px",
+      "sha256": "3d967496fe6d97acb47410d11359c49f62a95fb95c795f0819c059321926763c",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "run-27.docx",
+      "scope": "run",
+      "value": "1.13",
+      "sha256": "c149349984a9107c454128c2340685677cd6cbb878d719f3cc582855dc2b0763",
+      "loaded": {
+        "run_size": 0.5,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.5,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.5,
+        "style_size": 11.0
+      },
+      "output": "run-27.docx",
+      "output_sha256": "c9ba9d946b9dea400319a46ac556a6a18e7e96034e60bbc4baae2d38149fc439"
+    },
+    {
+      "input": "run-28.docx",
+      "scope": "run",
+      "value": "23.99",
+      "sha256": "af40f42680ec77cbc91a62d85973f48719eea5f33509e802dc9cf53f5a63ff93",
+      "loaded": {
+        "run_size": 11.5,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 11.5,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 11.5,
+        "style_size": 11.0
+      },
+      "output": "run-28.docx",
+      "output_sha256": "fed78a5ee153e4e58ed4041e36b45e6166d70f51f03056c6d93ad64007d74e53"
+    },
+    {
+      "input": "run-29.docx",
+      "scope": "run",
+      "value": "6.13pt",
+      "sha256": "d2d81f606be572f6bb7a2debf629922667303451be1c30cf9bd1d3ad4fe8a54d",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "output": "run-29.docx",
+      "output_sha256": "013280b6d4297a2dd817bcf071381a4f08cddda0d659d2b99a8f190d962a450f"
+    },
+    {
+      "input": "run-30.docx",
+      "scope": "run",
+      "value": "6.125pt",
+      "sha256": "d239ba2317fa6824e41ccfea58bbd449860080a6ed22cc56266af81a69ebc881",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 11.0
+      },
+      "output": "run-30.docx",
+      "output_sha256": "bcb09f3bc3a556ace1ad54665935705e2df484a8b71cba9cf3a8389fad8fd048"
+    },
+    {
+      "input": "run-31.docx",
+      "scope": "run",
+      "value": "0.01pt",
+      "sha256": "7ca28d251a37f1fefdda967530909efa8f53e7eba9b39ee885894f5391b3cfc4",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-31.docx",
+      "output_sha256": "6edf3e4e7b59da1f180b9447e17a54392a42da850a782010c84b69bc67ab55d5"
+    },
+    {
+      "input": "run-32.docx",
+      "scope": "run",
+      "value": "24PT",
+      "sha256": "4183d93556f5e70e5675ee83bd76cb96ff957095b7a625ab56288a9af0f83d7b",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "run-33.docx",
+      "scope": "run",
+      "value": "-1pt",
+      "sha256": "ed1f085f602bf2be60e85c71153af64ad0055f4f19b07cae134f3c000cf96990",
+      "loaded": {
+        "run_size": -1.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": -1.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": -1.0,
+        "style_size": 11.0
+      },
+      "output": "run-33.docx",
+      "output_sha256": "024b5f8dbf05f299942668df9e3eb6258715fb9458535d4882c07bfffc239834"
+    },
+    {
+      "input": "run-34.docx",
+      "scope": "run",
+      "value": "+12pt",
+      "sha256": "81bdd45bdd4eafafd4eada7280edc1e18bc4e5d1fd8edb3aafaa9a85ef5e4fab",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-34.docx",
+      "output_sha256": "1c15be746c994bfe1e61e5cf2ae5d459278f2a0e5e18ae44f27a30d0c7451fa3"
+    },
+    {
+      "input": "run-35.docx",
+      "scope": "run",
+      "value": " 12pt ",
+      "sha256": "3c260a32c604e6c0940792961532bb0a8e6217d4e37a7e4a84d9235cf4285cb1",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "run-36.docx",
+      "scope": "run",
+      "value": "24.99",
+      "sha256": "b1dedbfe399ede582a6fe6e0239efcc2f44df8f9970aad4c4ffa541b1d326858",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 11.0
+      },
+      "output": "run-36.docx",
+      "output_sha256": "00bfe8421ca52490d8e0a02470e87b16239643299f95d7d74fb50b0da2027110"
+    },
+    {
+      "input": "run-37.docx",
+      "scope": "run",
+      "value": "25.01",
+      "sha256": "9b2a01ec775b5431bdfdd9e46af1cc46da2d3a2e9be36929597361aa40289ec5",
+      "loaded": {
+        "run_size": 12.5,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 12.5,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 12.5,
+        "style_size": 11.0
+      },
+      "output": "run-37.docx",
+      "output_sha256": "d2cb639c08103a7a85bddeae8f42305a4efa9b8051a95cea8687a019ec35e93e"
+    },
+    {
+      "input": "run-38.docx",
+      "scope": "run",
+      "value": "22.5",
+      "sha256": "db209c1700cf8aadeee8050c9212ac06b5ce02cb5559046a334e448bee905156",
+      "loaded": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "output": "run-38.docx",
+      "output_sha256": "8cbebc75390386c5f57a1bb4b5a57162e5fa66d6f588f3fe5fe5890e70ea864b"
+    },
+    {
+      "input": "run-39.docx",
+      "scope": "run",
+      "value": "1e-2",
+      "sha256": "0ca1baf3760f5e61c7bced23b03db439442467ecb2a2d264c5a48d1691d9e21c",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 11.0
+      },
+      "output": "run-39.docx",
+      "output_sha256": "a37c7eef859c6960178bcaaa4a2e8e3eba34be4f642e48325d7bb3baca26067a"
+    },
+    {
+      "input": "run-40.docx",
+      "scope": "run",
+      "value": "1.5in",
+      "sha256": "9367f05c445bb500711cb20ffb623230e7ca4b14e9d9b3c6cbdab27538fa2ff0",
+      "loaded": {
+        "run_size": 108.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 108.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 108.0,
+        "style_size": 11.0
+      },
+      "output": "run-40.docx",
+      "output_sha256": "7c05098ad07a24eee83f98619cc1f1a23f852b43a6309b90b365fe122217313c"
+    },
+    {
+      "input": "run-41.docx",
+      "scope": "run",
+      "value": "12 pt",
+      "sha256": "a663eab0157e40ba83c565c510d637d56c0627c91b054eb3ecb1506446ed5531",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "style-00.docx",
+      "scope": "style",
+      "value": "24",
+      "sha256": "ffe8914d0998a5c6844e2933a759f4c8be18e67a0dd08ae9f6e7bbbe28a737d6",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-00.docx",
+      "output_sha256": "c45a2679ee2901321a06d718b0b2e213122289fa542833d160490a1725ffa892"
+    },
+    {
+      "input": "style-01.docx",
+      "scope": "style",
+      "value": "24.0",
+      "sha256": "24d566b117f73a1bd71cd8cfa69a2d0ae2d8b5845618caf4109fba2a7f598abc",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-01.docx",
+      "output_sha256": "c45a2679ee2901321a06d718b0b2e213122289fa542833d160490a1725ffa892"
+    },
+    {
+      "input": "style-02.docx",
+      "scope": "style",
+      "value": "25.5",
+      "sha256": "6a29192d2ad949965ab12317141ee61ee22ad738057b64b3a9154c7e2915304c",
+      "loaded": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "after_save": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "cold": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "output": "style-02.docx",
+      "output_sha256": "9339057ebf5866ab2f57b83b8281398ca0a9aed7b4a9b1d2a8e2e633af6fde35"
+    },
+    {
+      "input": "style-03.docx",
+      "scope": "style",
+      "value": "+24",
+      "sha256": "92f2f12276b6ea37e8da46b2db052da9f29b22a221de5b034cf3953a17fa82d9",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-03.docx",
+      "output_sha256": "c45a2679ee2901321a06d718b0b2e213122289fa542833d160490a1725ffa892"
+    },
+    {
+      "input": "style-04.docx",
+      "scope": "style",
+      "value": " 24 ",
+      "sha256": "83186d3081a5012a4c4bb1bde357119636cf95777a400c0c33fa6e86f0df9fc5",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "style-05.docx",
+      "scope": "style",
+      "value": "1e2",
+      "sha256": "55382d1b441d6f568a1e86cec86cee8fe27b8542245f2a58316951b09b0ff877",
+      "loaded": {
+        "run_size": 50.0,
+        "style_size": 50.0
+      },
+      "after_save": {
+        "run_size": 50.0,
+        "style_size": 50.0
+      },
+      "cold": {
+        "run_size": 50.0,
+        "style_size": 50.0
+      },
+      "output": "style-05.docx",
+      "output_sha256": "d8ea0c7a2014a4767b366d75d8e02dacc117413a137c7aa103004ab9c4c319ee"
+    },
+    {
+      "input": "style-06.docx",
+      "scope": "style",
+      "value": "12pt",
+      "sha256": "f8501407b59fa7852545bc26c69b9dad407759532859ad574bb3bd5d311caec8",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-06.docx",
+      "output_sha256": "875adde6e6ccb4012db63d0b762f0fdc12a76bab7b4f6a551a677a2da697effe"
+    },
+    {
+      "input": "style-07.docx",
+      "scope": "style",
+      "value": "6.25pt",
+      "sha256": "abeae84e6ad7eadd56da26ec2b1e10520727eb07d5e39a7db9a9838dad90beb7",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "output": "style-07.docx",
+      "output_sha256": "68e1d1d0afd96b6cf418eb09424d21013b4d657c595a9060c4d6924f43208b1c"
+    },
+    {
+      "input": "style-08.docx",
+      "scope": "style",
+      "value": "0.5in",
+      "sha256": "54441cc6a764b93a00c226f73b784829beded8642a7bbed12db44359c947804d",
+      "loaded": {
+        "run_size": 36.0,
+        "style_size": 36.0
+      },
+      "after_save": {
+        "run_size": 36.0,
+        "style_size": 36.0
+      },
+      "cold": {
+        "run_size": 36.0,
+        "style_size": 36.0
+      },
+      "output": "style-08.docx",
+      "output_sha256": "cc4808777b56d71c3544f20aa2a3210705760213bee94a9c6c4ebafa4d995bb0"
+    },
+    {
+      "input": "style-09.docx",
+      "scope": "style",
+      "value": "2.54cm",
+      "sha256": "55e284d528afd976aa1221e14ce61593823b8ad5a87c5fdb523e8edc7d70fc17",
+      "loaded": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "after_save": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "cold": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "output": "style-09.docx",
+      "output_sha256": "6ae85b52f18971223cd05339270383290de676b30fcb735eb92a3814ee512c1a"
+    },
+    {
+      "input": "style-10.docx",
+      "scope": "style",
+      "value": "25.4mm",
+      "sha256": "8cd2440af414abc110bba0e6ae5bd6dfd9fefe972859bd99f1ad49fefe569ceb",
+      "loaded": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "after_save": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "cold": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "output": "style-10.docx",
+      "output_sha256": "8cb486bec4a90b2cc162cf8196a213c04b31ad292d35455fb7f5e12ae01f6cba"
+    },
+    {
+      "input": "style-11.docx",
+      "scope": "style",
+      "value": "1pc",
+      "sha256": "ff7f4ca6bce4d3f6c7e822e33292bb22216754598aca6be7a15768a99f3f8447",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-11.docx",
+      "output_sha256": "035f791ee048a5ef2e88a0a89e62810b0825b6130e667d4f5d0056a6c65736ff"
+    },
+    {
+      "input": "style-12.docx",
+      "scope": "style",
+      "value": "1pi",
+      "sha256": "1eb6921ee1d86fc55de5d3ff1c246df228b9481eff247d0a3797529e9832dfc6",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-12.docx",
+      "output_sha256": "643868b056834d00427c8b858fbbde5600c6ced5fd9ad69812cfd0a7b7232abb"
+    },
+    {
+      "input": "style-13.docx",
+      "scope": "style",
+      "value": "24hp",
+      "sha256": "bc987177e9229b9f8f6033cdc569a0141f9af207cb0f6d28c2dcf4b21d74d4d9",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "style-14.docx",
+      "scope": "style",
+      "value": "24twip",
+      "sha256": "76401852038a7aa9386331f9a41066dd7d60d001932a7aa50a732b6cd9db2727",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "style-15.docx",
+      "scope": "style",
+      "value": "0",
+      "sha256": "395425cd0882c97ffd968dfe55fe8393754c7de265c03d3ae75b59395678ba90",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-15.docx",
+      "output_sha256": "7ef49a3fc5cc8051bdaa875818e646565a0611bc49a00a5af5872f7fd9992bed"
+    },
+    {
+      "input": "style-16.docx",
+      "scope": "style",
+      "value": "-2",
+      "sha256": "7b890e61c3114b76502a802964aa01251ecec4dd5614ddc778b059383487a99c",
+      "loaded": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "after_save": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "cold": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "output": "style-16.docx",
+      "output_sha256": "f995e529d7f4774ac2fda1788116d4783adbbd3e2d6923cb8bb1df813b997aa3"
+    },
+    {
+      "input": "style-17.docx",
+      "scope": "style",
+      "value": "PRIVATE FONT VALUE",
+      "sha256": "fbe5fb3ac73194bdcab807c65b90a2765f75b9f1a6734d8e81e223aa644f60be",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-17.docx",
+      "output_sha256": "7ef49a3fc5cc8051bdaa875818e646565a0611bc49a00a5af5872f7fd9992bed"
+    },
+    {
+      "input": "style-18.docx",
+      "scope": "style",
+      "value": "2_4",
+      "sha256": "4811baaef270f305a9d9f1ddd8102ced331a757e9a429a7f01efc23af714fa93",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-18.docx",
+      "output_sha256": "7ef49a3fc5cc8051bdaa875818e646565a0611bc49a00a5af5872f7fd9992bed"
+    },
+    {
+      "input": "style-19.docx",
+      "scope": "style",
+      "value": "٢٤",
+      "sha256": "7dca60d14e3a8f589e6443eee06f3207cda5ccf48ad1a978b93a31e7dbb7b6de",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-19.docx",
+      "output_sha256": "7ef49a3fc5cc8051bdaa875818e646565a0611bc49a00a5af5872f7fd9992bed"
+    },
+    {
+      "input": "style-20.docx",
+      "scope": "style",
+      "value": "",
+      "sha256": "f82c3af4ae9c79cd79bf1f58d6c0a75e3ee70d4a8e7969c8a93723fa2a335d8b",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-20.docx",
+      "output_sha256": "7ef49a3fc5cc8051bdaa875818e646565a0611bc49a00a5af5872f7fd9992bed"
+    },
+    {
+      "input": "style-21.docx",
+      "scope": "style",
+      "value": "NaN",
+      "sha256": "21f5821c4e09c750ed5369bbe1c6e6935cf6267e1a608e126eb1bb3719f6b0d3",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-21.docx",
+      "output_sha256": "7ef49a3fc5cc8051bdaa875818e646565a0611bc49a00a5af5872f7fd9992bed"
+    },
+    {
+      "input": "style-22.docx",
+      "scope": "style",
+      "value": "Infinity",
+      "sha256": "1d2a19376e51367b241d6ea5835615963f53639bb9cf94276e09000a813768b1",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-22.docx",
+      "output_sha256": "7ef49a3fc5cc8051bdaa875818e646565a0611bc49a00a5af5872f7fd9992bed"
+    },
+    {
+      "input": "style-23.docx",
+      "scope": "style",
+      "value": "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "sha256": "e54f4763447c18e461e47816d25bc597d48d8e9d3204b3d9fbe043fe0f3da3ef",
+      "loaded": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "after_save": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "cold": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "output": "style-23.docx",
+      "output_sha256": "a1e1f6d8f82ac138f2f767707e56300e45bae74e73a7e8ec513e3afe6b2a6aee"
+    },
+    {
+      "input": "style-24.docx",
+      "scope": "style",
+      "value": "18446744073709551615",
+      "sha256": "b18663257a7d3457494608056523831867d4e1784e8aa2ff994b2d3f0decc6b8",
+      "loaded": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "after_save": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "cold": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "output": "style-24.docx",
+      "output_sha256": "a1e1f6d8f82ac138f2f767707e56300e45bae74e73a7e8ec513e3afe6b2a6aee"
+    },
+    {
+      "input": "style-25.docx",
+      "scope": "style",
+      "value": "+24.0",
+      "sha256": "c7b76d172d9c86ee53469b6a845faa9fe08b6369fb557c7163f7c631e3ed2fe2",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-25.docx",
+      "output_sha256": "c45a2679ee2901321a06d718b0b2e213122289fa542833d160490a1725ffa892"
+    },
+    {
+      "input": "style-26.docx",
+      "scope": "style",
+      "value": "24px",
+      "sha256": "068d553c683a7fe239f91a67f9628f310c088a72c772a2bda7e6b1ccdd8dccd5",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "style-27.docx",
+      "scope": "style",
+      "value": "1.13",
+      "sha256": "ff81ff78134de2c030448b69fbedef09f42687ff5a5278cc6ebe04b0827dfa97",
+      "loaded": {
+        "run_size": 0.5,
+        "style_size": 0.5
+      },
+      "after_save": {
+        "run_size": 0.5,
+        "style_size": 0.5
+      },
+      "cold": {
+        "run_size": 0.5,
+        "style_size": 0.5
+      },
+      "output": "style-27.docx",
+      "output_sha256": "9abeb7a2a16fce94e909c0f252a7a29ba07a762df082ae8d92528468bb1ca524"
+    },
+    {
+      "input": "style-28.docx",
+      "scope": "style",
+      "value": "23.99",
+      "sha256": "706faf0200676ea0667e855022980357b4f13fced2d1da46a9e256c43097a64d",
+      "loaded": {
+        "run_size": 11.5,
+        "style_size": 11.5
+      },
+      "after_save": {
+        "run_size": 11.5,
+        "style_size": 11.5
+      },
+      "cold": {
+        "run_size": 11.5,
+        "style_size": 11.5
+      },
+      "output": "style-28.docx",
+      "output_sha256": "93272579ed2f86b1f9547e01de6a12eb1b5735b52bcb8c7bc61303882444ed00"
+    },
+    {
+      "input": "style-29.docx",
+      "scope": "style",
+      "value": "6.13pt",
+      "sha256": "49af5584dd4c1582762a8d041e078b127ef770fa81a718d2b1c89788a79196f2",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "output": "style-29.docx",
+      "output_sha256": "bd01ce2f852a81b66d5b0cc78a5ebe17545361ef8f0f1c87e94f1f51c042c354"
+    },
+    {
+      "input": "style-30.docx",
+      "scope": "style",
+      "value": "6.125pt",
+      "sha256": "8589c5cdc9889626f3c4f58f598f7c0c7b2632e7f53ad1e3ec88af2c9fe73077",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "output": "style-30.docx",
+      "output_sha256": "d03f625af39ca4ee0c2058c4e2f47774e3e8c60ea100d5b835d7301f7abfd59d"
+    },
+    {
+      "input": "style-31.docx",
+      "scope": "style",
+      "value": "0.01pt",
+      "sha256": "54e0b5e801e890902abbbe945e01641cc5b37bbbead9c4f0909681eacfaf38cf",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-31.docx",
+      "output_sha256": "03b20509032327a38638da4b9158681f5fb29a7d6571385b6d84127ba48049ca"
+    },
+    {
+      "input": "style-32.docx",
+      "scope": "style",
+      "value": "24PT",
+      "sha256": "64fa9cc5da9583c34052a024a4f03363e40e0852789df1aa7ae7bb0e56c7eb48",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "style-33.docx",
+      "scope": "style",
+      "value": "-1pt",
+      "sha256": "451fda0c9d56a00304f100006bf4d82af64cdef96f091a79e9e63db8006d1830",
+      "loaded": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "after_save": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "cold": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "output": "style-33.docx",
+      "output_sha256": "816963ccadf2d17a56ddc970063a3f910494fd1be9ed409b6eafe8c17d749448"
+    },
+    {
+      "input": "style-34.docx",
+      "scope": "style",
+      "value": "+12pt",
+      "sha256": "a6bba7c38cb7518b4081a6932c1f5dced5d88c0c1e680dbb3a356dd88c8a57e5",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-34.docx",
+      "output_sha256": "f52a732f8b2f25becc7b1199251593b1f17aa4f20640a8a0eb7c2513dee3c7b1"
+    },
+    {
+      "input": "style-35.docx",
+      "scope": "style",
+      "value": " 12pt ",
+      "sha256": "0e128d3de857aba49b44d7a2c2100316084ad75e8198a3903c6eb73ce9e3d84c",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "style-36.docx",
+      "scope": "style",
+      "value": "24.99",
+      "sha256": "edb49c836bc56a27ae91c7e8ed92a297af3546c41326332b56e59afc926eb107",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "style-36.docx",
+      "output_sha256": "c45a2679ee2901321a06d718b0b2e213122289fa542833d160490a1725ffa892"
+    },
+    {
+      "input": "style-37.docx",
+      "scope": "style",
+      "value": "25.01",
+      "sha256": "26f3fa3058c1fdd4df0c2f62ebe2af8b8b71c44dc2cf4e1a616d20f420d6c70b",
+      "loaded": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "after_save": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "cold": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "output": "style-37.docx",
+      "output_sha256": "9339057ebf5866ab2f57b83b8281398ca0a9aed7b4a9b1d2a8e2e633af6fde35"
+    },
+    {
+      "input": "style-38.docx",
+      "scope": "style",
+      "value": "22.5",
+      "sha256": "ef244a9df37123a57e12b68b046bcf3f7ac3429fd90b1a85eacbd9dde3bf668e",
+      "loaded": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "output": "style-38.docx",
+      "output_sha256": "b1084f929e9bac4e4c4028a158c20734fe66ed1ec2c0202a20d2933931e84fbb"
+    },
+    {
+      "input": "style-39.docx",
+      "scope": "style",
+      "value": "1e-2",
+      "sha256": "e344ac6f9e96edb49653744dbdda50a2f72b15ea3b20be401323dee9b84afb61",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "style-39.docx",
+      "output_sha256": "7ef49a3fc5cc8051bdaa875818e646565a0611bc49a00a5af5872f7fd9992bed"
+    },
+    {
+      "input": "style-40.docx",
+      "scope": "style",
+      "value": "1.5in",
+      "sha256": "a8d61cc536e2f8a017e6dd41b1ced751751015a802464b29c396a07fdfa9ce61",
+      "loaded": {
+        "run_size": 108.0,
+        "style_size": 108.0
+      },
+      "after_save": {
+        "run_size": 108.0,
+        "style_size": 108.0
+      },
+      "cold": {
+        "run_size": 108.0,
+        "style_size": 108.0
+      },
+      "output": "style-40.docx",
+      "output_sha256": "dce35eb2c7850f8d8d9a231e4063e0fbab91c83bc10683099d9ad01a0b6fd3a0"
+    },
+    {
+      "input": "style-41.docx",
+      "scope": "style",
+      "value": "12 pt",
+      "sha256": "d66776a03cac3a64f30ee8723fdfa6d09f79ad543fdedf3d3ab99b8d90ae5f2b",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "default-00.docx",
+      "scope": "default",
+      "value": "24",
+      "sha256": "c42592bc586317b16a4221db477a3fda79de64c019df9eee9f607e64738ce3a1",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-00.docx",
+      "output_sha256": "c20b101bffa976ead1629036705a50e2f8856a7e724d9c8b82af4655baf06ed4"
+    },
+    {
+      "input": "default-01.docx",
+      "scope": "default",
+      "value": "24.0",
+      "sha256": "f1edba89c8c49234b9d3ed2ba462ea47646eac751e10966f4db808d8ca0742bd",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-01.docx",
+      "output_sha256": "aa0167e0671adcb0ac9889da27c07bce141e73d42d46dde41ff4beb97e178065"
+    },
+    {
+      "input": "default-02.docx",
+      "scope": "default",
+      "value": "25.5",
+      "sha256": "b2e3c61900175e5c65116cdef40a197d4e48463efd97ef07c79ee553125adbce",
+      "loaded": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "after_save": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "cold": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "output": "default-02.docx",
+      "output_sha256": "e0128741f8c0cb2970ee1da20288cdadd7183a1044e4dd5cffe2d990ee01338d"
+    },
+    {
+      "input": "default-03.docx",
+      "scope": "default",
+      "value": "+24",
+      "sha256": "b9a3ec1de8477a01b789b0d4affdfc83fc4636d1edbb6a53209079d0ed29d2c3",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-03.docx",
+      "output_sha256": "aa0167e0671adcb0ac9889da27c07bce141e73d42d46dde41ff4beb97e178065"
+    },
+    {
+      "input": "default-04.docx",
+      "scope": "default",
+      "value": " 24 ",
+      "sha256": "d642b957cd219d59c856ec205a0bca79dfcba8063c2847364331dc10860df25c",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "default-05.docx",
+      "scope": "default",
+      "value": "1e2",
+      "sha256": "958bfc953a25b31b71b802497b426f181bd3993ecbb040f74a9c86b30554ba3a",
+      "loaded": {
+        "run_size": 50.0,
+        "style_size": 50.0
+      },
+      "after_save": {
+        "run_size": 50.0,
+        "style_size": 50.0
+      },
+      "cold": {
+        "run_size": 50.0,
+        "style_size": 50.0
+      },
+      "output": "default-05.docx",
+      "output_sha256": "a576b0792917cd25148ef4ef3d4e8e61d48f59dd8a2c054f62e5ea245813eb21"
+    },
+    {
+      "input": "default-06.docx",
+      "scope": "default",
+      "value": "12pt",
+      "sha256": "e2fee564f8d2f9c55d7968c6d8303736db376c750f04048c13c29ad04bfc1f61",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-06.docx",
+      "output_sha256": "ed305983bbb2181920ace35013558a3dcd68cad1d52ebb8c1ad1e9381df94a9c"
+    },
+    {
+      "input": "default-07.docx",
+      "scope": "default",
+      "value": "6.25pt",
+      "sha256": "3efb941891ea53da6c40be9b6df8d38f4142b174e5e5a4a7739e7450867c6ed0",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "output": "default-07.docx",
+      "output_sha256": "3c17dab6cf8c27a5fb289aa29d48baa7d6f3e29bdec1dc922387dedc1d63c956"
+    },
+    {
+      "input": "default-08.docx",
+      "scope": "default",
+      "value": "0.5in",
+      "sha256": "42d4a2244e3dc494f130f5ca50c6b9cc70223031be13f863a64d78d4cc669929",
+      "loaded": {
+        "run_size": 36.0,
+        "style_size": 36.0
+      },
+      "after_save": {
+        "run_size": 36.0,
+        "style_size": 36.0
+      },
+      "cold": {
+        "run_size": 36.0,
+        "style_size": 36.0
+      },
+      "output": "default-08.docx",
+      "output_sha256": "0fbd838294fc46498d3cdee9079213037741b663303b87ec24545a2876e5ac27"
+    },
+    {
+      "input": "default-09.docx",
+      "scope": "default",
+      "value": "2.54cm",
+      "sha256": "e7b9d3854d535c3750c797930c74227bff6caef1cb9427cdc780818fa3773452",
+      "loaded": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "after_save": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "cold": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "output": "default-09.docx",
+      "output_sha256": "e45f8206d6c4732f411d653ec2d5e0b5e2213c17a5a53a39f53e107ef4fb641a"
+    },
+    {
+      "input": "default-10.docx",
+      "scope": "default",
+      "value": "25.4mm",
+      "sha256": "5fd454896af2dd021ab5055dc675665b34f59d89393245d4a1ceed5bf0bae04e",
+      "loaded": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "after_save": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "cold": {
+        "run_size": 72.0,
+        "style_size": 72.0
+      },
+      "output": "default-10.docx",
+      "output_sha256": "b36570ae392e8492fa978f886762124c2104f1c08e31a3d85ef311096b7f1e74"
+    },
+    {
+      "input": "default-11.docx",
+      "scope": "default",
+      "value": "1pc",
+      "sha256": "9dd03281d8de377108b130d3bb6c5d490a8f708521533133df0f8049954b71ca",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-11.docx",
+      "output_sha256": "576dead8197bbe966f5ddd4f90959e8e8bc7f889c573bfa5612fa5570a85503c"
+    },
+    {
+      "input": "default-12.docx",
+      "scope": "default",
+      "value": "1pi",
+      "sha256": "76514a236fc6a4e96e7af5a3b68abf49ec984bb8b10c0d8812feed8634b646b3",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-12.docx",
+      "output_sha256": "ef795179bc30d41d9251a98d887d4782adaeab1dd990ea1c10e30a92b118e26f"
+    },
+    {
+      "input": "default-13.docx",
+      "scope": "default",
+      "value": "24hp",
+      "sha256": "69ad38bac00e0a6b349bd1d164c8ce6e98608d97288ac7c5121c8e1292a0026c",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "default-14.docx",
+      "scope": "default",
+      "value": "24twip",
+      "sha256": "eb3f093da6656dc618fd4899dd70a6172ff21024907410e845ef58fee5905aa8",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "default-15.docx",
+      "scope": "default",
+      "value": "0",
+      "sha256": "a0b03204fdd1d8c517ce0503512ccf2f9ea3a728e109573bb961963a44bbcaf7",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-15.docx",
+      "output_sha256": "fb4da3ac34d440aafb187a5b005415e43183a37c29d5f791a6a8bf842b850565"
+    },
+    {
+      "input": "default-16.docx",
+      "scope": "default",
+      "value": "-2",
+      "sha256": "ef02ee3e91131f285b154802e1cd4383ed38bf5b708eefff86b88e97cd40f771",
+      "loaded": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "after_save": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "cold": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "output": "default-16.docx",
+      "output_sha256": "f47015ad0f9c54703da54785f18db36126201c4f7854c8b98f49856c81d7204c"
+    },
+    {
+      "input": "default-17.docx",
+      "scope": "default",
+      "value": "PRIVATE FONT VALUE",
+      "sha256": "097aaaa0b134adb4da74a1e153a4f6c2429a844144b46bb817696837f4443a9e",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-17.docx",
+      "output_sha256": "fb4da3ac34d440aafb187a5b005415e43183a37c29d5f791a6a8bf842b850565"
+    },
+    {
+      "input": "default-18.docx",
+      "scope": "default",
+      "value": "2_4",
+      "sha256": "0a58f4afb95b3b4de7a4cd4210f0fe7ce1fab950def017de4734ea6eeb1a2fd4",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-18.docx",
+      "output_sha256": "fb4da3ac34d440aafb187a5b005415e43183a37c29d5f791a6a8bf842b850565"
+    },
+    {
+      "input": "default-19.docx",
+      "scope": "default",
+      "value": "٢٤",
+      "sha256": "7658750ccad147f624945176ea24d2b5cddcb909fae89f1ebc12d73c037f6552",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-19.docx",
+      "output_sha256": "fb4da3ac34d440aafb187a5b005415e43183a37c29d5f791a6a8bf842b850565"
+    },
+    {
+      "input": "default-20.docx",
+      "scope": "default",
+      "value": "",
+      "sha256": "3f02099660693b4f81defa6eb0a3fdfbf7e80e6415a9b911ed182b27d69cc1a8",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-20.docx",
+      "output_sha256": "fb4da3ac34d440aafb187a5b005415e43183a37c29d5f791a6a8bf842b850565"
+    },
+    {
+      "input": "default-21.docx",
+      "scope": "default",
+      "value": "NaN",
+      "sha256": "ec1c52dcfa83ff46d3c68dcebd32e16c8ccf0726d6f55ba99e6cfd625eb43c57",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-21.docx",
+      "output_sha256": "fb4da3ac34d440aafb187a5b005415e43183a37c29d5f791a6a8bf842b850565"
+    },
+    {
+      "input": "default-22.docx",
+      "scope": "default",
+      "value": "Infinity",
+      "sha256": "15a2b26c3f518fc7410fe5ede575975bedb1f1a443b49b6e20cedd8a620a9fdb",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-22.docx",
+      "output_sha256": "fb4da3ac34d440aafb187a5b005415e43183a37c29d5f791a6a8bf842b850565"
+    },
+    {
+      "input": "default-23.docx",
+      "scope": "default",
+      "value": "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "sha256": "f89cb3365416e56e8f4e9e14e672e10dc6207ca39dc51510db33f8f5ce61e0ee",
+      "loaded": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "after_save": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "cold": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "output": "default-23.docx",
+      "output_sha256": "9cc1713cdf743f663cccfd1cfd1a5a6299a439719f6f2bf2e317e5231164c02f"
+    },
+    {
+      "input": "default-24.docx",
+      "scope": "default",
+      "value": "18446744073709551615",
+      "sha256": "78ec750b271b48dda84044514f0dc199d60e7281faba008fd4bf59ad6e8bbc0c",
+      "loaded": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "after_save": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "cold": {
+        "run_size": -0.5,
+        "style_size": -0.5
+      },
+      "output": "default-24.docx",
+      "output_sha256": "9cc1713cdf743f663cccfd1cfd1a5a6299a439719f6f2bf2e317e5231164c02f"
+    },
+    {
+      "input": "default-25.docx",
+      "scope": "default",
+      "value": "+24.0",
+      "sha256": "7cb8a35869638170786ecdf9a95fe74eb2b2d62a50d24b8f48fce1b34760f3ec",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-25.docx",
+      "output_sha256": "aa0167e0671adcb0ac9889da27c07bce141e73d42d46dde41ff4beb97e178065"
+    },
+    {
+      "input": "default-26.docx",
+      "scope": "default",
+      "value": "24px",
+      "sha256": "c4e6a73e5a84f5980eabee418d80a8ca12ff980c39b129372a30c43aed1b1aef",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "default-27.docx",
+      "scope": "default",
+      "value": "1.13",
+      "sha256": "6b5eedd5bcaa5506c13448e4bd20c05cdc7d272027327d330d690c0e94e9b63b",
+      "loaded": {
+        "run_size": 0.5,
+        "style_size": 0.5
+      },
+      "after_save": {
+        "run_size": 0.5,
+        "style_size": 0.5
+      },
+      "cold": {
+        "run_size": 0.5,
+        "style_size": 0.5
+      },
+      "output": "default-27.docx",
+      "output_sha256": "76a7fee6afcd892b75b7440999d58cb54465ea9204e3d4286b88ad0ff55a9947"
+    },
+    {
+      "input": "default-28.docx",
+      "scope": "default",
+      "value": "23.99",
+      "sha256": "023a7c6335d0afa4614cfbd0646001252c1a0a88e7bc5a7c936e15c2b058885c",
+      "loaded": {
+        "run_size": 11.5,
+        "style_size": 11.5
+      },
+      "after_save": {
+        "run_size": 11.5,
+        "style_size": 11.5
+      },
+      "cold": {
+        "run_size": 11.5,
+        "style_size": 11.5
+      },
+      "output": "default-28.docx",
+      "output_sha256": "1c8f28c4c4ecd12a5d010dc7614603e3ee159e199c69b3e834dee8105fe3ffb8"
+    },
+    {
+      "input": "default-29.docx",
+      "scope": "default",
+      "value": "6.13pt",
+      "sha256": "88ab4c9b4ee8b8f4d063ddcb0698c3977bf69cda3197c14aa7ab5e1995b5cb1d",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "output": "default-29.docx",
+      "output_sha256": "b4103508dd1a866795e73132ad396d323bfc3ef8ef98e360505a94006f42b11f"
+    },
+    {
+      "input": "default-30.docx",
+      "scope": "default",
+      "value": "6.125pt",
+      "sha256": "1dfc8cf7bede5bf8a645c431ff07c2691d9e41575026b7fff6e533383d8aa384",
+      "loaded": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "after_save": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "cold": {
+        "run_size": 6.0,
+        "style_size": 6.0
+      },
+      "output": "default-30.docx",
+      "output_sha256": "e6ab5ed77142d19c82c664c59080431d3d9932e2359696ce4c8da9eade096e0d"
+    },
+    {
+      "input": "default-31.docx",
+      "scope": "default",
+      "value": "0.01pt",
+      "sha256": "8b42cb4d8595091596a17a626ad59bbcee623666f768670d730b57c56712edcb",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-31.docx",
+      "output_sha256": "68044a3b7849af0dd837785d712c3fa0858d5297eb8975f2d307db30525cc2e5"
+    },
+    {
+      "input": "default-32.docx",
+      "scope": "default",
+      "value": "24PT",
+      "sha256": "df6ed393baf7e932a9c171996cee9a11ed10d9aefdf505d87cf62a9498bc6d6a",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "default-33.docx",
+      "scope": "default",
+      "value": "-1pt",
+      "sha256": "b5db1f450b076ed916f75bd9258ac75563c94d26364ec257f96c5d453d54e546",
+      "loaded": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "after_save": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "cold": {
+        "run_size": -1.0,
+        "style_size": -1.0
+      },
+      "output": "default-33.docx",
+      "output_sha256": "f84151bfea573962d5662d582e7144a2c1bcb5dedf7712ae7ceae37702455c27"
+    },
+    {
+      "input": "default-34.docx",
+      "scope": "default",
+      "value": "+12pt",
+      "sha256": "e9b0d1d23008f5250b155d72dbdc35900d5a2cc3b00b39c14ccffa08cd7349d9",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-34.docx",
+      "output_sha256": "012cfdb1ac272f743e5a0eacaff023e30626bece3ec7b6e2fe730bd54a5f8da0"
+    },
+    {
+      "input": "default-35.docx",
+      "scope": "default",
+      "value": " 12pt ",
+      "sha256": "d22ccb713b8c950febca3b0dc9115c94694852fd8c70d022a72ebe1388663d68",
+      "load_error": "RuntimeError"
+    },
+    {
+      "input": "default-36.docx",
+      "scope": "default",
+      "value": "24.99",
+      "sha256": "06d1ac8e8223477f1fe1a346dfa1fbb6d84df5bbe881d93214de76c1b9a82964",
+      "loaded": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "after_save": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "cold": {
+        "run_size": 12.0,
+        "style_size": 12.0
+      },
+      "output": "default-36.docx",
+      "output_sha256": "aa0167e0671adcb0ac9889da27c07bce141e73d42d46dde41ff4beb97e178065"
+    },
+    {
+      "input": "default-37.docx",
+      "scope": "default",
+      "value": "25.01",
+      "sha256": "ff0284415be5b63738a4894943d7bcca34fe16a34acf62b0a9535248bcad74b0",
+      "loaded": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "after_save": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "cold": {
+        "run_size": 12.5,
+        "style_size": 12.5
+      },
+      "output": "default-37.docx",
+      "output_sha256": "e0128741f8c0cb2970ee1da20288cdadd7183a1044e4dd5cffe2d990ee01338d"
+    },
+    {
+      "input": "default-38.docx",
+      "scope": "default",
+      "value": "22.5",
+      "sha256": "adb091d7b1918d0cb11ee7ba323d07e9853ce5d9d0060e6d7c72baba737690db",
+      "loaded": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "after_save": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "cold": {
+        "run_size": 11.0,
+        "style_size": 11.0
+      },
+      "output": "default-38.docx",
+      "output_sha256": "a1259761fbbe85b368c642f53bf23c7af6de5ab1ef08e5b71087ab3bda4c6603"
+    },
+    {
+      "input": "default-39.docx",
+      "scope": "default",
+      "value": "1e-2",
+      "sha256": "c34738eaaa169e22350b9da517766e670b940af4e66d3fab8f30b42a9373ca5d",
+      "loaded": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "after_save": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "cold": {
+        "run_size": 0.0,
+        "style_size": 0.0
+      },
+      "output": "default-39.docx",
+      "output_sha256": "fb4da3ac34d440aafb187a5b005415e43183a37c29d5f791a6a8bf842b850565"
+    },
+    {
+      "input": "default-40.docx",
+      "scope": "default",
+      "value": "1.5in",
+      "sha256": "d3050ecef9a90062ef33103047568b9041858d9f7e2271417fe63bb80b16854e",
+      "loaded": {
+        "run_size": 108.0,
+        "style_size": 108.0
+      },
+      "after_save": {
+        "run_size": 108.0,
+        "style_size": 108.0
+      },
+      "cold": {
+        "run_size": 108.0,
+        "style_size": 108.0
+      },
+      "output": "default-40.docx",
+      "output_sha256": "3e836a161e49fff585da7f830412b9dbff72f44f3e07bde8e6b7515b71952867"
+    },
+    {
+      "input": "default-41.docx",
+      "scope": "default",
+      "value": "12 pt",
+      "sha256": "513db3bef8775f79c84fbe4ccaa1ca63bbbb970aad97d6037fd3fc189f191bb9",
+      "load_error": "RuntimeError"
+    }
+  ],
+  "rendering_acceptance": false,
+  "full_format_acceptance": false,
+  "scope": "42 ordinary w:sz values across direct, paragraph style and document defaults; trial watermarks retained in saved outputs; complex-script size and rendering unaccepted",
+  "references": [
+    "https://reference.aspose.com/words/python-net/aspose.words/font/size/",
+    "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.hpsmeasuretype.val"
+  ],
+  "docweave_roundtrip": {
+    "version": "26.7.0.post2",
+    "python": "3.14.7",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "outputs": "corpus/font-size-loading-current.zip",
+    "outputs_sha256": "b668edf037b99d5e9a5a4222719e6c83d8920c43831cc09168c4503f44f67ba7",
+    "records": [
+      {
+        "input": "run-00.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-01.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-02.docx",
+        "output_sha256": "37c101e87821ed2f13e7c99120a07e76687a1ac47eb0aceca5ee089db808b212"
+      },
+      {
+        "input": "run-03.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-05.docx",
+        "output_sha256": "490ec5b3727e4edad79af446e4cd238e6c0dcd2e6fa603a9b019183ac22f4c1e"
+      },
+      {
+        "input": "run-06.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-07.docx",
+        "output_sha256": "d06f64359b987335c8301d1b573f494259b3372194aad060e57719aef8976e13"
+      },
+      {
+        "input": "run-08.docx",
+        "output_sha256": "94f2e5ad5ec7dfad61ef197920f43279a73a9ee068d29753402dcb137c6d672e"
+      },
+      {
+        "input": "run-09.docx",
+        "output_sha256": "22ae44bd5e15a49df0dc709cdb7d737f04768d89b355d0040af8dc307c836352"
+      },
+      {
+        "input": "run-10.docx",
+        "output_sha256": "22ae44bd5e15a49df0dc709cdb7d737f04768d89b355d0040af8dc307c836352"
+      },
+      {
+        "input": "run-11.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-12.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-25.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-27.docx",
+        "output_sha256": "8d9f799113cbaf9b49093cc8fca7e3f97db90978fd3f425246b6dac3b4e605aa"
+      },
+      {
+        "input": "run-28.docx",
+        "output_sha256": "228ceb8b7810dddc47ed6ac6f854744ab18f3ae376bb85533bf4d3a0c0874080"
+      },
+      {
+        "input": "run-29.docx",
+        "output_sha256": "d06f64359b987335c8301d1b573f494259b3372194aad060e57719aef8976e13"
+      },
+      {
+        "input": "run-30.docx",
+        "output_sha256": "d06f64359b987335c8301d1b573f494259b3372194aad060e57719aef8976e13"
+      },
+      {
+        "input": "run-34.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-36.docx",
+        "output_sha256": "99dfadd99d81c2ba91a6b6e09bbc2ee37fddcb22bf38358b2f227f208bf94289"
+      },
+      {
+        "input": "run-37.docx",
+        "output_sha256": "37c101e87821ed2f13e7c99120a07e76687a1ac47eb0aceca5ee089db808b212"
+      },
+      {
+        "input": "run-38.docx",
+        "output_sha256": "575e8506da55317b9659fca5adadb3bdd5925a6589c1987ad136f71891f6ccde"
+      },
+      {
+        "input": "run-40.docx",
+        "output_sha256": "cb06b2df4af3e95e942a2f4ec84dd4c497591d83ec38aeea7d571c6088892509"
+      },
+      {
+        "input": "style-00.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-01.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-02.docx",
+        "output_sha256": "f5fa241bb97feb6b443db69bfa8b361c11eb661dfff426fd406a593e18f229f9"
+      },
+      {
+        "input": "style-03.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-05.docx",
+        "output_sha256": "4af05d27653073544322740d7646760d922fd872ab1d38210154ef4d80a42690"
+      },
+      {
+        "input": "style-06.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-07.docx",
+        "output_sha256": "2035fc3a64a49aa8d518e017d329842571b839d1dfe1288e6859cb81d840ae32"
+      },
+      {
+        "input": "style-08.docx",
+        "output_sha256": "24bc199b273af3324795b7f70369378712a8112e353ebbba732793d945830a5c"
+      },
+      {
+        "input": "style-09.docx",
+        "output_sha256": "c9969fba50e3189c7c4300df205909e73230e0e7e0f72de2a4e5179ac7633553"
+      },
+      {
+        "input": "style-10.docx",
+        "output_sha256": "c9969fba50e3189c7c4300df205909e73230e0e7e0f72de2a4e5179ac7633553"
+      },
+      {
+        "input": "style-11.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-12.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-25.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-27.docx",
+        "output_sha256": "a2ffba94f310766569d2348a3dd2d03fb947da0fa1f5000a7829eca3851251dc"
+      },
+      {
+        "input": "style-28.docx",
+        "output_sha256": "2de8c8e76ab056170028650d310312a9c4c203c30baf5fad620fb25ef1b633d6"
+      },
+      {
+        "input": "style-29.docx",
+        "output_sha256": "2035fc3a64a49aa8d518e017d329842571b839d1dfe1288e6859cb81d840ae32"
+      },
+      {
+        "input": "style-30.docx",
+        "output_sha256": "2035fc3a64a49aa8d518e017d329842571b839d1dfe1288e6859cb81d840ae32"
+      },
+      {
+        "input": "style-34.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-36.docx",
+        "output_sha256": "d8625e855558622aa384a4ce71c692ac439ccc9f2c0ed29e800254dd0f5563bd"
+      },
+      {
+        "input": "style-37.docx",
+        "output_sha256": "f5fa241bb97feb6b443db69bfa8b361c11eb661dfff426fd406a593e18f229f9"
+      },
+      {
+        "input": "style-38.docx",
+        "output_sha256": "39dfd479ec28bc471f99fd1431c3a17a7b9e39156b70b5324c61771897b77cdf"
+      },
+      {
+        "input": "style-40.docx",
+        "output_sha256": "00c79bdf5e639b0ffd6a2fec3761a12fb409d15ded5fce8c46c2576d6abaa542"
+      },
+      {
+        "input": "default-00.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-01.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-02.docx",
+        "output_sha256": "cca3016c0695ee5d1e5adb56f519351f601d73d2cdc5a4bb7ebd604da7878b1c"
+      },
+      {
+        "input": "default-03.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-05.docx",
+        "output_sha256": "3f6b08d5eded2565ed6b7192eedca93e27911afe8d5bf143b90ebfe5e58bed40"
+      },
+      {
+        "input": "default-06.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-07.docx",
+        "output_sha256": "cc773749ed7c6c4e8dcd7d4ee111d779a0bec2c06c071f57286c4b523f4a6f4c"
+      },
+      {
+        "input": "default-08.docx",
+        "output_sha256": "6b45d8c23a81f2527f8bd8de23d732425e47d5c65b83312641fe8d5dd27550cf"
+      },
+      {
+        "input": "default-09.docx",
+        "output_sha256": "e7085c516d3ca53502293743c9da345ca529167271221b51fe2a0506c60e893d"
+      },
+      {
+        "input": "default-10.docx",
+        "output_sha256": "e7085c516d3ca53502293743c9da345ca529167271221b51fe2a0506c60e893d"
+      },
+      {
+        "input": "default-11.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-12.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-25.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-27.docx",
+        "output_sha256": "7add43500de5e54a6ff2609048b4a6c5dea2c952ecedccd64d22e93e400f5cae"
+      },
+      {
+        "input": "default-28.docx",
+        "output_sha256": "d4662753757d101ffd2c34d02d59d195af0cfb99e52145a746a5f5d69b1768c2"
+      },
+      {
+        "input": "default-29.docx",
+        "output_sha256": "cc773749ed7c6c4e8dcd7d4ee111d779a0bec2c06c071f57286c4b523f4a6f4c"
+      },
+      {
+        "input": "default-30.docx",
+        "output_sha256": "cc773749ed7c6c4e8dcd7d4ee111d779a0bec2c06c071f57286c4b523f4a6f4c"
+      },
+      {
+        "input": "default-34.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-36.docx",
+        "output_sha256": "f8ab97e8e277f7a97a45694fcd09a425ea67576a779cbe6d19fea9f2aaebda01"
+      },
+      {
+        "input": "default-37.docx",
+        "output_sha256": "cca3016c0695ee5d1e5adb56f519351f601d73d2cdc5a4bb7ebd604da7878b1c"
+      },
+      {
+        "input": "default-38.docx",
+        "output_sha256": "3771cf77e3d984d21a7092965fb8e93e561cf8a10ded9fde1fbc9a8f7a0df9b5"
+      },
+      {
+        "input": "default-40.docx",
+        "output_sha256": "45af72c356866035c91b2b1891f0c6e93dd324a3a762fa6ec8e9d1497dd002fa"
+      }
+    ],
+    "full_acceptance": false,
+    "native_reread": {
+      "version": "26.9.0",
+      "python": "3.13.15",
+      "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+      "licensed": false,
+      "records": [
+        {
+          "input": "run-00.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-01.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-02.docx",
+          "run_size": 12.5,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-03.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-05.docx",
+          "run_size": 50.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-06.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-07.docx",
+          "run_size": 6.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-08.docx",
+          "run_size": 36.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-09.docx",
+          "run_size": 72.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-10.docx",
+          "run_size": 72.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-11.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-12.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-25.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-27.docx",
+          "run_size": 0.5,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-28.docx",
+          "run_size": 11.5,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-29.docx",
+          "run_size": 6.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-30.docx",
+          "run_size": 6.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-34.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-36.docx",
+          "run_size": 12.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-37.docx",
+          "run_size": 12.5,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-38.docx",
+          "run_size": 11.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "run-40.docx",
+          "run_size": 108.0,
+          "style_size": 10.0
+        },
+        {
+          "input": "style-00.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-01.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-02.docx",
+          "run_size": 12.5,
+          "style_size": 12.5
+        },
+        {
+          "input": "style-03.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-05.docx",
+          "run_size": 50.0,
+          "style_size": 50.0
+        },
+        {
+          "input": "style-06.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-07.docx",
+          "run_size": 6.0,
+          "style_size": 6.0
+        },
+        {
+          "input": "style-08.docx",
+          "run_size": 36.0,
+          "style_size": 36.0
+        },
+        {
+          "input": "style-09.docx",
+          "run_size": 72.0,
+          "style_size": 72.0
+        },
+        {
+          "input": "style-10.docx",
+          "run_size": 72.0,
+          "style_size": 72.0
+        },
+        {
+          "input": "style-11.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-12.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-25.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-27.docx",
+          "run_size": 0.5,
+          "style_size": 0.5
+        },
+        {
+          "input": "style-28.docx",
+          "run_size": 11.5,
+          "style_size": 11.5
+        },
+        {
+          "input": "style-29.docx",
+          "run_size": 6.0,
+          "style_size": 6.0
+        },
+        {
+          "input": "style-30.docx",
+          "run_size": 6.0,
+          "style_size": 6.0
+        },
+        {
+          "input": "style-34.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-36.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "style-37.docx",
+          "run_size": 12.5,
+          "style_size": 12.5
+        },
+        {
+          "input": "style-38.docx",
+          "run_size": 11.0,
+          "style_size": 11.0
+        },
+        {
+          "input": "style-40.docx",
+          "run_size": 108.0,
+          "style_size": 108.0
+        },
+        {
+          "input": "default-00.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-01.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-02.docx",
+          "run_size": 12.5,
+          "style_size": 12.5
+        },
+        {
+          "input": "default-03.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-05.docx",
+          "run_size": 50.0,
+          "style_size": 50.0
+        },
+        {
+          "input": "default-06.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-07.docx",
+          "run_size": 6.0,
+          "style_size": 6.0
+        },
+        {
+          "input": "default-08.docx",
+          "run_size": 36.0,
+          "style_size": 36.0
+        },
+        {
+          "input": "default-09.docx",
+          "run_size": 72.0,
+          "style_size": 72.0
+        },
+        {
+          "input": "default-10.docx",
+          "run_size": 72.0,
+          "style_size": 72.0
+        },
+        {
+          "input": "default-11.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-12.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-25.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-27.docx",
+          "run_size": 0.5,
+          "style_size": 0.5
+        },
+        {
+          "input": "default-28.docx",
+          "run_size": 11.5,
+          "style_size": 11.5
+        },
+        {
+          "input": "default-29.docx",
+          "run_size": 6.0,
+          "style_size": 6.0
+        },
+        {
+          "input": "default-30.docx",
+          "run_size": 6.0,
+          "style_size": 6.0
+        },
+        {
+          "input": "default-34.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-36.docx",
+          "run_size": 12.0,
+          "style_size": 12.0
+        },
+        {
+          "input": "default-37.docx",
+          "run_size": 12.5,
+          "style_size": 12.5
+        },
+        {
+          "input": "default-38.docx",
+          "run_size": 11.0,
+          "style_size": 11.0
+        },
+        {
+          "input": "default-40.docx",
+          "run_size": 108.0,
+          "style_size": 108.0
+        }
+      ]
+    }
+  }
+}

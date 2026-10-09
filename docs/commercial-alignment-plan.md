@@ -132,6 +132,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [全量能力台账](benchmarks/commercial-26.9-capabilities.json) | 当前入口、具体差距、依赖及局部行为证据；未完成项保留 |
 | [加载/保存观察](benchmarks/commercial-26.9-format-behavior.json) | 固定格式方向及原始输出记录；返回文件不等于格式验收 |
 | [样式编辑观察](benchmarks/style-font-edits-26.9.json) | 1482 次编辑前、编辑后、保存后及重开状态，36 次 Run 状态变化 |
+| [字号词法与单位读取](benchmarks/font-size-loading-26.9.json) | 42 个值 × 直接/样式/默认值，126 个输入及 105 个官方保存/冷回读输出；独立 XML 复验。66 个正值目标 Run 字号已实现共享读取和模型往返，并经官方实际回读；三个 PDF 字号独立测量。22 个直接 Run 输入的隐式样式默认值在转换后从 11pt 变为 10pt，另列未决；损坏/非正数恢复、复杂文字与完整布局仍未验收 |
 | [隐式字号观察](benchmarks/font-default-matrix-26.9.json) | 16 个段落/字符样式输入，区分缺少默认组、空组及显式/复杂字号 |
 | [样式段落格式观察](benchmarks/style-paragraph-format-26.9.json) | 27 个继承输入、108 次基本对齐编辑及官方原始输出 |
 | [段落分页属性](benchmarks/paragraph-pagination-26.9.json) | 324 个非首段输入、1296 次样式/直接值编辑，24 次非法 setter 观察 |
@@ -144,7 +145,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [字符 setter 字体与样式上下文](benchmarks/paragraph-character-setters-26.9.json) | 8 种字号 × 段落/样式 × 3 个属性 × 零/正/负值，144 次编辑及 144 次 TypeError；保留加载、编辑、保存后的活动对象和冷回读，独立 XML 核对点值及字符值。样式 setter 的点值在保存时才更新；DOM setter 和渲染仍未验收 |
 | [字符缩进继承读取](benchmarks/paragraph-character-reads-26.9.json) | 24 组 docDefaults/basedOn/直接值输入，包含显式零；原包 DOM 支持直接字符 getter、样式继承 getter，205 个官方保存输出可读取。setter、点值联动、编号/条件表格继承及渲染未验收 |
 | [字符缩进继承编辑](benchmarks/paragraph-character-inheritance-edits-26.9.json) | 24 个相同输入在 Base/Derived/段落上执行零/正/负值 setter，216 次编辑、216 次 TypeError；六个字符/点值 getter 的加载、编辑、保存活动对象和冷回读均保留，冷回读的继承链用独立 XML 验证。仅为官方行为证据，SDK setter 和布局仍未验收 |
-| [损坏 twip 输入拒绝](../tests/test_twip_input_validation.py) | 段落缩进/间距、编号定义/覆盖和 dxa 表格/单元格边距拒绝非法整数及溢出，异常隐藏原值，保留原包和已有 CLI 输出；正常值及整数差值运算复验。官方损坏输入恢复行为未测，字体字号静默继承/回退问题另列未决 |
+| [损坏 twip 输入拒绝](../tests/test_twip_input_validation.py) | 段落缩进/间距、编号定义/覆盖和 dxa 表格/单元格边距拒绝非法整数及溢出，异常隐藏原值，保留原包和已有 CLI 输出；正常值及整数差值运算复验。官方损坏 twip 恢复行为未测；字号读取及不同的损坏值恢复见上述字号观察 |
 | [字符单位模型往返](benchmarks/paragraph-character-indents-current.json) | 已安装 wheel 经模型 JSON 写出 61 组 DOCX/Flat OPC，122 个输出按原生字符值独立读取；样式、编号及显式零保留，点值联动与渲染仍未验收 |
 | [首段分页未决差异](benchmarks/first-paragraph-page-break-26.9.json) | 4 次编辑输出及 [18 个试用对照](benchmarks/first-paragraph-trial-26.9.json)；首段变化伴随提示插入，持许可证对照仍缺失 |
 | [保存状态观察](benchmarks/style-save-state-26.9.json) | 商业试用包的内存/重开状态，区分水印内容 |

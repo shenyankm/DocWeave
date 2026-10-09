@@ -26,9 +26,10 @@ from aspose.words_foss.docx_reader.constants import (
 from aspose.words_foss.docx_reader.field_mappings import LIST_TRAILING_CHARACTER_MAP
 from aspose.words_foss.docx_reader.utils import _canonicalize_style_name, parse_onoff
 from aspose.words_foss.model.style_identifiers import resolve_style_identifier
+from aspose.words_foss.utils.xml_helpers import parse_font_size
 
 from ._context import ReaderContext
-from ._helpers import apply_padding_sides, build_borders, build_shading, find_val, parse_int, is_truthy_onoff, read_twip
+from ._helpers import apply_padding_sides, build_borders, build_shading, parse_int, is_truthy_onoff, read_twip
 from .cascading import (
     FontBuilder,
     FontResolver,
@@ -55,12 +56,9 @@ def _tsp_build_font(rPr: ET.Element) -> ldm.Font:
         val = color_el.get(f"{W_NS}val", "")
         if val and val.lower() != "auto":
             font.color = _hex_to_ldm_color(val)
-    sz_val = find_val(rPr, "sz")
-    if sz_val:
-        try:
-            font.size = int(sz_val) / 2.0
-        except ValueError:
-            pass
+    size = rPr.find(f"{W_NS}sz")
+    if size is not None:
+        font.size = parse_font_size(size.get(f"{W_NS}val", ""))
     return font
 
 

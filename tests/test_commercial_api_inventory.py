@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_paragraph_character_reads", "verify_paragraph_character_inheritance_edits", "verify_character_indent_roundtrips"])
+@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_paragraph_character_reads", "verify_paragraph_character_inheritance_edits", "verify_character_indent_roundtrips", "verify_font_size_loading"])
 def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, name):
     from zipfile import ZipInfo
 
@@ -19,7 +19,7 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     monkeypatch.setattr(ZipInfo, "__init__", windows_info)
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))[name]
-    assert check(root / "docs/benchmarks") in {10, 18, 24, 61, 122, 144, 216, 360, 1296}
+    assert check(root / "docs/benchmarks") in {10, 18, 24, 61, 122, 126, 144, 216, 360, 1296}
 
 
 
@@ -339,6 +339,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
               "style-normalization-contexts-26.9.json", "corpus/style-normalization-contexts-26.9.zip",
               "corpus/style-normalization-context-outputs-26.9.zip", "style-import-projections.json",
               "corpus/style-import-projections.zip"]
+    names += ["font-size-loading-26.9.json", "corpus/font-size-loading-26.9.zip",
+              "corpus/font-size-loading-26.9-outputs.zip", "corpus/font-size-loading-current.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -371,6 +373,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_paragraph_character_inheritance_edits"] == 216
     assert result["checked_character_indent_roundtrips"] == 122
     assert result["checked_paragraph_dimension_rendering_pairs"] == 10
+    assert result["checked_font_size_loading_inputs"] == 126
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]
@@ -916,3 +919,37 @@ def test_character_roundtrip_evidence_rejects_forged_observation(tmp_path, tampe
     (tmp_path / "paragraph-character-indents-current.json").write_text(json.dumps(report))
     with pytest.raises(AssertionError):
         check(tmp_path)
+
+
+@pytest.mark.parametrize('phase', ['loaded', 'after_save', 'cold', 'current_run', 'current_hash', 'current_coverage'])
+def test_font_size_loading_evidence_rejects_forged_measurement(tmp_path, phase):
+    import json
+    import shutil
+
+    root = Path(__file__).parents[1]
+    benchmarks = root / 'docs/benchmarks'
+    report = json.loads((benchmarks / 'font-size-loading-26.9.json').read_text())
+    (tmp_path / 'corpus').mkdir()
+    for key in ('corpus', 'outputs'):
+        shutil.copyfile(benchmarks / report[key], tmp_path / report[key])
+    shutil.copyfile(benchmarks / report['docweave_roundtrip']['outputs'],
+                    tmp_path / report['docweave_roundtrip']['outputs'])
+    if phase == 'current_run':
+        report['docweave_roundtrip']['native_reread']['records'][0]['run_size'] += .5
+    elif phase == 'current_hash':
+        report['docweave_roundtrip']['records'][0]['output_sha256'] = 'forged'
+    elif phase == 'current_coverage':
+        rows = report['docweave_roundtrip']['native_reread']['records']
+        rows[0] = rows[1]
+    else:
+        report['records'][0][phase]['run_size'] += .5
+    (tmp_path / 'font-size-loading-26.9.json').write_text(json.dumps(report))
+    check = runpy.run_path(str(root / 'scripts/verify_commercial_baseline.py'))['verify_font_size_loading']
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+def test_font_size_loading_evidence_accepts_frozen_outputs():
+    root = Path(__file__).parents[1]
+    check = runpy.run_path(str(root / 'scripts/verify_commercial_baseline.py'))['verify_font_size_loading']
+    assert check(root / 'docs/benchmarks') == 126

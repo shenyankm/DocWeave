@@ -102,8 +102,7 @@ def _nearest_style_property(resolver, chain, kind, group, name):
             element = candidate
     if name == "sz":
         if element is not None:
-            _read_size(element)
-            return str(int(element.getAttributeNS(W, "val")))
+            return str(int(_read_size(element) * 2))
         return None
     return element.getAttributeNS(W, "val") if element is not None else "left" if kind == "paragraph" else None
 

@@ -119,7 +119,11 @@ for style in editable.styles:
   `get_by_name()`；未找到返回 `None`，同名歧义抛出 `ValueError`。不自动创建内建样式。
 - `Style.font` 读取最近的样式层及文档默认 b/i/sz，设置写入当前层；`direct_font`
   读取当前层，未设置返回 `None`，可赋 `None` 清除。`font` 的这三项 setter 拒绝 `None`。
-  字号仍限正的半点数；没有声明字号时使用受测普通字号默认值：有 `rPrDefault` 为 10pt，
+  字号 setter 仍限正的半点数；读取普通 `w:sz` 时支持已测得的整数、小数、指数及
+  `pt/in/cm/mm/pc/pi` 单位，按官方观察截断不足半点的部分；结果须为正且可表示，原包 XML 不因读取改变。
+  [126 个固定输入及 105 个官方保存输出](benchmarks/font-size-loading-26.9.json)中，
+  66 个正值字号的 DOM、转换模型和保存重开已对照；零/负值及损坏值仍按本项目规则拒绝，
+  与官方恢复行为不同，复杂文字字号和完整排版未验收。没有声明字号时使用受测普通字号默认值：有 `rPrDefault` 为 10pt，
   没有该组为 11pt。直接值 getter 仍返回 `None`，读取不会写入 XML。
 - 段落/字符样式的这三项编辑已按 1482 次固定官方观察验证；尚无新增、删除、重命名或
   修改继承关系接口，不提供完整 Style/Font API。表格/列表字体编辑和嵌套 rStyle 修改拒绝。
