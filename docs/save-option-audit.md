@@ -47,7 +47,7 @@
 | `table_content_alignment` | 表格对齐覆盖 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `list_export_mode` | Markdown 列表或纯文本路径 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `export_images_as_base64` | 无 images_folder 时始终内联；有目录时选择内联/外部 | [test_conversion_api.py](../tests/test_conversion_api.py) |
-| `images_folder` | 外部图片目录；副产物与主输出非事务整体 | [test_conversion_api.py](../tests/test_conversion_api.py) |
+| `images_folder` | 外部图片目录；不同内容的同名图片分配序号，相同字节复用，已有文件及目标符号链接保留；副产物与主输出非事务整体 | [test_markdown_image_collisions.py](../tests/test_markdown_image_collisions.py)、[test_conversion_api.py](../tests/test_conversion_api.py) |
 | `images_folder_alias` | 外部图片链接目录别名 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `export_underline_formatting` | 下划线 HTML 标记 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `link_export_mode` | 自动/内联/引用链接 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |

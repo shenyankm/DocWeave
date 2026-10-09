@@ -18,6 +18,7 @@ from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._links import INLINE_LINK_RE, decode_link
 from aspose.words_foss.diagnostics import ContentLossWarning, ConversionWarning, document_nodes, source_story_losses, warn
 from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_children, visible_runs
+from aspose.words_foss._io import atomic_output
 from aspose.words_foss.md_import.document_builder import (
     _link_destination,
     _link_title,
@@ -394,7 +395,22 @@ class LdmMarkdownWriter:
             folder = Path(self.options.images_folder)
             folder.mkdir(parents=True, exist_ok=True)
             filepath = folder / filename
-            filepath.write_bytes(img.image_bytes)
+            stem, suffix = filepath.stem, filepath.suffix
+            number = 1
+            output_path = self._output_path.resolve() if self._output_path is not None else None
+            while (filepath.exists() or filepath.is_symlink()
+                   or filepath.resolve() == output_path):
+                if (not filepath.is_symlink() and filepath.is_file()
+                        and filepath.resolve() != output_path
+                        and filepath.stat().st_size == len(img.image_bytes)
+                        and filepath.read_bytes() == img.image_bytes):
+                    break
+                number += 1
+                filepath = folder / f"{stem}_{number}{suffix}"
+            else:
+                with atomic_output(filepath) as temporary:
+                    temporary.write_bytes(img.image_bytes)
+            filename = filepath.name
 
             # Use alias if set, otherwise compute relative path
             if self.options.images_folder_alias:

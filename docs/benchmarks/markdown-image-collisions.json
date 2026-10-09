@@ -1,0 +1,81 @@
+{
+  "baseline_commit": "42dc64cc4d1c4cc4aaaf74987935a93646594cd7",
+  "scope": "A1 external Markdown/HTML image filename collisions and unsafe replacement, not a multi-file transaction",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "installed_cwd": "/tmp"
+  },
+  "reproduction": {
+    "test": "tests/test_markdown_image_collisions.py",
+    "old_installed": "7 failed in 0.24s",
+    "source": "7 passed in 0.16s"
+  },
+  "implementation": "Keep a free original basename; reserve the Markdown output path; resolve differing-content collisions with numbered basenames; reuse equal bytes without rewrite; avoid destination symlinks and use existing atomic_output for new image files",
+  "coverage": [
+    "Markdown and HTML tables, Document.save and direct LdmMarkdownWriter",
+    "Two different same-name images plus repeat of identical image preserve every payload and matching output URI",
+    "Existing unrelated file and symlink target remain unchanged",
+    "Normalized assets-directory alias cannot replace the main Markdown destination",
+    "Merge paragraphs from two independently generated python-docx packages whose pictures share the same media filename; Pillow reads both red and blue output images"
+  ],
+  "installed_integration": {
+    "result": "273 passed, 1592 deselected, 14 warnings in 14.00s",
+    "command": "PYPANDOC_PANDOC=/tmp/docweave-pandoc-arm64/pandoc /tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests -q --import-mode=importlib -k 'markdown or md_writer or image_collision or conversion_api or bounded_conversion or ecosystem_semantics or field_shape_visibility or nested_field_visibility' --tb=short",
+    "boundary": "Scoped to Markdown, conversion/safety and related semantics; not a fresh full-suite run"
+  },
+  "examples": "31 passed, 13 warnings in 6.23s",
+  "wheel": {
+    "bytes": 26488918,
+    "size_delta_bytes": 229,
+    "sha256": "dfb1beeda1853d10e0e7b80513397ff31bd706c8ecb5bd821c56022a1715eb74",
+    "source_py_files_matched": 125,
+    "resources": "scripts/check_wheel.py passes from /tmp using site-packages"
+  },
+  "common_markdown": {
+    "result": "Five fixed inputs have identical bytes, hashes and diagnostics",
+    "records": [
+      {
+        "name": "small",
+        "source_sha256": "e5c217ce9ab6e2de6ecadb6380699947826ceb39463fe7ccc055092f2ac0d703",
+        "markdown_bytes": 44,
+        "markdown_sha256": "390e64a3a33bd9d47b707dbf42478a2a62b84dbb72d08c525d575a38aa9400b1",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "hundred_pages",
+        "source_sha256": "4a58a34bdddd09e80f992dbc7c0055ab4a07ceea21146304564bd4e81b922d4c",
+        "markdown_bytes": 244286,
+        "markdown_sha256": "e36e62629bfaad7dd778d5936269dfddc522dbbd13db0a9cc9946d4bc6d68fad",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "image_table",
+        "source_sha256": "a1dae1a70968e0640b959f3fcc09b0a7c363f97556a5b54311be7b068e2bd8c2",
+        "markdown_bytes": 19478,
+        "markdown_sha256": "a9f49bd6762f0a9a301a64c101455cbecd3dca417adcf55d1ccdbb8bfcb67f28",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "repeated_images",
+        "source_sha256": "a19f56933135f9820b43e3e90f3ac091d5e3aed0db48a5a932abc4eedf7df3a2",
+        "markdown_bytes": 23159,
+        "markdown_sha256": "06463be1fce92e9c2a5b20c3d36c0e8a2a73f87f420cc2282cef6847d99b51e7",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "mixed_styles",
+        "source_sha256": "db06ae569aba30457f3e83782be91d96dca3786684a6d878a767c3e97b48ff26",
+        "markdown_bytes": 16530,
+        "markdown_sha256": "4087e7cff57911ca214f9115d85c4b90b4790bf2091bb2fe7694dbc9bd882ff1",
+        "diagnostic_codes": []
+      }
+    ]
+  },
+  "limits": [
+    "Assets and the main Markdown file remain separate publications; an error after image output may leave new assets",
+    "Numbered filenames can differ when an output folder already contains conflicting assets",
+    "Concurrent publication into a shared assets folder has not been validated",
+    "No new Word/LibreOffice or PDF layout acceptance; no overall A1 completion claim"
+  ]
+}
