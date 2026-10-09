@@ -6,8 +6,10 @@ from typing import Union
 from fpdf import FPDF
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss.pdf_writer.baseline import baseline_scope
 from aspose.words_foss.pdf_writer._context import PDFWriterContext
 from aspose.words_foss.pdf_writer.constants import MIN_HEADER_FOOTER_Y_MM
+from aspose.words_foss.pdf_writer.text import is_pure_page_break
 
 
 def _collect_hf_children(
@@ -48,7 +50,8 @@ def _hf_content_height(
 ) -> float:
     """Height in mm that *children* occupy once rendered in a band."""
     usable_w = writer._page_width - writer._page_margin_left - writer._page_margin_right
-    return sum(writer._estimate_child_height(child, usable_w) for child in children)
+    return sum(writer._estimate_child_height(child, usable_w) for child in children
+               if not (isinstance(child, ldm.Paragraph) and is_pure_page_break(child)))
 
 
 def _render_hf_children(
@@ -94,18 +97,22 @@ def install_page_header(
         if getattr(pdf, "_in_header_render", False):
             return
         pdf._in_header_render = True  # type: ignore[attr-defined]
+        previous_repeat = getattr(pdf, '_in_repeated_page_band', False)
+        pdf._in_repeated_page_band = pdf.page_no() > 1 + int(skip_first_page)
         prev_auto = pdf.auto_page_break
         prev_bottom = pdf.b_margin
         body_start_y = pdf.t_margin
         try:
             pdf.set_auto_page_break(auto=False, margin=0)
             pdf.set_xy(writer._page_margin_left, max(header_y_mm, MIN_HEADER_FOOTER_Y_MM))
-            _render_hf_children(pdf, writer, children, render_positioned=True)
+            with baseline_scope(pdf, None), writer._artifact(pdf, 'Header'):
+                _render_hf_children(pdf, writer, children, render_positioned=True)
             final_y = max(pdf.get_y(), body_start_y)
             pdf.set_xy(writer._page_margin_left, final_y)
         finally:
             pdf.set_auto_page_break(auto=prev_auto, margin=prev_bottom)
             pdf._in_header_render = False  # type: ignore[attr-defined]
+            pdf._in_repeated_page_band = previous_repeat
 
     pdf.header = _header_callback  # type: ignore[method-assign]
 
@@ -130,6 +137,8 @@ def install_page_footer(
         if getattr(pdf, "_in_footer_render", False):
             return
         pdf._in_footer_render = True  # type: ignore[attr-defined]
+        previous_repeat = getattr(pdf, '_in_repeated_page_band', False)
+        pdf._in_repeated_page_band = pdf.page_no() > 1 + int(skip_first_page)
         prev_auto = pdf.auto_page_break
         prev_bottom = pdf.b_margin
         try:
@@ -140,10 +149,12 @@ def install_page_footer(
             )
             band_top = max(band_bottom - content_h_mm, MIN_HEADER_FOOTER_Y_MM)
             pdf.set_xy(writer._page_margin_left, band_top)
-            _render_hf_children(pdf, writer, children)
+            with baseline_scope(pdf, None), writer._artifact(pdf, 'Footer'):
+                _render_hf_children(pdf, writer, children)
         finally:
             pdf.set_auto_page_break(auto=prev_auto, margin=prev_bottom)
             pdf._in_footer_render = False  # type: ignore[attr-defined]
+            pdf._in_repeated_page_band = previous_repeat
 
     pdf.footer = _footer_callback  # type: ignore[method-assign]
 
@@ -154,6 +165,8 @@ def register_bookmarks(
     anchor_links: dict[str, int],
 ) -> None:
     """Point every :class:`BookmarkStart` in *para* at the current page."""
+    if getattr(pdf, '_in_repeated_page_band', False):
+        return
     for extra in para._children:
         if not isinstance(extra, ldm.BookmarkStart) or not extra.name:
             continue
@@ -161,4 +174,4 @@ def register_bookmarks(
         if link_id is None:
             link_id = pdf.add_link()
             anchor_links[extra.name] = link_id
-        pdf.set_link(link_id, y=pdf.get_y(), page=pdf.page_no())
+        pdf.set_link(link_id, x=pdf.get_x(), y=pdf.get_y(), page=pdf.page_no())

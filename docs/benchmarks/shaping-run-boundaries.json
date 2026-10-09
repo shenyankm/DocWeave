@@ -1,0 +1,1879 @@
+{
+  "before": {
+    "probe_source": "from pathlib import Path\nimport hashlib\nimport json\nimport sys\n\nimport pymupdf\nfrom aspose.words_foss import light_document_model as ldm\nfrom aspose.words_foss.pdf_writer import LdmPdfWriter\nfrom aspose.words_foss.saving import PdfSaveOptions\n\nCASES = {'arabic-word': ['\u0633', '\u0644\u0627\u0645'], 'arabic-latin': ['\u0633\u0644\u0627\u0645 ', 'ABC', ' \u0639\u0627\u0644\u0645 ', 'DEF', ' \u0646\u0647\u0627\u064a\u0629'],\n         'rtl-numbers': ['\u0633\u0644\u0627\u0645 ', '(', '123', ')', ' \u0639\u0627\u0644\u0645'],\n         'latin-kerning': ['A', 'V', 'A', 'T', 'A', 'R'],\n         'mixed': ['\u4e2d\u6587 ', 'hello ', '\u0633\u0644\u0627\u0645 ', '123 ', '\u4e16\u754c']}\n\ndef render(parts, shaping):\n    model = ldm.Document(sections=[ldm.Section(page_setup=ldm.PageSetup(page_width=400,\n        page_height=250, left_margin=20, right_margin=20, top_margin=20, bottom_margin=20),\n        body=ldm.Body(children=[ldm.Paragraph(children=[ldm.Run(text=text,\n            font=ldm.Font(size=28)) for text in parts])]))])\n    options = PdfSaveOptions()\n    options.text_shaping = shaping\n    options.fallback_fonts = ['/System/Library/Fonts/Supplemental/Arial.ttf']\n    raw = LdmPdfWriter(options).write_to_bytes(model)\n    with pymupdf.open(stream=raw, filetype='pdf') as doc:\n        result={'text':doc[0].get_text(),'words':doc[0].get_text('words'),\n                'pixels_sha256':hashlib.sha256(doc[0].get_pixmap(matrix=pymupdf.Matrix(2,2)).samples).hexdigest()}\n        return result\n\nresults = {'probe_source':Path(__file__).read_text(),'cases':{}}\nfor name,parts in CASES.items():\n    whole = render([''.join(parts)], True)\n    split = render(parts, True)\n    results['cases'][name]={'whole':whole,'split':split,'same_pixels':whole['pixels_sha256']==split['pixels_sha256']}\nPath(f'/tmp/docweave-shaping-split-{sys.argv[1]}.json').write_text(json.dumps(results,indent=2)+'\\n')\nprint(json.dumps({name:{'whole_text':r['whole']['text'],'split_text':r['split']['text'],'same_pixels':r['same_pixels']} for name,r in results['cases'].items()},ensure_ascii=False))\n",
+    "cases": {
+      "arabic-word": {
+        "whole": {
+          "text": "\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              63.97800064086914,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "7a776d15df23a9f018cad5a5dfaac37f5767290ee92a4ad21358a60aa80c5ddb"
+        },
+        "split": {
+          "text": "\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              70.51799774169922,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "a88232eb0788c7c99fd2d0fbc54d7ee175b84b00dcbc5729fb88eff55a7f071d"
+        },
+        "same_pixels": false
+      },
+      "arabic-latin": {
+        "whole": {
+          "text": "\u0646\u0647\u0627\u064a\u0629\n\u0639\u0627\u0644\u0645\n\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              64.46199798583984,
+              53.93600082397461,
+              "\u0646\u0647\u0627\u064a\u0629",
+              0,
+              0,
+              0
+            ],
+            [
+              128.1999969482422,
+              22.65999984741211,
+              164.60800170898438,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              1,
+              0
+            ],
+            [
+              230.42999267578125,
+              22.65999984741211,
+              271.5680236816406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              2,
+              0
+            ]
+          ],
+          "pixels_sha256": "7b25c051463b3e055e830f542a7046fb078216883bc75d68e99701f661389675"
+        },
+        "split": {
+          "text": "\u0646\u0647\u0627\u064a\u0629\n\u0639\u0627\u0644\u0645\n\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              64.46199798583984,
+              53.93600082397461,
+              "\u0646\u0647\u0627\u064a\u0629",
+              0,
+              0,
+              0
+            ],
+            [
+              128.1999969482422,
+              22.65999984741211,
+              164.60800170898438,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              1,
+              0
+            ],
+            [
+              230.42999267578125,
+              22.65999984741211,
+              271.5680236816406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              2,
+              0
+            ]
+          ],
+          "pixels_sha256": "7b25c051463b3e055e830f542a7046fb078216883bc75d68e99701f661389675"
+        },
+        "same_pixels": true
+      },
+      "rtl-numbers": {
+        "whole": {
+          "text": "\u0639\u0627\u0644\u0645\n\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              59.24800109863281,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ],
+            [
+              137.3300018310547,
+              22.65999984741211,
+              178.46800231933594,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              1,
+              0
+            ]
+          ],
+          "pixels_sha256": "ca377af3b766ad75f4a5c9d8faf75925d6a946f57ea2182fea1f13d862ab1c93"
+        },
+        "split": {
+          "text": "\u0639\u0627\u0644\u0645\n\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              59.24800109863281,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ],
+            [
+              137.3300018310547,
+              22.65999984741211,
+              178.46800231933594,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              1,
+              0
+            ]
+          ],
+          "pixels_sha256": "ca377af3b766ad75f4a5c9d8faf75925d6a946f57ea2182fea1f13d862ab1c93"
+        },
+        "same_pixels": true
+      },
+      "latin-kerning": {
+        "whole": {
+          "text": "AVATAR\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              120.44400024414062,
+              53.599998474121094,
+              "AVATAR",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "441417a9fc6adac0ae041796a017cdfe1a505067df4df6213b1d488d92295547"
+        },
+        "split": {
+          "text": "AVATAR\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              124.55999755859375,
+              53.599998474121094,
+              "AVATAR",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "0b35679ad2ef3f5aec87c39f5cfde1b40e57c3efbe3fb20de191f34bb135d83f"
+        },
+        "same_pixels": false
+      },
+      "mixed": {
+        "whole": {
+          "text": "\u4e2d\u6587 hello  \u0633\u0627\u0644\u0645123 \u4e16\u754c\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              78.83000183105469,
+              53.599998474121094,
+              "\u4e2d\u6587",
+              0,
+              0,
+              0
+            ],
+            [
+              85.10200500488281,
+              20.0,
+              150.4820098876953,
+              53.599998474121094,
+              "hello",
+              0,
+              0,
+              1
+            ],
+            [
+              163.02999877929688,
+              22.65999984741211,
+              204.17799377441406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              204.19000244140625,
+              20.0,
+              250.8099822998047,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              3
+            ],
+            [
+              257.08197021484375,
+              20.0,
+              313.08197021484375,
+              53.599998474121094,
+              "\u4e16\u754c",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "bc6a6962b3d6c58588bb465632ee9dd096ff2f317883078021abdc07dea3b91d"
+        },
+        "split": {
+          "text": "\u4e2d\u6587 hello  \u0633\u0627\u0644\u0645123 \u4e16\u754c\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              78.83000183105469,
+              53.599998474121094,
+              "\u4e2d\u6587",
+              0,
+              0,
+              0
+            ],
+            [
+              85.11000061035156,
+              20.0,
+              150.49000549316406,
+              53.599998474121094,
+              "hello",
+              0,
+              0,
+              1
+            ],
+            [
+              163.02999877929688,
+              22.65999984741211,
+              204.17799377441406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              204.19000244140625,
+              20.0,
+              250.8099822998047,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              3
+            ],
+            [
+              257.0799865722656,
+              20.0,
+              313.0799865722656,
+              53.599998474121094,
+              "\u4e16\u754c",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "bc6a6962b3d6c58588bb465632ee9dd096ff2f317883078021abdc07dea3b91d"
+        },
+        "same_pixels": true
+      }
+    }
+  },
+  "after": {
+    "probe_source": "from pathlib import Path\nimport hashlib\nimport json\nimport sys\n\nimport pymupdf\nfrom fpdf import FPDF\nfrom aspose.words_foss.pdf_writer.font import register_fonts, close_fonts\nfrom aspose.words_foss.pdf_writer.constants import PT_TO_MM\nfrom aspose.words_foss import light_document_model as ldm\nfrom aspose.words_foss.pdf_writer import LdmPdfWriter\nfrom aspose.words_foss.saving import PdfSaveOptions\n\nCASES = {'arabic-word': ['\u0633', '\u0644\u0627\u0645'], 'arabic-latin': ['\u0633\u0644\u0627\u0645 ', 'ABC', ' \u0639\u0627\u0644\u0645 ', 'DEF', ' \u0646\u0647\u0627\u064a\u0629'],\n         'rtl-numbers': ['\u0633\u0644\u0627\u0645 ', '(', '123', ')', ' \u0639\u0627\u0644\u0645'],\n         'latin-kerning': ['A', 'V', 'A', 'T', 'A', 'R'],\n         'mixed': ['\u4e2d\u6587 ', 'hello ', '\u0633\u0644\u0627\u0645 ', '123 ', '\u4e16\u754c']}\n\ndef render(parts, shaping, native=False):\n    model = ldm.Document(sections=[ldm.Section(page_setup=ldm.PageSetup(page_width=400,\n        page_height=250, left_margin=20, right_margin=20, top_margin=20, bottom_margin=20),\n        body=ldm.Body(children=[ldm.Paragraph(children=[ldm.Run(text=text,\n            font=ldm.Font(size=28)) for text in parts])]))])\n    options = PdfSaveOptions()\n    options.text_shaping = shaping\n    options.fallback_fonts = ['/System/Library/Fonts/Supplemental/Arial.ttf']\n    if native:\n        pdf = FPDF(format=(400 * PT_TO_MM, 250 * PT_TO_MM))\n        pdf.set_margins(20 * PT_TO_MM, 20 * PT_TO_MM, 20 * PT_TO_MM)\n        pdf.set_auto_page_break(True, margin=20 * PT_TO_MM)\n        register_fonts(pdf, model, options.fallback_fonts)\n        pdf.set_text_shaping(shaping)\n        pdf.add_page()\n        pdf.set_font('DocumentSansSC', size=28)\n        pdf.multi_cell(pdf.epw, 28 * 1.4 * PT_TO_MM, ''.join(parts))\n        raw = bytes(pdf.output())\n        close_fonts(pdf)\n    else:\n        raw = LdmPdfWriter(options).write_to_bytes(model)\n    with pymupdf.open(stream=raw, filetype='pdf') as doc:\n        pixmap=doc[0].get_pixmap(matrix=pymupdf.Matrix(2,2))\n        pixmap.save(f'/tmp/docweave-shaping-inspection-{native}.png')\n        result={'page_rect':list(doc[0].rect),'pixel_size':[pixmap.width,pixmap.height],'text':doc[0].get_text(),'words':doc[0].get_text('words'),\n                'pixels_sha256':hashlib.sha256(doc[0].get_pixmap(matrix=pymupdf.Matrix(2,2)).samples).hexdigest()}\n        return result\n\nresults = {'probe_source':Path(__file__).read_text(),'cases':{}}\nfor name,parts in CASES.items():\n    whole = render([''.join(parts)], True)\n    split = render(parts, True)\n    native = render([''.join(parts)], True, native=True)\n    results['cases'][name]={'whole':whole,'split':split,'native':native,\n        'same_pixels':whole['pixels_sha256']==split['pixels_sha256'],\n        'native_same_pixels':whole['pixels_sha256']==native['pixels_sha256']}\nPath(f'/tmp/docweave-shaping-split-{sys.argv[1]}.json').write_text(json.dumps(results,indent=2)+'\\n')\nprint(json.dumps({name:{'whole_text':r['whole']['text'],'split_text':r['split']['text'],'same_pixels':r['same_pixels'],'native_same_pixels':r['native_same_pixels']} for name,r in results['cases'].items()},ensure_ascii=False))\n",
+    "cases": {
+      "arabic-word": {
+        "whole": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              63.97800064086914,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "7a776d15df23a9f018cad5a5dfaac37f5767290ee92a4ad21358a60aa80c5ddb"
+        },
+        "split": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              63.97800064086914,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "7a776d15df23a9f018cad5a5dfaac37f5767290ee92a4ad21358a60aa80c5ddb"
+        },
+        "native": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              63.97800064086914,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "7cc64c38de20b59a5fff03846197d5ae46f38a549d4b141e52a34f4922400db2"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      },
+      "arabic-latin": {
+        "whole": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u0646\u0647\u0627\u064a\u0629 DEF \u0639\u0627\u0644\u0645 ABC \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              64.46199798583984,
+              53.93600082397461,
+              "\u0646\u0647\u0627\u064a\u0629",
+              0,
+              0,
+              0
+            ],
+            [
+              70.70999908447266,
+              20.0,
+              121.92200469970703,
+              53.599998474121094,
+              "DEF",
+              0,
+              0,
+              1
+            ],
+            [
+              128.1999969482422,
+              22.65999984741211,
+              164.60800170898438,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              170.8699951171875,
+              20.0,
+              224.15399169921875,
+              53.599998474121094,
+              "ABC",
+              0,
+              0,
+              3
+            ],
+            [
+              230.42999267578125,
+              22.65999984741211,
+              271.5680236816406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "58477f91b819c0cf9f31ea10737fcbbe6eca4b99bf647b9fe8224cca36b4b0d4"
+        },
+        "split": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u0646\u0647\u0627\u064a\u0629 DEF \u0639\u0627\u0644\u0645 ABC \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              64.46199798583984,
+              53.93600082397461,
+              "\u0646\u0647\u0627\u064a\u0629",
+              0,
+              0,
+              0
+            ],
+            [
+              70.70999908447266,
+              20.0,
+              121.92200469970703,
+              53.599998474121094,
+              "DEF",
+              0,
+              0,
+              1
+            ],
+            [
+              128.1999969482422,
+              22.65999984741211,
+              164.60800170898438,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              170.8699951171875,
+              20.0,
+              224.15399169921875,
+              53.599998474121094,
+              "ABC",
+              0,
+              0,
+              3
+            ],
+            [
+              230.42999267578125,
+              22.65999984741211,
+              271.5680236816406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "58477f91b819c0cf9f31ea10737fcbbe6eca4b99bf647b9fe8224cca36b4b0d4"
+        },
+        "native": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": " \u0646\u0647\u0627\u064a\u0629DEF  \u0639\u0627\u0644\u0645ABC \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              64.46199798583984,
+              53.93600082397461,
+              "\u0646\u0647\u0627\u064a\u0629",
+              0,
+              0,
+              0
+            ],
+            [
+              70.74200439453125,
+              20.0,
+              121.9540023803711,
+              53.599998474121094,
+              "DEF",
+              0,
+              0,
+              1
+            ],
+            [
+              128.2259979248047,
+              22.65999984741211,
+              164.60800170898438,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              170.8820037841797,
+              20.0,
+              224.16600036621094,
+              53.599998474121094,
+              "ABC",
+              0,
+              0,
+              3
+            ],
+            [
+              230.43800354003906,
+              22.65999984741211,
+              271.5680236816406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "1968bbb2d4268262c74fd21a42b39b4400d0399e7279cfcd56614d757bfd43fd"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      },
+      "rtl-numbers": {
+        "whole": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u0639\u0627\u0644\u0645 )123( \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              59.24800109863281,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ],
+            [
+              65.50199890136719,
+              20.0,
+              131.0540008544922,
+              53.599998474121094,
+              ")123(",
+              0,
+              0,
+              1
+            ],
+            [
+              137.3300018310547,
+              22.65999984741211,
+              178.46800231933594,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ]
+          ],
+          "pixels_sha256": "35de1de9d374e3c37e5ca02449a6257bcd0d68bd54b81b8630879f79b67d3d88"
+        },
+        "split": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u0639\u0627\u0644\u0645 )123( \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              59.24800109863281,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ],
+            [
+              65.50199890136719,
+              20.0,
+              131.0540008544922,
+              53.599998474121094,
+              ")123(",
+              0,
+              0,
+              1
+            ],
+            [
+              137.3300018310547,
+              22.65999984741211,
+              178.46800231933594,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ]
+          ],
+          "pixels_sha256": "35de1de9d374e3c37e5ca02449a6257bcd0d68bd54b81b8630879f79b67d3d88"
+        },
+        "native": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": ") \u0639\u0627\u0644\u0645123( \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              65.51200103759766,
+              20.0,
+              74.97600555419922,
+              53.599998474121094,
+              ")",
+              0,
+              0,
+              0
+            ],
+            [
+              22.829999923706055,
+              22.65999984741211,
+              59.24800109863281,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              1
+            ],
+            [
+              74.97599792480469,
+              20.0,
+              131.05999755859375,
+              53.599998474121094,
+              "123(",
+              0,
+              0,
+              2
+            ],
+            [
+              137.33200073242188,
+              22.65999984741211,
+              178.46800231933594,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              3
+            ]
+          ],
+          "pixels_sha256": "24821c199ae6e39868980d15a8db09a9e1fbc13a16fdb3e07a9409eae4fcbcc2"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      },
+      "latin-kerning": {
+        "whole": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "AVATAR\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              120.44400024414062,
+              53.599998474121094,
+              "AVATAR",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "441417a9fc6adac0ae041796a017cdfe1a505067df4df6213b1d488d92295547"
+        },
+        "split": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "AVATAR\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              120.44400024414062,
+              53.599998474121094,
+              "AVATAR",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "441417a9fc6adac0ae041796a017cdfe1a505067df4df6213b1d488d92295547"
+        },
+        "native": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "AVATAR\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              120.44400024414062,
+              53.599998474121094,
+              "AVATAR",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "65d7d4eb1866139a2e14bbf699e6954735508c11ca342b6658ad2c8b5bcb8b2c"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      },
+      "mixed": {
+        "whole": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u4e2d\u6587 hello  \u0633\u0627\u0644\u0645123 \u4e16\u754c\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              78.83000183105469,
+              53.599998474121094,
+              "\u4e2d\u6587",
+              0,
+              0,
+              0
+            ],
+            [
+              85.10200500488281,
+              20.0,
+              150.4820098876953,
+              53.599998474121094,
+              "hello",
+              0,
+              0,
+              1
+            ],
+            [
+              163.02999877929688,
+              22.65999984741211,
+              204.17799377441406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              204.19000244140625,
+              20.0,
+              250.8099822998047,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              3
+            ],
+            [
+              257.08197021484375,
+              20.0,
+              313.08197021484375,
+              53.599998474121094,
+              "\u4e16\u754c",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "bc6a6962b3d6c58588bb465632ee9dd096ff2f317883078021abdc07dea3b91d"
+        },
+        "split": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u4e2d\u6587 hello  \u0633\u0627\u0644\u0645123 \u4e16\u754c\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              78.83000183105469,
+              53.599998474121094,
+              "\u4e2d\u6587",
+              0,
+              0,
+              0
+            ],
+            [
+              85.10200500488281,
+              20.0,
+              150.4820098876953,
+              53.599998474121094,
+              "hello",
+              0,
+              0,
+              1
+            ],
+            [
+              163.02999877929688,
+              22.65999984741211,
+              204.17799377441406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              204.19000244140625,
+              20.0,
+              250.8099822998047,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              3
+            ],
+            [
+              257.08197021484375,
+              20.0,
+              313.08197021484375,
+              53.599998474121094,
+              "\u4e16\u754c",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "bc6a6962b3d6c58588bb465632ee9dd096ff2f317883078021abdc07dea3b91d"
+        },
+        "native": {
+          "page_rect": [
+            0.0,
+            0.0,
+            400.0,
+            250.0
+          ],
+          "pixel_size": [
+            800,
+            500
+          ],
+          "text": "\u4e2d\u6587 hello  \u0633\u0627\u0644\u0645123 \u4e16\u754c\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              78.83000183105469,
+              53.599998474121094,
+              "\u4e2d\u6587",
+              0,
+              0,
+              0
+            ],
+            [
+              85.10200500488281,
+              20.0,
+              150.4820098876953,
+              53.599998474121094,
+              "hello",
+              0,
+              0,
+              1
+            ],
+            [
+              163.02601623535156,
+              22.65999984741211,
+              204.17799377441406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              204.1699981689453,
+              20.0,
+              250.78997802734375,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              3
+            ],
+            [
+              257.0619812011719,
+              20.0,
+              313.0619812011719,
+              53.599998474121094,
+              "\u4e16\u754c",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "279137a70e49a3d5cfbae72c579af3dce5f6c8886d5e3456bc5d3d68b20f4271"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      }
+    }
+  },
+  "validation": "Five whole/split pixel invariants; missing fallback Latin/digits restored; native direction context retained; original measurement tests strengthened against actual PDF baselines and bounds",
+  "limits": [
+    "Does not establish bidi context across genuinely different formatting or links",
+    "Not a full language or Word layout acceptance",
+    "No timing or memory improvement claim",
+    "Fragmented-digit microbenchmark PDF shrank; no general speed or RSS reduction was demonstrated"
+  ],
+  "intermediate_native_probe": {
+    "probe_source": "from pathlib import Path\nimport hashlib\nimport json\nimport sys\n\nimport pymupdf\nfrom fpdf import FPDF\nfrom aspose.words_foss.pdf_writer.font import register_fonts, close_fonts\nfrom aspose.words_foss.pdf_writer.constants import PT_TO_MM\nfrom aspose.words_foss import light_document_model as ldm\nfrom aspose.words_foss.pdf_writer import LdmPdfWriter\nfrom aspose.words_foss.saving import PdfSaveOptions\n\nCASES = {'arabic-word': ['\u0633', '\u0644\u0627\u0645'], 'arabic-latin': ['\u0633\u0644\u0627\u0645 ', 'ABC', ' \u0639\u0627\u0644\u0645 ', 'DEF', ' \u0646\u0647\u0627\u064a\u0629'],\n         'rtl-numbers': ['\u0633\u0644\u0627\u0645 ', '(', '123', ')', ' \u0639\u0627\u0644\u0645'],\n         'latin-kerning': ['A', 'V', 'A', 'T', 'A', 'R'],\n         'mixed': ['\u4e2d\u6587 ', 'hello ', '\u0633\u0644\u0627\u0645 ', '123 ', '\u4e16\u754c']}\n\ndef render(parts, shaping, native=False):\n    model = ldm.Document(sections=[ldm.Section(page_setup=ldm.PageSetup(page_width=400,\n        page_height=250, left_margin=20, right_margin=20, top_margin=20, bottom_margin=20),\n        body=ldm.Body(children=[ldm.Paragraph(children=[ldm.Run(text=text,\n            font=ldm.Font(size=28)) for text in parts])]))])\n    options = PdfSaveOptions()\n    options.text_shaping = shaping\n    options.fallback_fonts = ['/System/Library/Fonts/Supplemental/Arial.ttf']\n    if native:\n        pdf = FPDF(format=(400 * PT_TO_MM, 250 * PT_TO_MM))\n        pdf.set_margins(20 * PT_TO_MM, 20 * PT_TO_MM, 20 * PT_TO_MM)\n        pdf.set_auto_page_break(True, margin=20 * PT_TO_MM)\n        register_fonts(pdf, model, options.fallback_fonts)\n        pdf.set_text_shaping(shaping)\n        pdf.add_page()\n        pdf.set_font('DocumentSansSC', size=28)\n        pdf.multi_cell(pdf.epw, 28 * 1.4 * PT_TO_MM, ''.join(parts))\n        raw = bytes(pdf.output())\n        close_fonts(pdf)\n    else:\n        raw = LdmPdfWriter(options).write_to_bytes(model)\n    with pymupdf.open(stream=raw, filetype='pdf') as doc:\n        result={'text':doc[0].get_text(),'words':doc[0].get_text('words'),\n                'pixels_sha256':hashlib.sha256(doc[0].get_pixmap(matrix=pymupdf.Matrix(2,2)).samples).hexdigest()}\n        return result\n\nresults = {'probe_source':Path(__file__).read_text(),'cases':{}}\nfor name,parts in CASES.items():\n    whole = render([''.join(parts)], True)\n    split = render(parts, True)\n    native = render([''.join(parts)], True, native=True)\n    results['cases'][name]={'whole':whole,'split':split,'native':native,\n        'same_pixels':whole['pixels_sha256']==split['pixels_sha256'],\n        'native_same_pixels':whole['pixels_sha256']==native['pixels_sha256']}\nPath(f'/tmp/docweave-shaping-split-{sys.argv[1]}.json').write_text(json.dumps(results,indent=2)+'\\n')\nprint(json.dumps({name:{'whole_text':r['whole']['text'],'split_text':r['split']['text'],'same_pixels':r['same_pixels'],'native_same_pixels':r['native_same_pixels']} for name,r in results['cases'].items()},ensure_ascii=False))\n",
+    "cases": {
+      "arabic-word": {
+        "whole": {
+          "text": "\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              63.97800064086914,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "7a776d15df23a9f018cad5a5dfaac37f5767290ee92a4ad21358a60aa80c5ddb"
+        },
+        "split": {
+          "text": "\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              63.97800064086914,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "7a776d15df23a9f018cad5a5dfaac37f5767290ee92a4ad21358a60aa80c5ddb"
+        },
+        "native": {
+          "text": "\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              63.97800064086914,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "7cc64c38de20b59a5fff03846197d5ae46f38a549d4b141e52a34f4922400db2"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      },
+      "arabic-latin": {
+        "whole": {
+          "text": "\u0646\u0647\u0627\u064a\u0629 DEF \u0639\u0627\u0644\u0645 ABC \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              64.46199798583984,
+              53.93600082397461,
+              "\u0646\u0647\u0627\u064a\u0629",
+              0,
+              0,
+              0
+            ],
+            [
+              70.70999908447266,
+              20.0,
+              121.92200469970703,
+              53.599998474121094,
+              "DEF",
+              0,
+              0,
+              1
+            ],
+            [
+              128.1999969482422,
+              22.65999984741211,
+              164.60800170898438,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              170.8699951171875,
+              20.0,
+              224.15399169921875,
+              53.599998474121094,
+              "ABC",
+              0,
+              0,
+              3
+            ],
+            [
+              230.42999267578125,
+              22.65999984741211,
+              271.5680236816406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "58477f91b819c0cf9f31ea10737fcbbe6eca4b99bf647b9fe8224cca36b4b0d4"
+        },
+        "split": {
+          "text": "\u0646\u0647\u0627\u064a\u0629 DEF \u0639\u0627\u0644\u0645 ABC \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              64.46199798583984,
+              53.93600082397461,
+              "\u0646\u0647\u0627\u064a\u0629",
+              0,
+              0,
+              0
+            ],
+            [
+              70.70999908447266,
+              20.0,
+              121.92200469970703,
+              53.599998474121094,
+              "DEF",
+              0,
+              0,
+              1
+            ],
+            [
+              128.1999969482422,
+              22.65999984741211,
+              164.60800170898438,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              170.8699951171875,
+              20.0,
+              224.15399169921875,
+              53.599998474121094,
+              "ABC",
+              0,
+              0,
+              3
+            ],
+            [
+              230.42999267578125,
+              22.65999984741211,
+              271.5680236816406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "58477f91b819c0cf9f31ea10737fcbbe6eca4b99bf647b9fe8224cca36b4b0d4"
+        },
+        "native": {
+          "text": " \u0646\u0647\u0627\u064a\u0629DEF  \u0639\u0627\u0644\u0645ABC \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              64.46199798583984,
+              53.93600082397461,
+              "\u0646\u0647\u0627\u064a\u0629",
+              0,
+              0,
+              0
+            ],
+            [
+              70.74200439453125,
+              20.0,
+              121.9540023803711,
+              53.599998474121094,
+              "DEF",
+              0,
+              0,
+              1
+            ],
+            [
+              128.2259979248047,
+              22.65999984741211,
+              164.60800170898438,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              170.8820037841797,
+              20.0,
+              224.16600036621094,
+              53.599998474121094,
+              "ABC",
+              0,
+              0,
+              3
+            ],
+            [
+              230.43800354003906,
+              22.65999984741211,
+              271.5680236816406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "1968bbb2d4268262c74fd21a42b39b4400d0399e7279cfcd56614d757bfd43fd"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      },
+      "rtl-numbers": {
+        "whole": {
+          "text": "\u0639\u0627\u0644\u0645) 123 (\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              59.24800109863281,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ],
+            [
+              59.22999954223633,
+              20.0,
+              68.69400024414062,
+              53.599998474121094,
+              ")",
+              0,
+              0,
+              1
+            ],
+            [
+              74.97000122070312,
+              20.0,
+              121.59000396728516,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              2
+            ],
+            [
+              127.86199951171875,
+              20.0,
+              137.3260040283203,
+              53.599998474121094,
+              "(",
+              0,
+              0,
+              3
+            ],
+            [
+              137.3300018310547,
+              22.65999984741211,
+              178.46800231933594,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "d81b845a29c67fb009333486bafce3d253106c460378d904564b298c350de70a"
+        },
+        "split": {
+          "text": "\u0639\u0627\u0644\u0645) 123 (\u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              22.829999923706055,
+              22.65999984741211,
+              59.24800109863281,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              0
+            ],
+            [
+              59.22999954223633,
+              20.0,
+              68.69400024414062,
+              53.599998474121094,
+              ")",
+              0,
+              0,
+              1
+            ],
+            [
+              74.97000122070312,
+              20.0,
+              121.59000396728516,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              2
+            ],
+            [
+              127.86199951171875,
+              20.0,
+              137.3260040283203,
+              53.599998474121094,
+              "(",
+              0,
+              0,
+              3
+            ],
+            [
+              137.3300018310547,
+              22.65999984741211,
+              178.46800231933594,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "d81b845a29c67fb009333486bafce3d253106c460378d904564b298c350de70a"
+        },
+        "native": {
+          "text": ") \u0639\u0627\u0644\u0645123( \u0633\u0627\u0644\u0645\n",
+          "words": [
+            [
+              65.51200103759766,
+              20.0,
+              74.97600555419922,
+              53.599998474121094,
+              ")",
+              0,
+              0,
+              0
+            ],
+            [
+              22.829999923706055,
+              22.65999984741211,
+              59.24800109863281,
+              53.93600082397461,
+              "\u0639\u0627\u0644\u0645",
+              0,
+              0,
+              1
+            ],
+            [
+              74.97599792480469,
+              20.0,
+              131.05999755859375,
+              53.599998474121094,
+              "123(",
+              0,
+              0,
+              2
+            ],
+            [
+              137.33200073242188,
+              22.65999984741211,
+              178.46800231933594,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              3
+            ]
+          ],
+          "pixels_sha256": "24821c199ae6e39868980d15a8db09a9e1fbc13a16fdb3e07a9409eae4fcbcc2"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      },
+      "latin-kerning": {
+        "whole": {
+          "text": "AVATAR\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              120.44400024414062,
+              53.599998474121094,
+              "AVATAR",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "441417a9fc6adac0ae041796a017cdfe1a505067df4df6213b1d488d92295547"
+        },
+        "split": {
+          "text": "AVATAR\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              120.44400024414062,
+              53.599998474121094,
+              "AVATAR",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "441417a9fc6adac0ae041796a017cdfe1a505067df4df6213b1d488d92295547"
+        },
+        "native": {
+          "text": "AVATAR\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              120.44400024414062,
+              53.599998474121094,
+              "AVATAR",
+              0,
+              0,
+              0
+            ]
+          ],
+          "pixels_sha256": "65d7d4eb1866139a2e14bbf699e6954735508c11ca342b6658ad2c8b5bcb8b2c"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      },
+      "mixed": {
+        "whole": {
+          "text": "\u4e2d\u6587 hello  \u0633\u0627\u0644\u0645123 \u4e16\u754c\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              78.83000183105469,
+              53.599998474121094,
+              "\u4e2d\u6587",
+              0,
+              0,
+              0
+            ],
+            [
+              85.10200500488281,
+              20.0,
+              150.4820098876953,
+              53.599998474121094,
+              "hello",
+              0,
+              0,
+              1
+            ],
+            [
+              163.02999877929688,
+              22.65999984741211,
+              204.17799377441406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              204.19000244140625,
+              20.0,
+              250.8099822998047,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              3
+            ],
+            [
+              257.08197021484375,
+              20.0,
+              313.08197021484375,
+              53.599998474121094,
+              "\u4e16\u754c",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "bc6a6962b3d6c58588bb465632ee9dd096ff2f317883078021abdc07dea3b91d"
+        },
+        "split": {
+          "text": "\u4e2d\u6587 hello  \u0633\u0627\u0644\u0645123 \u4e16\u754c\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              78.83000183105469,
+              53.599998474121094,
+              "\u4e2d\u6587",
+              0,
+              0,
+              0
+            ],
+            [
+              85.10200500488281,
+              20.0,
+              150.4820098876953,
+              53.599998474121094,
+              "hello",
+              0,
+              0,
+              1
+            ],
+            [
+              163.02999877929688,
+              22.65999984741211,
+              204.17799377441406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              204.19000244140625,
+              20.0,
+              250.8099822998047,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              3
+            ],
+            [
+              257.08197021484375,
+              20.0,
+              313.08197021484375,
+              53.599998474121094,
+              "\u4e16\u754c",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "bc6a6962b3d6c58588bb465632ee9dd096ff2f317883078021abdc07dea3b91d"
+        },
+        "native": {
+          "text": "\u4e2d\u6587 hello  \u0633\u0627\u0644\u0645123 \u4e16\u754c\n",
+          "words": [
+            [
+              22.829999923706055,
+              20.0,
+              78.83000183105469,
+              53.599998474121094,
+              "\u4e2d\u6587",
+              0,
+              0,
+              0
+            ],
+            [
+              85.10200500488281,
+              20.0,
+              150.4820098876953,
+              53.599998474121094,
+              "hello",
+              0,
+              0,
+              1
+            ],
+            [
+              163.02601623535156,
+              22.65999984741211,
+              204.17799377441406,
+              53.93600082397461,
+              "\u0633\u0627\u0644\u0645",
+              0,
+              0,
+              2
+            ],
+            [
+              204.1699981689453,
+              20.0,
+              250.78997802734375,
+              53.599998474121094,
+              "123",
+              0,
+              0,
+              3
+            ],
+            [
+              257.0619812011719,
+              20.0,
+              313.0619812011719,
+              53.599998474121094,
+              "\u4e16\u754c",
+              0,
+              0,
+              4
+            ]
+          ],
+          "pixels_sha256": "279137a70e49a3d5cfbae72c579af3dce5f6c8886d5e3456bc5d3d68b20f4271"
+        },
+        "same_pixels": true,
+        "native_same_pixels": false
+      }
+    }
+  },
+  "native_pixel_limit": "Native versus project images are not byte-identical. Text objects have separate rounding; a single Arabic word had identical parsed boxes but 201 pixels differed by only 1 gray level. Native RTL punctuation glyph positions are independently tested within 0.05 pt; no full native pixel equality claim.",
+  "references": [
+    "https://py-pdf.github.io/fpdf2/TextShaping.html",
+    "https://py-pdf.github.io/fpdf2/Unicode.html"
+  ],
+  "performance": {
+    "python": "3.13.15 | packaged by Anaconda, Inc. | (main, Aug 14 2026, 17:19:34) [Clang 20.1.8 ]",
+    "platform": "darwin",
+    "scope": "PDF write-to-bytes only, imports/model creation excluded; independent processes, 5 alternating pairs per case",
+    "probe_source": "import hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport resource\nimport statistics\nimport subprocess\nimport sys\nimport time\n\nimport pymupdf\nfrom aspose.words_foss import light_document_model as ldm\nfrom aspose.words_foss.pdf_writer import LdmPdfWriter\nfrom aspose.words_foss.saving import PdfSaveOptions\n\nROOT = '/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python'\n\nif len(sys.argv) > 1:\n    text = '12345' * 80\n    parts = text if sys.argv[1] == 'fragmented' else [text]\n    model = ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[ldm.Paragraph(\n        children=[ldm.Run(text=part, font=ldm.Font(size=14)) for part in parts])]))])\n    options = PdfSaveOptions()\n    options.text_shaping = True\n    tick = time.perf_counter()\n    raw = LdmPdfWriter(options).write_to_bytes(model)\n    elapsed = time.perf_counter() - tick\n    with pymupdf.open(stream=raw, filetype='pdf') as pdf:\n        assert ''.join(page.get_text() for page in pdf).replace('\\n', '').replace(' ', '') == text\n        pages = len(pdf)\n    print(json.dumps({'seconds':elapsed,'pdf_bytes':len(raw),'pages':pages,\n        'rss_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,\n        'model_sha256':hashlib.sha256(model.model_dump_json().encode()).hexdigest()}))\nelse:\n    results = {'python':sys.version,'platform':sys.platform,'scope':'PDF write-to-bytes only, imports/model creation excluded; independent processes, 5 alternating pairs per case',\n        'probe_source':Path(__file__).read_text(),'cases':{}}\n    for case in ['fragmented','whole']:\n        runs = {'before':[],'after':[]}\n        for i in range(5):\n            for kind in (['before','after'] if i%2 == 0 else ['after','before']):\n                env = os.environ.copy()\n                env.pop('PYTHONPATH',None)\n                if kind == 'after':env['PYTHONPATH']=ROOT\n                sample = json.loads(subprocess.check_output([sys.executable,__file__,case],env=env,cwd='/tmp',text=True))\n                runs[kind].append(sample)\n        assert len({r['model_sha256'] for samples in runs.values() for r in samples}) == 1\n        assert len({r['pages'] for samples in runs.values() for r in samples}) == 1\n        results['cases'][case]={'samples':runs,'medians':{kind:{metric:statistics.median(r[metric] for r in samples) for metric in ['seconds','pdf_bytes','rss_bytes']} for kind,samples in runs.items()}}\n    Path('/tmp/docweave-shaping-benchmark.json').write_text(json.dumps(results,indent=2)+'\\n')\n    print(json.dumps({name:result['medians'] for name,result in results['cases'].items()}))\n",
+    "cases": {
+      "fragmented": {
+        "samples": {
+          "before": [
+            {
+              "seconds": 3.316078750001907,
+              "pdf_bytes": 5367,
+              "pages": 1,
+              "rss_bytes": 320192512,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            },
+            {
+              "seconds": 3.349313083002926,
+              "pdf_bytes": 5367,
+              "pages": 1,
+              "rss_bytes": 312901632,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            },
+            {
+              "seconds": 3.365147791999334,
+              "pdf_bytes": 5367,
+              "pages": 1,
+              "rss_bytes": 315916288,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            },
+            {
+              "seconds": 3.4101153340016026,
+              "pdf_bytes": 5367,
+              "pages": 1,
+              "rss_bytes": 325959680,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            },
+            {
+              "seconds": 3.391519083001185,
+              "pdf_bytes": 5367,
+              "pages": 1,
+              "rss_bytes": 325861376,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            }
+          ],
+          "after": [
+            {
+              "seconds": 3.295776583996485,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 318062592,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            },
+            {
+              "seconds": 3.3122507910011336,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 324173824,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            },
+            {
+              "seconds": 3.3482831250003073,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 320176128,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            },
+            {
+              "seconds": 3.349107833004382,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 320241664,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            },
+            {
+              "seconds": 3.3701424579994637,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 317505536,
+              "model_sha256": "90dc0a0f1bb59517c98ee02f8c020ba9df0fd8df4e54a566cf9492aada7e725d"
+            }
+          ]
+        },
+        "medians": {
+          "before": {
+            "seconds": 3.365147791999334,
+            "pdf_bytes": 5367,
+            "rss_bytes": 320192512
+          },
+          "after": {
+            "seconds": 3.3482831250003073,
+            "pdf_bytes": 3960,
+            "rss_bytes": 320176128
+          }
+        }
+      },
+      "whole": {
+        "samples": {
+          "before": [
+            {
+              "seconds": 3.3375988749976386,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 318849024,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            },
+            {
+              "seconds": 3.3578188749961555,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 322355200,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            },
+            {
+              "seconds": 3.342688917000487,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 316276736,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            },
+            {
+              "seconds": 3.379781040996022,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 318963712,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            },
+            {
+              "seconds": 3.378008207997482,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 323190784,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            }
+          ],
+          "after": [
+            {
+              "seconds": 3.36119595800119,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 320389120,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            },
+            {
+              "seconds": 3.3810220409941394,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 317505536,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            },
+            {
+              "seconds": 3.3696590420004213,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 317325312,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            },
+            {
+              "seconds": 3.383919917003368,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 310198272,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            },
+            {
+              "seconds": 3.3678633750023437,
+              "pdf_bytes": 3960,
+              "pages": 1,
+              "rss_bytes": 321978368,
+              "model_sha256": "f0f647af38a50f9b3576cdec0ecb8cd1061668822160b5ba53c93a8c17d40e91"
+            }
+          ]
+        },
+        "medians": {
+          "before": {
+            "seconds": 3.3578188749961555,
+            "pdf_bytes": 3960,
+            "rss_bytes": 318963712
+          },
+          "after": {
+            "seconds": 3.3696590420004213,
+            "pdf_bytes": 3960,
+            "rss_bytes": 317505536
+          }
+        }
+      }
+    }
+  },
+  "wheel": {
+    "bytes": 26246436,
+    "source_equal_python_files": 122,
+    "all_aspose_files_source_equal": true
+  },
+  "installed_wheel_validation": {
+    "tests_passed": 623,
+    "test_seconds": 126.47,
+    "test_warnings": 9,
+    "examples_passed": 31,
+    "example_seconds": 7.03,
+    "example_warnings": 13,
+    "wheel_resource_check": "passed",
+    "ruff_E9_F63_F7_F82_F401": "passed",
+    "diff_check": "passed",
+    "native_punctuation_tolerance_pt": 0.05
+  }
+}

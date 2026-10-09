@@ -1,0 +1,20 @@
+{
+  "pages": 1,
+  "tokens": {
+    "PREFIX": {
+      "x": 20.100000381469727,
+      "y": 19.990604400634766
+    },
+    "TITLE": {
+      "x": 20.100000381469727,
+      "y": 31.540607452392578
+    },
+    "BODY": {
+      "x": 20.100000381469727,
+      "y": 43.09061050415039
+    }
+  },
+  "title_body_same_column": true,
+  "group_in_next_column": false,
+  "scope": "real LibreOffice comparison on PREFIX + keepNext TITLE/BODY two-column fixture; records differences, no pixel/font equivalence claim"
+}

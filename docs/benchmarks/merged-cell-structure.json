@@ -1,0 +1,509 @@
+{
+  "scope": "Eight real PDF corpora; horizontal, legacy horizontal, vertical, combined spans, with/without pagination. Not full PDF/UA certification.",
+  "before": [
+    {
+      "kind": "horizontal",
+      "paginate": false,
+      "pages": 1,
+      "pdf_bytes": 7639,
+      "expected_row_span": 1,
+      "expected_col_span": 2,
+      "anchor_attributes": {},
+      "logical_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "pixel_sha256": "15ee1e144e69ed3879516a30313bd53dea80ce72d2d1601cdc79266a0cb74810",
+      "words_sha256": "2a2487de6f7c289d61bdbc613ce005f7517b4081c22de647b6664d7402644d6a",
+      "drawing_sha256": "5d296afd22d9e006566e2fef10f6e85327ad5d852d2af8bf79fe32957752d905"
+    },
+    {
+      "kind": "horizontal",
+      "paginate": true,
+      "pages": 6,
+      "pdf_bytes": 16254,
+      "expected_row_span": 1,
+      "expected_col_span": 2,
+      "anchor_attributes": {},
+      "logical_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "pixel_sha256": "afac3046d69fda8c5166ffb71d8ac4fcafb7a0b0810a0de723dd2ce2d6c9d915",
+      "words_sha256": "950c6a430a03b90eb0be1a7e6b0d32898dbb289cd69b55d2a19316cc55601f50",
+      "drawing_sha256": "a848eb2a61aaa89212f60cff458e4803822a9cb2ea703f595f1c8f3963b16fbf"
+    },
+    {
+      "kind": "legacy",
+      "paginate": false,
+      "pages": 1,
+      "pdf_bytes": 8231,
+      "expected_row_span": 1,
+      "expected_col_span": 2,
+      "anchor_attributes": {},
+      "logical_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "pixel_sha256": "f40e90909cfd71fd7170bdac6904f2e204a0020db698745e68a9774e117fabd1",
+      "words_sha256": "655c5348b786e81474e62612cb6b7c2793a20e738f7a139cf7ccee3a6e08a1b4",
+      "drawing_sha256": "90b52d2417729ae43decec066d47e58919eda2b675bfb1a3a32c588373e5806d"
+    },
+    {
+      "kind": "legacy",
+      "paginate": true,
+      "pages": 6,
+      "pdf_bytes": 16802,
+      "expected_row_span": 1,
+      "expected_col_span": 2,
+      "anchor_attributes": {},
+      "logical_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "pixel_sha256": "2cb4bf7767f1c6186390ef39aee6495516f66721670463ea0f8f8b00facd87e7",
+      "words_sha256": "78c4f4819cdde9edb4c3d73d56e38eaf1669913c07994cf8a30980295880f27a",
+      "drawing_sha256": "af9754509fa20a2bae5e35e760596c08640d9fbf5f5792533089f20ca5fdf274"
+    },
+    {
+      "kind": "vertical",
+      "paginate": false,
+      "pages": 1,
+      "pdf_bytes": 7106,
+      "expected_row_span": 3,
+      "expected_col_span": 1,
+      "anchor_attributes": {},
+      "logical_cells_per_row": [
+        2,
+        2,
+        2
+      ],
+      "pixel_sha256": "c6d4c22ad6c32e6d96167b4a172a6136315ddd29e1bbd9446b9b284b703dd8f4",
+      "words_sha256": "9acce635893693e2bada76a5e79af010e32174eda16c6ce095dfc8b5aed589d5",
+      "drawing_sha256": "6531423689d05088a9a515e6e81a01abc4e2ad4139a68095dd2188cb20f12747"
+    },
+    {
+      "kind": "vertical",
+      "paginate": true,
+      "pages": 6,
+      "pdf_bytes": 15531,
+      "expected_row_span": 3,
+      "expected_col_span": 1,
+      "anchor_attributes": {},
+      "logical_cells_per_row": [
+        2,
+        2,
+        2
+      ],
+      "pixel_sha256": "90758325757edacd4574410494b6aad1583d0100cc066ecace5521dc61196c67",
+      "words_sha256": "d4dc474e541ed6b4bf97c3c2ce803c436103cb389c03590e2ba5d030161e3e40",
+      "drawing_sha256": "8dbcaa644369de5bcc151db61807fa849f4c158a459e1a67b23c121f4bb040ae"
+    },
+    {
+      "kind": "combined",
+      "paginate": false,
+      "pages": 1,
+      "pdf_bytes": 7111,
+      "expected_row_span": 3,
+      "expected_col_span": 2,
+      "anchor_attributes": {},
+      "logical_cells_per_row": [
+        2,
+        2,
+        2
+      ],
+      "pixel_sha256": "409f94ecacf4cdba293f20d82a87d9bdccee4dbbdb8ddbe9da2a3d9aa6c10b19",
+      "words_sha256": "0dc83634eb263b05e398472531c8b1377bec1619bd797a0114761e997657f15f",
+      "drawing_sha256": "e3a88e9b106dc15e6ce986c9b08e0fe75533bc4328de4c6068f56c30d7feb949"
+    },
+    {
+      "kind": "combined",
+      "paginate": true,
+      "pages": 6,
+      "pdf_bytes": 15558,
+      "expected_row_span": 3,
+      "expected_col_span": 2,
+      "anchor_attributes": {},
+      "logical_cells_per_row": [
+        2,
+        2,
+        2
+      ],
+      "pixel_sha256": "ef991a372f4343ad068a7bf3724206398cfcfdf1b45355e5612f26280c53982c",
+      "words_sha256": "908a99bd2a8ae2a743138dfbeacd826624e7428d44ef92e50374e8ff174c0b82",
+      "drawing_sha256": "d500109c0fbb0004277209b53bc578ed64152ce2ab72fd4a46047661b74a12c3"
+    }
+  ],
+  "after": [
+    {
+      "kind": "horizontal",
+      "paginate": false,
+      "pages": 1,
+      "pdf_bytes": 7669,
+      "expected_row_span": 1,
+      "expected_col_span": 2,
+      "anchor_attributes": {
+        "/O": "/Table",
+        "/ColSpan": 2
+      },
+      "logical_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "pixel_sha256": "15ee1e144e69ed3879516a30313bd53dea80ce72d2d1601cdc79266a0cb74810",
+      "words_sha256": "2a2487de6f7c289d61bdbc613ce005f7517b4081c22de647b6664d7402644d6a",
+      "drawing_sha256": "5d296afd22d9e006566e2fef10f6e85327ad5d852d2af8bf79fe32957752d905"
+    },
+    {
+      "kind": "horizontal",
+      "paginate": true,
+      "pages": 6,
+      "pdf_bytes": 16284,
+      "expected_row_span": 1,
+      "expected_col_span": 2,
+      "anchor_attributes": {
+        "/O": "/Table",
+        "/ColSpan": 2
+      },
+      "logical_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "pixel_sha256": "afac3046d69fda8c5166ffb71d8ac4fcafb7a0b0810a0de723dd2ce2d6c9d915",
+      "words_sha256": "950c6a430a03b90eb0be1a7e6b0d32898dbb289cd69b55d2a19316cc55601f50",
+      "drawing_sha256": "a848eb2a61aaa89212f60cff458e4803822a9cb2ea703f595f1c8f3963b16fbf"
+    },
+    {
+      "kind": "legacy",
+      "paginate": false,
+      "pages": 1,
+      "pdf_bytes": 8261,
+      "expected_row_span": 1,
+      "expected_col_span": 2,
+      "anchor_attributes": {
+        "/O": "/Table",
+        "/ColSpan": 2
+      },
+      "logical_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "pixel_sha256": "f40e90909cfd71fd7170bdac6904f2e204a0020db698745e68a9774e117fabd1",
+      "words_sha256": "655c5348b786e81474e62612cb6b7c2793a20e738f7a139cf7ccee3a6e08a1b4",
+      "drawing_sha256": "90b52d2417729ae43decec066d47e58919eda2b675bfb1a3a32c588373e5806d"
+    },
+    {
+      "kind": "legacy",
+      "paginate": true,
+      "pages": 6,
+      "pdf_bytes": 16832,
+      "expected_row_span": 1,
+      "expected_col_span": 2,
+      "anchor_attributes": {
+        "/O": "/Table",
+        "/ColSpan": 2
+      },
+      "logical_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "pixel_sha256": "2cb4bf7767f1c6186390ef39aee6495516f66721670463ea0f8f8b00facd87e7",
+      "words_sha256": "78c4f4819cdde9edb4c3d73d56e38eaf1669913c07994cf8a30980295880f27a",
+      "drawing_sha256": "af9754509fa20a2bae5e35e760596c08640d9fbf5f5792533089f20ca5fdf274"
+    },
+    {
+      "kind": "vertical",
+      "paginate": false,
+      "pages": 1,
+      "pdf_bytes": 6958,
+      "expected_row_span": 3,
+      "expected_col_span": 1,
+      "anchor_attributes": {
+        "/O": "/Table",
+        "/RowSpan": 3
+      },
+      "logical_cells_per_row": [
+        2,
+        1,
+        1
+      ],
+      "pixel_sha256": "c6d4c22ad6c32e6d96167b4a172a6136315ddd29e1bbd9446b9b284b703dd8f4",
+      "words_sha256": "9acce635893693e2bada76a5e79af010e32174eda16c6ce095dfc8b5aed589d5",
+      "drawing_sha256": "6531423689d05088a9a515e6e81a01abc4e2ad4139a68095dd2188cb20f12747"
+    },
+    {
+      "kind": "vertical",
+      "paginate": true,
+      "pages": 6,
+      "pdf_bytes": 15383,
+      "expected_row_span": 3,
+      "expected_col_span": 1,
+      "anchor_attributes": {
+        "/O": "/Table",
+        "/RowSpan": 3
+      },
+      "logical_cells_per_row": [
+        2,
+        1,
+        1
+      ],
+      "pixel_sha256": "90758325757edacd4574410494b6aad1583d0100cc066ecace5521dc61196c67",
+      "words_sha256": "d4dc474e541ed6b4bf97c3c2ce803c436103cb389c03590e2ba5d030161e3e40",
+      "drawing_sha256": "8dbcaa644369de5bcc151db61807fa849f4c158a459e1a67b23c121f4bb040ae"
+    },
+    {
+      "kind": "combined",
+      "paginate": false,
+      "pages": 1,
+      "pdf_bytes": 6974,
+      "expected_row_span": 3,
+      "expected_col_span": 2,
+      "anchor_attributes": {
+        "/O": "/Table",
+        "/RowSpan": 3,
+        "/ColSpan": 2
+      },
+      "logical_cells_per_row": [
+        2,
+        1,
+        1
+      ],
+      "pixel_sha256": "409f94ecacf4cdba293f20d82a87d9bdccee4dbbdb8ddbe9da2a3d9aa6c10b19",
+      "words_sha256": "0dc83634eb263b05e398472531c8b1377bec1619bd797a0114761e997657f15f",
+      "drawing_sha256": "e3a88e9b106dc15e6ce986c9b08e0fe75533bc4328de4c6068f56c30d7feb949"
+    },
+    {
+      "kind": "combined",
+      "paginate": true,
+      "pages": 6,
+      "pdf_bytes": 15421,
+      "expected_row_span": 3,
+      "expected_col_span": 2,
+      "anchor_attributes": {
+        "/O": "/Table",
+        "/RowSpan": 3,
+        "/ColSpan": 2
+      },
+      "logical_cells_per_row": [
+        2,
+        1,
+        1
+      ],
+      "pixel_sha256": "ef991a372f4343ad068a7bf3724206398cfcfdf1b45355e5612f26280c53982c",
+      "words_sha256": "908a99bd2a8ae2a743138dfbeacd826624e7428d44ef92e50374e8ff174c0b82",
+      "drawing_sha256": "d500109c0fbb0004277209b53bc578ed64152ce2ab72fd4a46047661b74a12c3"
+    }
+  ],
+  "comparison": [
+    {
+      "kind": "horizontal",
+      "paginate": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": 30,
+      "before_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "after_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "attributes": {
+        "/O": "/Table",
+        "/ColSpan": 2
+      }
+    },
+    {
+      "kind": "horizontal",
+      "paginate": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": 30,
+      "before_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "after_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "attributes": {
+        "/O": "/Table",
+        "/ColSpan": 2
+      }
+    },
+    {
+      "kind": "legacy",
+      "paginate": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": 30,
+      "before_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "after_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "attributes": {
+        "/O": "/Table",
+        "/ColSpan": 2
+      }
+    },
+    {
+      "kind": "legacy",
+      "paginate": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": 30,
+      "before_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "after_cells_per_row": [
+        2,
+        3,
+        3
+      ],
+      "attributes": {
+        "/O": "/Table",
+        "/ColSpan": 2
+      }
+    },
+    {
+      "kind": "vertical",
+      "paginate": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": -148,
+      "before_cells_per_row": [
+        2,
+        2,
+        2
+      ],
+      "after_cells_per_row": [
+        2,
+        1,
+        1
+      ],
+      "attributes": {
+        "/O": "/Table",
+        "/RowSpan": 3
+      }
+    },
+    {
+      "kind": "vertical",
+      "paginate": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": -148,
+      "before_cells_per_row": [
+        2,
+        2,
+        2
+      ],
+      "after_cells_per_row": [
+        2,
+        1,
+        1
+      ],
+      "attributes": {
+        "/O": "/Table",
+        "/RowSpan": 3
+      }
+    },
+    {
+      "kind": "combined",
+      "paginate": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": -137,
+      "before_cells_per_row": [
+        2,
+        2,
+        2
+      ],
+      "after_cells_per_row": [
+        2,
+        1,
+        1
+      ],
+      "attributes": {
+        "/O": "/Table",
+        "/RowSpan": 3,
+        "/ColSpan": 2
+      }
+    },
+    {
+      "kind": "combined",
+      "paginate": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": -137,
+      "before_cells_per_row": [
+        2,
+        2,
+        2
+      ],
+      "after_cells_per_row": [
+        2,
+        1,
+        1
+      ],
+      "attributes": {
+        "/O": "/Table",
+        "/RowSpan": 3,
+        "/ColSpan": 2
+      }
+    }
+  ]
+}

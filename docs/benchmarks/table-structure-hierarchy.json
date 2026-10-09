@@ -1,0 +1,245 @@
+{
+  "scope": "Four real table corpora: repeated header, nested table, split row, 40-line logical paragraph; 1/2 columns and page bands. Not PDF/UA certification.",
+  "before": [
+    {
+      "columns": 1,
+      "bands": false,
+      "pages": 6,
+      "pdf_bytes": 12866,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 2,
+        "//Document//TH": 12,
+        "//Document//TD": 18
+      },
+      "pixel_sha256": "397713e933c2b733119428cd1aeb7dd2fc1bebad3f8c4d8833666db7eef4d8cb",
+      "words_sha256": "d62244034f8f97746d105eb5346abbfe86856595a6a673272200ca5651b13bfb",
+      "drawing_sha256": "7d95e8b06155d95e6ce637f7900b19c555ee321debef127ced9f2158d7974389"
+    },
+    {
+      "columns": 1,
+      "bands": true,
+      "pages": 6,
+      "pdf_bytes": 14342,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 14,
+        "//Document//TH": 12,
+        "//Document//TD": 18
+      },
+      "pixel_sha256": "9dd000009c186d8491540d099072d14f9bdf5e7d6f33b9c7d4d093f75cec0a4f",
+      "words_sha256": "37574f2f815f5a1db9891e368017e83cf00e6e269b75173704072d897251acf2",
+      "drawing_sha256": "9b32f4be827bea161a6a6e5ba9258dd7ab379029697bd27fc34c8e8b9deba8db"
+    },
+    {
+      "columns": 2,
+      "bands": false,
+      "pages": 3,
+      "pdf_bytes": 11317,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 2,
+        "//Document//TH": 12,
+        "//Document//TD": 18
+      },
+      "pixel_sha256": "422b9ce15cdcaae68a0912faeac18793db3c6386a071a7f3ecf763f80793614b",
+      "words_sha256": "f7e0278376512184d8702cd9ccadf461555280bab2763cd49402a2fc59c95bd5",
+      "drawing_sha256": "531b4b6de57ab3b2d0309bed4eaca024216fffa5018482575761293e18a78c04"
+    },
+    {
+      "columns": 2,
+      "bands": true,
+      "pages": 3,
+      "pdf_bytes": 12089,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 8,
+        "//Document//TH": 12,
+        "//Document//TD": 18
+      },
+      "pixel_sha256": "9656ce2760fad111542e25e1b4d66f2c2ca95979936bc8fbf02f61b674e9f56f",
+      "words_sha256": "e89cedb52ad6ba0016f17204440b115dd017055d43537baca98f270d649be197",
+      "drawing_sha256": "60d57c033e9ec09884dd31881b030f4d630e7f02019196322670abe98e2bb44e"
+    }
+  ],
+  "after": [
+    {
+      "columns": 1,
+      "bands": false,
+      "pages": 6,
+      "pdf_bytes": 18721,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 2,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 3,
+        "//Document//Table//TR//TH": 2,
+        "//Document//Table//TR//TH//P": 2,
+        "//Document//Table//TR//TH//P//Span": 12,
+        "//Document//Table//TR//TD": 4,
+        "//Document//Table//TR//TD//P": 4,
+        "//Document//Table//TR//TD//P//Span": 43,
+        "//Document//Table//TR//TD//Table": 1,
+        "//Document//Table//TR//TD//Table//TR": 2,
+        "//Document//Table//TR//TD//Table//TR//TD": 4,
+        "//Document//Table//TR//TD//Table//TR//TD//P": 4,
+        "//Document//Table//TR//TD//Table//TR//TD//P//Span": 4
+      },
+      "pixel_sha256": "397713e933c2b733119428cd1aeb7dd2fc1bebad3f8c4d8833666db7eef4d8cb",
+      "words_sha256": "d62244034f8f97746d105eb5346abbfe86856595a6a673272200ca5651b13bfb",
+      "drawing_sha256": "7d95e8b06155d95e6ce637f7900b19c555ee321debef127ced9f2158d7974389"
+    },
+    {
+      "columns": 1,
+      "bands": true,
+      "pages": 6,
+      "pdf_bytes": 20256,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 14,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 3,
+        "//Document//Table//TR//TH": 2,
+        "//Document//Table//TR//TH//P": 2,
+        "//Document//Table//TR//TH//P//Span": 12,
+        "//Document//Table//TR//TD": 4,
+        "//Document//Table//TR//TD//P": 4,
+        "//Document//Table//TR//TD//P//Span": 43,
+        "//Document//Table//TR//TD//Table": 1,
+        "//Document//Table//TR//TD//Table//TR": 2,
+        "//Document//Table//TR//TD//Table//TR//TD": 4,
+        "//Document//Table//TR//TD//Table//TR//TD//P": 4,
+        "//Document//Table//TR//TD//Table//TR//TD//P//Span": 4
+      },
+      "pixel_sha256": "9dd000009c186d8491540d099072d14f9bdf5e7d6f33b9c7d4d093f75cec0a4f",
+      "words_sha256": "37574f2f815f5a1db9891e368017e83cf00e6e269b75173704072d897251acf2",
+      "drawing_sha256": "9b32f4be827bea161a6a6e5ba9258dd7ab379029697bd27fc34c8e8b9deba8db"
+    },
+    {
+      "columns": 2,
+      "bands": false,
+      "pages": 3,
+      "pdf_bytes": 17608,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 2,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 3,
+        "//Document//Table//TR//TH": 2,
+        "//Document//Table//TR//TH//P": 2,
+        "//Document//Table//TR//TH//P//Span": 12,
+        "//Document//Table//TR//TD": 4,
+        "//Document//Table//TR//TD//P": 4,
+        "//Document//Table//TR//TD//P//Span": 43,
+        "//Document//Table//TR//TD//Table": 1,
+        "//Document//Table//TR//TD//Table//TR": 2,
+        "//Document//Table//TR//TD//Table//TR//TD": 4,
+        "//Document//Table//TR//TD//Table//TR//TD//P": 4,
+        "//Document//Table//TR//TD//Table//TR//TD//P//Span": 8
+      },
+      "pixel_sha256": "422b9ce15cdcaae68a0912faeac18793db3c6386a071a7f3ecf763f80793614b",
+      "words_sha256": "f7e0278376512184d8702cd9ccadf461555280bab2763cd49402a2fc59c95bd5",
+      "drawing_sha256": "531b4b6de57ab3b2d0309bed4eaca024216fffa5018482575761293e18a78c04"
+    },
+    {
+      "columns": 2,
+      "bands": true,
+      "pages": 3,
+      "pdf_bytes": 18416,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 8,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 3,
+        "//Document//Table//TR//TH": 2,
+        "//Document//Table//TR//TH//P": 2,
+        "//Document//Table//TR//TH//P//Span": 12,
+        "//Document//Table//TR//TD": 4,
+        "//Document//Table//TR//TD//P": 4,
+        "//Document//Table//TR//TD//P//Span": 43,
+        "//Document//Table//TR//TD//Table": 1,
+        "//Document//Table//TR//TD//Table//TR": 2,
+        "//Document//Table//TR//TD//Table//TR//TD": 4,
+        "//Document//Table//TR//TD//Table//TR//TD//P": 4,
+        "//Document//Table//TR//TD//Table//TR//TD//P//Span": 8
+      },
+      "pixel_sha256": "9656ce2760fad111542e25e1b4d66f2c2ca95979936bc8fbf02f61b674e9f56f",
+      "words_sha256": "e89cedb52ad6ba0016f17204440b115dd017055d43537baca98f270d649be197",
+      "drawing_sha256": "60d57c033e9ec09884dd31881b030f4d630e7f02019196322670abe98e2bb44e"
+    }
+  ],
+  "comparison": [
+    {
+      "columns": 1,
+      "bands": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": 5855
+    },
+    {
+      "columns": 1,
+      "bands": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": 5914
+    },
+    {
+      "columns": 2,
+      "bands": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": 6291
+    },
+    {
+      "columns": 2,
+      "bands": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true
+      },
+      "pdf_size_delta": 6327
+    }
+  ],
+  "wheel_bytes": 26250403,
+  "wheel_delta_bytes": 1431,
+  "implementation_limits": [
+    "RowSpan/ColSpan attributes are not emitted",
+    "Repeated headers/page bands are not yet Artifact content",
+    "Ordinary body paragraphs still have page-local structure elements",
+    "No full PDF/UA validator run"
+  ],
+  "mcid_lookup_microbenchmark": {
+    "scope": "Lookup only, 5 samples of 200 calls each; not end-to-end rendering speed.",
+    "cases": [
+      {
+        "elements": 100,
+        "native_scan_median_us": 3.3577049907762557,
+        "parent_slot_median_us": 0.05500001861946657
+      },
+      {
+        "elements": 1000,
+        "native_scan_median_us": 32.59271001297748,
+        "parent_slot_median_us": 0.05791502189822495
+      },
+      {
+        "elements": 10000,
+        "native_scan_median_us": 324.4627049934934,
+        "parent_slot_median_us": 0.057085017033386976
+      }
+    ]
+  }
+}

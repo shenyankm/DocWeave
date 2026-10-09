@@ -1,6 +1,7 @@
 """Table rendering for the PDF writer."""
 
 
+from contextlib import ExitStack
 from dataclasses import dataclass, field, replace
 from io import BytesIO
 from typing import Optional
@@ -8,6 +9,7 @@ from typing import Optional
 from fpdf import FPDF
 from aspose.words_foss.diagnostics import warn
 from aspose.words_foss._io import MAX_TABLE_COLUMNS
+from aspose.words_foss.pdf_writer.baseline import baseline_scope, mixed_size
 from aspose.words_foss.pdf_writer.page_bands import register_bookmarks
 from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
 
@@ -20,6 +22,7 @@ from aspose.words_foss.pdf_writer.constants import (
     DEFAULT_SHAPE_DIM_PT,
     FPDF_ALIGN,
     LINE_HEIGHT_FACTOR,
+    LIST_INDENT_PER_LEVEL_MM,
     DEFAULT_CELL_PAD_LEFT_MM,
     DEFAULT_CELL_PAD_TOP_MM,
     DEFAULT_FONT_SIZE_PT,
@@ -30,7 +33,7 @@ from aspose.words_foss.pdf_writer.constants import (
 )
 from aspose.words_foss.pdf_writer.font import apply_run_font, reset_font
 from aspose.words_foss.pdf_writer._context import PDFWriterContext
-from aspose.words_foss.pdf_writer.text import apply_caps, cell_text, extract_link_segments, safe_text
+from aspose.words_foss.pdf_writer.text import apply_caps, cell_text, extract_link_segments, plain_text, safe_text
 
 # Border slot indices in the LDM `borders` list, matching the canonical
 # BorderType layout shared with the DOCX writer:
@@ -53,7 +56,7 @@ _ORIENTATION_TO_ANGLE: dict[int, float] = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class _CellLine:
     height: float
     segments: list = field(default_factory=list)
@@ -63,6 +66,12 @@ class _CellLine:
     nested: Optional[tuple] = None
     rotated_text: Optional[str] = None
     paragraph: Optional[ldm.Paragraph] = None
+    paragraph_key: object = None
+    list_format: Optional[ldm.ListFormat] = None
+    label_run: Optional[ldm.Run] = None
+    indent: float = 0.0
+    marker_indent: float = 0.0
+    right_indent: float = 0.0
 
 
 class TableRenderer:
@@ -75,6 +84,10 @@ class TableRenderer:
         """Keep rich cell content in a grid and split long rows at content-line boundaries."""
         if not table.rows:
             return
+        with self._writer._structure(pdf, '/Table', object()):
+            self._render_table(pdf, table)
+
+    def _render_table(self, pdf: FPDF, table: ldm.Table) -> None:
         w = self._writer
         attrs = table._tblp_pr_attrs
         if (attrs and table.text_wrapping == 1
@@ -117,8 +130,13 @@ class TableRenderer:
             if repeat_headers:
                 for index in headers:
                     height = self._row_height(table.rows[index], layouts[index])
-                    self._paint_row(pdf, table, index, layouts[index], table_x(), pdf.get_y(), height)
+                    self._paint_row(pdf, table, index, layouts[index], table_x(), pdf.get_y(), height,
+                                    emit_navigation=False)
                     pdf.set_y(pdf.get_y() + height)
+
+        # Leading headers form one group, including their first appearance.
+        if not in_hf and header_height > bottom - pdf.get_y() + 1e-7:
+            advance(repeat_headers=False)
 
         for row_index, row in enumerate(table.rows):
             remaining = [(cell, col, span, width, list(lines))
@@ -215,20 +233,49 @@ class TableRenderer:
                 count = max((sum(c.cell_format.grid_span for c in row.cells)
                              for row in child.rows), default=0)
                 if count:
+                    occurrence = object()
                     widths = self._compute_col_widths(child, count, width)
                     for i, row in enumerate(child.rows):
                         layout = self._layout_row(pdf, row, widths)
-                        lines.append(_CellLine(self._row_height(row, layout), nested=(child, i, layout)))
+                        lines.append(_CellLine(self._row_height(row, layout), nested=(child, i, layout, occurrence)))
                 continue
             para = child
             first_line = len(lines)
             segments = []
             align = FPDF_ALIGN.get(para.paragraph_format.alignment, "L")
+            label_run = None
+            pending_label = None
+            is_list = para.list_format is not None and para.list_format.is_list_item
+            indent = marker_indent = right_indent = 0.0
+            if is_list:
+                pf = para.paragraph_format
+                indent = (pf.left_indent * PT_TO_MM if pf.left_indent > 0
+                          else LIST_INDENT_PER_LEVEL_MM * (para.list_format.list_level_number + 1))
+                marker_indent = max(0.0, indent + pf.first_line_indent * PT_TO_MM)
+                right_indent = max(0.0, pf.right_indent * PT_TO_MM)
+                label = (para.list_label.label_string if para.list_label else None) or w._paragraph_renderer._compute_list_label(para.list_format)
+                if label:
+                    size = next((run.font.size for run in visible_runs(para) if run.font.size > 0), DEFAULT_FONT_SIZE_PT)
+                    label_run = ldm.Run(text=safe_text(f'{label} '), font=ldm.Font(size=size))
+                    apply_run_font(pdf, label_run.font)
+                    label_width = pdf.get_string_width(label_run.text)
+                    if marker_indent + label_width > width - right_indent:
+                        raise ValueError("A list marker is wider than the usable cell area")
+                    pending_label = (label_run, label_run.text, label_width, size, None)
+                    indent = max(indent, marker_indent + label_width)
+            text_width = width - indent - right_indent
+            if text_width <= 0:
+                raise ValueError("No usable text width after cell list indents")
 
             def flush(segments=segments, para=para, align=align):
-                if not segments:
+                nonlocal pending_label
+                if not segments and pending_label is None:
                     return
-                rows = w._run_renderer.wrap_segments(pdf, segments, width) if cell.cell_format.wrap_text else [list(segments)]
+                rows = (w._run_renderer.wrap_segments(pdf, segments, text_width)
+                        if segments and cell.cell_format.wrap_text else [list(segments)])
+                if pending_label is not None:
+                    rows[0].insert(0, pending_label)
+                    pending_label = None
                 for row in rows:
                     size = max((item[3] for item in row), default=DEFAULT_FONT_SIZE_PT)
                     height = w._paragraph_renderer.line_height_mm(size, para.paragraph_format)
@@ -253,7 +300,7 @@ class TableRenderer:
                         image_h = (item.height or DEFAULT_SHAPE_DIM_PT) * PT_TO_MM
                         if image_w <= 0 or image_h <= 0:
                             raise ValueError("Table image dimensions must be positive")
-                        scale = min(1.0, width / image_w)
+                        scale = min(1.0, text_width / image_w)
                         lines.append(_CellLine(image_h * scale, image=item, width=image_w * scale, align=align))
                     if item.text_box:
                         nested_cell = ldm.Cell(paragraphs=item.text_box.get("paragraphs", []))
@@ -265,6 +312,17 @@ class TableRenderer:
                 lines.append(_CellLine(para.paragraph_format.space_after * PT_TO_MM))
             if len(lines) > first_line:
                 lines[first_line].paragraph = para
+                if w.options.export_document_structure or is_list:
+                    occurrence = object()
+                    for line in lines[first_line:]:
+                        if line.paragraph_key is None:
+                            line.paragraph_key = occurrence
+                            if is_list:
+                                line.list_format = para.list_format
+                                line.label_run = label_run
+                                line.indent = indent
+                                line.marker_indent = marker_indent
+                                line.right_indent = right_indent
         reset_font(pdf)
         return lines
 
@@ -275,7 +333,19 @@ class TableRenderer:
             height = max(height, sum(line.height for line in lines) + top + bottom)
         return max(height, row.row_format.height * PT_TO_MM if row else 0)
 
-    def _paint_row(self, pdf, table, row_index, layout, x, y, height):
+    def _paint_row(self, pdf, table, row_index, layout, x, y, height, *, emit_navigation=True):
+        if not self._writer.options.export_document_structure:
+            return self._paint_row_content(pdf, table, row_index, layout, x, y, height,
+                                           emit_navigation=emit_navigation)
+        if not emit_navigation:
+            with self._writer._artifact(pdf):
+                return self._paint_row_content(pdf, table, row_index, layout, x, y, height,
+                                               emit_navigation=False)
+        with self._writer._structure(pdf, '/TR', table, row_index):
+            return self._paint_row_content(pdf, table, row_index, layout, x, y, height,
+                                           emit_navigation=emit_navigation)
+
+    def _paint_row_content(self, pdf, table, row_index, layout, x, y, height, *, emit_navigation=True):
         w = self._writer
         table_borders = self._table_level_borders(table)
         style_borders = self._inherited_table_borders(table)
@@ -303,35 +373,64 @@ class TableRenderer:
                 content_height = sum(line.height for line in lines)
                 free = max(0, height - top - bottom - content_height)
                 at_y = y + top + (free / 2 if cf.vertical_alignment == 1 else free if cf.vertical_alignment == 2 else 0)
-                with w._tag(pdf, "/TH" if table.rows[row_index].row_format.heading_format else "/TD"):
+                with w._cell_structure(pdf, table, row_index, col):
                     with pdf.rect_clip(x + left, y + top, width - left - right, height - top - bottom):
                         # q/Q restores the PDF font, but fpdf2 can retain the clip's cached font flag.
                         pdf.current_font_is_set_on_page = False
                         for line in lines:
-                            offset = max(0, width - left - right - (line.width if line.image else sum(s[2] for s in line.segments)))
-                            at_x = x + left + (offset / 2 if line.align == "C" else offset if line.align == "R" else 0)
+                            body_width = (line.width if line.image else
+                                          sum(s[2] for s in line.segments if s[0] is not line.label_run))
+                            offset = max(0, width - left - right - line.indent - line.right_indent - body_width)
+                            shift = offset / 2 if line.align == "C" else offset if line.align == "R" else 0
+                            at_x = x + left + line.indent + shift
                             pdf.set_xy(at_x, at_y)
-                            if line.paragraph:
+                            if line.paragraph and emit_navigation:
                                 register_bookmarks(pdf, line.paragraph, w._anchor_links)
                                 w._paragraph_renderer._emit_bookmark_outlines(pdf, line.paragraph)
                                 pf = line.paragraph.paragraph_format
                                 if pf.is_heading and w.options.outline_options.create_outlines_for_headings_in_tables:
-                                    w._paragraph_renderer._emit_heading_outline(pdf, cell_text(cell), pf.outline_level + 1)
-                            if line.rotated_text is not None:
-                                font = self._get_cell_first_font(cell)
-                                if font:
-                                    apply_run_font(pdf, font)
-                                self._render_rotated_cell(pdf, line.rotated_text, x, y, width, height,
-                                                          left, top, DEFAULT_FONT_SIZE_PT * DEFAULT_CELL_LINE_H_FACTOR,
-                                                          cf.orientation)
-                            elif line.image:
-                                data = w._shape_renderer.compress_image_bytes(line.image.image_data.image_bytes)
-                                pdf.image(BytesIO(data), x=at_x, y=at_y, w=line.width, h=line.height)
-                            elif line.nested:
-                                nested_table, nested_index, nested_layout = line.nested
-                                self._paint_row(pdf, nested_table, nested_index, nested_layout, x + left, at_y, line.height)
-                            elif line.segments:
-                                w._run_renderer._render_segment_row(pdf, line.segments, line.height, DEFAULT_FONT_SIZE_PT, at_x=at_x)
+                                    title = plain_text(line.paragraph).strip()
+                                    if title:
+                                        w._paragraph_renderer._emit_heading_outline(pdf, title, pf.outline_level + 1)
+                            with ExitStack() as structure:
+                                structure.enter_context(baseline_scope(pdf, mixed_size(s[3] for s in line.segments)))
+                                segments = line.segments
+                                if line.list_format:
+                                    structure.enter_context(w._list_structure(pdf, line.list_format, line.paragraph_key))
+                                    labels = [part for part in segments if part[0] is line.label_run]
+                                    segments = [part for part in segments if part[0] is not line.label_run]
+                                    if labels:
+                                        with w._structure(pdf, '/Lbl', line.paragraph_key):
+                                            with w._tag(pdf, '/Span'):
+                                                w._run_renderer._render_segment_row(pdf, labels, line.height, DEFAULT_FONT_SIZE_PT,
+                                                                                   at_x=x + left + line.marker_indent + shift)
+                                        pdf.set_xy(at_x, at_y)
+                                    structure.enter_context(w._structure(pdf, '/LBody', line.paragraph_key))
+                                elif line.paragraph or line.nested:
+                                    w._end_list(pdf)
+                                if line.rotated_text is not None:
+                                    font = self._get_cell_first_font(cell)
+                                    if font:
+                                        apply_run_font(pdf, font)
+                                    with w._structure(pdf, '/P', line):
+                                        with w._tag(pdf, '/Span'):
+                                            self._render_rotated_cell(pdf, line.rotated_text, x, y, width, height,
+                                                                      left, top, DEFAULT_FONT_SIZE_PT * DEFAULT_CELL_LINE_H_FACTOR,
+                                                                      cf.orientation)
+                                elif line.image:
+                                    data = w._shape_renderer.compress_image_bytes(line.image.image_data.image_bytes)
+                                    with w._structure(pdf, '/P', line.paragraph_key or line):
+                                        with w._tag(pdf, '/Figure', alt_text=line.image.alternative_text):
+                                            pdf.image(BytesIO(data), x=at_x, y=at_y, w=line.width, h=line.height)
+                                elif line.nested:
+                                    nested_table, nested_index, nested_layout, occurrence = line.nested
+                                    with w._structure(pdf, '/Table', occurrence):
+                                        self._paint_row(pdf, nested_table, nested_index, nested_layout, x + left, at_y, line.height,
+                                                        emit_navigation=emit_navigation)
+                                elif segments:
+                                    with w._structure(pdf, '/P', line.paragraph_key or line):
+                                        with w._tag(pdf, '/Span'):
+                                            w._run_renderer._render_segment_row(pdf, segments, line.height, DEFAULT_FONT_SIZE_PT, at_x=at_x)
                             at_y += line.height
                 x += width
         finally:
@@ -399,7 +498,7 @@ class TableRenderer:
         table_bottom = saved_y
         table._tblp_pr_attrs = {}  # avoid recursion
         try:
-            self.render_table(pdf, table)
+            self._render_table(pdf, table)
             table_bottom = pdf.get_y()
         finally:
             table._tblp_pr_attrs = attrs_holder
@@ -417,7 +516,7 @@ class TableRenderer:
                 pdf.set_xy(saved_x, saved_y)
         # Push the float's target column cursor past the table so the
         # next paragraphs in that column don't render on top of it.
-        if col_y_map is not None and spec == "right":
+        if col_y_map and spec == "right":
             tgt_col = max(col_y_map)
             col_y_map[tgt_col] = max(col_y_map.get(tgt_col, 0.0), table_bottom)
 

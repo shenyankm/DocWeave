@@ -62,18 +62,10 @@ def cell_text(cell: ldm.Cell) -> str:
     cell to hold multi-line blocks like address blocks).  Markdown link
     syntax is stripped so the ``[text](url)`` form from the readers does
     not leak into the cell.  Per-run ``w:caps`` is honoured via
-    :func:`apply_caps`.
+    :func:`apply_caps`; hidden runs and field instructions are excluded.
     """
-    lines: list[str] = []
-    for para in cell.paragraphs:
-        pieces: list[str] = []
-        for run in visible_runs(para):
-            for chunk, _ in extract_link_segments(run.text or ""):
-                pieces.append(apply_caps(chunk, run.font))
-        line = "".join(pieces)
-        if line:
-            lines.append(line)
-    return "\n".join(lines)
+    lines = (plain_text(para) for para in cell.paragraphs)
+    return "\n".join(line for line in lines if line)
 
 
 def is_pure_page_break(para: ldm.Paragraph) -> bool:

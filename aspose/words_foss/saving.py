@@ -164,23 +164,20 @@ class ColorMode(IntEnum):
 
 class OutlineOptions:
     """Controls how outlines (bookmarks panel) are generated in the PDF.
-    Note: the fpdf2 backend always fills gaps between non-contiguous
-    outline levels (e.g. H1 followed by H3 inserts an empty H2 entry)
-    because the library requires a contiguous hierarchy, so gap-filling
-    stays active regardless of ``create_missing_outline_levels``.
+    Missing levels are compacted by default (H1 then H3 becomes two levels).
+    Enable ``create_missing_outline_levels`` to insert empty intermediate entries.
     """
 
     def __init__(self):
         # Values >= 6 behave alike: heading depth is clamped to 6.
         self.headings_outline_levels: int = 0
-        # Currently unused. Will be added in a future release.
+        # Expand this many PDF tree levels; 0 collapses all, valid range 0..9.
         self.expanded_outline_levels: int = 0
         self.default_bookmarks_outline_level: int = 0
         # Bookmarks whose name starts with "_" are skipped even if listed here.
         self.bookmarks_outline_levels: dict[str, int] = {}
         # Enables heading outlines inside table cells.
         self.create_outlines_for_headings_in_tables: bool = False
-        # Currently unused: gap-filling is always active in the fpdf2 backend.
         self.create_missing_outline_levels: bool = False
 
 
@@ -225,8 +222,7 @@ class PdfSaveOptions:
         self.image_compression = PdfImageCompression.AUTO
         self.jpeg_quality: int = 100
 
-        # Text compression
-        # Currently unused. Will be added in a future release.
+        # Page content stream compression; font and image streams are independent.
         self.text_compression = PdfTextCompression.FLATE
 
         # Font embedding
@@ -237,8 +233,7 @@ class PdfSaveOptions:
         # Currently unused. Will be added in a future release.
         self.font_embedding_mode = PdfFontEmbeddingMode.EMBED_ALL
 
-        # Page display mode
-        # Currently unused. Will be added in a future release.
+        # Requested viewer opening mode; readers may ignore it.
         self.page_mode = PdfPageMode.USE_OUTLINES
 
         # Color

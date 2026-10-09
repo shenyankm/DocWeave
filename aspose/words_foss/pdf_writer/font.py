@@ -1,12 +1,23 @@
 """Font registration, application and reset helpers for the PDF writer."""
+from io import BytesIO
 from pathlib import Path
 
+from fontTools.ttLib.sfnt import SFNTWriter
 from fpdf import FPDF
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.pdf_writer.color import set_text_color
 from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE_PT
 from aspose.words_foss.pdf_writer.diagnostics import document_nodes
+
+
+def close_fonts(pdf: FPDF) -> None:
+    """Release font readers even when fpdf2 never reaches its output cleanup."""
+    for font in pdf.fonts.values():
+        if font.type == 'TTF':
+            font.subset.pick.cache_clear()
+            font.subset.get_glyph.cache_clear()
+            font.close()
 
 
 def register_fonts(pdf: FPDF, doc=None, fallback_fonts=()) -> list[str]:
@@ -25,6 +36,19 @@ def register_fonts(pdf: FPDF, doc=None, fallback_fonts=()) -> list[str]:
     for style, suffix in (("", "Regular"), ("B", "Bold"), ("I", "Oblique"), ("BI", "BoldOblique")):
         if style in styles:
             pdf.add_font(DEFAULT_FONT_NAME, style, str(font_dir / f"DocumentSansSC-{suffix}.woff"))
+            if pdf.text_shaping:
+                from fpdf.fonts import HarfBuzzFont
+                import uharfbuzz as hb
+
+                font = pdf.fonts[DEFAULT_FONT_NAME.lower() + style]
+                # shortcut: fpdf2's private cache avoids WOFF recompilation; recheck on upgrades.
+                reader = font.ttfont.reader
+                buffer = BytesIO()
+                sfnt = SFNTWriter(buffer, len(reader.tables), reader.sfntVersion)
+                for tag in reader.keys():
+                    sfnt[tag] = reader[tag]
+                sfnt.close()
+                font._hbfont = HarfBuzzFont(hb.Face(buffer.getvalue()))
     families = []
     for index, path in enumerate(fallback_fonts):
         family = f"Fallback{index}"

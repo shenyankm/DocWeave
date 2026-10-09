@@ -6,13 +6,17 @@ and strikethrough lines.
 
 
 import re
+from itertools import groupby
 from typing import Optional, Tuple, Union
 
 from fpdf import FPDF
 # ponytail: fpdf2 bidi/line-break internals require regression checks when upgrading fpdf2.
-from fpdf.line_break import MultiLineBreak
+from fpdf.bidi import BidiParagraph
+from fpdf.enums import Align, CharVPos, StrokeCapStyle
+from fpdf.line_break import Fragment, MultiLineBreak, TextLine
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss.pdf_writer.baseline import baseline_scope, mixed_size
 from aspose.words_foss.pdf_writer.color import parse_color
 from aspose.words_foss.pdf_writer.constants import (
     DEFAULT_FONT_NAME,
@@ -26,6 +30,7 @@ from aspose.words_foss.pdf_writer.constants import (
     STRIKETHROUGH_Y_RATIO,
 )
 from aspose.words_foss.pdf_writer.font import apply_run_font
+from aspose.words_foss.pdf_writer.shaping_context import ContextualFont, ContextualFragment, SourceCharacter
 from aspose.words_foss.pdf_writer.text import (
     apply_caps,
     extract_link_segments,
@@ -33,6 +38,15 @@ from aspose.words_foss.pdf_writer.text import (
 )
 from aspose.words_foss.docx_reader import PAGE_FIELD_SENTINEL
 from aspose.words_foss.pdf_writer._context import PDFWriterContext
+
+
+class _ShapedSegment(tuple):
+    """Keep the existing five values plus the native direction/font context."""
+
+    def __new__(cls, values, fragment):
+        segment = super().__new__(cls, values)
+        segment.fragment = fragment
+        return segment
 
 
 class RunRenderer:
@@ -59,94 +73,87 @@ class RunRenderer:
         pf: Optional[ldm.ParagraphFormat] = None,
     ) -> None:
         """Render runs with inline formatting: bold, italic, underline, colors, sizes."""
-        fs = DEFAULT_FONT_SIZE_PT
+        size = mixed_size(run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT
+                          for run in runs if run.text)
+        with baseline_scope(pdf, size):
+            fs = DEFAULT_FONT_SIZE_PT
 
-        # A ``\t`` between runs marks a Word tab stop — TOC entries put
-        # the title before the tab and the page number after.  Route
-        # TOC entries through the aligned path so the column-split
-        # detector can anchor the trailing runs to the right margin
-        # (Word's default TOC right-tab stop).  Ordinary numbered
-        # paragraphs like ``4.1<tab>Heading`` must stay on the
-        # left-aligned path — the aligned renderer would otherwise
-        # split them at the tab and collide the trailing text with
-        # the number.
-        has_tab = any("\t" in (r.text or "") for r in runs)
-        # For non-left alignment, use multi_cell which supports align
-        if align != "L" or (has_tab and is_toc) or pdf.text_shaping:
-            self.render_formatted_runs_aligned(
-                pdf, runs, align=align, line_h_override=line_h_override, is_toc=is_toc, pf=pf
-            )
-            return
+            # A ``\t`` between runs marks a Word tab stop — TOC entries put
+            # the title before the tab and the page number after.  Route
+            # TOC entries through the aligned path so the column-split
+            # detector can anchor the trailing runs to the right margin
+            # (Word's default TOC right-tab stop).  Ordinary numbered
+            # paragraphs like ``4.1<tab>Heading`` must stay on the
+            # left-aligned path — the aligned renderer would otherwise
+            # split them at the tab and collide the trailing text with
+            # the number.
+            has_tab = any("\t" in (r.text or "") for r in runs)
+            # For non-left alignment, use multi_cell which supports align
+            if align != "L" or (has_tab and is_toc) or pdf.text_shaping or (
+                    pf is not None and pf.widow_control and not has_tab and newline):
+                self.render_formatted_runs_aligned(
+                    pdf, runs, align=align, line_h_override=line_h_override, is_toc=is_toc, pf=pf
+                )
+                return
 
-        for run in runs:
-            text = run.text or ""
-            if not text:
-                continue
-            font = run.font
-            size = font.size if font.size > 0 else fs
-            line_h = (
-                line_h_override
-                if line_h_override is not None
-                else size * PT_TO_MM * LINE_HEIGHT_FACTOR
-            )
-
-            # Strip form-feed characters ("\f" = Word page-break marker).
-            text = text.replace("\f", "")
-            if "\t" in text:
-                if tab_stops and tab_stops.tab_stops:
-                    apply_run_font(pdf, font, default_size=fs)
-                    pieces = text.split("\t")
-                    for p_idx, piece in enumerate(pieces):
-                        if p_idx > 0:
-                            self._advance_to_tab_stop(
-                                pdf, tab_stops, default_tab_stop, line_h,
-                                upcoming_text=piece,
-                            )
-                        if piece:
-                            resolved = self._resolve_run_text(pdf, piece)
-                            if resolved:
-                                resolved = apply_caps(resolved, font)
-                                pdf.write(h=line_h, text=safe_text(resolved))
+            for run in runs:
+                text = run.text or ""
+                if not text:
                     continue
-                text = text.replace("\t", " ")
-            text = self._resolve_run_text(pdf, text)
-            if not text:
-                continue
-            text = apply_caps(text, font)
-            for chunk, link in extract_link_segments(text):
-                if not chunk:
-                    continue
-                apply_run_font(pdf, font, default_size=fs)
-                highlight = parse_color(font.highlight_color)
-                if link is not None:
-                    # Typical hyperlink convention: blue text.
-                    pdf.set_text_color(*HYPERLINK_TEXT_RGB)
-                safe = safe_text(chunk)
-                link_target = self._writer._link_target_for(pdf, link)
-                if highlight:
-                    # Use cell-based rendering so the fill rectangle
-                    # and text are always perfectly aligned — even
-                    # when the run wraps across lines.
-                    self._write_with_highlight(pdf, safe, line_h, highlight, run=run, link=link_target)
-                elif font.strike_through:
-                    x_before = pdf.get_x()
-                    y_before = pdf.get_y()
-                    pdf.write(h=line_h, text=safe, link=link_target)
-                    x_after = pdf.get_x()
-                    strike_y = y_before + size * PT_TO_MM * STRIKETHROUGH_Y_RATIO
-                    pdf.line(x_before, strike_y, x_after, strike_y)
-                else:
-                    pdf.write(h=line_h, text=safe, link=link_target)
+                font = run.font
+                size = font.size if font.size > 0 else fs
+                line_h = (
+                    line_h_override
+                    if line_h_override is not None
+                    else size * PT_TO_MM * LINE_HEIGHT_FACTOR
+                )
 
-        # Reset color
-        pdf.set_text_color(0, 0, 0)
-        if newline:
-            pdf.ln()
+                # Strip form-feed characters ("\f" = Word page-break marker).
+                text = text.replace("\f", "")
+                for piece_index, piece in enumerate(text.split("\t")):
+                    if piece_index:
+                        apply_run_font(pdf, font, default_size=fs)
+                        self._advance_to_tab_stop(
+                            pdf, tab_stops, default_tab_stop, line_h, upcoming_text=piece,
+                        )
+                    text = self._resolve_run_text(pdf, piece)
+                    if not text:
+                        continue
+                    text = apply_caps(text, font)
+                    for chunk, link in extract_link_segments(text):
+                        if not chunk:
+                            continue
+                        apply_run_font(pdf, font, default_size=fs)
+                        highlight = parse_color(font.highlight_color)
+                        if link is not None:
+                            # Typical hyperlink convention: blue text.
+                            pdf.set_text_color(*HYPERLINK_TEXT_RGB)
+                        safe = safe_text(chunk)
+                        link_target = self._writer._link_target_for(pdf, link)
+                        if highlight:
+                            # Use cell-based rendering so the fill rectangle
+                            # and text are always perfectly aligned — even
+                            # when the run wraps across lines.
+                            self._write_with_highlight(pdf, safe, line_h, highlight, run=run, link=link_target)
+                        elif font.strike_through:
+                            x_before = pdf.get_x()
+                            y_before = pdf.get_y()
+                            pdf.write(h=line_h, text=safe, link=link_target)
+                            x_after = pdf.get_x()
+                            strike_y = y_before + size * PT_TO_MM * STRIKETHROUGH_Y_RATIO
+                            pdf.line(x_before, strike_y, x_after, strike_y)
+                        else:
+                            pdf.write(h=line_h, text=safe, link=link_target)
+
+            # Reset color
+            pdf.set_text_color(0, 0, 0)
+            if newline:
+                pdf.ln()
 
     def _advance_to_tab_stop(
         self,
         pdf: FPDF,
-        tab_stops: ldm.TabStopCollection,
+        tab_stops: Optional[ldm.TabStopCollection],
         default_tab_stop: float,
         line_h: float,
         upcoming_text: str = "",
@@ -159,10 +166,10 @@ class RunRenderer:
         w = self._writer
         current_x = pdf.get_x()
         margin_left = w._page_margin_left
-        pos_from_margin = current_x - margin_left
-        pos_pt = pos_from_margin / PT_TO_MM
+        # Native write/cell starts glyphs one inner margin after the cursor.
+        pos_pt = (current_x + pdf.c_margin - margin_left) / PT_TO_MM + 1e-7
 
-        next_tab = tab_stops.after(pos_pt)
+        next_tab = tab_stops.after(pos_pt) if tab_stops else None
         if next_tab is not None:
             target_pt = next_tab.position
         else:
@@ -189,7 +196,7 @@ class RunRenderer:
                     before_w = text_w_pt
                 target_pt -= before_w
 
-        target_x = margin_left + target_pt * PT_TO_MM
+        target_x = margin_left + target_pt * PT_TO_MM - pdf.c_margin
         gap = target_x - current_x
         if gap <= 0:
             return
@@ -260,31 +267,56 @@ class RunRenderer:
             else max_size * PT_TO_MM * LINE_HEIGHT_FACTOR
         )
 
-        # Tab-based two-column layout (TOC entries): title on the left,
-        # trailing content pinned to the right margin, same baseline.
+        # Reserve a page-number area; wrapped TOC titles finish beside it.
         tab_idx = (
             next((i for i, (_, t, _, _, _) in enumerate(segments) if t == "\t"), None)
             if is_toc
             else None
         )
+        trailing = []
+        field_tab = None
+        trailing_right = usable_w - pdf.c_margin
+        text_width = usable_w - 2 * pdf.c_margin
         if tab_idx is not None:
-            left = [s for s in segments[:tab_idx] if s[1] != "\t"]
+            if pf is not None:
+                # shortcut: one LEFT/CENTER/RIGHT/DECIMAL field; extend for full multi-tab layout.
+                field_tab = min((tab for tab in pf.tab_stops
+                                 if tab.alignment in (0, 1, 2, 3) and not tab.is_clear
+                                 and tab.position > pf.left_indent),
+                                key=lambda tab: tab.position, default=None)
+                if field_tab is not None:
+                    trailing_right = (field_tab.position - pf.left_indent) * PT_TO_MM
+                    if not pdf.c_margin < trailing_right <= usable_w + pf.right_indent * PT_TO_MM + 1e-7:
+                        raise ValueError("TOC tab is outside the usable text area")
+                    text_width = trailing_right - pdf.c_margin
+            visible = [s for s in segments[:tab_idx] if s[1] != "\t"]
             right = [s for s in segments[tab_idx + 1 :] if s[1] != "\t"]
-            self._render_segment_row(pdf, left, line_h, fs, at_x=pdf.l_margin)
             if right:
-                right_w = sum(sw for _, _, sw, _, _ in right)
-                right_x = max(
-                    pdf.l_margin,
-                    pdf.l_margin + usable_w - right_w,
-                )
-                pdf.set_y(pdf.get_y() - line_h)  # stay on the same baseline
-                self._render_segment_row(pdf, right, line_h, fs, at_x=right_x)
-            pdf.set_text_color(0, 0, 0)
-            return
-
-        # Recompute visible-only total after tab segments have been ruled out.
-        visible = [s for s in segments if s[1] != "\t"]
-        if not visible:
+                field_width = text_width
+                if field_tab is not None and field_tab.alignment in (0, 1, 3):
+                    field_width = usable_w + pf.right_indent * PT_TO_MM - pdf.c_margin
+                trailing_rows = self.wrap_segments(pdf, right, field_width)
+                if len(trailing_rows) != 1:
+                    raise ValueError("TOC page number is wider than the usable text area")
+                trailing = trailing_rows[0]
+                right_w = sum(s[2] for s in trailing)
+                if field_tab is not None and field_tab.alignment in (0, 1, 3):
+                    before = 0.0
+                    if field_tab.alignment == 1:
+                        before = right_w / 2
+                    elif field_tab.alignment == 3:
+                        before = self._decimal_prefix_width(pdf, trailing)
+                    trailing_right += right_w - before
+                    if (trailing_right > usable_w + pf.right_indent * PT_TO_MM + 1e-7 or
+                            trailing_right - right_w < pdf.c_margin):
+                        raise ValueError("TOC field is outside the usable text area")
+                    text_width = trailing_right - pdf.c_margin
+                if visible:
+                    text_width -= right_w + pdf.c_margin
+            align = "L"
+        else:
+            visible = [s for s in segments if s[1] != "\t"]
+        if not visible and not trailing:
             return
 
         # Word footers frequently encode a two-column "left / right" line
@@ -300,29 +332,81 @@ class RunRenderer:
                 right_w = sum(sw for _, _, sw, _, _ in right)
                 right_x = max(
                     pdf.l_margin,
-                    pdf.l_margin + usable_w - right_w,
+                    pdf.l_margin + usable_w - right_w - 2 * pdf.c_margin,
                 )
                 pdf.set_y(pdf.get_y() - line_h)  # stay on the same baseline
                 self._render_segment_row(pdf, right, line_h, fs, at_x=right_x)
                 pdf.set_text_color(0, 0, 0)
                 return
         first_offset = pdf.get_x() - pdf.l_margin
-        rows = self.wrap_segments(pdf, visible, usable_w - 2 * pdf.c_margin,
-                                  first_width=usable_w - first_offset - 2 * pdf.c_margin)
+        rows = (self.wrap_segments(pdf, visible, text_width,
+                                   first_width=text_width - first_offset)
+                if visible else [[]])
         for index, row in enumerate(rows):
+            if (pf is not None and pf.widow_control and len(rows) > 1 and
+                    index in (0, len(rows) - 2) and pdf.auto_page_break and
+                    2 * line_h <= pdf.h - pdf.b_margin - pdf.t_margin + 1e-7 and
+                    pdf.y + 2 * line_h > pdf.h - pdf.b_margin + 1e-7):
+                getattr(pdf, "_advance_region", pdf.add_page)()
             row_w = sum(seg[2] for seg in row)
             offset = first_offset if index == 0 else 0.0
             x_start = pdf.l_margin + offset
             if align == "C":
-                x_start += (usable_w - offset - row_w) / 2
+                x_start += (usable_w - offset - row_w - 2 * pdf.c_margin) / 2
             elif align == "R":
                 x_start += usable_w - offset - row_w - 2 * pdf.c_margin
             self._render_segment_row(pdf, row, line_h, fs, at_x=x_start)
+            if trailing and index == len(rows) - 1:
+                right_x = pdf.l_margin + trailing_right - right_w - pdf.c_margin
+                pdf.set_y(pdf.get_y() - line_h)
+                if row and field_tab is not None and field_tab.leader:
+                    self._draw_toc_leader(
+                        pdf, segments[tab_idx][0], field_tab.leader, line_h,
+                        pdf.l_margin + offset + row_w + 2 * pdf.c_margin, right_x,
+                    )
+                self._render_segment_row(pdf, trailing, line_h, fs, at_x=right_x)
         pdf.set_text_color(0, 0, 0)
 
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def _decimal_prefix_width(pdf: FPDF, segments: list) -> float:
+        width = 0.0
+        for segment in segments:
+            run, text, seg_w, _, _ = segment
+            separator = next((i for i, char in enumerate(text) if char in ".,"), None)
+            if separator is not None:
+                if isinstance(segment, _ShapedSegment):
+                    return width + segment.fragment.get_width(end=separator)
+                apply_run_font(pdf, run.font, default_size=DEFAULT_FONT_SIZE_PT)
+                return width + pdf.get_string_width(text[:separator])
+            width += seg_w
+        return width
+
+    def _draw_toc_leader(self, pdf: FPDF, run: ldm.Run, leader: int,
+                         line_h: float, x1: float, x2: float) -> None:
+        styles = {1: (0.005, 0.16, -0.06, 0.05),
+                  2: (0.22, 0.14, -0.25, 0.04),
+                  3: (0, 0, 0.08, 0.04),
+                  4: (0, 0, 0.08, 0.08),
+                  5: (0.005, 0.16, -0.30, 0.05)}
+        if leader not in styles or x2 <= x1:
+            return
+        dash, gap, shift, width = styles[leader]
+        size = (run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT) * PT_TO_MM
+        x1 += width * size / 2
+        x2 -= width * size / 2
+        if x2 <= x1:
+            return
+        y = pdf.y + line_h / 2 + (0.3 + shift) * size
+        # Vector decoration keeps leader characters out of text extraction.
+        with self._writer._artifact(pdf), pdf.local_context(
+                line_width=width * size, draw_color=parse_color(run.font.color) or (0, 0, 0),
+                stroke_cap_style=StrokeCapStyle.ROUND if leader in (1, 5) else StrokeCapStyle.BUTT,
+                dash_pattern={'dash': dash * size, 'gap': gap * size}):
+            pdf.line(x1, y, x2, y)
 
     @staticmethod
     def wrap_segments(pdf: FPDF, segments: list, width: float, *, first_width=None) -> list:
@@ -339,7 +423,24 @@ class RunRenderer:
             for run, text, _, size, link in segments:
                 style = ("B" if run.font.bold else "") + ("I" if run.font.italic else "")
                 pdf.set_font(DEFAULT_FONT_NAME, style=style, size=size)
-                widths = {char: pdf.get_string_width(char) for char in set(text) if char != "\n"}
+                characters = set(text) - {'\n'}
+                if not pdf._fallback_font_ids and pdf.char_vpos == CharVPos.LINE:
+                    cache = getattr(pdf, '_plain_glyph_widths', None)
+                    if cache is None:
+                        cache = pdf._plain_glyph_widths = {}
+                    context = (pdf.current_font, pdf.font_size_pt, pdf.font_stretching, pdf.char_spacing, pdf.k)
+                    widths = {}
+                    for char in characters:
+                        key = (*context, char)
+                        value = cache.get(key)
+                        if value is None:
+                            value = pdf.get_string_width(char)
+                            if len(cache) >= 4096:
+                                cache.clear()
+                            cache[key] = value
+                        widths[char] = value
+                else:
+                    widths = {char: pdf.get_string_width(char) for char in characters}
                 for token in re.findall(r"\n|[^\S\n]+|[^\s]+", text):
                     token_width = sum(widths.get(char, 0) for char in token)
                     if (used and not token.isspace() and token_width <= width
@@ -372,22 +473,70 @@ class RunRenderer:
     @staticmethod
     def _wrap_shaped_segments(pdf: FPDF, segments: list, width: float, first_width) -> list:
         """Use fpdf2\'s shaping-aware line breaker, including fallback-font metrics."""
+        grouped = []
+        # Run boundaries with identical formatting must not break shaping context.
+        for (_, size, link), group in groupby(segments, key=lambda item: (item[0].font, item[3], item[4])):
+            items = list(group)
+            grouped.append((items[0][0], "".join(item[1] for item in items), 0.0, size, link))
+        segments = grouped
+        paragraph_text = "".join(segment[1] for segment in segments)
+        if not paragraph_text:
+            return [[]]
+        contextual = any(left[1] and right[1] and not left[1][-1].isspace()
+                         and not right[1][0].isspace()
+                         for left, right in zip(segments, segments[1:]))
         saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else ""), pdf.font_size_pt)
         fragments = []
         try:
+            paragraph = BidiParagraph(
+                paragraph_text,
+                base_direction=pdf.text_shaping["direction"], preserve_bn_chars=True,
+                alias=pdf.str_alias_nb_pages,
+            )
+            pdf.text_shaping["paragraph_direction"] = paragraph.base_direction
+            directions = iter(paragraph.get_bidi_fragments())
+            directional_text, direction = next(directions)
+            remaining = len(directional_text)
+            source_index = 0
             for index, (run, text, _, size, _) in enumerate(segments):
                 apply_run_font(pdf, run.font, default_size=size)
-                for fragment in pdf._preload_bidirectional_text(text, False):
-                    fragment.link = index  # Keep source-run identity across native fragment clones.
-                    fragments.append(fragment)
+                offset = 0
+                while offset < len(text):
+                    count = min(len(text) - offset, remaining)
+                    pdf.text_shaping["fragment_direction"] = direction
+                    for fragment in pdf._preload_font_styles(text[offset:offset + count], False):
+                        if contextual and type(fragment) is Fragment:
+                            fragment.font.__class__ = ContextualFont
+                            fragment.graphics_state.text_shaping['_source_text'] = paragraph_text
+                            fragment = ContextualFragment(
+                                [SourceCharacter(char, source_index + i)
+                                 for i, char in enumerate(fragment.characters)],
+                                fragment.graphics_state, fragment.k, fragment.link,
+                            )
+                        source_index += len(fragment.characters)
+                        fragment.link = index  # Keep source-run identity across native fragment clones.
+                        fragments.append(fragment)
+                    offset += count
+                    remaining -= count
+                    if remaining == 0:
+                        directional_text, direction = next(directions, ("", None))
+                        remaining = len(directional_text)
             breaker = MultiLineBreak(fragments, width, margins=(0, 0),
                                      first_line_indent=0 if first_width is None else width - first_width)
             rows = []
             while line := breaker.get_line():
                 row = []
+                if contextual:
+                    positions = [char.source_index for fragment in line.fragments for char in fragment.characters
+                                 if isinstance(char, SourceCharacter)]
+                    for fragment in line.fragments:
+                        if isinstance(fragment, ContextualFragment) and positions:
+                            fragment.graphics_state.text_shaping['_source_line'] = min(positions), max(positions) + 1
                 for fragment in line.get_ordered_fragments():
+                    if not fragment.characters:
+                        continue  # A zero-width cell would advance to the right margin.
                     run, _, _, size, link = segments[fragment.link]
-                    row.append((run, fragment.string, fragment.get_width(), size, link))
+                    row.append(_ShapedSegment((run, fragment.string, fragment.get_width(), size, link), fragment))
                 rows.append(row)
             return rows or [[]]
         finally:
@@ -408,7 +557,8 @@ class RunRenderer:
         pdf.set_x(at_x)
         pdf.cell(w=0, h=line_h)  # Break pages/columns before painting the background.
         pdf.set_x(pdf.l_margin + offset)
-        for run, safe, seg_w, size, link in segments:
+        for segment in segments:
+            run, safe, seg_w, size, link = segment
             apply_run_font(pdf, run.font, default_size=fs)
             highlight = parse_color(run.font.highlight_color)
             if highlight:
@@ -419,12 +569,21 @@ class RunRenderer:
             if run.font.strike_through:
                 x_before = pdf.get_x()
                 y_before = pdf.get_y()
+            if isinstance(segment, _ShapedSegment):
+                fragment = segment.fragment
+                fragment.link = None  # Source indices are not PDF link IDs.
+                fragment.graphics_state.text_color = pdf.text_color
+                pdf._render_styled_text_line(
+                    TextLine((fragment,), 0, 0, Align.L, line_h, seg_w), line_h, link=link_target)
+            else:
                 pdf.cell(w=seg_w, h=line_h, text=safe, link=link_target)
+            if run.font.strike_through:
                 x_after = pdf.get_x()
                 strike_y = y_before + size * PT_TO_MM * STRIKETHROUGH_Y_RATIO
                 pdf.line(x_before, strike_y, x_after, strike_y)
-            else:
-                pdf.cell(w=seg_w, h=line_h, text=safe, link=link_target)
+            # shortcut: fpdf2 fallback cells cache fonts inside q/Q; recheck on upgrades.
+            if self._writer.options.fallback_fonts:
+                pdf.current_font_is_set_on_page = False
         pdf.ln(line_h)
 
     @staticmethod
@@ -506,6 +665,8 @@ class RunRenderer:
             pdf.set_fill_color(*rgb)
             self._fill_text_rect(pdf, pdf.get_x(), pdf.get_y(), chunk_width, line_h)
             pdf.cell(w=chunk_width, h=line_h, text=chunk, link=link)
+            if self._writer.options.fallback_fonts:
+                pdf.current_font_is_set_on_page = False
 
     @staticmethod
     def _fill_text_rect(pdf: FPDF, x: float, y: float, w: float, h: float) -> None:

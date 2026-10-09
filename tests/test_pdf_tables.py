@@ -201,6 +201,19 @@ def test_rotated_text_cell_keeps_its_orientation():
         assert_in_bounds(pdf)
 
 
+@pytest.mark.parametrize('orientation', [1, 2])
+def test_rotated_cell_excludes_hidden_text(orientation):
+    rotated = ldm.Cell(paragraphs=[ldm.Paragraph(children=[
+        ldm.Run(text='SECRET', font=ldm.Font(hidden=True)),
+        ldm.Run(text='visible', font=ldm.Font(all_caps=True)),
+    ])], cell_format=ldm.CellFormat(orientation=orientation))
+    _, pdf = convert(table(row(rotated, cell('normal'))))
+    with pdf:
+        text = ''.join(page.get_text() for page in pdf)
+        assert 'SECRET' not in text and 'VISIBLE' in text
+        assert_in_bounds(pdf)
+
+
 def test_impossible_header_fails_without_destroying_output(tmp_path):
     source = tmp_path / "source.md"
     source.write_text("text", encoding="utf-8")

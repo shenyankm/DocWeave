@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-09",
+  "python": "3.13",
+  "fpdf2": "2.8.9",
+  "scope": "One warmed process per mode; one paragraph CACHE PROBE; 12 RuntimeError failures after actual paragraph drawing; gc.collect before final measurement.",
+  "baseline": "The files_only mode simulates cleanup that closes font readers but omits fpdf2 SubsetMap cache clearing. It is not a complete historical checkout comparison.",
+  "metric": "tracemalloc current Python heap minus the pre-loop baseline after gc.collect; peak is tracemalloc peak since tracing began. Neither metric is RSS.",
+  "samples": [
+    {
+      "mode": "files_only",
+      "failures": 12,
+      "live_subsets": 12,
+      "retained_python_bytes": 366372207,
+      "peak_python_bytes": 366711425
+    },
+    {
+      "mode": "full_cleanup",
+      "failures": 12,
+      "live_subsets": 0,
+      "retained_python_bytes": 2128673,
+      "peak_python_bytes": 153853837
+    }
+  ],
+  "fd_recovery_probe": {
+    "platform": "macOS /dev/fd",
+    "fatal_font_warning_failures": 12,
+    "successful_retries": 12,
+    "open_fd_before": 4,
+    "open_fd_after": 4
+  },
+  "regression_tests": "tests/test_pdf_font_lifecycle.py checks immediate real font file closure, weakref collection, existing output preservation, and reuse after failure.",
+  "limit": "One sample per mode; no throughput, normal-case RSS, cross-platform, or package size improvement is claimed. Standalone private measurement calls retain their cache until the next conversion."
+}

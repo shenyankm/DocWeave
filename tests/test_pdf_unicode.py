@@ -2,6 +2,7 @@
 from pathlib import Path
 
 import pytest
+from docx import Document
 from pypdf import PdfReader
 
 import aspose.words_foss as aw
@@ -22,8 +23,9 @@ def test_chinese_docx_to_pdf(tmp_path):
     source = Path(__file__).parent / "data" / "input" / "chinese_pdf.docx"
     output = tmp_path / "chinese.pdf"
     doc = aw.Document(source)
+    assert Document(source).styles['Normal'].font.name == 'SimSun'
     assert "你好世界，简体中文与繁體中文。English ABC 123" in doc.get_text()
-    with pytest.warns(PdfFontSubstitutionWarning, match="Sources: Cambria, SimSun"):
+    with pytest.warns(PdfFontSubstitutionWarning, match="Sources: SimSun$"):
         doc.save(output, aw.SaveFormat.PDF)
 
     pdf = PdfReader(output)

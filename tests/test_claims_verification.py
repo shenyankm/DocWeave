@@ -166,17 +166,15 @@ def test_highlighted_links_survive_real_page_breaks(tmp_path):
 @pytest.mark.parametrize(
     "option",
     [
-        "text_compression",
         "embed_full_fonts",
         "use_core_fonts",
         "font_embedding_mode",
-        "page_mode",
         "color_mode",
         "preserve_form_fields",
         "memory_optimization",
     ],
 )
-def test_all_eight_explicit_unsupported_options_warn_through_document(tmp_path, option):
+def test_all_six_explicit_unsupported_options_warn_through_document(tmp_path, option):
     source = tmp_path / "source.txt"
     source.write_text("中文诊断", encoding="utf-8")
     options = aw.saving.PdfSaveOptions()

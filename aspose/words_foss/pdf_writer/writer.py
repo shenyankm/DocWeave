@@ -7,7 +7,8 @@ tables, shapes, and formatted runs.
 
 
 import re
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
+from functools import partial
 from pathlib import Path
 from typing import Iterator, Optional, Union
 
@@ -27,10 +28,12 @@ from aspose.words_foss.pdf_writer.constants import (
     POST_TABLE_SPACING_MM,
     PT_TO_MM,
 )
-from aspose.words_foss.pdf_writer.font import register_fonts
+from aspose.words_foss.pdf_writer.font import close_fonts, register_fonts
 from aspose.words_foss.pdf_writer.diagnostics import document_nodes, warn_about_conversion
 from aspose.words_foss.pdf_writer.page_bands import install_page_footer, install_page_header
 from aspose.words_foss.pdf_writer.paragraph_renderer import ParagraphRenderer
+from aspose.words_foss.pdf_writer.outline import OutlineOutputProducer
+from aspose.words_foss.pdf_writer.structure import TableStructureBuilder
 from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
 from aspose.words_foss.pdf_writer.shape_renderer import ShapeRenderer
 from aspose.words_foss.pdf_writer.table_renderer import TableRenderer
@@ -43,7 +46,7 @@ from aspose.words_foss.pdf_writer.text import (
     plain_text,
     safe_text,
 )
-from aspose.words_foss.saving import PdfSaveOptions, PdfZoomBehavior
+from aspose.words_foss.saving import PdfPageMode, PdfSaveOptions, PdfTextCompression, PdfZoomBehavior
 
 _FIT_HEIGHT = PdfZoomBehavior.FIT_HEIGHT
 _FIT_BOX = PdfZoomBehavior.FIT_BOX
@@ -135,7 +138,7 @@ class LdmPdfWriter:
         self._page_number_offset = 0
         # Outline generation state
         self._in_table: bool = False
-        self._last_outline_level: int = 0
+        self._outline_levels: list[int] = []
         # Exposed to sub-renderers that need style lookups (e.g. table borders).
         self._doc: Optional[ldm.Document] = None
         self._list_counters: dict[tuple[int, int], int] = {}
@@ -160,23 +163,33 @@ class LdmPdfWriter:
             temporary.write_bytes(self.write_to_bytes(doc))
 
     def write_to_bytes(self, doc: ldm.Document) -> bytes:
-        pdf = self._render_pdf(doc)
-        pdf_bytes = pdf.output()
-        if self.options.zoom_behavior == PdfZoomBehavior.NONE:
-            pdf_bytes = _remove_open_action(pdf_bytes)
-        elif self.options.zoom_behavior in (_FIT_HEIGHT, _FIT_BOX):
-            pdf_bytes = _replace_open_action(pdf_bytes, self.options.zoom_behavior)
-        # fpdf2 subsets shared fonts during output; do not reuse them for later measurements.
-        self._measurement_pdf = None
-        self._measurement_writer = None
-        return bytes(pdf_bytes)
+        expanded_levels = self.options.outline_options.expanded_outline_levels
+        if self._measurement_pdf is not None:
+            close_fonts(self._measurement_pdf)
+        try:
+            if not isinstance(expanded_levels, int) or not 0 <= expanded_levels <= 9:
+                raise ValueError("expanded_outline_levels must be an integer from 0 to 9")
+            with ExitStack() as cleanup:
+                pdf = self._render_pdf(doc, cleanup)
+                pdf_bytes = pdf.output(output_producer_class=partial(
+                    OutlineOutputProducer, expanded_levels=expanded_levels,
+                ))
+                if self.options.zoom_behavior == PdfZoomBehavior.NONE:
+                    pdf_bytes = _remove_open_action(pdf_bytes)
+                elif self.options.zoom_behavior in (_FIT_HEIGHT, _FIT_BOX):
+                    pdf_bytes = _replace_open_action(pdf_bytes, self.options.zoom_behavior)
+                return bytes(pdf_bytes)
+        finally:
+            # fpdf2 subsets shared fonts during output; do not reuse them for measurements.
+            self._measurement_pdf = None
+            self._measurement_writer = None
 
-    def _render_pdf(self, doc: ldm.Document) -> FPDF:
+    def _render_pdf(self, doc: ldm.Document, cleanup: ExitStack) -> FPDF:
         # Fresh anchor-link state per write
         self._anchor_links = {}
         self._default_tab_stop = doc.default_tab_stop
         self._in_table = False
-        self._last_outline_level = 0
+        self._outline_levels = []
         self._doc = doc
         self._list_counters = {}
         self._pre_rendered_shapes = set()
@@ -198,6 +211,10 @@ class LdmPdfWriter:
                 page_h_mm = ps.page_height * PT_TO_MM
 
         pdf = FPDF(unit="mm", format=(page_w_mm, page_h_mm))
+        if self.options.export_document_structure:
+            pdf.struct_builder = TableStructureBuilder(pdf)
+        cleanup.callback(close_fonts, pdf)
+        pdf.set_compression(PdfTextCompression(self.options.text_compression) == PdfTextCompression.FLATE)
         # Cumulative floating-point rounding must not split an exactly fitting paragraph.
         pdf.will_page_break = lambda height: FPDF.will_page_break(pdf, height - 1e-7)
         if self.options.text_shaping:
@@ -359,13 +376,24 @@ class LdmPdfWriter:
                     section, col_state, pdf.get_y(), children,
                 )
 
-            for child in children:
+            for child_index, child in enumerate(children):
+                previous = children[child_index - 1] if child_index else None
+                linked = isinstance(previous, ldm.Paragraph) and previous.paragraph_format.keep_with_next
+                if isinstance(child, ldm.Paragraph):
+                    linked = linked and not child.paragraph_format.page_break_before and not any(
+                        "\f" in run.text for run in child.runs
+                    )
                 if (
                     col_state is not None
                     and balance_target_y is not None
                     and col_state.current < col_state.ncols - 1
+                    and not linked
                 ):
                     child_h = self._estimate_child_height(child, col_w_mm)
+                    if isinstance(child, ldm.Paragraph) and child.paragraph_format.keep_with_next:
+                        group_h, _ = self._keep_group_height(children, child_index, col_w_mm)
+                        if group_h <= self._page_height - self._page_margin_bottom - pdf.t_margin:
+                            child_h = group_h
                     if pdf.get_y() + child_h / 2 > balance_target_y:
                         if isinstance(child, ldm.Paragraph):
                             self._pre_draw_anchored_wrapped(pdf, child)
@@ -373,8 +401,13 @@ class LdmPdfWriter:
                         self._force_next_column(pdf, col_state, col_y)
 
                 if isinstance(child, ldm.Paragraph):
+                    if child.paragraph_format.keep_with_next and (child_index == 0 or
+                            not isinstance(children[child_index - 1], ldm.Paragraph) or
+                            not children[child_index - 1].paragraph_format.keep_with_next):
+                        self._keep_with_next(pdf, children, child_index)
                     self._paragraph_renderer.render_paragraph(pdf, child)
                 elif isinstance(child, ldm.Table):
+                    self._end_list(pdf)
                     self._in_table = True
                     self._table_renderer.render_table(pdf, child)
                     self._in_table = False
@@ -398,6 +431,7 @@ class LdmPdfWriter:
 
     def _apply_viewer_options(self, pdf: FPDF) -> None:
         opts = self.options
+        pdf.page_mode = PdfPageMode(opts.page_mode).name
         if opts.display_doc_title:
             pdf.viewer_preferences = ViewerPreferences(display_doc_title=True)
 
@@ -509,6 +543,35 @@ class LdmPdfWriter:
             return self._estimate_table_height(child, col_w_mm)
         return 0.0
 
+    def _keep_group_height(self, children, start, width):
+        height = self._estimate_paragraph_height(children[start], width)
+        index = start
+        while children[index].paragraph_format.keep_with_next and index + 1 < len(children):
+            following = children[index + 1]
+            if isinstance(following, ldm.Table):
+                height += self._estimate_table_height(following.model_copy(update={"rows": following.rows[:1]}), width)
+                index += 1
+                break
+            if not isinstance(following, ldm.Paragraph) or following.paragraph_format.page_break_before:
+                break
+            if any("\f" in run.text for run in following.runs):
+                break
+            following_height = self._estimate_paragraph_height(following, width)
+            if not following.paragraph_format.keep_with_next and not following.paragraph_format.keep_together:
+                size = max((run.font.size for run in visible_runs(following)), default=DEFAULT_FONT_SIZE_PT)
+                line = self._paragraph_renderer.line_height_mm(size or DEFAULT_FONT_SIZE_PT, following.paragraph_format)
+                following_height = min(following_height, 2 * line + following.paragraph_format.space_before * PT_TO_MM)
+            height += following_height
+            index += 1
+        return height, index
+
+    def _keep_with_next(self, pdf, children, start):
+        width = self._page_width - self._page_margin_left - self._page_margin_right
+        height, index = self._keep_group_height(children, start, width)
+        bottom = self._page_height - self._page_margin_bottom
+        if index > start and pdf.y + height > bottom + 1e-7 and height <= bottom - pdf.t_margin + 1e-7:
+            getattr(pdf, "_advance_region", pdf.add_page)()
+
     def _estimate_paragraph_height(self, para: ldm.Paragraph, col_w_mm: float) -> float:
         from aspose.words_foss.model.wrap_type import WrapType
         from aspose.words_foss.pdf_writer.constants import FPDF_ALIGN
@@ -539,6 +602,7 @@ class LdmPdfWriter:
             self._measurement_pdf.add_page()
         measure = self._measurement_pdf
         measure.set_auto_page_break(False)
+        measure.set_font(DEFAULT_FONT_NAME, size=DEFAULT_FONT_SIZE_PT)
         measure.set_margins(0, 0, measure.w - col_w_mm)
         measure.set_xy(0, 0)
         if self._measurement_writer is None:
@@ -730,19 +794,110 @@ class LdmPdfWriter:
     # ------------------------------------------------------------------
 
     @contextmanager
-    def _tag(self, pdf: FPDF, struct_type: str, title: Optional[str] = None) -> Iterator[None]:
-        """Wrap content in a PDF structure element when tagging is on."""
-        if not self.options.export_document_structure:
+    def _artifact(self, pdf: FPDF, subtype: Optional[str] = None) -> Iterator[None]:
+        """Wrap content whose renderer disables automatic page breaks."""
+        if not self.options.export_document_structure or getattr(pdf, '_in_structure_artifact', False):
             yield
             return
-        mcid = pdf.struct_builder.next_mcid_for_page(pdf.page)
-        kwargs: dict = {"struct_type": struct_type, "mcid": mcid}
-        if title:
-            kwargs["title"] = title
-        pdf._add_marked_content(**kwargs)
-        pdf._out(f"/P <</MCID {mcid}>> BDC")
-        yield
-        pdf._out("EMC")
+        overridden = '_in_structure_artifact' in pdf.__dict__
+        original = getattr(pdf, '_in_structure_artifact', False)
+        if subtype is None:
+            pdf._out('/Artifact BMC')
+        else:
+            properties = '/Type /Pagination'
+            if pdf.pdf_version >= '1.7':
+                properties += f' /Subtype /{subtype}'
+            pdf._out(f'/Artifact <<{properties}>> BDC')
+        pdf._in_structure_artifact = True
+        try:
+            yield
+        finally:
+            try:
+                pdf._out('EMC')
+            finally:
+                if overridden:
+                    pdf._in_structure_artifact = original
+                else:
+                    pdf.__dict__.pop('_in_structure_artifact', None)
+
+    @contextmanager
+    def _list_structure(self, pdf: FPDF, list_format, source=None) -> Iterator[None]:
+        if self.options.export_document_structure and not getattr(pdf, '_in_structure_artifact', False):
+            with pdf.struct_builder.list_item(list_format, source):
+                yield
+        else:
+            yield
+
+    def _end_list(self, pdf: FPDF) -> None:
+        if self.options.export_document_structure and not getattr(pdf, '_in_structure_artifact', False):
+            pdf.struct_builder.end_list()
+
+    @contextmanager
+    def _cell_structure(self, pdf: FPDF, table: ldm.Table, row_index: int, column: int) -> Iterator[None]:
+        if self.options.export_document_structure and not getattr(pdf, '_in_structure_artifact', False):
+            with pdf.struct_builder.cell(table, row_index, column):
+                yield
+        else:
+            yield
+
+    @contextmanager
+    def _structure(self, pdf: FPDF, struct_type: str, source, position=None) -> Iterator[None]:
+        if self.options.export_document_structure and not getattr(pdf, '_in_structure_artifact', False):
+            with pdf.struct_builder.group(struct_type, source, position):
+                yield
+        else:
+            yield
+
+    @contextmanager
+    def _tag(self, pdf: FPDF, struct_type: str, title: Optional[str] = None,
+             alt_text: Optional[str] = None) -> Iterator[None]:
+        """Wrap content in a PDF structure element when tagging is on."""
+        if not self.options.export_document_structure or getattr(pdf, '_in_structure_artifact', False):
+            yield
+            return
+        original = pdf.add_page
+        overridden = "add_page" in pdf.__dict__
+        active = False
+        element = None
+
+        def begin():
+            nonlocal active, element
+            mcid = pdf.struct_builder.next_mcid_for_page(pdf.page)
+            kwargs: dict = {"struct_type": struct_type, "mcid": mcid}
+            if title:
+                kwargs["title"] = title
+            if alt_text:
+                kwargs["alt_text"] = alt_text
+            if element is not None:
+                kwargs['continuation'] = element
+            element = pdf._add_marked_content(**kwargs)
+            pdf._out(f"/P <</MCID {mcid}>> BDC")
+            active = True
+
+        def end():
+            nonlocal active
+            if active:
+                pdf._out("EMC")
+                active = False
+
+        def next_page(*args, **kwargs):
+            end()  # Each page stream must close before its footer is painted.
+            result = original(*args, **kwargs)
+            begin()  # Reopen after the new header with a page-local MCID.
+            return result
+
+        pdf.add_page = next_page
+        try:
+            begin()
+            yield
+        finally:
+            try:
+                end()
+            finally:
+                if overridden:
+                    pdf.add_page = original
+                else:
+                    pdf.__dict__.pop("add_page", None)
 
     # ------------------------------------------------------------------
     # Link helpers

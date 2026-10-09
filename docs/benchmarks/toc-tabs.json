@@ -1,0 +1,1036 @@
+{
+  "scope": "TOC single separator with first active forward RIGHT tab: body/header/footer, equal one/two columns, shaping on/off. Mixed sizes, public DOCX, clear/order selection, title page/column breaks, explicit outer column boundary and output-preserving width rejection checked by tests. Leaders and other TOC alignments remain unsupported; not full Word fidelity.",
+  "python": "3.13.15",
+  "before": {
+    "1-body-False": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 71.17001342773438,
+      "bytes": 6450,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          22.800003051757812,
+          66.30599975585938,
+          37.20000457763672,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          20.0,
+          271.1700134277344,
+          39.20000076293945,
+          "123",
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "1-body-True": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 71.17001342773438,
+      "bytes": 6450,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          22.800003051757812,
+          66.30599975585938,
+          37.20000457763672,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          20.0,
+          271.1700134277344,
+          39.20000076293945,
+          "123",
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "1-header-False": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 71.17001342773438,
+      "bytes": 6870,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          16.970001220703125,
+          66.30599975585938,
+          31.3700008392334,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          14.169998168945312,
+          271.1700134277344,
+          33.369998931884766,
+          "123",
+          0,
+          1,
+          0
+        ],
+        "BODY": [
+          22.829999923706055,
+          36.57000732421875,
+          51.62800216674805,
+          49.7700080871582,
+          "BODY",
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "1-header-True": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 71.17001342773438,
+      "bytes": 6881,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          16.970001220703125,
+          66.30599975585938,
+          31.3700008392334,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          14.169998168945312,
+          271.1700134277344,
+          33.369998931884766,
+          "123",
+          0,
+          1,
+          0
+        ],
+        "BODY": [
+          22.829999923706055,
+          36.57000732421875,
+          51.361000061035156,
+          49.7700080871582,
+          "BODY",
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "1-footer-False": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 71.17001342773438,
+      "bytes": 6864,
+      "pages": 1,
+      "words": {
+        "BODY": [
+          22.829999923706055,
+          20.0,
+          51.62800216674805,
+          33.20000076293945,
+          "BODY",
+          0,
+          0,
+          0
+        ],
+        "TITLE": [
+          34.83000183105469,
+          146.22999572753906,
+          66.30599975585938,
+          160.62998962402344,
+          "TITLE",
+          1,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          143.42999267578125,
+          271.1700134277344,
+          162.62998962402344,
+          "123",
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "1-footer-True": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 71.17001342773438,
+      "bytes": 6881,
+      "pages": 1,
+      "words": {
+        "BODY": [
+          22.829999923706055,
+          20.0,
+          51.361000061035156,
+          33.20000076293945,
+          "BODY",
+          0,
+          0,
+          0
+        ],
+        "TITLE": [
+          34.83000183105469,
+          146.22999572753906,
+          66.30599975585938,
+          160.62998962402344,
+          "TITLE",
+          1,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          143.42999267578125,
+          271.1700134277344,
+          162.62998962402344,
+          "123",
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "2-body-False": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 133.6699981689453,
+      "error_pt": 13.669998168945312,
+      "bytes": 6450,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          22.800003051757812,
+          66.30599975585938,
+          37.20000457763672,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          105.3499984741211,
+          20.0,
+          133.6699981689453,
+          39.20000076293945,
+          "123",
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "2-body-True": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 133.6699981689453,
+      "error_pt": 13.669998168945312,
+      "bytes": 6450,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          22.800003051757812,
+          66.30599975585938,
+          37.20000457763672,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          105.3499984741211,
+          20.0,
+          133.6699981689453,
+          39.20000076293945,
+          "123",
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "2-header-False": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 151.17001342773438,
+      "bytes": 6870,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          16.970001220703125,
+          66.30599975585938,
+          31.3700008392334,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          14.169998168945312,
+          271.1700134277344,
+          33.369998931884766,
+          "123",
+          0,
+          1,
+          0
+        ],
+        "BODY": [
+          22.829999923706055,
+          36.57000732421875,
+          51.62800216674805,
+          49.7700080871582,
+          "BODY",
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "2-header-True": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 151.17001342773438,
+      "bytes": 6881,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          16.970001220703125,
+          66.30599975585938,
+          31.3700008392334,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          14.169998168945312,
+          271.1700134277344,
+          33.369998931884766,
+          "123",
+          0,
+          1,
+          0
+        ],
+        "BODY": [
+          22.829999923706055,
+          36.57000732421875,
+          51.361000061035156,
+          49.7700080871582,
+          "BODY",
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "2-footer-False": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 151.17001342773438,
+      "bytes": 6864,
+      "pages": 1,
+      "words": {
+        "BODY": [
+          22.829999923706055,
+          20.0,
+          51.62800216674805,
+          33.20000076293945,
+          "BODY",
+          0,
+          0,
+          0
+        ],
+        "TITLE": [
+          34.83000183105469,
+          146.22999572753906,
+          66.30599975585938,
+          160.62998962402344,
+          "TITLE",
+          1,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          143.42999267578125,
+          271.1700134277344,
+          162.62998962402344,
+          "123",
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "2-footer-True": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 271.1700134277344,
+      "error_pt": 151.17001342773438,
+      "bytes": 6881,
+      "pages": 1,
+      "words": {
+        "BODY": [
+          22.829999923706055,
+          20.0,
+          51.361000061035156,
+          33.20000076293945,
+          "BODY",
+          0,
+          0,
+          0
+        ],
+        "TITLE": [
+          34.83000183105469,
+          146.22999572753906,
+          66.30599975585938,
+          160.62998962402344,
+          "TITLE",
+          1,
+          0,
+          0
+        ],
+        "123": [
+          242.85000610351562,
+          143.42999267578125,
+          271.1700134277344,
+          162.62998962402344,
+          "123",
+          1,
+          1,
+          0
+        ]
+      }
+    }
+  },
+  "after": {
+    "1-body-False": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 200.0,
+      "error_pt": 0.0,
+      "bytes": 6450,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          22.800003051757812,
+          66.30599975585938,
+          37.20000457763672,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          171.67999267578125,
+          20.0,
+          200.0,
+          39.20000076293945,
+          "123",
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "1-body-True": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 200.0,
+      "error_pt": 0.0,
+      "bytes": 6450,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          22.800003051757812,
+          66.30599975585938,
+          37.20000457763672,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          171.67999267578125,
+          20.0,
+          200.0,
+          39.20000076293945,
+          "123",
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "1-header-False": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 200.0,
+      "error_pt": 0.0,
+      "bytes": 6871,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          16.970001220703125,
+          66.30599975585938,
+          31.3700008392334,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          171.67999267578125,
+          14.169998168945312,
+          200.0,
+          33.369998931884766,
+          "123",
+          0,
+          1,
+          0
+        ],
+        "BODY": [
+          22.829999923706055,
+          36.57000732421875,
+          51.62800216674805,
+          49.7700080871582,
+          "BODY",
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "1-header-True": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 200.0,
+      "error_pt": 0.0,
+      "bytes": 6883,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          16.970001220703125,
+          66.30599975585938,
+          31.3700008392334,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          171.67999267578125,
+          14.169998168945312,
+          200.0,
+          33.369998931884766,
+          "123",
+          0,
+          1,
+          0
+        ],
+        "BODY": [
+          22.829999923706055,
+          36.57000732421875,
+          51.361000061035156,
+          49.7700080871582,
+          "BODY",
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "1-footer-False": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 200.0,
+      "error_pt": 0.0,
+      "bytes": 6866,
+      "pages": 1,
+      "words": {
+        "BODY": [
+          22.829999923706055,
+          20.0,
+          51.62800216674805,
+          33.20000076293945,
+          "BODY",
+          0,
+          0,
+          0
+        ],
+        "TITLE": [
+          34.83000183105469,
+          146.22999572753906,
+          66.30599975585938,
+          160.62998962402344,
+          "TITLE",
+          1,
+          0,
+          0
+        ],
+        "123": [
+          171.67999267578125,
+          143.42999267578125,
+          200.0,
+          162.62998962402344,
+          "123",
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "1-footer-True": {
+      "expected_number_right_pt": 200,
+      "actual_number_right_pt": 200.0,
+      "error_pt": 0.0,
+      "bytes": 6881,
+      "pages": 1,
+      "words": {
+        "BODY": [
+          22.829999923706055,
+          20.0,
+          51.361000061035156,
+          33.20000076293945,
+          "BODY",
+          0,
+          0,
+          0
+        ],
+        "TITLE": [
+          34.83000183105469,
+          146.22999572753906,
+          66.30599975585938,
+          160.62998962402344,
+          "TITLE",
+          1,
+          0,
+          0
+        ],
+        "123": [
+          171.67999267578125,
+          143.42999267578125,
+          200.0,
+          162.62998962402344,
+          "123",
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "2-body-False": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 120.00000762939453,
+      "error_pt": 7.62939453125e-06,
+      "bytes": 6449,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          22.800003051757812,
+          66.30599975585938,
+          37.20000457763672,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          91.68000030517578,
+          20.0,
+          120.00000762939453,
+          39.20000076293945,
+          "123",
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "2-body-True": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 120.00000762939453,
+      "error_pt": 7.62939453125e-06,
+      "bytes": 6449,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          22.800003051757812,
+          66.30599975585938,
+          37.20000457763672,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          91.68000030517578,
+          20.0,
+          120.00000762939453,
+          39.20000076293945,
+          "123",
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "2-header-False": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 120.00000762939453,
+      "error_pt": 7.62939453125e-06,
+      "bytes": 6869,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          16.970001220703125,
+          66.30599975585938,
+          31.3700008392334,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          91.68000030517578,
+          14.169998168945312,
+          120.00000762939453,
+          33.369998931884766,
+          "123",
+          0,
+          1,
+          0
+        ],
+        "BODY": [
+          22.829999923706055,
+          36.57000732421875,
+          51.62800216674805,
+          49.7700080871582,
+          "BODY",
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "2-header-True": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 120.00000762939453,
+      "error_pt": 7.62939453125e-06,
+      "bytes": 6882,
+      "pages": 1,
+      "words": {
+        "TITLE": [
+          34.83000183105469,
+          16.970001220703125,
+          66.30599975585938,
+          31.3700008392334,
+          "TITLE",
+          0,
+          0,
+          0
+        ],
+        "123": [
+          91.68000030517578,
+          14.169998168945312,
+          120.00000762939453,
+          33.369998931884766,
+          "123",
+          0,
+          1,
+          0
+        ],
+        "BODY": [
+          22.829999923706055,
+          36.57000732421875,
+          51.361000061035156,
+          49.7700080871582,
+          "BODY",
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "2-footer-False": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 120.00000762939453,
+      "error_pt": 7.62939453125e-06,
+      "bytes": 6865,
+      "pages": 1,
+      "words": {
+        "BODY": [
+          22.829999923706055,
+          20.0,
+          51.62800216674805,
+          33.20000076293945,
+          "BODY",
+          0,
+          0,
+          0
+        ],
+        "TITLE": [
+          34.83000183105469,
+          146.22999572753906,
+          66.30599975585938,
+          160.62998962402344,
+          "TITLE",
+          1,
+          0,
+          0
+        ],
+        "123": [
+          91.68000030517578,
+          143.42999267578125,
+          120.00000762939453,
+          162.62998962402344,
+          "123",
+          1,
+          1,
+          0
+        ]
+      }
+    },
+    "2-footer-True": {
+      "expected_number_right_pt": 120,
+      "actual_number_right_pt": 120.00000762939453,
+      "error_pt": 7.62939453125e-06,
+      "bytes": 6881,
+      "pages": 1,
+      "words": {
+        "BODY": [
+          22.829999923706055,
+          20.0,
+          51.361000061035156,
+          33.20000076293945,
+          "BODY",
+          0,
+          0,
+          0
+        ],
+        "TITLE": [
+          34.83000183105469,
+          146.22999572753906,
+          66.30599975585938,
+          160.62998962402344,
+          "TITLE",
+          1,
+          0,
+          0
+        ],
+        "123": [
+          91.68000030517578,
+          143.42999267578125,
+          120.00000762939453,
+          162.62998962402344,
+          "123",
+          1,
+          1,
+          0
+        ]
+      }
+    }
+  },
+  "probe_source": "import json,runpy,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__\nns=runpy.run_path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_pdf_toc_tabs.py')\nrecords={}\nfor columns in (1,2):\n for location in ('body','header','footer'):\n  for shaping in (False,True):\n   position=180 if columns==1 else 100\n   model=ns['toc_tab_model'](position,columns,location)\n   options=aw.saving.PdfSaveOptions();options.text_shaping=shaping\n   raw=ns['LdmPdfWriter'](options).write_to_bytes(model)\n   with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n    words={w[4]:w for w in pdf[0].get_text('words')}\n    key=f'{columns}-{location}-{shaping}'\n    records[key]={'expected_number_right_pt':20+position,'actual_number_right_pt':words['123'][2],'error_pt':abs(words['123'][2]-20-position),'bytes':len(raw),'pages':len(pdf),'words':words}\n    if key=='2-body-True':\n     pdf.save('/tmp/docweave-toc-tabs-'+sys.argv[1]+'.pdf')\n     pdf[0].draw_line((20+position,0),(20+position,180),color=(1,0,0),width=.3)\n     pdf[0].get_pixmap(matrix=pymupdf.Matrix(3,3)).save('/tmp/docweave-toc-tabs-'+sys.argv[1]+'.png')\nPath('/tmp/docweave-toc-tabs-'+sys.argv[1]+'.json').write_text(json.dumps(records,indent=2)+'\\n')\nprint({'cases':len(records),'max_error_pt':max(v['error_pt'] for v in records.values())})\n",
+  "native_comparison": {
+    "engine": "LibreOffice 26.2.6.3",
+    "cases": {
+      "docweave-toc-tab-native": {
+        "expected_number_right_pt": 200,
+        "native_number_right_pt": 200.1099853515625,
+        "library_number_right_pt": 200.00001525878906,
+        "source_docx_sha256": "b9d1765dd9eb05b042fc1e26aa92ed2fcd268684e300e69ba4bdf4bfd61691c6",
+        "native_pdf_sha256": "2bf1b0a92fc41b467921e5c24588fb537d8fcd1a2343fe53807152afd86a8397",
+        "library_pdf_sha256": "136e7dacbd17c554f945dffe0eef2c53e42f71b27ea2ad3f23cf1ef16b748793",
+        "source_document_xml": "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n<w:document xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" xmlns:mo=\"http://schemas.microsoft.com/office/mac/office/2008/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:mv=\"urn:schemas-microsoft-com:mac:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 wp14\"><w:body><w:p><w:pPr><w:pStyle w:val=\"TOC1\"/><w:tabs><w:tab w:pos=\"3600\" w:val=\"right\"/></w:tabs><w:ind w:left=\"480\" w:right=\"120\"/></w:pPr><w:r><w:rPr><w:sz w:val=\"24\"/></w:rPr><w:t>TITLE</w:t><w:tab/></w:r><w:r><w:rPr><w:sz w:val=\"32\"/></w:rPr><w:t>123</w:t></w:r></w:p><w:sectPr w:rsidR=\"00FC693F\" w:rsidRPr=\"0006063C\" w:rsidSect=\"00034616\"><w:pgSz w:w=\"6000\" w:h=\"3600\"/><w:pgMar w:top=\"400\" w:right=\"400\" w:bottom=\"400\" w:left=\"400\" w:header=\"720\" w:footer=\"720\" w:gutter=\"0\"/><w:cols w:space=\"720\"/><w:docGrid w:linePitch=\"360\"/></w:sectPr></w:body></w:document>",
+        "native_words": {
+          "TITLE": [
+            44.099998474121094,
+            23.799997329711914,
+            75.54000091552734,
+            37.86399841308594,
+            "TITLE",
+            0,
+            0,
+            0
+          ],
+          "123": [
+            173.5500030517578,
+            19.999996185302734,
+            200.1099853515625,
+            38.75199890136719,
+            "123",
+            0,
+            1,
+            0
+          ]
+        },
+        "library_words": {
+          "TITLE": [
+            46.83000183105469,
+            24.479995727539062,
+            78.30599975585938,
+            38.87999725341797,
+            "TITLE",
+            0,
+            0,
+            0
+          ],
+          "123": [
+            173.36000061035156,
+            21.67999267578125,
+            200.00001525878906,
+            40.8799934387207,
+            "123",
+            0,
+            1,
+            0
+          ]
+        }
+      },
+      "docweave-toc-tab-native-edge": {
+        "expected_number_right_pt": 280,
+        "native_number_right_pt": 280.11004638671875,
+        "library_number_right_pt": 280.0,
+        "source_docx_sha256": "416c1e49090894f50f85297822001b9aedca83c1529bf5140e847eb234f5ffe4",
+        "native_pdf_sha256": "77e522e450cdd84045aa4f211fc1bd39a2ce8ad9b3f4fd25a461bf5d1fe3b6cb",
+        "library_pdf_sha256": "d4de602664746c0cacaf41383d8160d22e3ac4d0b80606121308db75bb44db72",
+        "source_document_xml": "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n<w:document xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" xmlns:mo=\"http://schemas.microsoft.com/office/mac/office/2008/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:mv=\"urn:schemas-microsoft-com:mac:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 wp14\"><w:body><w:p><w:pPr><w:pStyle w:val=\"TOC1\"/><w:tabs><w:tab w:pos=\"5200\" w:val=\"right\"/></w:tabs><w:ind w:left=\"480\" w:right=\"120\"/></w:pPr><w:r><w:rPr><w:sz w:val=\"24\"/></w:rPr><w:t>TITLE</w:t><w:tab/></w:r><w:r><w:rPr><w:sz w:val=\"32\"/></w:rPr><w:t>123</w:t></w:r></w:p><w:sectPr w:rsidR=\"00FC693F\" w:rsidRPr=\"0006063C\" w:rsidSect=\"00034616\"><w:pgSz w:w=\"6000\" w:h=\"3600\"/><w:pgMar w:top=\"400\" w:right=\"400\" w:bottom=\"400\" w:left=\"400\" w:header=\"720\" w:footer=\"720\" w:gutter=\"0\"/><w:cols w:space=\"720\"/><w:docGrid w:linePitch=\"360\"/></w:sectPr></w:body></w:document>",
+        "native_words": {
+          "TITLE": [
+            44.099998474121094,
+            23.799997329711914,
+            75.54000091552734,
+            37.86399841308594,
+            "TITLE",
+            0,
+            0,
+            0
+          ],
+          "123": [
+            253.5500030517578,
+            19.999996185302734,
+            280.11004638671875,
+            38.75199890136719,
+            "123",
+            0,
+            1,
+            0
+          ]
+        },
+        "library_words": {
+          "TITLE": [
+            46.83000183105469,
+            24.479995727539062,
+            78.30599975585938,
+            38.87999725341797,
+            "TITLE",
+            0,
+            0,
+            0
+          ],
+          "123": [
+            253.36000061035156,
+            21.67999267578125,
+            280.0,
+            40.8799934387207,
+            "123",
+            0,
+            1,
+            0
+          ]
+        }
+      }
+    }
+  },
+  "unchanged_corpora": {
+    "common": {
+      "cases": 5,
+      "pages": 113,
+      "equal_recorded_fields": true,
+      "canonical_record_sha256": "7b9bdb7dcffd719c80b6bb573b4ace449ba1e7cfb7a7c60754748cdd0ee69132"
+    },
+    "body_lists": {
+      "cases": 8,
+      "pages": 48,
+      "equal_recorded_fields": true,
+      "canonical_record_sha256": "b4035e5f4048fbe97cf27a7ce4b37813e88a00643e2efc4cc79813babb91ff2f"
+    },
+    "cell_lists": {
+      "cases": 6,
+      "pages": 40,
+      "equal_recorded_fields": true,
+      "canonical_record_sha256": "60fab82680ca6df220e513f9d1480c132a11ee4d068fe38915879cf7fa7bdfb1"
+    },
+    "short_split_lines": {
+      "cases": 24,
+      "pages": 24,
+      "equal_recorded_fields": true,
+      "canonical_record_sha256": "04e33e32b040e39f46e9c5ee949162f7b23f71939917c5f70d33fa34fe12edf7"
+    },
+    "long_toc": {
+      "cases": 8,
+      "pages": 32,
+      "equal_recorded_fields": true,
+      "canonical_record_sha256": "97ec900ddd11807b00d6308af32a0ff4b5cdd0c75c0c52702090f4788bc88d9b"
+    }
+  },
+  "long-toc_wheel": {
+    "bytes": 26254136,
+    "sha256": "fe4533586402843899a434c1c53dcf8d20cc4d2046de049d392032df396eebeb"
+  },
+  "toc-tabs_wheel": {
+    "bytes": 26254335,
+    "sha256": "450ade336aa48fd8a0f04e5bd1166b53ce9319c6c12ce8b209a40ebfdcbc14ff"
+  },
+  "validation": {
+    "source_targeted": {
+      "passed": 25,
+      "seconds": 7.77
+    },
+    "examples": {
+      "passed": 31,
+      "warnings": 13,
+      "seconds": 8.03
+    },
+    "installed_files_byte_equal": 131,
+    "wheel_check": true,
+    "ruff_scope": "aspose E9,F63,F7,F82,F401; full new-test check",
+    "performance_benchmark_run": false,
+    "installed_full_suite": {
+      "passed": 992,
+      "warnings": 16,
+      "seconds": 192.47
+    }
+  }
+}

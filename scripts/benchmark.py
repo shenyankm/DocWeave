@@ -5,6 +5,7 @@ Each sample runs in a new process. RSS is unavailable on Windows (reported as nu
 """
 
 import argparse
+from contextlib import ExitStack
 from io import BytesIO
 import json
 from pathlib import Path
@@ -66,14 +67,15 @@ def measure(path):
     imported = perf_counter()
     document = aw.Document(path)
     parsed = perf_counter()
-    pdf = LdmPdfWriter()._render_pdf(document.light_document_model)
-    rendered = perf_counter()
-    payload = pdf.output()
-    serialized = perf_counter()
-    with tempfile.TemporaryDirectory() as directory:
-        with atomic_output(Path(directory) / "result.pdf") as output:
-            output.write_bytes(payload)
-    written = perf_counter()
+    with ExitStack() as cleanup:
+        pdf = LdmPdfWriter()._render_pdf(document.light_document_model, cleanup)
+        rendered = perf_counter()
+        payload = pdf.output()
+        serialized = perf_counter()
+        with tempfile.TemporaryDirectory() as directory:
+            with atomic_output(Path(directory) / "result.pdf") as output:
+                output.write_bytes(payload)
+        written = perf_counter()
     try:
         import resource
         rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss

@@ -40,11 +40,9 @@ class PdfUnsupportedOptionWarning(PdfConversionWarning):
 
 def warn_about_conversion(pdf, doc, options, fallback_families):
     unsupported = {
-        "text_compression",
         "embed_full_fonts",
         "use_core_fonts",
         "font_embedding_mode",
-        "page_mode",
         "color_mode",
         "preserve_form_fields",
         "memory_optimization",

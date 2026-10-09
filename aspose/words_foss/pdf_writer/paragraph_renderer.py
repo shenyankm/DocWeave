@@ -6,8 +6,7 @@ eliminating the previous code duplication.
 """
 
 
-from aspose.words_foss.diagnostics import warn
-from aspose.words_foss.pdf_writer.diagnostics import PdfUnsupportedOptionWarning
+from contextlib import contextmanager
 from typing import Optional
 
 from fpdf import FPDF
@@ -15,6 +14,7 @@ from fpdf import FPDF
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_runs
 from aspose.words_foss.model.wrap_type import WrapType
+from aspose.words_foss.pdf_writer.baseline import baseline_scope, mixed_size
 from aspose.words_foss.pdf_writer.constants import (
     CODE_BLOCK_BG_RGB,
     DEFAULT_FONT_NAME,
@@ -122,7 +122,6 @@ class ParagraphRenderer:
 
     def __init__(self, writer: PDFWriterContext) -> None:
         self._writer = writer
-        self._warned_expanded: bool = False
 
     # ------------------------------------------------------------------
     # Line height computation
@@ -156,11 +155,19 @@ class ParagraphRenderer:
 
     def render_paragraph(self, pdf: FPDF, para: ldm.Paragraph) -> None:
         """Render a single paragraph into the PDF."""
-        if is_pure_page_break(para):
+        if not para.list_format or not para.list_format.is_list_item:
+            self._writer._end_list(pdf)
+        in_band = getattr(pdf, '_in_header_render', False) or getattr(pdf, '_in_footer_render', False)
+        if not in_band and para.paragraph_format.page_break_before and (
+                pdf.get_y() > pdf.t_margin + 1e-7 or
+                self._writer._page_margin_left > self._writer._page_full_margin_left + 1e-7):
             pdf.add_page()
+        if is_pure_page_break(para):
+            if not in_band:
+                pdf.add_page()
             return
 
-        if para.paragraph_format.keep_together:
+        if not in_band and para.paragraph_format.keep_together:
             self._maybe_keep_together(pdf, para)
 
         # Capture the paragraph's top Y before body rendering — needed
@@ -168,14 +175,56 @@ class ParagraphRenderer:
         # ``relative_vertical_position == Paragraph`` ().
         paragraph_top_y = pdf.get_y()
 
-        register_bookmarks(pdf, para, self._writer._anchor_links)
-        self._emit_bookmark_outlines(pdf, para)
-        self._render_paragraph_body(pdf, para)
+        with self._track_navigation_start(pdf, para):
+            register_bookmarks(pdf, para, self._writer._anchor_links)
+            self._emit_bookmark_outlines(pdf, para)
+            self._render_paragraph_body(pdf, para)
 
         self._render_paragraph_relative_shapes(pdf, para, paragraph_top_y)
 
-        if any("\f" in (run.text or "") for run in visible_runs(para)):
+        if not in_band and any("\f" in (run.text or "") for run in visible_runs(para)):
             pdf.add_page()
+
+    @contextmanager
+    def _track_navigation_start(self, pdf: FPDF, para: ldm.Paragraph):
+        if getattr(pdf, '_in_repeated_page_band', False) or (
+                not para.paragraph_format.is_heading and not any(
+                    isinstance(item, ldm.BookmarkStart) and item.name for item in para._children)):
+            yield
+            return
+        outline_start = len(pdf._outline)
+        original = pdf._perform_page_break_if_need_be
+        overridden = "_perform_page_break_if_need_be" in pdf.__dict__
+        captured = checking = False
+
+        # shortcut: fpdf2 has no public first-draw hook; verify this integration on upgrades.
+        def after_break(h):
+            nonlocal captured, checking
+            if captured or checking:
+                return original(h)
+            # A break can render header/footer outlines; retain only the paragraph's entries.
+            sections = list(pdf._outline[outline_start:])
+            checking = True
+            try:
+                result = original(h)
+            finally:
+                checking = False
+            captured = True
+            register_bookmarks(pdf, para, self._writer._anchor_links)
+            for section in sections:
+                section.page_number = section.dest.page_number = pdf.page_no()
+                section.dest.top = pdf.h_pt - pdf.get_y() * pdf.k
+                section.dest.left = pdf.get_x() * pdf.k
+            return result
+
+        pdf._perform_page_break_if_need_be = after_break
+        try:
+            yield
+        finally:
+            if overridden:
+                pdf._perform_page_break_if_need_be = original
+            else:
+                pdf.__dict__.pop("_perform_page_break_if_need_be", None)
 
     def _render_paragraph_relative_shapes(
         self, pdf: FPDF, para: ldm.Paragraph, paragraph_top_y: float
@@ -241,25 +290,26 @@ class ParagraphRenderer:
         return 1 if self._writer.options.export_bookmarks_outline else 0
 
     def _start_section_safe(self, pdf: FPDF, text: str, level: int) -> None:
-        """Call ``pdf.start_section`` filling any gaps fpdf2 would reject."""
+        """Map source levels to a contiguous PDF hierarchy, optionally filling gaps."""
+        if getattr(pdf, '_in_repeated_page_band', False):
+            return
         w = self._writer
-        for gap in range(w._last_outline_level + 1, level):
-            pdf.start_section("", level=gap - 1)
-        w._last_outline_level = level
-        pdf.start_section(text, level=level - 1)
+        levels = w._outline_levels
+        if w.options.outline_options.create_missing_outline_levels:
+            for gap in range((levels[-1] if levels else 0) + 1, level):
+                levels.append(gap)
+                pdf.start_section("", level=len(levels) - 1)
+                pdf._outline[-1].dest.left = pdf.get_x() * pdf.k
+        while levels and levels[-1] >= level:
+            levels.pop()
+        levels.append(level)
+        pdf.start_section(text, level=len(levels) - 1)
+        pdf._outline[-1].dest.left = pdf.get_x() * pdf.k
 
     def _emit_heading_outline(self, pdf: FPDF, text: str, level: int) -> None:
         """Emit a PDF outline entry for a heading if allowed by OutlineOptions."""
         w = self._writer
         oo = w.options.outline_options
-        # TODO: implement expanded_outline_levels via PDF /Count post-processing
-        if oo.expanded_outline_levels > 0 and not self._warned_expanded:
-            warn(
-                "OutlineOptions.expanded_outline_levels is not yet implemented; "
-                "the value will be ignored", PdfUnsupportedOptionWarning,
-                stacklevel=2,
-            )
-            self._warned_expanded = True
         max_level = self._effective_headings_outline_levels()
         if level > max_level:
             return
@@ -378,6 +428,9 @@ class ParagraphRenderer:
         w = self._writer
         fs = DEFAULT_FONT_SIZE_PT
         style_name = pf.style_name
+        if (pf.is_heading or any(name in (style_name or '') for name in ('Code', 'code', 'Quote')) or
+                not list_format or not list_format.is_list_item or self._is_horizontal_rule(pf, runs)):
+            w._end_list(pdf)
 
         # Apply space before
         self._apply_space_before(pdf, pf)
@@ -454,24 +507,49 @@ class ParagraphRenderer:
             label = list_label.label_string if list_label and list_label.label_string else ""
             if not label:
                 label = self._compute_list_label(list_format)
-            with w._tag(pdf, "/LI"):
+            baseline = mixed_size(run.font.size if run.font.size > 0 else fs for run in runs if run.text)
+            with baseline_scope(pdf, baseline), w._list_structure(pdf, list_format):
                 run_size = get_dominant_font_size(runs)
                 effective_fs = run_size if run_size > 0 else fs
                 line_h = self.line_height_mm(get_line_font_size(runs), pf)
-                if marker_indent_mm > 0:
-                    pdf.cell(w=marker_indent_mm)
                 pdf.set_font(DEFAULT_FONT_NAME, size=effective_fs)
+                label_text = safe_text(f"{label} ") if label else ""
+                label_width = pdf.get_string_width(label_text) if label_text else 0.0
+                text_indent_mm = max(text_indent_mm, marker_indent_mm + label_width)
+                if (text_indent_mm + 2 * pdf.c_margin >= pdf.epw or
+                        marker_indent_mm + label_width + 2 * pdf.c_margin > pdf.epw):
+                    raise ValueError("No usable text width after body list indents")
+                if pdf.auto_page_break:
+                    needed = line_h
+                    region_height = pdf.h - pdf.b_margin - pdf.t_margin
+                    if (pf.widow_control and not any('\t' in (run.text or '') for run in runs)
+                            and 2 * line_h <= region_height + 1e-7
+                            and pdf.y + 2 * line_h > pdf.h - pdf.b_margin + 1e-7):
+                        body_pf = pf.model_copy(update={'left_indent': text_indent_mm / PT_TO_MM,
+                            'first_line_indent': 0.0, 'space_before': 0.0, 'space_after': 0.0})
+                        body = ldm.Paragraph(children=runs, paragraph_format=body_pf)
+                        width = w._page_width - w._page_margin_left - w._page_margin_right
+                        if w._estimate_paragraph_height(body, width) > line_h + 1e-7:
+                            needed = 2 * line_h
+                    if needed <= region_height + 1e-7 and pdf.y + needed > pdf.h - pdf.b_margin + 1e-7:
+                        getattr(pdf, '_advance_region', pdf.add_page)()
+                pdf.set_x(pdf.l_margin + marker_indent_mm)
                 if label:
-                    pdf.write(h=line_h, text=safe_text(f"{label} "))
-                if text_indent_mm > marker_indent_mm:
-                    pdf.set_x(pdf.l_margin + text_indent_mm)
-                w._run_renderer.render_formatted_runs(
-                    pdf,
-                    runs,
-                    newline=True,
-                    line_h_override=line_h,
-                    pf=pf,
-                )
+                    with w._tag(pdf, '/Lbl'):
+                        pdf.cell(w=label_width + 2 * pdf.c_margin, h=line_h, text=label_text)
+                previous = w._paragraph_insets
+                w._paragraph_insets = (text_indent_mm, previous[1])
+                pdf.set_left_margin(w._page_margin_left + text_indent_mm)
+                pdf.set_x(pdf.l_margin)
+                try:
+                    with w._tag(pdf, '/LBody'):
+                        w._run_renderer.render_formatted_runs(
+                            pdf, runs, align=align, newline=True,
+                            line_h_override=line_h, pf=pf,
+                        )
+                finally:
+                    w._paragraph_insets = previous
+                    pdf.set_left_margin(w._page_margin_left + previous[0])
             self._apply_space_after(pdf, pf)
             return
 
@@ -630,4 +708,3 @@ class ParagraphRenderer:
             for run in runs
             for chunk, _ in extract_link_segments(run.text or "")
         )
-

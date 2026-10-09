@@ -5,7 +5,7 @@ Lets the sub-renderer modules type their ``writer`` without importing
 ``LdmPdfWriter`` satisfies it structurally.
 """
 
-from typing import Any, Optional, Protocol, Union
+from typing import Any, ContextManager, Optional, Protocol, Union
 
 from fpdf import FPDF
 
@@ -19,12 +19,14 @@ class PDFWriterContext(Protocol):
     _page_width: float
     _page_height: float
     _page_margin_left: float
+    _page_full_margin_left: float
     _page_margin_right: float
     _page_margin_bottom: float
     _page_number_offset: int
     _paragraph_insets: tuple[float, float]
 
     _anchor_links: dict[str, int]
+    _outline_levels: list[int]
     _pre_rendered_shapes: set[int]
 
     _paragraph_renderer: Any
@@ -32,6 +34,19 @@ class PDFWriterContext(Protocol):
     _table_renderer: Any
 
     def _link_target_for(self, pdf: FPDF, url: Optional[str]) -> Union[int, str]: ...
+
+    def _structure(self, pdf: FPDF, struct_type: str, source: Any,
+                   position: Any = None) -> ContextManager[None]: ...
+
+    def _artifact(self, pdf: FPDF, subtype: Optional[str] = None) -> ContextManager[None]: ...
+
+    def _list_structure(self, pdf: FPDF, list_format: ldm.ListFormat,
+                        source: Any = None) -> ContextManager[None]: ...
+
+    def _end_list(self, pdf: FPDF) -> None: ...
+
+    def _cell_structure(self, pdf: FPDF, table: ldm.Table, row_index: int,
+                        column: int) -> ContextManager[None]: ...
 
     def _estimate_paragraph_height(self, para: ldm.Paragraph, col_w_mm: float) -> float: ...
 

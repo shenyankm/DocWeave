@@ -1,0 +1,2065 @@
+{
+  "scope": "Eight real table header corpora. pypdf removes Artifact content for semantic extraction; no screen-reader or PDF/UA certification.",
+  "before": [
+    {
+      "columns": 1,
+      "nested": false,
+      "image": false,
+      "pages": 5,
+      "pdf_bytes": 18067,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//P": 1,
+        "//Document//Table//TR//TH//P//Span": 5,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 0,
+      "semantic_target_count": 5,
+      "semantic_link_count": 5,
+      "visual_target_count": 5,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              22.83,
+              135.42
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              137.4199981689453,
+              84.30999755859375,
+              147.4199981689453
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "b8dbb0271ba8a506a7e924074ef7f565a702a894ac0a36fad262de00fef43a58",
+      "words_sha256": "2b408d4fde6bbc70cf8cd0e3bfc5501b89581209901f9fdc4a1924fd02acb6c5",
+      "drawing_sha256": "b185121b92a5e5595306e248a3fb32162b7c4de1689ec37ce6854c285bca307b"
+    },
+    {
+      "columns": 1,
+      "nested": false,
+      "image": true,
+      "pages": 6,
+      "pdf_bytes": 20240,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//P": 1,
+        "//Document//Table//TR//TH//P//Span": 6,
+        "//Document//Table//TR//TH//P//Figure": 6,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 0,
+      "semantic_target_count": 6,
+      "semantic_link_count": 6,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              22.83,
+              135.42
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              137.4199981689453,
+              84.30999755859375,
+              147.4199981689453
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "0843f433a067edacf2f9b0dabb011f0339616695e2586d388be3af1b856523d3",
+      "words_sha256": "fdb795ef36e6862cb6f28a29e340ef8b1a2e8402e22791d8056c0cafb1c7ab30",
+      "drawing_sha256": "d564bd025193f8298c181edfaceb9ca3d4c7eaa97369a5f12098a03208030ec3"
+    },
+    {
+      "columns": 1,
+      "nested": true,
+      "image": false,
+      "pages": 6,
+      "pdf_bytes": 19294,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//Table": 1,
+        "//Document//Table//TR//TH//Table//TR": 1,
+        "//Document//Table//TR//TH//Table//TR//TD": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Span": 6,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 0,
+      "semantic_target_count": 6,
+      "semantic_link_count": 6,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              25.67,
+              136.83
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              138.8300018310547,
+              87.1500015258789,
+              148.8300018310547
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "fbefb1339318b95ca16fa61f57f52acfd3f34e4108652dd041633b46a30d42c9",
+      "words_sha256": "c1f35b53227a21417d86881b2fb0be22fd58729ccf3d8685d8638aff8ba5b952",
+      "drawing_sha256": "f3210d3ff9fe1a1ee1eb2aa0f2f7f371b6cdd9f01f80d3ed2cffee0cdd6c7bf7"
+    },
+    {
+      "columns": 1,
+      "nested": true,
+      "image": true,
+      "pages": 6,
+      "pdf_bytes": 20672,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//Table": 1,
+        "//Document//Table//TR//TH//Table//TR": 1,
+        "//Document//Table//TR//TH//Table//TR//TD": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Span": 6,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Figure": 6,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 0,
+      "semantic_target_count": 6,
+      "semantic_link_count": 6,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              25.67,
+              136.83
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              138.8300018310547,
+              87.1500015258789,
+              148.8300018310547
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "aa787f291cc52ac50f69ee1ec6f81403a0e206edad3accce0f0ea9b389d507ae",
+      "words_sha256": "6fa7045a22b00a9fccb2f9e6eb0b560263b3781816e5823591a0713b01d6a9fc",
+      "drawing_sha256": "8316d37344c4aaeae71beb4ade405593952859076f0a027609f6f9b5902da388"
+    },
+    {
+      "columns": 2,
+      "nested": false,
+      "image": false,
+      "pages": 3,
+      "pdf_bytes": 16953,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//P": 1,
+        "//Document//Table//TR//TH//P//Span": 5,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 0,
+      "semantic_target_count": 5,
+      "semantic_link_count": 5,
+      "visual_target_count": 5,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              22.83,
+              135.42
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              137.4199981689453,
+              84.30999755859375,
+              147.4199981689453
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "8d95a118fdda93be8989e151d88facf40e362f156b10615118afa9033f4dc40a",
+      "words_sha256": "070dfb778125aa6c84544f4c3558e8bcc5b1b9a56d5c6ca001d1b27e398c6de0",
+      "drawing_sha256": "227ebcd88e66f9813616d86c2a04edb6560f1f9da2580e993284034b89b310a2"
+    },
+    {
+      "columns": 2,
+      "nested": false,
+      "image": true,
+      "pages": 3,
+      "pdf_bytes": 18466,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//P": 1,
+        "//Document//Table//TR//TH//P//Span": 6,
+        "//Document//Table//TR//TH//P//Figure": 6,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 0,
+      "semantic_target_count": 6,
+      "semantic_link_count": 6,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              22.83,
+              135.42
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              137.4199981689453,
+              84.30999755859375,
+              147.4199981689453
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "034a0afc0f6228c579fd1002dc7762ada81f4c8b0a8ccb73c9868c1c9e8c8738",
+      "words_sha256": "81b97f16e570321589397fb765bfeafe7b7330d55066821af982f19cff458c0f",
+      "drawing_sha256": "9e9e6b02f707c2225cebf52f3c7b36ca7100a35fdba07bd2cff762861b48eec8"
+    },
+    {
+      "columns": 2,
+      "nested": true,
+      "image": false,
+      "pages": 3,
+      "pdf_bytes": 17598,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//Table": 1,
+        "//Document//Table//TR//TH//Table//TR": 1,
+        "//Document//Table//TR//TH//Table//TR//TD": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Span": 6,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 0,
+      "semantic_target_count": 6,
+      "semantic_link_count": 6,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              25.67,
+              136.83
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              138.8300018310547,
+              87.1500015258789,
+              148.8300018310547
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "5750c69322f85dd0b0d10644103e023a939cb1c5ce51b031d526cf2ab57d02b5",
+      "words_sha256": "8ac2f6561f309100be6a112ca683fb2649b27e8ebfd036fd2c1b03fd1dba9067",
+      "drawing_sha256": "777b230bc9125d7886c6797736bd885ee97f8fa3bf3820f703d1a0ed9730b068"
+    },
+    {
+      "columns": 2,
+      "nested": true,
+      "image": true,
+      "pages": 3,
+      "pdf_bytes": 18818,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//Table": 1,
+        "//Document//Table//TR//TH//Table//TR": 1,
+        "//Document//Table//TR//TH//Table//TR//TD": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Span": 6,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Figure": 6,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 0,
+      "semantic_target_count": 6,
+      "semantic_link_count": 6,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              25.67,
+              136.83
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              138.8300018310547,
+              87.1500015258789,
+              148.8300018310547
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "8619646fa021997cd1f6e0f2a529dc93cddf8f26aedb939ff8f94fada0d907b5",
+      "words_sha256": "0b25bc35fd61a3430abb0c8b40fa18b043aab4203d40ca26a532bf92c5f08157",
+      "drawing_sha256": "fcfcf5c11ba81e282406fe09fa31e35e5e91d1f6a8a67c4964af3723b4e2f60b"
+    }
+  ],
+  "after": [
+    {
+      "columns": 1,
+      "nested": false,
+      "image": false,
+      "pages": 5,
+      "pdf_bytes": 17657,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//P": 1,
+        "//Document//Table//TR//TH//P//Span": 1,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 4,
+      "semantic_target_count": 1,
+      "semantic_link_count": 1,
+      "visual_target_count": 5,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              22.83,
+              135.42
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              137.4199981689453,
+              84.30999755859375,
+              147.4199981689453
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "b8dbb0271ba8a506a7e924074ef7f565a702a894ac0a36fad262de00fef43a58",
+      "words_sha256": "2b408d4fde6bbc70cf8cd0e3bfc5501b89581209901f9fdc4a1924fd02acb6c5",
+      "drawing_sha256": "b185121b92a5e5595306e248a3fb32162b7c4de1689ec37ce6854c285bca307b"
+    },
+    {
+      "columns": 1,
+      "nested": false,
+      "image": true,
+      "pages": 6,
+      "pdf_bytes": 19053,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//P": 1,
+        "//Document//Table//TR//TH//P//Span": 1,
+        "//Document//Table//TR//TH//P//Figure": 1,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 5,
+      "semantic_target_count": 1,
+      "semantic_link_count": 1,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              22.83,
+              135.42
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              137.4199981689453,
+              84.30999755859375,
+              147.4199981689453
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "0843f433a067edacf2f9b0dabb011f0339616695e2586d388be3af1b856523d3",
+      "words_sha256": "fdb795ef36e6862cb6f28a29e340ef8b1a2e8402e22791d8056c0cafb1c7ab30",
+      "drawing_sha256": "d564bd025193f8298c181edfaceb9ca3d4c7eaa97369a5f12098a03208030ec3"
+    },
+    {
+      "columns": 1,
+      "nested": true,
+      "image": false,
+      "pages": 6,
+      "pdf_bytes": 18778,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//Table": 1,
+        "//Document//Table//TR//TH//Table//TR": 1,
+        "//Document//Table//TR//TH//Table//TR//TD": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Span": 1,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 5,
+      "semantic_target_count": 1,
+      "semantic_link_count": 1,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              25.67,
+              136.83
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              138.8300018310547,
+              87.1500015258789,
+              148.8300018310547
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "fbefb1339318b95ca16fa61f57f52acfd3f34e4108652dd041633b46a30d42c9",
+      "words_sha256": "c1f35b53227a21417d86881b2fb0be22fd58729ccf3d8685d8638aff8ba5b952",
+      "drawing_sha256": "f3210d3ff9fe1a1ee1eb2aa0f2f7f371b6cdd9f01f80d3ed2cffee0cdd6c7bf7"
+    },
+    {
+      "columns": 1,
+      "nested": true,
+      "image": true,
+      "pages": 6,
+      "pdf_bytes": 19433,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//Table": 1,
+        "//Document//Table//TR//TH//Table//TR": 1,
+        "//Document//Table//TR//TH//Table//TR//TD": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Span": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Figure": 1,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 5,
+      "semantic_target_count": 1,
+      "semantic_link_count": 1,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              25.67,
+              136.83
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              138.8300018310547,
+              87.1500015258789,
+              148.8300018310547
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "aa787f291cc52ac50f69ee1ec6f81403a0e206edad3accce0f0ea9b389d507ae",
+      "words_sha256": "6fa7045a22b00a9fccb2f9e6eb0b560263b3781816e5823591a0713b01d6a9fc",
+      "drawing_sha256": "8316d37344c4aaeae71beb4ade405593952859076f0a027609f6f9b5902da388"
+    },
+    {
+      "columns": 2,
+      "nested": false,
+      "image": false,
+      "pages": 3,
+      "pdf_bytes": 16544,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//P": 1,
+        "//Document//Table//TR//TH//P//Span": 1,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 4,
+      "semantic_target_count": 1,
+      "semantic_link_count": 1,
+      "visual_target_count": 5,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              22.83,
+              135.42
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              137.4199981689453,
+              84.30999755859375,
+              147.4199981689453
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "8d95a118fdda93be8989e151d88facf40e362f156b10615118afa9033f4dc40a",
+      "words_sha256": "070dfb778125aa6c84544f4c3558e8bcc5b1b9a56d5c6ca001d1b27e398c6de0",
+      "drawing_sha256": "227ebcd88e66f9813616d86c2a04edb6560f1f9da2580e993284034b89b310a2"
+    },
+    {
+      "columns": 2,
+      "nested": false,
+      "image": true,
+      "pages": 3,
+      "pdf_bytes": 17271,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//P": 1,
+        "//Document//Table//TR//TH//P//Span": 1,
+        "//Document//Table//TR//TH//P//Figure": 1,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 5,
+      "semantic_target_count": 1,
+      "semantic_link_count": 1,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              22.83,
+              135.42
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              137.4199981689453,
+              84.30999755859375,
+              147.4199981689453
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              62.2599983215332,
+              23.419998168945312,
+              84.30999755859375,
+              33.41999816894531
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              199.75999450683594,
+              23.419998168945312,
+              221.80999755859375,
+              33.41999816894531
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "034a0afc0f6228c579fd1002dc7762ada81f4c8b0a8ccb73c9868c1c9e8c8738",
+      "words_sha256": "81b97f16e570321589397fb765bfeafe7b7330d55066821af982f19cff458c0f",
+      "drawing_sha256": "9e9e6b02f707c2225cebf52f3c7b36ca7100a35fdba07bd2cff762861b48eec8"
+    },
+    {
+      "columns": 2,
+      "nested": true,
+      "image": false,
+      "pages": 3,
+      "pdf_bytes": 17063,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//Table": 1,
+        "//Document//Table//TR//TH//Table//TR": 1,
+        "//Document//Table//TR//TH//Table//TR//TD": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Span": 1,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 5,
+      "semantic_target_count": 1,
+      "semantic_link_count": 1,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              25.67,
+              136.83
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              138.8300018310547,
+              87.1500015258789,
+              148.8300018310547
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "5750c69322f85dd0b0d10644103e023a939cb1c5ce51b031d526cf2ab57d02b5",
+      "words_sha256": "8ac2f6561f309100be6a112ca683fb2649b27e8ebfd036fd2c1b03fd1dba9067",
+      "drawing_sha256": "777b230bc9125d7886c6797736bd885ee97f8fa3bf3820f703d1a0ed9730b068"
+    },
+    {
+      "columns": 2,
+      "nested": true,
+      "image": true,
+      "pages": 3,
+      "pdf_bytes": 17617,
+      "structure_paths": {
+        "//Document": 1,
+        "//Document//P": 1,
+        "//Document//Table": 1,
+        "//Document//Table//TR": 2,
+        "//Document//Table//TR//TH": 1,
+        "//Document//Table//TR//TH//Table": 1,
+        "//Document//Table//TR//TH//Table//TR": 1,
+        "//Document//Table//TR//TH//Table//TR//TD": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Span": 1,
+        "//Document//Table//TR//TH//Table//TR//TD//P//Figure": 1,
+        "//Document//Table//TR//TD": 1,
+        "//Document//Table//TR//TD//P": 1,
+        "//Document//Table//TR//TD//P//Span": 40
+      },
+      "artifact_sequences": 5,
+      "semantic_target_count": 1,
+      "semantic_link_count": 1,
+      "visual_target_count": 6,
+      "body_tokens_once": true,
+      "outline_count": 1,
+      "outline_page": 0,
+      "links": [
+        [
+          [
+            null,
+            0,
+            [
+              22.829999923706055,
+              22.0,
+              49.84000015258789,
+              32.0
+            ],
+            [
+              25.67,
+              136.83
+            ]
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              138.8300018310547,
+              87.1500015258789,
+              148.8300018310547
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ],
+        [
+          [
+            "https://example.com",
+            null,
+            [
+              65.0999984741211,
+              24.830001831054688,
+              87.1500015258789,
+              34.83000183105469
+            ],
+            null
+          ],
+          [
+            "https://example.com",
+            null,
+            [
+              202.60000610351562,
+              24.830001831054688,
+              224.64999389648438,
+              34.83000183105469
+            ],
+            null
+          ]
+        ]
+      ],
+      "pixel_sha256": "8619646fa021997cd1f6e0f2a529dc93cddf8f26aedb939ff8f94fada0d907b5",
+      "words_sha256": "0b25bc35fd61a3430abb0c8b40fa18b043aab4203d40ca26a532bf92c5f08157",
+      "drawing_sha256": "fcfcf5c11ba81e282406fe09fa31e35e5e91d1f6a8a67c4964af3723b4e2f60b"
+    }
+  ],
+  "comparison": [
+    {
+      "columns": 1,
+      "nested": false,
+      "image": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true,
+        "visual_target_count": true,
+        "links": true,
+        "outline_count": true,
+        "outline_page": true
+      },
+      "pdf_bytes_saved": 410,
+      "artifact_sequences": 4,
+      "semantic_targets_before": 5,
+      "semantic_targets_after": 1
+    },
+    {
+      "columns": 1,
+      "nested": false,
+      "image": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true,
+        "visual_target_count": true,
+        "links": true,
+        "outline_count": true,
+        "outline_page": true
+      },
+      "pdf_bytes_saved": 1187,
+      "artifact_sequences": 5,
+      "semantic_targets_before": 6,
+      "semantic_targets_after": 1
+    },
+    {
+      "columns": 1,
+      "nested": true,
+      "image": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true,
+        "visual_target_count": true,
+        "links": true,
+        "outline_count": true,
+        "outline_page": true
+      },
+      "pdf_bytes_saved": 516,
+      "artifact_sequences": 5,
+      "semantic_targets_before": 6,
+      "semantic_targets_after": 1
+    },
+    {
+      "columns": 1,
+      "nested": true,
+      "image": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true,
+        "visual_target_count": true,
+        "links": true,
+        "outline_count": true,
+        "outline_page": true
+      },
+      "pdf_bytes_saved": 1239,
+      "artifact_sequences": 5,
+      "semantic_targets_before": 6,
+      "semantic_targets_after": 1
+    },
+    {
+      "columns": 2,
+      "nested": false,
+      "image": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true,
+        "visual_target_count": true,
+        "links": true,
+        "outline_count": true,
+        "outline_page": true
+      },
+      "pdf_bytes_saved": 409,
+      "artifact_sequences": 4,
+      "semantic_targets_before": 5,
+      "semantic_targets_after": 1
+    },
+    {
+      "columns": 2,
+      "nested": false,
+      "image": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true,
+        "visual_target_count": true,
+        "links": true,
+        "outline_count": true,
+        "outline_page": true
+      },
+      "pdf_bytes_saved": 1195,
+      "artifact_sequences": 5,
+      "semantic_targets_before": 6,
+      "semantic_targets_after": 1
+    },
+    {
+      "columns": 2,
+      "nested": true,
+      "image": false,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true,
+        "visual_target_count": true,
+        "links": true,
+        "outline_count": true,
+        "outline_page": true
+      },
+      "pdf_bytes_saved": 535,
+      "artifact_sequences": 5,
+      "semantic_targets_before": 6,
+      "semantic_targets_after": 1
+    },
+    {
+      "columns": 2,
+      "nested": true,
+      "image": true,
+      "unchanged": {
+        "pages": true,
+        "pixel_sha256": true,
+        "words_sha256": true,
+        "drawing_sha256": true,
+        "visual_target_count": true,
+        "links": true,
+        "outline_count": true,
+        "outline_page": true
+      },
+      "pdf_bytes_saved": 1201,
+      "artifact_sequences": 5,
+      "semantic_targets_before": 6,
+      "semantic_targets_after": 1
+    }
+  ]
+}
