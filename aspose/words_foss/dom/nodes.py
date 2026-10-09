@@ -751,9 +751,13 @@ class ParagraphFormat(_Format):
                 raise TypeError("Paragraph dimensions require a number or None for an unset direct value")
             if tag == "spacing" and (value < 0 or value > 1584):
                 raise RuntimeError("Paragraph spacing must be between 0 and 1584 points")
-            if abs(value) > 2147483647 / 20 or not isfinite(value):
-                raise ValueError("Paragraph dimension exceeds finite signed twip limits")
-            twips = round(value * 20)
+            if isinstance(value, float) and not isfinite(value):
+                raise ValueError("Paragraph dimension requires a finite number")
+            twips = value * 20
+            # Native finite inputs whose multiplication overflows use the signed minimum.
+            if isinstance(twips, float) and not isfinite(twips):
+                twips = -2147483648
+            twips = round(min(2147483647, max(-2147483648, twips)))
             if prop == "first_line_indent" and twips < 0:
                 attribute, twips = "hanging", -twips
             value = str(twips)

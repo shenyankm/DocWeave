@@ -30289,7 +30289,14 @@
       "dimension_extremes_evidence": {
         "file": "paragraph-dimension-extremes-26.9.json",
         "status": "unresolved",
-        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
+        "limits": "native nonfinite sentinel differs; live getters only; finite indent boundary save/reopen evidence recorded separately"
+      },
+      "indent_limits_evidence": {
+        "file": "paragraph-indent-limits-26.9.json",
+        "implementation": "finite twip clamping and multiplication overflow sentinel; 54 style/direct edits and saved output observations; unsigned hanging normalized in 10 native outputs and reopened natively",
+        "tests": "tests/test_paragraph_dimensions.py",
+        "limits": "nonfinite setters, complete canonical API and extreme rendering remain unaligned/unverified",
+        "full_acceptance": false
       }
     },
     {
@@ -30444,7 +30451,14 @@
       "dimension_extremes_evidence": {
         "file": "paragraph-dimension-extremes-26.9.json",
         "status": "unresolved",
-        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
+        "limits": "native nonfinite sentinel differs; live getters only; finite indent boundary save/reopen evidence recorded separately"
+      },
+      "indent_limits_evidence": {
+        "file": "paragraph-indent-limits-26.9.json",
+        "implementation": "finite twip clamping and multiplication overflow sentinel; 54 style/direct edits and saved output observations; unsigned hanging normalized in 10 native outputs and reopened natively",
+        "tests": "tests/test_paragraph_dimensions.py",
+        "limits": "nonfinite setters, complete canonical API and extreme rendering remain unaligned/unverified",
+        "full_acceptance": false
       }
     },
     {
@@ -30609,7 +30623,14 @@
       "dimension_extremes_evidence": {
         "file": "paragraph-dimension-extremes-26.9.json",
         "status": "unresolved",
-        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
+        "limits": "native nonfinite sentinel differs; live getters only; finite indent boundary save/reopen evidence recorded separately"
+      },
+      "indent_limits_evidence": {
+        "file": "paragraph-indent-limits-26.9.json",
+        "implementation": "finite twip clamping and multiplication overflow sentinel; 54 style/direct edits and saved output observations; unsigned hanging normalized in 10 native outputs and reopened natively",
+        "tests": "tests/test_paragraph_dimensions.py",
+        "limits": "nonfinite setters, complete canonical API and extreme rendering remain unaligned/unverified",
+        "full_acceptance": false
       }
     },
     {
@@ -30666,7 +30687,7 @@
       "dimension_extremes_evidence": {
         "file": "paragraph-dimension-extremes-26.9.json",
         "status": "unresolved",
-        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
+        "limits": "native nonfinite sentinel differs; live getters only; finite indent boundary save/reopen evidence recorded separately"
       },
       "spacing_limits_evidence": {
         "file": "paragraph-spacing-limits-26.9.json",
@@ -30719,7 +30740,7 @@
       "dimension_extremes_evidence": {
         "file": "paragraph-dimension-extremes-26.9.json",
         "status": "unresolved",
-        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
+        "limits": "native nonfinite sentinel differs; live getters only; finite indent boundary save/reopen evidence recorded separately"
       },
       "spacing_limits_evidence": {
         "file": "paragraph-spacing-limits-26.9.json",

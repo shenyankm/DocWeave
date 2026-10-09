@@ -185,21 +185,25 @@ def saved_dimensions(data):
 
 
 def verify_paragraph_dimensions(root, filename="paragraph-dimensions-26.9.json"):
-    assert filename in {"paragraph-dimensions-26.9.json", "paragraph-spacing-limits-26.9.json"}
+    assert filename in {"paragraph-dimensions-26.9.json", "paragraph-spacing-limits-26.9.json", "paragraph-indent-limits-26.9.json"}
     limits = filename == "paragraph-spacing-limits-26.9.json"
+    indents = filename == "paragraph-indent-limits-26.9.json"
     report = json.loads((root / filename).read_text())
     assert report["version"] == "26.9.0" and report["licensed"] is False
-    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes" / ("paragraph_spacing_limits.py" if limits else "paragraph_dimensions.py")))
+    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes" / ("paragraph_indent_limits.py" if indents else "paragraph_spacing_limits.py" if limits else "paragraph_dimensions.py")))
     generated = {name: (prop, data) for name, prop, data in probe["inputs"]()}
-    assert (len(generated), len(report["records"]), len(report["setter_errors"])) == ((2, 32, 12) if limits else (45, 360, 270))
+    assert (len(generated), len(report["records"]), len(report["setter_errors"])) == ((3, 54, 18) if indents else (2, 32, 12) if limits else (45, 360, 270))
     archives = {}
-    for key in ("corpus", "outputs"):
+    for key in ("corpus", "outputs") + (("normalized_outputs",) if indents else ()):
         raw = (root / report[key]).read_bytes()
         assert digest(raw) == report[key + "_sha256"]
         with ZipFile(BytesIO(raw)) as archive:
             archives[key] = {name: archive.read(name) for name in archive.namelist()}
     assert set(archives["corpus"]) == set(generated)
     assert set(archives["outputs"]) == {row["output"] for row in report["records"] if row["error"] is None}
+    if indents:
+        affected = {row["output"] for row in report["records"] if row.get("native_xml_issue")}
+        assert len(affected) == 10 and set(archives["normalized_outputs"]) == affected
     before = {}
     for name, (prop, expected) in generated.items():
         data = archives["corpus"][name]
@@ -216,7 +220,24 @@ def verify_paragraph_dimensions(root, filename="paragraph-dimensions-26.9.json")
             assert row["error"] is None
             raw = archives["outputs"][row["output"]]
             assert digest(raw) == row["output_sha256"]
+            if indents and row.get("native_xml_issue"):
+                normalized = archives["normalized_outputs"][row["output"]]
+                assert digest(normalized) == row["normalized_sha256"]
+                assert row["normalized_reopen"] == row["after_reopen"]
+                assert row["property"] == "first_line_indent"
+                assert row["native_xml_issue"] == "negative unsigned hanging at signed twip minimum"
+                with ZipFile(BytesIO(raw)) as native, ZipFile(BytesIO(normalized)) as valid:
+                    assert set(native.namelist()) == set(valid.namelist())
+                    modified = 0
+                    for name in native.namelist():
+                        original = native.read(name)
+                        expected = original.replace(b'w:hanging="-2147483648"', b'w:hanging="2147483648"') if name in {"word/document.xml", "word/styles.xml"} else original
+                        assert valid.read(name) == expected
+                        modified += expected != original
+                    assert modified == 1
+                raw = normalized
             assert saved_dimensions(raw) == row["after_reopen"] == row["after_edit"] == row["after_save_live"]
+    assert {(row["input"], row["target"], repr(row["value"])) for row in report["setter_errors"]} == {(name, target, repr(value)) for name in generated for target in ("style", "paragraph") for value in (None, True, "bad")}
     assert all(row["error"] == "TypeError" and row["property"] == generated[row["input"]][0] for row in report["setter_errors"])
     return len(report["records"])
 
@@ -861,6 +882,7 @@ def verify(root):
     pagination_rendering = verify_pagination_rendering(root)
     dimensions = verify_paragraph_dimensions(root)
     spacing_limits = verify_paragraph_dimensions(root, "paragraph-spacing-limits-26.9.json")
+    indent_limits = verify_paragraph_dimensions(root, "paragraph-indent-limits-26.9.json")
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
@@ -881,6 +903,7 @@ def verify(root):
             "checked_pagination_rendering_pairs": pagination_rendering,
             "checked_paragraph_dimension_edits": dimensions,
             "checked_paragraph_spacing_limits": spacing_limits,
+            "checked_paragraph_indent_limits": indent_limits,
             "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 

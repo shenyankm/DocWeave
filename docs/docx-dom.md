@@ -139,7 +139,9 @@ for style in editable.styles:
   已有前置段落时保留。持许可证的对照仍未执行，本项目保留原始值，差异继续记为未决。
 - `left_indent`、`right_indent`、`first_line_indent`、`space_before`、`space_after` 以 pt 读写，
   继承值和有效值默认 0；直接值的 `None` 表示未设置，可清除。继承 setter 拒绝 `None`，
-  布尔和字符串也拒绝；非有限值或超出有符号 twip 范围的值在修改前拒绝。段间距在量化前限定为 0–1584pt，越界抛出 `RuntimeError` 并保留原值。
+  布尔和字符串也拒绝；非有限值在修改前拒绝。段间距在量化前限定为 0–1584pt，
+  越界抛出 `RuntimeError` 并保留原值。有限缩进以有符号 32 位 twip 边界夹紧；
+  有限值乘以 20 后若发生浮点溢出，按官方观察得到 -2147483648 twip。
   值按 1/20pt 四舍六入五成双量化，如 12.375→12.4。负首行缩进写为 hanging，
   与 firstLine 同层出现时 hanging 优先；编辑保留 ind/spacing 中未涉及的属性。
   [360 次官方编辑及 270 次错误观察](benchmarks/paragraph-dimensions-26.9.json)覆盖 45 个普通输入；
@@ -147,8 +149,12 @@ for style in editable.styles:
   逻辑缩进、相对行间距、编号/条件表格上下文和完整 ParagraphFormat API 仍未对齐。
   [32 次间距边界编辑](benchmarks/paragraph-spacing-limits-26.9.json)覆盖段落/样式、合法边界、
   量化和保存重开；[极端 setter 观察](benchmarks/paragraph-dimension-extremes-26.9.json)发现官方缩进
-  会夹紧大值，NaN/Infinity 可产生负边界哨兵。本项目仍拒绝这些值，错误行为差异未解决；
+  会夹紧大值，NaN/Infinity 可产生负边界哨兵。本项目仍拒绝非有限值，错误行为差异未解决；
   极端观察仅检查 live getter，不能作为保存或渲染验收。
+  [54 次有限缩进边界编辑](benchmarks/paragraph-indent-limits-26.9.json)覆盖夹紧、浮点溢出、
+  样式/段落编辑和保存重开。官方 10 次负首行边界输出含负数 `hanging`；本项目写合法正数
+  `2147483648`（[Open XML 属性类型](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.indentation.hanging?view=openxml-3.0.1)），经独立解析和官方加载对照，解析值相同。原生异常属性及规范化对照分别保留，
+  不声称文件字节相同，也未验收这些极端值的最终渲染。
   [10 个原生 PDF 对照](benchmarks/paragraph-dimensions-rendering-26.9.json)覆盖 0/12.375pt 样式编辑，
   原点/字宽容差 0.02pt、144dpi 黑色像素差上限 1%，实测最大约 0.412%。
   仅覆盖普通字体 ASCII、固定行距和非首页面，负缩进及复杂内容的最终渲染仍未验收。

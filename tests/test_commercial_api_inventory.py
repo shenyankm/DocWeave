@@ -313,7 +313,9 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
-    names += ["paragraph-spacing-limits-26.9.json", "corpus/paragraph-spacing-limits-26.9.zip",
+    names += ["paragraph-indent-limits-26.9.json", "corpus/paragraph-indent-limits-26.9.zip",
+              "corpus/paragraph-indent-limits-26.9-outputs.zip", "corpus/paragraph-indent-limits-26.9-normalized.zip",
+              "paragraph-spacing-limits-26.9.json", "corpus/paragraph-spacing-limits-26.9.zip",
               "corpus/paragraph-spacing-limits-26.9-outputs.zip", "paragraph-dimensions-26.9.json", "corpus/paragraph-dimensions-26.9.zip",
               "corpus/paragraph-dimensions-26.9-outputs.zip", "paragraph-dimensions-rendering-26.9.json",
               "corpus/paragraph-dimensions-rendering-26.9.zip", "corpus/paragraph-dimensions-rendering-26.9-commercial.zip",
@@ -353,6 +355,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_trial_first_paragraph_outputs"] == 18
     assert result["checked_pagination_rendering_pairs"] == 10
     assert result["checked_paragraph_dimension_edits"] == 360
+    assert result["checked_paragraph_spacing_limits"] == 32
+    assert result["checked_paragraph_indent_limits"] == 54
     assert result["checked_paragraph_dimension_rendering_pairs"] == 10
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
@@ -600,3 +604,42 @@ def test_format_ledger_identifies_refusal_return_contract_and_load_error_gaps():
     assert "return contract differs" in rows[1]["gap"]
     assert rows[2]["implementation"]["exception_type"] == "UnicodeDecodeError"
     assert rows[2]["implementation"]["phase"] == "load" and "roundtrip fails" in rows[2]["gap"]
+
+
+def test_indent_normalization_rejects_unrelated_package_edits(tmp_path):
+    import hashlib
+    import json
+    from io import BytesIO
+    from shutil import copyfile
+    from zipfile import ZipFile
+
+    root = Path(__file__).parents[1]
+    source = root / "docs/benchmarks"
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_paragraph_dimensions"]
+    name = "paragraph-indent-limits-26.9.json"
+    report = json.loads((source / name).read_text())
+    for file in (name, report["corpus"], report["outputs"], report["normalized_outputs"]):
+        destination = tmp_path / file
+        destination.parent.mkdir(exist_ok=True)
+        copyfile(source / file, destination)
+    assert check(tmp_path, name) == 54
+    row = next(row for row in report["records"] if row.get("native_xml_issue"))
+    path = tmp_path / report["normalized_outputs"]
+    with ZipFile(path) as archive:
+        entries = {part: archive.read(part) for part in archive.namelist()}
+    with ZipFile(BytesIO(entries[row["output"]])) as archive:
+        parts = {part: archive.read(part) for part in archive.namelist()}
+    parts["[Content_Types].xml"] += b" "
+    stream = BytesIO()
+    with ZipFile(stream, "w") as archive:
+        for part, data in parts.items():
+            archive.writestr(part, data)
+    entries[row["output"]] = stream.getvalue()
+    row["normalized_sha256"] = hashlib.sha256(entries[row["output"]]).hexdigest()
+    with ZipFile(path, "w") as archive:
+        for part, data in entries.items():
+            archive.writestr(part, data)
+    report["normalized_outputs_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    (tmp_path / name).write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path, name)
