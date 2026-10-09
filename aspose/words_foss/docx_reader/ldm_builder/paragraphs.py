@@ -172,6 +172,11 @@ class ParagraphBuilder:
                 self._handle_run(child, para, tracker, para_style_id, image_rels)
             elif tag == f"{W_NS}hyperlink":
                 self._handle_hyperlink(child, para, para_style_id, tracker, image_rels)
+        if not para._children:
+            mark = self._font_resolver.resolve(None, para_style_id)
+            if para.paragraph_break_font is not None:
+                self._font_resolver.merge(mark, para.paragraph_break_font)
+            para.paragraph_break_font = mark
         return para
 
     @staticmethod

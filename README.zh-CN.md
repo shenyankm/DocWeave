@@ -496,7 +496,7 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-最新本地安装包验收环境为 macOS/Python 3.13.15：**1,592 项回归测试、31 项 API 示例通过**，
+最新本地安装包验收环境为 macOS/Python 3.13.15：**1,602 项回归测试、31 项 API 示例通过**，
 并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
 环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
 这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。

@@ -1,0 +1,219 @@
+{
+  "phase": 63,
+  "baseline_commit": "1ba52a9cb417dcaebaf8be0939dedda40b6f18c4",
+  "change": "Resolve inherited fonts for empty DOCX paragraphs and merge partial mark fonts by specified fields.",
+  "source_probe": "import json\nimport runpy\nimport sys\nfrom pathlib import Path\n\nimport pymupdf\n\nroot = Path('/tmp/docweave-empty-font-inheritance')\nroot.mkdir(exist_ok=True)\nmode = sys.argv[1]\nif mode == 'baseline':\n    sys.path.insert(0, '/tmp/docweave-empty-font-inheritance-baseline')\nif mode == 'generate':\n    fixtures = runpy.run_path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_empty_paragraph_font_inheritance.py')\n    for kind in ['normal', 'chain', 'defaults']:\n        doc, expected = fixtures['source_document'](kind, 'partial')\n        table = doc.tables[0]\n        table.style = 'Table Grid'\n        from docx.oxml import OxmlElement\n        from docx.oxml.ns import qn\n        margins = OxmlElement('w:tblCellMar')\n        for side in ['top', 'bottom', 'left', 'right']:\n            child = OxmlElement('w:'+side)\n            child.set(qn('w:w'), '0')\n            child.set(qn('w:type'), 'dxa')\n            margins.append(child)\n        table._tbl.tblPr.append(margins)\n        doc.save(root/f'{kind}.docx')\n    raise SystemExit\nimport aspose.words_foss as aw\nfrom aspose.words_foss.libreoffice import convert_to_pdf\nresult = {}\nfor kind in ['normal', 'chain', 'defaults']:\n    source, output = root/f'{kind}.docx', root/f'{mode}-{kind}.pdf'\n    if mode == 'native':\n        convert_to_pdf(source, output)\n    else:\n        document = aw.Document(source)\n        para = document.light_document_model.sections[0].body.tables[0].rows[0].cells[0].paragraphs[0]\n        docx_output = document.to_bytes('docx')\n        output.write_bytes(document.to_bytes(aw.saving.PdfSaveOptions()))\n    with pymupdf.open(output) as pdf:\n        pages = []\n        for page in pdf:\n            ys = sorted(set(round(item[1].y,3) for drawing in page.get_drawings() for item in drawing['items']\n                            if item[0]=='l' and abs(item[1].y-item[2].y)<0.01))\n            pages.append({'horizontal_lines':ys,'text':page.get_text().strip()})\n            page.get_pixmap(matrix=pymupdf.Matrix(2,2)).save(root/f'{mode}-{kind}-{page.number}.png')\n        result[kind]={'pages':len(pdf),'bytes':output.stat().st_size,'geometry':pages}\n        if mode != 'native':\n            result[kind]['mark_size'] = para.paragraph_break_font.size if para.paragraph_break_font else None\n            result[kind]['rebuilt_docx_bytes'] = len(docx_output)\n(root/f'{mode}.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint(json.dumps(result))\n",
+  "fixture_source": "\"\"\"Blank paragraphs use the same font cascade as visible text.\"\"\"\n\nfrom io import BytesIO\n\nimport pymupdf\nimport pytest\nfrom docx import Document as WordDocument\nfrom docx.enum.style import WD_STYLE_TYPE\nfrom docx.oxml import OxmlElement\nfrom docx.oxml.ns import qn\nfrom docx.shared import Pt\n\nfrom aspose.words_foss import Document\nfrom aspose.words_foss import light_document_model as ldm\nfrom aspose.words_foss.docx_reader.ldm_builder.cascading import ParagraphFormatResolver\nfrom aspose.words_foss.pdf_writer import LdmPdfWriter\n\n\ndef source_document(kind, mark):\n    source = WordDocument()\n    paragraph = source.add_table(rows=1, cols=1).cell(0, 0).paragraphs[0]\n    paragraph.paragraph_format.space_before = Pt(0)\n    paragraph.paragraph_format.space_after = Pt(0)\n    paragraph.paragraph_format.line_spacing = 1.0\n    if kind == \"normal\":\n        source.styles[\"Normal\"].font.size = Pt(8)\n        expected = 8\n    elif kind == \"chain\":\n        parent = source.styles.add_style(\"Blank Parent\", WD_STYLE_TYPE.PARAGRAPH)\n        parent.font.size = Pt(30)\n        parent.font.bold = True\n        child = source.styles.add_style(\"Blank Child\", WD_STYLE_TYPE.PARAGRAPH)\n        child.base_style = parent\n        paragraph.style = child\n        expected = 30\n    else:\n        rpr = (\n            source.styles.element.find(qn(\"w:docDefaults\"))\n            .find(qn(\"w:rPrDefault\"))\n            .find(qn(\"w:rPr\"))\n        )\n        size = rpr.find(qn(\"w:sz\"))\n        size.set(qn(\"w:val\"), \"12\")\n        source.styles[\"Normal\"].font.size = None\n        expected = 6\n    if mark is not None:\n        properties = OxmlElement(\"w:rPr\")\n        child = OxmlElement(\"w:b\" if mark == \"partial\" else \"w:sz\")\n        child.set(qn(\"w:val\"), \"0\" if mark == \"partial\" else \"32\")\n        properties.append(child)\n        paragraph._p.get_or_add_pPr().append(properties)\n        if mark != \"partial\":\n            expected = 16\n    return source, expected\n\n\n@pytest.mark.parametrize(\"kind\", [\"normal\", \"chain\", \"defaults\"])\n@pytest.mark.parametrize(\"mark\", [None, \"partial\", \"size\"])\ndef test_blank_cell_inherits_font_and_direct_mark_overrides(kind, mark):\n    source, expected = source_document(kind, mark)\n    stream = BytesIO()\n    source.save(stream)\n    loaded = Document(BytesIO(stream.getvalue()))\n    para = (\n        loaded.light_document_model.sections[0]\n        .body.tables[0]\n        .rows[0]\n        .cells[0]\n        .paragraphs[0]\n    )\n    assert not para._children\n    assert para.paragraph_break_font.size == expected\n    if mark == \"partial\":\n        assert para.paragraph_break_font.bold is False\n    table = ldm.Table(\n        top_padding=0,\n        bottom_padding=0,\n        rows=[\n            ldm.Row(\n                row_format=ldm.RowFormat(\n                    borders=[ldm.Border(line_style=1, line_width=0.5) for _ in range(6)]\n                ),\n                cells=[ldm.Cell(paragraphs=[para])],\n            )\n        ],\n    )\n    model = ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[table]))])\n    original = model.model_dump_json()\n    with pymupdf.open(\n        stream=LdmPdfWriter().write_to_bytes(model), filetype=\"pdf\"\n    ) as pdf:\n        assert not pdf[0].get_text().strip()\n        rects = [drawing[\"rect\"] for drawing in pdf[0].get_drawings()]\n        assert max(rect.y1 for rect in rects) - min(\n            rect.y0 for rect in rects\n        ) == pytest.approx(expected * 1.4, abs=0.02)\n    assert model.model_dump_json() == original\n    # Effective empty-line size survives DOCX rebuilding and an independent reload.\n    rewritten = Document(BytesIO(loaded.to_bytes(\"docx\")))\n    actual = (\n        rewritten.light_document_model.sections[0]\n        .body.tables[0]\n        .rows[0]\n        .cells[0]\n        .paragraphs[0]\n    )\n    assert actual.paragraph_break_font.size == expected\n\n\ndef test_partial_mark_merge_preserves_inherited_fields_without_aliasing():\n    parent = ldm.Font(size=8, bold=True)\n    base = ldm.ParagraphFormat(paragraph_break_font=parent)\n    override = ldm.ParagraphFormat(\n        paragraph_break_font=ldm.Font(bold=False, italic=True)\n    )\n    ParagraphFormatResolver.merge(base, override)\n    assert base.paragraph_break_font.size == 8\n    assert base.paragraph_break_font.bold is False\n    assert base.paragraph_break_font.italic is True\n    base.paragraph_break_font.size = 20\n    assert parent.size == 8 and parent.bold is True\n    assert override.paragraph_break_font.size == 0\n",
+  "reproduction": [
+    "Install phase 62 wheel with --no-deps --target /tmp/docweave-empty-font-inheritance-baseline.",
+    "Install candidate wheel in a venv outside the checkout.",
+    "Run source_probe generate/baseline/current/native; generate uses the saved fixture_source test file.",
+    "Native mode requires installed LibreOffice."
+  ],
+  "sources": {
+    "normal.docx": "71bbd93f789c4fc091b01f7e5bf0251d7fa9da232743982c223705a0fe06c003",
+    "defaults.docx": "f14c63524bc1bc86206013900ae079ba1b1f296fc97e7cabc9b5ff53d892df56",
+    "chain.docx": "d0be6ed6b7a2c2f7c4abef73ed68b06c89eee4354330d115e12b9c6b300324ef"
+  },
+  "baseline": {
+    "normal": {
+      "pages": 1,
+      "bytes": 3400,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            87.4
+          ],
+          "text": ""
+        }
+      ],
+      "mark_size": 0.0,
+      "rebuilt_docx_bytes": 14634
+    },
+    "chain": {
+      "pages": 1,
+      "bytes": 3400,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            87.4
+          ],
+          "text": ""
+        }
+      ],
+      "mark_size": 0.0,
+      "rebuilt_docx_bytes": 14719
+    },
+    "defaults": {
+      "pages": 1,
+      "bytes": 3400,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            87.4
+          ],
+          "text": ""
+        }
+      ],
+      "mark_size": 0.0,
+      "rebuilt_docx_bytes": 14633
+    }
+  },
+  "current": {
+    "normal": {
+      "pages": 1,
+      "bytes": 3400,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            83.2
+          ],
+          "text": ""
+        }
+      ],
+      "mark_size": 8.0,
+      "rebuilt_docx_bytes": 14722
+    },
+    "chain": {
+      "pages": 1,
+      "bytes": 3395,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            114.0
+          ],
+          "text": ""
+        }
+      ],
+      "mark_size": 30.0,
+      "rebuilt_docx_bytes": 14806
+    },
+    "defaults": {
+      "pages": 1,
+      "bytes": 3399,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            80.4
+          ],
+          "text": ""
+        }
+      ],
+      "mark_size": 6.0,
+      "rebuilt_docx_bytes": 14721
+    }
+  },
+  "libreoffice": {
+    "normal": {
+      "pages": 1,
+      "bytes": 7517,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.25,
+            82.15
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "chain": {
+      "pages": 1,
+      "bytes": 7522,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.25,
+            107.95
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "defaults": {
+      "pages": 1,
+      "bytes": 7518,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.25,
+            79.85
+          ],
+          "text": ""
+        }
+      ]
+    }
+  },
+  "common_corpus": {
+    "pages": 113,
+    "all_records_and_sizes_equal": true,
+    "source_probe": "import hashlib,json,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-current-performance');results={}\nfor case in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n raw=aw.Document(root/(case+'.docx')).to_bytes(aw.saving.PdfSaveOptions())\n pages=[]\n with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n  for page in pdf:\n   pages.append({key:hashlib.sha256(value).hexdigest() for key,value in {'words':repr(page.get_text('words')).encode(),'pixels':page.get_pixmap().samples,'drawings':repr(page.get_drawings()).encode(),'images':repr(page.get_image_info()).encode()}.items()})\n results[case]={'bytes':len(raw),'pages':pages}\nPath(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\\n');print('five PDF corpora saved')\n",
+    "cases": {
+      "small": {
+        "pages": 1,
+        "bytes": 6138,
+        "old_records_sha256": "3887f31f8114f8aa717c3f908d5d3a4f01b80fd3637593ae5e192716dfc6cf68",
+        "new_records_sha256": "3887f31f8114f8aa717c3f908d5d3a4f01b80fd3637593ae5e192716dfc6cf68"
+      },
+      "hundred_pages": {
+        "pages": 100,
+        "bytes": 75129,
+        "old_records_sha256": "96fa56501a2abdd2b5002cfdc325af82f227cb254ef5994a104db308b2bb40a0",
+        "new_records_sha256": "96fa56501a2abdd2b5002cfdc325af82f227cb254ef5994a104db308b2bb40a0"
+      },
+      "image_table": {
+        "pages": 3,
+        "bytes": 11337,
+        "old_records_sha256": "ff8d6df94bdeb3d67e82961ef5cfee0f65b7a964a0024a1882381ef2998141a5",
+        "new_records_sha256": "ff8d6df94bdeb3d67e82961ef5cfee0f65b7a964a0024a1882381ef2998141a5"
+      },
+      "repeated_images": {
+        "pages": 4,
+        "bytes": 5545,
+        "old_records_sha256": "9cabe49f4cbb40e34ef73bd5a693ea7ae07e8a770e39a61478722fa2a3b9eb9f",
+        "new_records_sha256": "9cabe49f4cbb40e34ef73bd5a693ea7ae07e8a770e39a61478722fa2a3b9eb9f"
+      },
+      "mixed_styles": {
+        "pages": 5,
+        "bytes": 19607,
+        "old_records_sha256": "9cf1c142de5431b298410982e1bb173d037989ad50f05a3b5df34b5e9dee5cbb",
+        "new_records_sha256": "9cf1c142de5431b298410982e1bb173d037989ad50f05a3b5df34b5e9dee5cbb"
+      }
+    }
+  },
+  "baseline_tests": {
+    "failed": 7,
+    "passed": 3
+  },
+  "source_related_tests": {
+    "passed": 87,
+    "seconds": 14.64,
+    "warnings": 2
+  },
+  "limits": [
+    "Natural leading remains 1.4, leaving 0.8/1.3/6.3 pt errors in these native samples.",
+    "Empty paragraph effective mark fonts are now explicit in the LDM and rebuilt DOCX.",
+    "Rebuilt DOCX samples grow by 87-88 bytes; no document-size reduction claim.",
+    "Hidden marks, field instructions, conditional table styles, and directly-created empty LDM runs still need deeper acceptance.",
+    "Only the existing empty-table renderer consumes this new inherited size; body/header blank-line rendering is not newly implemented.",
+    "No speed or RSS benchmark in this correctness phase."
+  ],
+  "validation": {
+    "full_tests": 1602,
+    "full_seconds": 360.87,
+    "full_warnings": 165,
+    "examples": 31,
+    "example_seconds": 6.51,
+    "example_warnings": 13,
+    "package_files": 133,
+    "final_package_bytes_equal_full_test_install": true,
+    "wheel_bytes": 26486717,
+    "wheel_sha256": "bd233e56dc3c265e9c11cecb4d9b5b6eb807b611ec82e7e14436c4e8d7ea87c4"
+  }
+}

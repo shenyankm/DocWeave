@@ -536,6 +536,11 @@ class ParagraphFormatResolver:
         for field in MERGE_PF_FIELDS:
             if field not in _set:
                 continue
+            if field == "paragraph_break_font" and base.paragraph_break_font is not None and override.paragraph_break_font is not None:
+                mark = base.paragraph_break_font.model_copy(deep=True)
+                FontResolver.merge(mark, override.paragraph_break_font)
+                base.paragraph_break_font = mark
+                continue
             if field == "shading":
                 val = getattr(override, field)
                 if val.background_pattern_color in ("", "auto") and not val.foreground_pattern_color:
