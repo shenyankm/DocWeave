@@ -92,10 +92,14 @@ def build(declarations, baseline, current, observations=None, formats=None):
             records[-1]["baseline_behavior"] = "partially_observed; canonical Font getter alignment remains incomplete"
         if name in {"aspose.words.Document.import_node", "aspose.words.DocumentBase.import_node"}:
             records[-1]["style_conflict_evidence"] = {
-                "file": "style-import-translated.json",
-                "scope": "247 default-mode deep paragraph import cases; seven native source changes and two native roundtrip changes",
+                "file": "style-import-default-on.json",
+                "scope": "247 default-mode imports; both imported and existing destination paragraphs checked; partial getters only",
                 "current_alternative_entrypoint": "DocxDocument.import_node",
-                "delivery": "bounded b/i/size/alignment translation implemented; 38 cases remain unsupported; full import and rendering unverified",
+                "delivery": "224 cases returned; 23 cases remain unsupported; default-on character-context serialization, full import and rendering unverified",
+            }
+            records[-1]["paragraph_default_evidence"] = {
+                "file": "paragraph-style-defaults-26.9.json",
+                "scope": "132 default-on paragraph/character combinations; 114 returned, 18 serialization contexts unsupported",
             }
         if name == "aspose.words.Font.size":
             records[-1]["default_format_evidence"] = {

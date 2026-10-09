@@ -79,6 +79,27 @@ def test_unimplemented_format_modes_fail_before_destination_changes(mode):
     assert target.to_bytes() == before
 
 
+@pytest.mark.parametrize("name", ["b", "i"])
+@pytest.mark.parametrize("child", [None, False, True])
+def test_default_on_character_base_requires_saved_story_normalization(name, child):
+    import runpy
+    from pathlib import Path
+
+    helpers = runpy.run_path(str(Path(__file__).parents[1] / "docs" / "probes" / "import_style_conflicts.py"))
+    style, build = helpers["style"], helpers["document"]
+    common = (f'<w:docDefaults><w:rPrDefault><w:rPr><w:{name}/><w:sz w:val="22"/>' +
+              '</w:rPr></w:rPrDefault></w:docDefaults>' + style("P", "paragraph", {name: False}) +
+              style("Base", "character", {name: True}))
+    source_data = build(common + style("Derived", "character", {name: child}, "Base"),
+                        '<w:pStyle w:val="P"/>', '<w:rStyle w:val="Derived"/>')
+    target_data = build(common, '<w:pStyle w:val="P"/>', '<w:rStyle w:val="Base"/>')
+    source, target = aw.DocxDocument(BytesIO(source_data)), aw.DocxDocument(BytesIO(target_data))
+    before = target.to_bytes()
+    with pytest.raises(NotImplementedError, match="destination-story normalization"):
+        target.import_node(source.body.paragraphs[0], True)
+    assert source.to_bytes() == source_data and target.to_bytes() == before
+
+
 def test_implicit_source_font_size_is_refused_before_destination_changes():
     import runpy
     from pathlib import Path

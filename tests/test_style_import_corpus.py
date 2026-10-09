@@ -15,14 +15,17 @@ from .test_docx_dom import payloads
 
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / "docs" / "benchmarks"
-REPORT = json.loads((BENCHMARKS / "style-import-translated.json").read_text())
+REPORTS = [json.loads((BENCHMARKS / name).read_text()) for name in ("style-import-default-on.json", "paragraph-style-defaults-26.9.json")]
 INSPECT = runpy.run_path(str(ROOT / "docs" / "probes" / "inspect_style_imports.py"))["inspect_document"]
-CHECKS = {row["case"]: row for row in REPORT["independent_checks"]["candidate"]}
+FORMATS = runpy.run_path(str(ROOT / "scripts" / "verify_commercial_baseline.py"))["saved_story_formats"]
+BASELINE = json.loads((BENCHMARKS / "style-import-conflicts-26.9.json").read_text())["reports"]["commercial"]
 
 
-@pytest.mark.parametrize("row", REPORT["reports"]["candidate"]["records"], ids=lambda row: row["case"])
-def test_style_import_saved_layers_and_atomic_refusals(row):
-    with ZipFile(BENCHMARKS / REPORT["corpus"]["archive"]) as archive:
+@pytest.mark.parametrize("report,row", [(report, row) for report in REPORTS for row in report["reports"]["candidate"]["records"]],
+                         ids=[row["case"] for report in REPORTS for row in report["reports"]["candidate"]["records"]])
+def test_style_import_saved_layers_and_atomic_refusals(report, row):
+    checks = {item["case"]: item for item in report["independent_checks"]["candidate"]}
+    with ZipFile(BENCHMARKS / report["corpus"]["archive"]) as archive:
         data = {phase: archive.read(row["case"] + "/" + phase + ".docx") for phase in ("source", "destination")}
     assert all(hashlib.sha256(value).hexdigest() == row["inputs"][phase] for phase, value in data.items())
     source, target = (aw.DocxDocument(BytesIO(data[phase])) for phase in ("source", "destination"))
@@ -34,7 +37,15 @@ def test_style_import_saved_layers_and_atomic_refusals(row):
     else:
         copied = target.import_node(node, True)
         assert copied.owner_document is target and copied.parent_node is None
+        native = report["reports"].get("commercial", BASELINE)
+        expected_warm = next(item["imported_format"] for item in native["records"] if item["case"] == row["case"])
+        font = copied.runs[0].effective_font
+        alignment = copied.effective_paragraph_format.alignment
+        assert {"bold": font.bold, "italic": font.italic, "size": font.size,
+                "alignment": {"both": "JUSTIFY"}.get(alignment, (alignment or "left").upper())} == expected_warm
         target.body.append_child(copied)
-        assert INSPECT(BytesIO(target.to_bytes())) == {key: value for key, value in CHECKS[row["case"]].items()
+        assert INSPECT(BytesIO(target.to_bytes())) == {key: value for key, value in checks[row["case"]].items()
                                                      if key not in {"case", "output"}}
+        expected = next(item["formats"] for item in report["story_rereads"]["commercial"]["records"] if item["case"] == row["case"])
+        assert FORMATS(target.to_bytes()) == expected
     assert node.parent_node is source.body and payloads(source.to_bytes()) == payloads(data["source"])

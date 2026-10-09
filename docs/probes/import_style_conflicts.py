@@ -78,7 +78,7 @@ def inputs():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["generate", "commercial", "current", "commercial-read"])
+    parser.add_argument("action", choices=["generate", "commercial", "current", "commercial-read", "commercial-read-stories", "commercial-roundtrip", "commercial-no-source-getter"])
     parser.add_argument("corpus", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
@@ -101,11 +101,11 @@ def main():
     def load(data):
         return aw.Document(BytesIO(data)) if commercial else aw.DocxDocument(BytesIO(data))
 
-    def paragraph(doc):
+    def paragraph(doc, label="IMPORT"):
         if commercial:
             return next(node.as_paragraph() for node in doc.get_child_nodes(aw.NodeType.PARAGRAPH, True)
-                        if node.get_text().strip() == "IMPORT")
-        return next(node for node in doc.body.paragraphs if node.text == "IMPORT")
+                        if node.get_text().strip() == label)
+        return next(node for node in doc.body.paragraphs if node.text == label)
 
     def formatting(node):
         font = node.runs[0].as_run().font if commercial else node.runs[0].effective_font
@@ -113,31 +113,50 @@ def main():
         return {"bold": font.bold, "italic": font.italic, "size": font.size, "alignment": alignment}
 
     records = []
-    if args.action == "commercial-read":
+    if args.action in {"commercial-read", "commercial-read-stories"}:
         candidate = json.loads((args.corpus / "observations.json").read_text())
         for row in candidate["records"]:
-            if row["outcome"] != "returned":
+            if row["outcome"] != "returned" and args.action == "commercial-read":
                 continue
             data = (args.corpus / row["output"]).read_bytes()
             assert hashlib.sha256(data).hexdigest() == row["output_sha256"]
-            records.append({"case": row["case"], "output_sha256": row["output_sha256"],
-                            "format": formatting(paragraph(load(data)))})
+            document = load(data)
+            if args.action == "commercial-read-stories":
+                labels = ("DESTINATION", "IMPORT") if row["outcome"] == "returned" else ("DESTINATION",)
+                observed = {"formats": {label: formatting(paragraph(document, label)) for label in labels}}
+            else:
+                observed = {"format": formatting(paragraph(document))}
+            records.append({"case": row["case"], "output_sha256": row["output_sha256"], **observed})
         report = {"module": module, "version": version("aspose-words"), "python": platform.python_version(),
                   "platform": platform.platform(), "records": records,
-                  "scope": "official reread of returned candidate outputs; no render acceptance", "licensed": False}
+                  "scope": "official cold getters for owned paragraphs; no render acceptance", "licensed": False}
         (args.output / "observations.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
         print(json.dumps({"checked_candidate_outputs": len(records)}))
         return
     raw = args.corpus.read_bytes()
     with ZipFile(BytesIO(raw)) as archive:
         keys = sorted({name.split("/")[0] for name in archive.namelist()})
-        assert len(keys) == 247
+        assert keys and set(archive.namelist()) == {key + "/" + phase + ".docx" for key in keys for phase in ("source", "destination")}
         for index, key in enumerate(keys):
             data = {phase: archive.read(key + "/" + phase + ".docx") for phase in ("source", "destination")}
+            if args.action == "commercial-roundtrip":
+                for phase, payload in data.items():
+                    document = load(payload)
+                    label = "IMPORT" if phase == "source" else "DESTINATION"
+                    before = formatting(paragraph(document, label))
+                    path = args.output / (f"{index:03d}-{phase}.docx")
+                    document.save(str(path))
+                    records.append({"case": key, "phase": phase, "input_sha256": hashlib.sha256(payload).hexdigest(),
+                                    "output": path.name, "output_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                                    "before": before, "after": formatting(paragraph(load(path.read_bytes()), label))})
+                continue
             source, destination = (load(data[phase]) for phase in ("source", "destination"))
             node = paragraph(source)
-            row = {"case": key, "inputs": {phase: hashlib.sha256(payload).hexdigest() for phase, payload in data.items()},
-                   "source_format": formatting(node)}
+            row = {"case": key, "inputs": {phase: hashlib.sha256(payload).hexdigest() for phase, payload in data.items()}}
+            if args.action == "commercial-no-source-getter":
+                row["no_source_getter_before_import"] = True
+            else:
+                row["source_format"] = formatting(node)
             before = destination.to_bytes() if not commercial else None
             try:
                 copied = destination.import_node(node, True)
@@ -157,10 +176,12 @@ def main():
     report = {"module": module, "version": version("aspose-words" if commercial else "aspose-words-foss-enhanced"),
               "python": platform.python_version(), "platform": platform.platform(),
               "corpus_sha256": hashlib.sha256(raw).hexdigest(), "records": records,
-              "scope": "247 new paragraph/character style conflicts; default mode, deep paragraph import; b/i/size/alignment getters",
+              "scope": f"{len(keys)} new paragraph/character style conflicts; default mode, deep paragraph import; b/i/size/alignment getters",
               "licensed": False if commercial else None, "full_import_acceptance": False, "rendering_acceptance": False}
+    if args.action == "commercial-roundtrip":
+        report["scope"] = "official save-only roundtrips of both owned inputs; no import or rendering acceptance"
     (args.output / "observations.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
-    print(json.dumps({"observations": len(records), "returned": sum(row["outcome"] == "returned" for row in records)}))
+    print(json.dumps({"observations": len(records), "returned": sum(row.get("outcome") == "returned" for row in records)}))
 
 
 if __name__ == "__main__":

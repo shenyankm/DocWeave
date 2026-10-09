@@ -188,7 +188,11 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-toggles-26.9.json", "style-toggles-current.json", "corpus/style-toggles-26.9.zip",
              "style-import-conflicts-26.9.json", "corpus/style-import-conflicts-26.9.zip",
              "corpus/style-import-conflict-outputs.zip", "style-import-translated.json",
-             "corpus/style-import-translated.zip", "font-defaults-26.9.json", "corpus/font-defaults-26.9.zip"]
+             "corpus/style-import-translated.zip", "font-defaults-26.9.json", "corpus/font-defaults-26.9.zip",
+             "style-import-default-on.json", "corpus/style-import-default-on.zip",
+             "paragraph-style-defaults-26.9.json", "corpus/paragraph-style-defaults-26.9.zip",
+             "corpus/paragraph-style-default-outputs.zip", "corpus/paragraph-default-repeat-outputs.zip",
+             "style-save-roundtrips-26.9.json", "corpus/style-save-roundtrips-26.9.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -200,7 +204,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_format_outputs"] == 100 and result["behavioral_acceptance"] is False
     assert result["checked_import_outputs"] == 168
     assert result["checked_style_inputs"] == 745
-    assert result["checked_style_import_outputs"] == 988
+    assert result["checked_style_import_outputs"] == 1631
+    assert result["checked_style_roundtrip_outputs"] == 494
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]
@@ -210,8 +215,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     import_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                    if row["id"] in {"aspose.words.Document.import_node", "aspose.words.DocumentBase.import_node"}]
     assert len(import_rows) == 2
-    assert all(row["style_conflict_evidence"]["file"] == "style-import-translated.json" for row in import_rows)
-    assert all("38 cases remain unsupported" in row["style_conflict_evidence"]["delivery"] for row in import_rows)
+    assert all(row["style_conflict_evidence"]["file"] == "style-import-default-on.json" for row in import_rows)
+    assert all("23 cases remain unsupported" in row["style_conflict_evidence"]["delivery"] for row in import_rows)
     archive = tmp_path / "corpus" / "commercial-26.9-literal-outputs.zip"
     archive.write_bytes(archive.read_bytes() + b"corruption")
     with pytest.raises(AssertionError):
@@ -309,6 +314,51 @@ def test_style_import_evidence_rejects_forged_layers_and_changed_outputs(tmp_pat
     archive.write_bytes(archive.read_bytes() + b"corruption")
     with pytest.raises(AssertionError, match="outputs digest"):
         check(tmp_path, name)
+
+
+@pytest.mark.parametrize("name", ["style-import-default-on.json", "paragraph-style-defaults-26.9.json"])
+def test_story_evidence_rejects_forged_destination_format(tmp_path, name):
+    import json
+    from shutil import copyfile
+
+    root = Path(__file__).parents[1]
+    check = runpy.run_path(str(root / "scripts" / "verify_commercial_baseline.py"))["verify_style_imports"]
+    source = root / "docs" / "benchmarks"
+    report = json.loads((source / name).read_text())
+    files = {name, report["corpus"]["archive"], report["outputs"]["archive"]}
+    files.update(report[key]["file"] for key in ("baseline", "before_baseline") if key in report)
+    if "repeat_outputs" in report:
+        files.add(report["repeat_outputs"]["archive"])
+    for file in files:
+        path = tmp_path / file
+        path.parent.mkdir(exist_ok=True)
+        copyfile(source / file, path)
+    assert check(tmp_path, name) == report["outputs"]["files"]
+    row = report["story_rereads"]["candidate"]["records"][0]["formats"]["DESTINATION"]
+    row["bold"] = not row["bold"]
+    (tmp_path / name).write_text(json.dumps(report))
+    with pytest.raises(AssertionError, match="saved story observation"):
+        check(tmp_path, name)
+
+
+def test_roundtrip_evidence_rejects_forged_after_format(tmp_path):
+    import json
+    from shutil import copyfile
+
+    root = Path(__file__).parents[1]
+    check = runpy.run_path(str(root / "scripts" / "verify_commercial_baseline.py"))["verify_style_roundtrips"]
+    source = root / "docs" / "benchmarks"
+    name = "style-save-roundtrips-26.9.json"
+    report = json.loads((source / name).read_text())
+    for file in (name, report["corpus"]["archive"], report["outputs"]["archive"]):
+        path = tmp_path / file
+        path.parent.mkdir(exist_ok=True)
+        copyfile(source / file, path)
+    assert check(tmp_path) == 494
+    report["report"]["records"][0]["after"]["bold"] = not report["report"]["records"][0]["after"]["bold"]
+    (tmp_path / name).write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
 
 
 def test_font_default_evidence_rejects_fabricated_value_and_missing_input(tmp_path):

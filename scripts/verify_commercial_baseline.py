@@ -131,23 +131,27 @@ def verify_style_imports(root, name="style-import-conflicts-26.9.json"):
     assert digest(corpus) == report["corpus"]["sha256"], "style import corpus digest mismatch"
     assert digest(raw_outputs) == report["outputs"]["sha256"], "style import outputs digest mismatch"
     probes = Path(__file__).parents[1] / "docs" / "probes"
-    generate = runpy.run_path(str(probes / "import_style_conflicts.py"))["inputs"]
+    generator = report["corpus"].get("generator", "import_style_conflicts.py")
+    counts = {"import_style_conflicts.py": 247, "paragraph_style_defaults.py": 132}
+    assert generator in counts
+    generate = runpy.run_path(str(probes / generator))["inputs"]
     expected = {key + "/" + phase + ".docx" for key, phase, _ in generate()}
     keys = {name.split("/")[0] for name in expected}
     inspect = runpy.run_path(str(probes / "inspect_style_imports.py"))["inspect_document"]
-    assert len(expected) == 494 and len(keys) == report["corpus"]["input_pairs"] == 247
-    checked, phases = 0, {}
+    assert len(expected) == 2 * len(keys) and len(keys) == report["corpus"]["input_pairs"] == counts[generator]
+    checked, phases, formats = 0, {}, {}
     with ZipFile(BytesIO(corpus)) as inputs, ZipFile(BytesIO(raw_outputs)) as outputs:
         assert len(inputs.namelist()) == len(expected) and set(inputs.namelist()) == expected
-        assert len(outputs.namelist()) == report["outputs"]["files"] == 247 * len(report["reports"])
+        assert len(outputs.namelist()) == report["outputs"]["files"] == len(keys) * len(report["reports"])
         for phase in report["reports"]:
             observed = report["reports"][phase]
             assert observed["corpus_sha256"] == report["corpus"]["sha256"]
             rows = {row["case"]: row for row in observed["records"]}
-            assert len(rows) == len(observed["records"]) == 247 and set(rows) == keys
+            assert len(rows) == len(observed["records"]) == len(keys) and set(rows) == keys
             phases[phase] = rows
             recorded = {row["case"]: row for row in report["independent_checks"][phase]}
-            assert len(recorded) == 247 and set(recorded) == keys
+            assert len(recorded) == len(keys) and set(recorded) == keys
+            formats[phase] = {}
             for key, row in rows.items():
                 for source in ("source", "destination"):
                     assert digest(inputs.read(key + "/" + source + ".docx")) == row["inputs"][source]
@@ -155,6 +159,8 @@ def verify_style_imports(root, name="style-import-conflicts-26.9.json"):
                 assert digest(data) == row["output_sha256"]
                 actual = {"case": key, "output": row["output"], **inspect(BytesIO(data))}
                 assert actual == recorded[key], "style import independent observation mismatch"
+                if "story_rereads" in report:
+                    formats[phase][key] = saved_story_formats(data)
                 if row["outcome"] == "raised":
                     assert phase != "commercial" and row["destination_unchanged"] is True
                 else:
@@ -183,10 +189,88 @@ def verify_style_imports(root, name="style-import-conflicts-26.9.json"):
     assert len(repeated) == len(report["repeat_without_source_getter"]) and set(repeated) == set(report["native_roundtrip_changes"])
     for key, row in repeated.items():
         assert row["no_source_getter_before_import"] is True
-        assert row["imported_bold"] == native[key]["imported_format"]["bold"]
-        assert row["reopened_bold"] == native[key]["reopened_format"]["bold"]
+        if "imported_format" in row:
+            assert row["imported_format"] == native[key]["imported_format"]
+            assert row["reopened_format"] == native[key]["reopened_format"]
+        else:
+            assert row["imported_bold"] == native[key]["imported_format"]["bold"]
+            assert row["reopened_bold"] == native[key]["reopened_format"]["bold"]
+    if "repeat_outputs" in report:
+        raw = (root / report["repeat_outputs"]["archive"]).read_bytes()
+        assert digest(raw) == report["repeat_outputs"]["sha256"]
+        with ZipFile(BytesIO(raw)) as archive:
+            assert len(archive.namelist()) == report["repeat_outputs"]["files"] == len(repeated)
+            for row in repeated.values():
+                data = archive.read(row["output"])
+                assert digest(data) == row["output_sha256"]
+                assert saved_story_formats(data)["IMPORT"] == row["reopened_format"]
+    if "story_rereads" in report:
+        previous = phases.get("before")
+        if previous is None:
+            path = root / report["before_baseline"]["file"]
+            raw = path.read_bytes()
+            assert digest(raw.replace(b"\r\n", b"\n")) == report["before_baseline"]["sha256"]
+            previous = {row["case"]: row for row in json.loads(raw)["reports"]["candidate"]["records"]}
+        source_rows = {"commercial": native, "before": previous, "candidate": phases["candidate"]}
+        observations = {}
+        assert set(report["story_rereads"]) == set(source_rows)
+        for phase, observed in report["story_rereads"].items():
+            assert observed["version"] == "26.9.0" and observed["licensed"] is False
+            rows = {row["case"]: row for row in observed["records"]}
+            assert len(rows) == len(observed["records"]) == len(keys) and set(rows) == keys
+            observations[phase] = rows
+            for key, row in rows.items():
+                original = source_rows[phase][key]
+                assert row["output_sha256"] == original["output_sha256"]
+                assert set(row["formats"]) == ({"IMPORT", "DESTINATION"} if original["outcome"] == "returned" else {"DESTINATION"})
+                if phase in formats:
+                    assert row["formats"] == formats[phase][key], "saved story observation mismatch"
+        for phase in ("before", "candidate"):
+            mismatches = sorted(key for key, row in source_rows[phase].items() if row["outcome"] == "returned"
+                                and observations[phase][key]["formats"] != observations["commercial"][key]["formats"])
+            assert mismatches == sorted(report["story_mismatches"][phase])
+        assert not report["story_mismatches"]["candidate"]
     assert report["validation"]["full_import_acceptance"] is False and report["validation"]["rendering_acceptance"] is False
     return checked
+
+
+def saved_story_formats(data):
+    from aspose.words_foss import DocxDocument
+
+    result = {}
+    for paragraph in DocxDocument(BytesIO(data)).body.paragraphs:
+        if paragraph.text not in {"IMPORT", "DESTINATION"}:
+            continue
+        assert paragraph.text not in result
+        font = paragraph.runs[0].effective_font
+        alignment = paragraph.effective_paragraph_format.alignment
+        result[paragraph.text] = {"bold": font.bold, "italic": font.italic, "size": font.size,
+                                  "alignment": {"both": "JUSTIFY"}.get(alignment, (alignment or "left").upper())}
+    return result
+
+
+def verify_style_roundtrips(root):
+    report = json.loads((root / "style-save-roundtrips-26.9.json").read_text())
+    observed = report["report"]
+    assert observed["version"] == "26.9.0" and observed["licensed"] is False
+    corpus = (root / report["corpus"]["archive"]).read_bytes()
+    raw = (root / report["outputs"]["archive"]).read_bytes()
+    assert digest(corpus) == report["corpus"]["sha256"] == observed["corpus_sha256"]
+    assert digest(raw) == report["outputs"]["sha256"]
+    rows = {(row["case"], row["phase"]): row for row in observed["records"]}
+    with ZipFile(BytesIO(corpus)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        assert len(rows) == len(observed["records"]) == len(inputs.namelist()) == len(outputs.namelist()) == 494
+        assert {key + "/" + phase + ".docx" for key, phase in rows} == set(inputs.namelist())
+        for (key, phase), row in rows.items():
+            data = inputs.read(key + "/" + phase + ".docx")
+            output = outputs.read(row["output"])
+            label = "IMPORT" if phase == "source" else "DESTINATION"
+            assert digest(data) == row["input_sha256"] and digest(output) == row["output_sha256"]
+            assert saved_story_formats(data) == {label: row["before"]}
+            assert saved_story_formats(output) == {label: row["after"]}
+    assert report["changes"] == sorted(key + "/" + phase for (key, phase), row in rows.items() if row["before"] != row["after"])
+    assert report["full_format_acceptance"] is False and report["rendering_acceptance"] is False
+    return len(rows)
 
 
 def verify(root):
@@ -231,12 +315,16 @@ def verify(root):
     toggles = verify_style_toggles(root)
     style_imports = verify_style_imports(root)
     style_imports += verify_style_imports(root, "style-import-translated.json")
+    style_imports += verify_style_imports(root, "style-import-default-on.json")
+    style_imports += verify_style_imports(root, "paragraph-style-defaults-26.9.json")
+    roundtrips = verify_style_roundtrips(root)
     defaults = verify_font_defaults(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
             "checked_style_inputs": toggles,
             "checked_style_import_outputs": style_imports,
             "checked_font_default_inputs": defaults,
+            "checked_style_roundtrip_outputs": roundtrips,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

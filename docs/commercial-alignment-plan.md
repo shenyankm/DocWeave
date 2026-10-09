@@ -406,3 +406,35 @@ IMPORT 段落，避免读到试用水印的 12pt；[生成与观察工具](probe
 平台 CI 待推送后验证，历史绿色状态不作为本批验收。尚未将 getter 匹配作为渲染或
 完整 Font/DocumentBase API 验收。KEEP_SOURCE_FORMATTING、KEEP_DIFFERENT_STYLES、
 编号、资源、默认开启的格式上下文及完整默认属性语义继续在全量范围内推进。
+
+### 双段落验收与默认开启的段落样式
+
+`e8187c5` 的 [四平台 CI](https://github.com/shenyankm/DocWeave/actions/runs/37934246343)
+全部成功。该阶段的 209 个官方回读仅检查导入的 IMPORT 段落，后续补验发现其中三个
+输出的既有 DESTINATION 段落粗体与官方保存重开结果不同，不能以 209 个导入段落匹配
+宣称目标原有内容格式也对齐。历史归档保留；[本批记录](benchmarks/style-import-default-on.json)
+新增两个自有段落的官方 getter 与匹配检查，保留三项差异的实际旧输出。
+
+段落样式迁移现以 docDefaults 的粗斜体作为缺省基值，无字符样式上下文的默认开启
+冲突可迁移；新增检查在提交前拒绝尚未校准的字符上下文基样式规范化。原 247 组中
+224 组返回，两段落的冷回读均匹配官方；23 组仍未实现且拒绝时源与目标包不变。
+新增[132 组自有输入](benchmarks/corpus/paragraph-style-defaults-26.9.zip)覆盖默认斜体、
+粗斜体及段落/字符组合。旧包返回 60 组，其中 12 组双段落格式不匹配；本批返回
+114 组且双段落无差异，18 组字符上下文仍未实现。
+[观察与原始输出](benchmarks/paragraph-style-defaults-26.9.json)保留官方、旧包和本批安装包
+全部结果，包括 9 个官方导入前后与保存重开的变化；未预读源字体 getter 的复测仍
+复现这些变化，原始复测输出亦归档。
+
+[494 次官方仅加载/保存](benchmarks/style-save-roundtrips-26.9.json)分别验证原 247 组的
+源与目标，19 次字体 getter 重开后变化，说明部分差异并非导入操作独有。
+原始输出保留试用水印；CLI 的 commercial-read-stories、commercial-roundtrip 和
+commercial-no-source-getter 可复验。CI 同时验证官方原始输出的结构/摘要、SDK 回读
+已观测字段及伪造目标段落格式拒绝，不能据此宣称完整 Font/Style 或渲染保真。
+
+本批生产安装包在 checkout 外全套 **3628 passed / 2 skipped / 199 warnings**
+（435.50 秒）；后续补充的证据检查包含在最终专项 **441 passed**（28.08 秒）中通过，
+示例 **31 passed**（8.05 秒），Ruff、wheel 资源/导入守卫和冻结证据检查通过。
+六个新增字符基样式回归在旧安装包均失败，在本批通过；新提交 CI 待推送后验证。
+默认开启的字符格式、实际保存规范化、
+全部导入模式、编号/资源、完整规范 DOM 与公开 Font/Style API、排版和渲染继续属于
+完整目标，均未以保护性拒绝作为完成或范围豁免。
