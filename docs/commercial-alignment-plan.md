@@ -130,7 +130,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
   支持受测的重开行为。1482 次官方编辑基准见 [样式编辑观察](benchmarks/style-font-edits-26.9.json)，
   回归入口为 `tests/test_style_font_edits.py`。
 - 跨文档导入和格式投影的当前证据见 [523 次导入](benchmarks/style-import-projections.json)。
-  其他导入模式、复杂样式/列表/资源、完整 Style/Font API 和隐式字号仍有缺口。
+  其他导入模式、复杂样式/列表/资源、完整 Style/Font API 和复杂文字字号仍有缺口。
 - DOCX 输出按实际部件、总解压大小、条目数和 ZIP 大小再次检查，超限失败保留已有目标。
   入口为 `tests/test_docx_output_limits.py`；这是本项目安全限制，不是商业容量验收。
 - 格式方向、公开保存选项、字段、修订、内容控件、比较、邮件合并、保护和完整布局等
@@ -143,6 +143,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [全量能力台账](benchmarks/commercial-26.9-capabilities.json) | 当前入口、具体差距、依赖及局部行为证据；未完成项保留 |
 | [加载/保存观察](benchmarks/commercial-26.9-format-behavior.json) | 固定格式方向及原始输出记录；返回文件不等于格式验收 |
 | [样式编辑观察](benchmarks/style-font-edits-26.9.json) | 1482 次编辑前、编辑后、保存后及重开状态，36 次 Run 状态变化 |
+| [隐式字号观察](benchmarks/font-default-matrix-26.9.json) | 16 个段落/字符样式输入，区分缺少默认组、空组及显式/复杂字号 |
 | [保存状态观察](benchmarks/style-save-state-26.9.json) | 商业试用包的内存/重开状态，区分水印内容 |
 | [样式导入投影](benchmarks/style-import-projections.json) | 当前导入的基准、输入输出 SHA 与独立格式读取 |
 | [Flat OPC 加载](benchmarks/flat-opc-loading.json) / [保存](benchmarks/flat-opc-saving.json) | 四种受测变体；复杂宏、模板与布局仍未全面验收 |
@@ -158,7 +159,9 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 方法见 [升级与安装核验](upgrade-notes.md#7-安装包核验)。具体提交的跨平台结果以
 [GitHub Actions](https://github.com/shenyankm/DocWeave/actions) 为准，不能用旧 SHA 的成功代替。
 
-本轮最终安装包在源码目录外完整测试 **5279 passed、2 skipped**（523.73 秒），
-示例 **31 passed**（9.87 秒）；专项 2018 项、补充边界 4 项和证据测试 25 项亦通过。
-环境为 Mac/Python 3.14.7，四个修改后的生产模块与被测 wheel 字节一致。
+本轮最终安装包在源码目录外完整测试 **5300 passed、2 skipped**（413.96 秒），
+示例 **31 passed**（7.52 秒），字号/样式/导入专项 **2805 passed**（16.57 秒）。
+完整回归启动后新增的一项证据拒绝用例，另随 **26 项证据检查**通过（23.71 秒）。
+环境为 Mac/Python 3.14.7，本轮修改的生产模块与被测 wheel 字节一致，安装资源检查通过。
+普通字号 getter 按 21 个固定官方输入校准，读取不物化 XML；复杂文字选择与布局未验收。
 这些是本轮固定观察，不作为全能力完成率，也不替代渲染验收或后续提交的结果。

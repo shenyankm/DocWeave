@@ -16489,6 +16489,14 @@
         "implementation": "partial_alternative_dom_api",
         "tests": "tests/test_style_font_edits.py",
         "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
+      },
+      "implicit_size_evidence": {
+        "file": "font-default-matrix-26.9.json",
+        "scope": "16 ordinary-size Run/Style getters plus five prior inputs; complex script and rendering unverified",
+        "current_alternative_entrypoint": "DocxDocument Run.effective_font.size and Style.font.size",
+        "implementation": "rPrDefault present: 10pt; absent: 11pt; declared sz overrides; direct getters remain unset",
+        "tests": "tests/test_implicit_font_sizes.py",
+        "delivery": "implemented in alternate DOM; full canonical API and formatting acceptance remain incomplete"
       }
     },
     {
@@ -37311,6 +37319,14 @@
         "implementation": "partial_alternative_dom_api",
         "tests": "tests/test_style_font_edits.py",
         "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
+      },
+      "implicit_size_evidence": {
+        "file": "font-default-matrix-26.9.json",
+        "scope": "16 ordinary-size Run/Style getters plus five prior inputs; complex script and rendering unverified",
+        "current_alternative_entrypoint": "DocxDocument Run.effective_font.size and Style.font.size",
+        "implementation": "rPrDefault present: 10pt; absent: 11pt; declared sz overrides; direct getters remain unset",
+        "tests": "tests/test_implicit_font_sizes.py",
+        "delivery": "implemented in alternate DOM; full canonical API and formatting acceptance remain incomplete"
       }
     },
     {

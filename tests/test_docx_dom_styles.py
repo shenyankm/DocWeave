@@ -204,7 +204,7 @@ def test_absent_relationship_does_not_apply_unrelated_styles_part(tmp_path):
         "word/_rels/document.xml.rels": f'<Relationships xmlns="{REL}"/>'.encode(),
     })
     run = doc.body.paragraphs[0].runs[0]
-    assert run.effective_font.bold is False and run.effective_font.size is None
+    assert run.effective_font.bold is False and run.effective_font.size == 11.0
     with pytest.raises(ValueError):
         doc.body.paragraphs[0].paragraph_format.style_id = "P"
 

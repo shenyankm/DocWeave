@@ -1,0 +1,110 @@
+{
+  "module": "aspose.words",
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "corpus": "corpus/font-default-matrix-26.9.zip",
+  "corpus_sha256": "0eb81975edfb546a3b9222a658ab78d5d339db7c07a1113c3983946d7d5e1b1d",
+  "records": [
+    {
+      "input": "character-absent.docx",
+      "sha256": "bcab61ee69983a59a4112f2cb9abe53f6e50828bfb4ee95e82c799f5e6c998c4",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "character-empty.docx",
+      "sha256": "3b2babd3fe06323594ae019f82f8b299df705a3d5d8c5d0e560fb6c614b5defd",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "character-paragraph.docx",
+      "sha256": "a236abf528f1fbe4ada9ed1e8d9649a2ebbd273acd48dd0c5404c69fa2c004c0",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "character-run_bold.docx",
+      "sha256": "6f363510cb9a32f934a988c11b156eaaf11c8d5461e70f04be8035a1c646ecab",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "character-run_complex_size.docx",
+      "sha256": "283d12a6e8704e22316e3fd76aad7ee4f6a7e10dbc162fa16ac187e382f20a79",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "character-run_empty.docx",
+      "sha256": "85b5dfceea538c4d4c97ce6256b3645e6f536f2a1e5e14aa4c5ad8a280dbde31",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "character-run_group.docx",
+      "sha256": "9ff986927e9d1eebca408e831f5c6d8925537ef56a4aa94df44ba4c035f9974b",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "character-run_size.docx",
+      "sha256": "2dd50adf307db336f453b34880e7d79c161a39837196e8c2308cb59cc40e0a08",
+      "run_size": 12.0,
+      "style_size": 12.0
+    },
+    {
+      "input": "paragraph-absent.docx",
+      "sha256": "cc9b7251eeeea41753dfe22b8c3adf2e62903cd2e4245d400122997d3afd3e23",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "paragraph-empty.docx",
+      "sha256": "8ed7922577f0224c786a8626420595b102ddd1708f08133bfb97f3b93c939abd",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "paragraph-paragraph.docx",
+      "sha256": "8957743610020eb81734e65188ac4298a8c2dbeabc4e25ef9b446700f443e87c",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "paragraph-run_bold.docx",
+      "sha256": "601466b7f30767c85436cf5321dde6592b0ed3639cb60e34706cbbbf75adcf8f",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "paragraph-run_complex_size.docx",
+      "sha256": "51ddb891c18496f2de0f6d252a08e0ee0f649d06b0da732d0f61ad51bf3fdfeb",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "paragraph-run_empty.docx",
+      "sha256": "753734bb1ee0d027c131b08e2f14d454be58b17dc6ed78dfd9c4aaa883e13f31",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "paragraph-run_group.docx",
+      "sha256": "7f250125aa7aa2eb1418ff5e4c4367a75e1d9c7e0e32917d7eb73762fe2aacc8",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "paragraph-run_size.docx",
+      "sha256": "1cea96d620dd285b90781c973ddca34d1e9c86477474d18e6fad347148d1bb9c",
+      "run_size": 12.0,
+      "style_size": 12.0
+    }
+  ],
+  "full_format_acceptance": false,
+  "rendering_acceptance": false,
+  "scope": "16 plain-DOCX implicit Latin-size Run/Style getters; no complex-script selection or rendering acceptance"
+}

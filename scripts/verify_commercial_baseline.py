@@ -122,6 +122,27 @@ def verify_font_defaults(root):
     return len(rows)
 
 
+def verify_font_default_matrix(root):
+    report = json.loads((root / "font-default-matrix-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    raw = (root / report["corpus"]).read_bytes()
+    assert digest(raw) == report["corpus_sha256"]
+    generated = dict(runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/font_default_matrix.py"))["inputs"]())
+    rows = {row["input"]: row for row in report["records"]}
+    assert len(rows) == len(report["records"]) == len(generated) == 16
+    with ZipFile(BytesIO(raw)) as archive:
+        assert len(archive.namelist()) == 16 and set(archive.namelist()) == set(rows) == set(generated)
+        for name, row in rows.items():
+            data = archive.read(name)
+            assert digest(data) == row["sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[name])) as expected:
+                assert {key: actual.read(key) for key in actual.namelist()} == {key: expected.read(key) for key in expected.namelist()}
+            size = 12.0 if name.endswith("-run_size.docx") else 10.0 if "-run_" in name else 11.0
+            assert row["run_size"] == row["style_size"] == size
+    return len(rows)
+
+
 def verify_style_imports(root, name="style-import-conflicts-26.9.json"):
     report = json.loads((root / name).read_text())
     assert set(report["reports"]) in ({"commercial", "before", "candidate"}, {"candidate"})
@@ -497,11 +518,13 @@ def verify(root):
     projections = verify_style_projections(root)
     edits = verify_style_font_edits(root)
     defaults = verify_font_defaults(root)
+    default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
             "checked_style_inputs": toggles,
             "checked_style_import_outputs": style_imports,
             "checked_font_default_inputs": defaults,
+            "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,
             "checked_style_save_states": save_states,
             "checked_style_projection_outputs": projections,

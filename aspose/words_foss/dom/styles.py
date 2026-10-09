@@ -124,6 +124,15 @@ class StyleFont(Font):
         value = super()._toggle(name)
         return bool(value) if self._resolved else value
 
+    @property
+    def size(self):
+        value = super().size
+        return StyleResolver(self._node.owner_document).default_size() if self._resolved and value is None else value
+
+    @size.setter
+    def size(self, value):
+        Font.size.fset(self, value)
+
     def _set(self, name, value):
         if name == "rStyle":
             raise NotImplementedError("Nested character references in styles require calibration")
@@ -288,7 +297,7 @@ class EffectiveFont:
 
     bold: bool
     italic: bool
-    size: float | None
+    size: float
 
 
 @dataclass(frozen=True)
@@ -349,6 +358,12 @@ class StyleResolver:
         defaults = _child(self.root, "docDefaults")
         return _child(_child(defaults, property_name + "Default"), property_name)
 
+    def default_size(self):
+        value = _read_size(_child(self._defaults("rPr"), "sz"))
+        if value is not None:
+            return value
+        return 11.0 if _child(_child(self.root, "docDefaults"), "rPrDefault") is None else 10.0
+
     def _paragraph_layers(self, paragraph):
         paragraph._editable()
         properties = _child(paragraph._element, "pPr")
@@ -393,7 +408,7 @@ class StyleResolver:
         style_id = reference.getAttributeNS(W, "val") if reference is not None else None
         character_styles = self._chain(style_id, "character")
         default = self._defaults("rPr")
-        size = _read_size(_child(default, "sz"))
+        size = self.default_size()
         for style in paragraph_styles + character_styles:
             properties = _child(style, "rPr")
             if _child(properties, "rStyle") is not None:

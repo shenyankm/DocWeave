@@ -24,6 +24,22 @@ def test_style_font_edit_evidence_rejects_forged_setter_result(tmp_path):
         check(tmp_path)
 
 
+def test_implicit_size_evidence_rejects_forged_observation(tmp_path):
+    import json
+    import shutil
+
+    root = Path(__file__).parents[1]
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_font_default_matrix"]
+    (tmp_path / "corpus").mkdir()
+    shutil.copyfile(root / "docs/benchmarks/corpus/font-default-matrix-26.9.zip",
+                    tmp_path / "corpus/font-default-matrix-26.9.zip")
+    report = json.loads((root / "docs/benchmarks/font-default-matrix-26.9.json").read_text())
+    report["records"][0]["run_size"] = 99
+    (tmp_path / "font-default-matrix-26.9.json").write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
 def test_inventory_preserves_overloads_setters_and_enum_values(tmp_path):
     inventory = runpy.run_path(
         str(Path(__file__).parents[1] / "scripts" / "inventory_commercial_api.py")
@@ -215,7 +231,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
-    names += ["style-font-edits-26.9.json", "corpus/style-font-edits-26.9.zip",
+    names += ["font-default-matrix-26.9.json", "corpus/font-default-matrix-26.9.zip",
+              "style-font-edits-26.9.json", "corpus/style-font-edits-26.9.zip",
               "style-normalization-contexts-26.9.json", "corpus/style-normalization-contexts-26.9.zip",
               "corpus/style-normalization-context-outputs-26.9.zip", "style-import-projections.json",
               "corpus/style-import-projections.zip"]
@@ -235,6 +252,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_style_save_states"] == 523
     assert result["checked_style_projection_outputs"] == 523
     assert result["checked_style_font_edit_outputs"] == 1482
+    assert result["checked_font_default_matrix_inputs"] == 16
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]
