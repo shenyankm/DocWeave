@@ -1,0 +1,135 @@
+{
+  "baseline_commit": "7e92463250c12e212fef19df5efd41cef08ead97",
+  "scope": "A1/C07 Markdown page-band omissions; diagnosis and strict rejection, not page-band rendering",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "outside_checkout_import": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+  },
+  "reproduction": {
+    "test": "tests/test_markdown_story_losses.py",
+    "baseline": "34 failed, 6 passed",
+    "candidate": "40 passed in 1.11s before final wording; all 40 included in final 118-case installed run",
+    "native_input": "python-docx generated actual DOCX with distinct body/header/footer labels; strict CLI consumes that DOCX"
+  },
+  "installed_integration": {
+    "files": [
+      "test_markdown_story_losses.py",
+      "test_content_integrity.py",
+      "test_conversion_api.py",
+      "test_markdown_notes.py",
+      "test_optional_ecosystem.py",
+      "test_source_provenance.py"
+    ],
+    "independent_tools": "Actual Mammoth/Pandoc tests, actual python-docx source generation",
+    "final_result": "118 passed, 12 warnings in 3.90s; no skips; final warning wording"
+  },
+  "examples": "31 passed, 13 warnings in 8.61s",
+  "common_markdown": {
+    "equality": "Five fixed inputs: exact output bytes and hashes unchanged",
+    "baseline": [
+      {
+        "name": "small",
+        "source_sha256": "e5c217ce9ab6e2de6ecadb6380699947826ceb39463fe7ccc055092f2ac0d703",
+        "markdown_bytes": 44,
+        "markdown_sha256": "390e64a3a33bd9d47b707dbf42478a2a62b84dbb72d08c525d575a38aa9400b1",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "hundred_pages",
+        "source_sha256": "4a58a34bdddd09e80f992dbc7c0055ab4a07ceea21146304564bd4e81b922d4c",
+        "markdown_bytes": 244286,
+        "markdown_sha256": "e36e62629bfaad7dd778d5936269dfddc522dbbd13db0a9cc9946d4bc6d68fad",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "image_table",
+        "source_sha256": "a1dae1a70968e0640b959f3fcc09b0a7c363f97556a5b54311be7b068e2bd8c2",
+        "markdown_bytes": 19478,
+        "markdown_sha256": "a9f49bd6762f0a9a301a64c101455cbecd3dca417adcf55d1ccdbb8bfcb67f28",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "repeated_images",
+        "source_sha256": "a19f56933135f9820b43e3e90f3ac091d5e3aed0db48a5a932abc4eedf7df3a2",
+        "markdown_bytes": 23159,
+        "markdown_sha256": "06463be1fce92e9c2a5b20c3d36c0e8a2a73f87f420cc2282cef6847d99b51e7",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "mixed_styles",
+        "source_sha256": "db06ae569aba30457f3e83782be91d96dca3786684a6d878a767c3e97b48ff26",
+        "markdown_bytes": 16530,
+        "markdown_sha256": "4087e7cff57911ca214f9115d85c4b90b4790bf2091bb2fe7694dbc9bd882ff1",
+        "diagnostic_codes": []
+      }
+    ],
+    "candidate": [
+      {
+        "name": "small",
+        "source_sha256": "e5c217ce9ab6e2de6ecadb6380699947826ceb39463fe7ccc055092f2ac0d703",
+        "markdown_bytes": 44,
+        "markdown_sha256": "390e64a3a33bd9d47b707dbf42478a2a62b84dbb72d08c525d575a38aa9400b1",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "hundred_pages",
+        "source_sha256": "4a58a34bdddd09e80f992dbc7c0055ab4a07ceea21146304564bd4e81b922d4c",
+        "markdown_bytes": 244286,
+        "markdown_sha256": "e36e62629bfaad7dd778d5936269dfddc522dbbd13db0a9cc9946d4bc6d68fad",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "image_table",
+        "source_sha256": "a1dae1a70968e0640b959f3fcc09b0a7c363f97556a5b54311be7b068e2bd8c2",
+        "markdown_bytes": 19478,
+        "markdown_sha256": "a9f49bd6762f0a9a301a64c101455cbecd3dca417adcf55d1ccdbb8bfcb67f28",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "repeated_images",
+        "source_sha256": "a19f56933135f9820b43e3e90f3ac091d5e3aed0db48a5a932abc4eedf7df3a2",
+        "markdown_bytes": 23159,
+        "markdown_sha256": "06463be1fce92e9c2a5b20c3d36c0e8a2a73f87f420cc2282cef6847d99b51e7",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "mixed_styles",
+        "source_sha256": "db06ae569aba30457f3e83782be91d96dca3786684a6d878a767c3e97b48ff26",
+        "markdown_bytes": 16530,
+        "markdown_sha256": "4087e7cff57911ca214f9115d85c4b90b4790bf2091bb2fe7694dbc9bd882ff1",
+        "diagnostic_codes": []
+      }
+    ]
+  },
+  "wheel": {
+    "name": "aspose_words_foss_enhanced-26.7.0.post2-py3-none-any.whl",
+    "bytes": 26487023,
+    "sha256": "fcb90994689ed8b493a16e27214f5bfcd1993a0359945f51fa6dc4b066a25289",
+    "source_files_byte_equal": 133,
+    "check_wheel": "passed"
+  },
+  "checks": [
+    "Fatal/unused-import Ruff subset for production passed",
+    "Full Ruff for new tests passed",
+    "git diff --check passed"
+  ],
+  "limits": [
+    "Markdown still omits page-band text/tables/notes/rules and variant images; warning does not preserve them",
+    "Default header/footer paragraph images retain existing export behavior",
+    "New ContentLossWarning can fail callers that reject losses, including --strict; failure preserves output",
+    "Other unsupported public options and complete A1 corpus audit remain unfinished",
+    "No PDF layout change; no native PDF/visual check or full-suite rerun for this diagnostic-only change",
+    "Latest CI delivery status is reported separately"
+  ],
+  "commands": {
+    "build": "/tmp/docweave-ecosystem-venv/bin/python -m build --wheel --outdir /tmp/docweave-wheels/markdown-story-losses",
+    "install": "/tmp/docweave-wheel-test/bin/python -m pip install --no-deps --force-reinstall /tmp/docweave-wheels/markdown-story-losses/aspose_words_foss_enhanced-26.7.0.post2-py3-none-any.whl",
+    "installed_tests_cwd": "/tmp",
+    "installed_tests": "PYPANDOC_PANDOC=/tmp/docweave-pandoc-arm64/pandoc /tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_markdown_story_losses.py /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_content_integrity.py /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_conversion_api.py /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_markdown_notes.py /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_optional_ecosystem.py /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_source_provenance.py -q --import-mode=importlib --tb=short",
+    "baseline": "PYTHONPATH=/tmp/docweave-markdown-story-old /tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_markdown_story_losses.py -q --import-mode=importlib --tb=no",
+    "baseline_package": "Extract aspose/ files from the previous save-option-formats wheel into /tmp/docweave-markdown-story-old",
+    "probe_source": "import hashlib,json,sys,warnings\nfrom pathlib import Path\nimport aspose.words_foss as aw\nrecords=[]\nfor name in (\"small\",\"hundred_pages\",\"image_table\",\"repeated_images\",\"mixed_styles\"):\n source=Path(\"/tmp/docweave-current-performance\")/(name+\".docx\")\n with warnings.catch_warnings(record=True) as caught:\n  warnings.simplefilter(\"always\")\n  doc=aw.Document(source)\n  raw=doc.to_bytes(\"md\")\n records.append({\"name\":name,\"source_sha256\":hashlib.sha256(source.read_bytes()).hexdigest(),\"markdown_bytes\":len(raw),\"markdown_sha256\":hashlib.sha256(raw).hexdigest(),\"diagnostic_codes\":[d.code for d in doc.diagnostics]})\nPath(sys.argv[1]).write_text(json.dumps({\"module\":aw.__file__,\"records\":records},indent=2)+\"\\n\")\n"
+  },
+  "test_source_sha256": "1d622ce5c674cd0e2297093ea8d20cb9cba12776473ee70f2587586755693b2c"
+}

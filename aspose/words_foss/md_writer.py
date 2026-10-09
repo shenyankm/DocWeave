@@ -182,6 +182,20 @@ class LdmMarkdownWriter:
         output_path: Optional[Path] = None,
     ) -> str:
         """Convert *doc* to Markdown and return the result string."""
+        if any(
+            isinstance(node, ldm.Table)
+            or (isinstance(node, ldm.Paragraph) and (
+                any(run.text.strip() and not run.font.hidden for run in visible_runs(node))
+                or any(isinstance(child, ldm.NoteReference) and not child.hidden
+                       for child in node._children)))
+            or (isinstance(node, ldm.Shape) and (
+                is_horizontal_rule_shape(node)
+                or (node.has_image and story.header_footer_type not in (0, 1))))
+            for section in doc.sections for story in section.headers_footers
+            for node in document_nodes(story)
+        ):
+            warn("Markdown omits header/footer content other than default paragraph images",
+                 ContentLossWarning, code="markdown.header_footer_content_omitted")
         if any(isinstance(node, ldm.UnknownNode) for node in document_nodes(doc)):
             warn("Unknown document nodes are omitted from Markdown", ContentLossWarning,
                  code="markdown.unknown_node")
