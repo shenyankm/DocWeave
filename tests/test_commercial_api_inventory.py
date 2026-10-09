@@ -6,6 +6,22 @@ from pathlib import Path
 import pytest
 
 
+def test_pagination_evidence_rejects_forged_setter_result(tmp_path):
+    import json
+    import shutil
+
+    root = Path(__file__).parents[1]
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_paragraph_pagination"]
+    (tmp_path / "corpus").mkdir()
+    for name in ("paragraph-pagination-26.9.zip", "paragraph-pagination-26.9-outputs.zip"):
+        shutil.copyfile(root / "docs/benchmarks/corpus" / name, tmp_path / "corpus" / name)
+    report = json.loads((root / "docs/benchmarks/paragraph-pagination-26.9.json").read_text())
+    report["records"][0]["edited"]["derived"] = not report["records"][0]["value"]
+    (tmp_path / "paragraph-pagination-26.9.json").write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
 def test_style_font_edit_evidence_rejects_forged_setter_result(tmp_path):
     import json
     import shutil
@@ -247,7 +263,9 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
-    names += ["style-paragraph-format-26.9.json", "corpus/style-paragraph-format-26.9.zip", "corpus/style-paragraph-format-26.9-outputs.zip",
+    names += ["first-paragraph-page-break-26.9.json", "corpus/first-paragraph-page-break-26.9.zip", "corpus/first-paragraph-page-break-26.9-outputs.zip",
+              "paragraph-pagination-26.9.json", "corpus/paragraph-pagination-26.9.zip", "corpus/paragraph-pagination-26.9-outputs.zip",
+              "style-paragraph-format-26.9.json", "corpus/style-paragraph-format-26.9.zip", "corpus/style-paragraph-format-26.9-outputs.zip",
               "font-default-matrix-26.9.json", "corpus/font-default-matrix-26.9.zip",
               "style-font-edits-26.9.json", "corpus/style-font-edits-26.9.zip",
               "style-normalization-contexts-26.9.json", "corpus/style-normalization-contexts-26.9.zip",
@@ -271,6 +289,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_style_font_edit_outputs"] == 1482
     assert result["checked_font_default_matrix_inputs"] == 16
     assert result["checked_style_paragraph_edit_outputs"] == 108
+    assert result["checked_paragraph_pagination_outputs"] == 1296
+    assert result["checked_unresolved_first_paragraph_outputs"] == 4
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]

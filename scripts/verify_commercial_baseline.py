@@ -13,6 +13,95 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def saved_pagination(data, prop):
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    tags = {"keep_with_next": "keepNext", "keep_together": "keepLines",
+            "page_break_before": "pageBreakBefore", "widow_control": "widowControl"}
+    tag = tags[prop]
+    document = Document(BytesIO(data))
+    default = document.styles.element
+    for name in ("docDefaults", "pPrDefault", "pPr", tag):
+        default = default.find(qn("w:" + name)) if default is not None else None
+    initial = prop == "widow_control" if default is None else default.get(qn("w:val"), "1") in {"1", "true", "on"}
+    result = {}
+    for name in ("Base", "Derived"):
+        style, chain = document.styles[name], []
+        while style is not None:
+            assert style.style_id not in {item.style_id for item in chain}
+            chain.append(style)
+            style = style.base_style
+        value = initial
+        for style in reversed(chain):
+            direct = getattr(style.paragraph_format, prop)
+            if direct is not None:
+                value = direct
+        result[name.lower()] = value
+    paragraph = next(p for p in document.paragraphs if "IMPORT" in p.text)
+    direct = getattr(paragraph.paragraph_format, prop)
+    result["paragraph"] = result["derived"] if direct is None else direct
+    return result
+
+
+def verify_paragraph_pagination(root):
+    report = json.loads((root / "paragraph-pagination-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["rendering_acceptance"] is False
+    source, raw = ((root / report[key]).read_bytes() for key in ("corpus", "outputs"))
+    assert digest(source) == report["corpus_sha256"] and digest(raw) == report["outputs_sha256"]
+    generated = {name: (prop, data) for name, prop, data in runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_pagination.py"))["inputs"]()}
+    rows = report["records"]
+    assert len(generated) == 324 and len(rows) == 1296
+    errors = report["setter_errors"]
+    assert len(errors) == 24 and all(row["error"] == "TypeError" for row in errors)
+    assert {(r["property"], r["target"], r["value"]) for r in errors} == {
+        (prop, target, value) for prop in {p for p, _ in generated.values()}
+        for target in ("style", "paragraph") for value in (None, 1, "bad")}
+    assert {(r["input"], r["target"], r["value"]) for r in rows} == {
+        (name, target, value) for name in generated for target in ("style", "paragraph") for value in (False, True)}
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        assert set(inputs.namelist()) == set(generated)
+        assert set(outputs.namelist()) == {r["output"] for r in rows}
+        for row in rows:
+            data = inputs.read(row["input"])
+            prop, expected = generated[row["input"]]
+            assert prop == row["property"] and data == expected and digest(data) == row["input_sha256"]
+            assert saved_pagination(data, prop) == row["before"]
+            assert row["edited"]["derived" if row["target"] == "style" else "paragraph"] == row["value"]
+            assert row["edited"] == row["saved_live"] == row["reopened"]
+            saved = outputs.read(row["output"])
+            assert digest(saved) == row["output_sha256"]
+            assert saved_pagination(saved, prop) == row["reopened"]
+    return len(rows)
+
+
+def verify_first_paragraph_page_break(root):
+    report = json.loads((root / "first-paragraph-page-break-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["status"].startswith("unresolved_") and report["rendering_acceptance"] is False
+    rows = report["records"]
+    assert len(rows) == 4
+    assert {(r["target"], r["value"]) for r in rows} == {(t, v) for t in ("style", "paragraph") for v in (False, True)}
+    source, raw = ((root / report[key]).read_bytes() for key in ("corpus", "outputs"))
+    assert digest(source) == report["corpus_sha256"] and digest(raw) == report["outputs_sha256"]
+    generated = {name: data for name, _, data in runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_pagination.py"))["inputs"](first_paragraph=True)}
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        assert set(inputs.namelist()) == {r["input"] for r in rows}
+        assert set(outputs.namelist()) == {r["output"] for r in rows}
+        for row in rows:
+            data, saved = inputs.read(row["input"]), outputs.read(row["output"])
+            assert digest(data) == row["input_sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[row["input"]])) as expected:
+                assert {key: actual.read(key) for key in actual.namelist()} == {key: expected.read(key) for key in expected.namelist()}
+            assert digest(saved) == row["output_sha256"]
+            assert row["property"] == "page_break_before"
+            assert saved_pagination(data, row["property"]) == {"base": False, "derived": False, "paragraph": True}
+            assert row["before"] == {"base": False, "derived": False, "paragraph": False}
+            assert row["edited"] == row["saved_live"] == row["reopened"] == saved_pagination(saved, row["property"])
+    return len(rows)
+
+
 def verify_format_outputs(report, archive_path):
     raw = archive_path.read_bytes()
     assert digest(raw) == report["outputs"]["sha256"], "format archive digest mismatch"
@@ -573,6 +662,8 @@ def verify(root):
     projections = verify_style_projections(root)
     edits = verify_style_font_edits(root)
     paragraph_edits = verify_style_paragraph_formats(root)
+    pagination = verify_paragraph_pagination(root)
+    first_paragraph = verify_first_paragraph_page_break(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -586,6 +677,8 @@ def verify(root):
             "checked_style_projection_outputs": projections,
             "checked_style_font_edit_outputs": edits,
             "checked_style_paragraph_edit_outputs": paragraph_edits,
+            "checked_paragraph_pagination_outputs": pagination,
+            "checked_unresolved_first_paragraph_outputs": first_paragraph,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

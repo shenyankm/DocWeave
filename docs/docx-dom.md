@@ -94,6 +94,7 @@ if style is not None:
     style.font.size = 17.5
     style.direct_font.italic = None  # 清除该层，恢复基样式/文档默认值
     style.paragraph_format.alignment = "center"
+    style.paragraph_format.keep_with_next = True
     style.direct_paragraph_format.alignment = None  # 清除当前层的对齐
 for style in editable.styles:
     print(style.name)
@@ -110,7 +111,12 @@ for style in editable.styles:
 - 段落样式的 `paragraph_format.alignment` 沿文档默认和 basedOn 链解析，未声明时为
   `left`；四种基本对齐的 108 次编辑/保存/重开已有官方固定观察。`direct_paragraph_format`
   保留当前层的 `None`，可用 `None` 清除；继承 getter 的 setter 拒绝 `None`。
-  字符/列表样式不提供段落格式，表格样式仍拒绝，其他段落属性和嵌套 pStyle 编辑未实现。
+  字符/列表样式不提供段落格式，表格样式仍拒绝，新增分页属性见下；其余段落属性和嵌套 pStyle 编辑未实现。
+- `keep_with_next`、`keep_together`、`page_break_before`、`widow_control` 支持段落直接值、
+  样式继承值和有效值；前三项默认 `False`，孤行控制默认 `True`。直接值为 `None` 表示未设置，
+  可用 `None` 清除；样式继承 setter 只接受 `bool`。324 个非首段输入、1296 次官方编辑已对照
+  保存/重开和本项目 LDM 属性，未验收最终分页像素。官方试用包会在加载时关闭受测首段的显式
+  段前分页，原因未确认；本项目保留原始值，记录为未决差异。
 - 读取不改变部件。样式句柄按 ID 读取当前相关部件，部件替换后不会继续编辑旧树。
   编辑启用保存投影，保留内存格式和未涉及的属性；保存重开后的 Run 格式可能按官方
   受测行为变化。重复直接属性在写入前拒绝，保存失败仍保留既有目标文件。
@@ -121,6 +127,7 @@ for style in editable.styles:
 effective = run.effective_font
 print(effective.bold, effective.italic, effective.size)
 print(paragraph.effective_paragraph_format.alignment)
+print(paragraph.effective_paragraph_format.widow_control)
 ```
 
 - 返回不可变的值快照；重新访问属性会重新解析当前 XML，不缓存可能过期的结果。
@@ -132,7 +139,7 @@ print(paragraph.effective_paragraph_format.alignment)
   此规则按官方 26.9.0 的固定语料校准，不能推广为所有 Word 版本、表格或复杂文字的行为。
 - 段落对齐按 `docDefaults → 段落样式链 → 直接格式` 解析；段落标记字体不错误地应用到文字 Run。
 - 样式循环、缺失父样式、跨类型继承、重复 ID 和非法已支持属性值不会静默忽略。
-- 当前只解析 `w:b`、`w:i`、`w:sz` 与 `w:jc`，不是完整字体或排版解析器。
+- 当前解析 `w:b`、`w:i`、`w:sz`、`w:jc` 和上述四个分页标志，不是完整字体或排版解析器。
   未定义对齐时返回 `left`；未定义粗斜体则返回 `False`。普通字号的隐式默认值按
   官方 26.9.0 固定观察解析为 10pt/11pt，不作为复杂文字脚本选择或最终字形尺寸。
 - 编号段落、有显式或默认表格样式的单元格，以及样式定义内嵌套 `rStyle` 暂不提供有效值，

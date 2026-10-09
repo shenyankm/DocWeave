@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from aspose.words_foss import _io
 from aspose.words_foss._opc import resolve_target
 from aspose.words_foss.dom.nodes import (
+    PAGINATION_PROPERTIES,
     XMLNS,
     Font,
     ParagraphFormat,
@@ -161,19 +162,28 @@ class StyleFont(Font):
 
 
 class StyleParagraphFormat(ParagraphFormat):
-    """Style alignment; direct values can be cleared without changing inheritance."""
+    """Style alignment and pagination; direct values retain an unset layer."""
 
     def __init__(self, style, resolved=True):
         super().__init__(style)
         self._resolved = resolved
 
     def _get(self, name):
-        if not self._resolved or name != "jc":
+        if not self._resolved or name not in {"jc", *PAGINATION_PROPERTIES.values()}:
             return super()._get(name)
         resolver = StyleResolver(self._node.owner_document)
         layers = [resolver._defaults("pPr")] + [_child(style, "pPr") for style in
                   resolver._chain(self._node.style_id, "paragraph")]
         return next((element for layer in reversed(layers) if (element := _child(layer, name)) is not None), None)
+
+    def _toggle(self, name):
+        value = super()._toggle(name)
+        return (name == "widowControl" if value is None else value) if self._resolved else value
+
+    def _set_toggle(self, name, value):
+        if self._resolved and not isinstance(value, bool):
+            raise TypeError("Style pagination properties require bool; use direct_paragraph_format to clear")
+        super()._set_toggle(name, value)
 
     @property
     def alignment(self):
@@ -185,7 +195,7 @@ class StyleParagraphFormat(ParagraphFormat):
         ParagraphFormat.alignment.fset(self, value)
 
     def _set(self, name, value):
-        if name != "jc":
+        if name not in {"jc", *PAGINATION_PROPERTIES.values()}:
             raise NotImplementedError("Nested paragraph style references require calibration")
         if value is None and self._resolved:
             raise TypeError("Use direct_paragraph_format to clear style properties")
@@ -364,6 +374,10 @@ class EffectiveFont:
 @dataclass(frozen=True)
 class EffectiveParagraphFormat:
     alignment: str | None
+    keep_with_next: bool = False
+    keep_together: bool = False
+    page_break_before: bool = False
+    widow_control: bool = True
 
 
 class StyleResolver:
@@ -447,11 +461,16 @@ class StyleResolver:
     def paragraph_format(self, paragraph):
         _, layers = self._paragraph_layers(paragraph)
         alignment = "left"
+        flags = {name: name == "widow_control" for name in PAGINATION_PROPERTIES}
         for layer in layers:
             element = _child(layer, "jc")
             if element is not None:
                 alignment = _read_alignment(element)
-        return EffectiveParagraphFormat(alignment)
+            for name, tag in PAGINATION_PROPERTIES.items():
+                element = _child(layer, tag)
+                if element is not None:
+                    flags[name] = _onoff(element)
+        return EffectiveParagraphFormat(alignment, **flags)
 
     def font(self, run):
         run._editable()

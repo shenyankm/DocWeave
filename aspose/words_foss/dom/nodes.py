@@ -696,6 +696,10 @@ class Font(_Format):
         self._set("rStyle", value)
 
 
+PAGINATION_PROPERTIES = {"keep_with_next": "keepNext", "keep_together": "keepLines",
+                         "page_break_before": "pageBreakBefore", "widow_control": "widowControl"}
+
+
 class ParagraphFormat(_Format):
     property_name = "pPr"
     order = ("pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr", "widowControl",
@@ -704,6 +708,22 @@ class ParagraphFormat(_Format):
              "bidi", "adjustRightInd", "snapToGrid", "spacing", "ind", "contextualSpacing",
              "mirrorIndents", "suppressOverlap", "jc", "textDirection", "textAlignment",
              "textboxTightWrap", "outlineLvl", "divId", "cnfStyle", "rPr", "sectPr", "pPrChange")
+
+    def _toggle(self, name):
+        element = self._get(name)
+        return None if element is None else _onoff(element)
+
+    def _set_toggle(self, name, value):
+        _validate_toggle(value)
+        groups = [node for node in _elements(self._node._element) if _is(node, "pPr")]
+        if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, name)]) > 1:
+            raise ValueError("Duplicate paragraph pagination properties")
+        self._set(name, None if value is None else "1" if value else "0")
+
+    keep_with_next = property(lambda self: self._toggle("keepNext"), lambda self, value: self._set_toggle("keepNext", value))
+    keep_together = property(lambda self: self._toggle("keepLines"), lambda self, value: self._set_toggle("keepLines", value))
+    page_break_before = property(lambda self: self._toggle("pageBreakBefore"), lambda self, value: self._set_toggle("pageBreakBefore", value))
+    widow_control = property(lambda self: self._toggle("widowControl"), lambda self, value: self._set_toggle("widowControl", value))
 
     @property
     def alignment(self):

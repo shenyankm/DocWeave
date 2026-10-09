@@ -1,0 +1,130 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "rendering_acceptance": false,
+  "corpus": "corpus/first-paragraph-page-break-26.9.zip",
+  "outputs": "corpus/first-paragraph-page-break-26.9-outputs.zip",
+  "corpus_sha256": "f539a33e6b2af25e830f8352c54ae1b9859d69ac0d8d37bf2c457fffc8f7ed8a",
+  "outputs_sha256": "eacd640f3841ad50c6efa85085ee1e38b94abbb7c1a0cfea5d833ec6b79e86d9",
+  "records": [
+    {
+      "input": "page_break_before/None-None-None-True.docx",
+      "input_sha256": "b453bb5eaefdf7f40abf194d8b65a00f5ccb9fa17b0766c115366e3f051612c2",
+      "property": "page_break_before",
+      "target": "style",
+      "value": false,
+      "before": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "edited": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "saved_live": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "reopened": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "output": "0656.docx",
+      "output_sha256": "df9920264fc677a4ec862c9756744fe1b8b2e4dc6bc8412c656844adcdb49223"
+    },
+    {
+      "input": "page_break_before/None-None-None-True.docx",
+      "input_sha256": "b453bb5eaefdf7f40abf194d8b65a00f5ccb9fa17b0766c115366e3f051612c2",
+      "property": "page_break_before",
+      "target": "style",
+      "value": true,
+      "before": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "edited": {
+        "base": false,
+        "derived": true,
+        "paragraph": false
+      },
+      "saved_live": {
+        "base": false,
+        "derived": true,
+        "paragraph": false
+      },
+      "reopened": {
+        "base": false,
+        "derived": true,
+        "paragraph": false
+      },
+      "output": "0657.docx",
+      "output_sha256": "ebf64932e74ada577b6dd69276900c4c495a1bd39a120d36696697def7450f61"
+    },
+    {
+      "input": "page_break_before/None-None-None-True.docx",
+      "input_sha256": "b453bb5eaefdf7f40abf194d8b65a00f5ccb9fa17b0766c115366e3f051612c2",
+      "property": "page_break_before",
+      "target": "paragraph",
+      "value": false,
+      "before": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "edited": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "saved_live": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "reopened": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "output": "0658.docx",
+      "output_sha256": "2440c7ad252e68420aeefbcd922e3ed05163eba30058b397415dadcd971d0956"
+    },
+    {
+      "input": "page_break_before/None-None-None-True.docx",
+      "input_sha256": "b453bb5eaefdf7f40abf194d8b65a00f5ccb9fa17b0766c115366e3f051612c2",
+      "property": "page_break_before",
+      "target": "paragraph",
+      "value": true,
+      "before": {
+        "base": false,
+        "derived": false,
+        "paragraph": false
+      },
+      "edited": {
+        "base": false,
+        "derived": false,
+        "paragraph": true
+      },
+      "saved_live": {
+        "base": false,
+        "derived": false,
+        "paragraph": true
+      },
+      "reopened": {
+        "base": false,
+        "derived": false,
+        "paragraph": true
+      },
+      "output": "0659.docx",
+      "output_sha256": "e1c4aeaa9ebcb795ca596d2ed2a45a2eaadc5394d13cff9639c4f71da6db8e4d"
+    }
+  ],
+  "status": "unresolved_first_paragraph_load_normalization_or_trial_interference; DocWeave preserves original explicit flag"
+}

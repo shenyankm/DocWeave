@@ -30313,7 +30313,19 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_pagination_evidence": {
+        "file": "paragraph-pagination-26.9.json",
+        "scope": "324 owned nonfirst-paragraph inputs, 1296 style/direct bool edits, live/save/reopen and LDM property mapping",
+        "current_alternative_entrypoint": "DocxDocument paragraph_format, effective_paragraph_format and Style.paragraph_format",
+        "implementation": "partial_alternative_dom_api; direct None means unset and clears; style resolved setters require bool",
+        "tests": "tests/test_paragraph_pagination.py",
+        "delivery": "implemented with frozen property observations; canonical API, complex contexts and final rendering remain incomplete",
+        "limits": [
+          "first-paragraph page_break_before normalization unresolved; see first-paragraph-page-break-26.9.json",
+          "direct paragraph format uses explicit/unset semantics and permits None; differs from native resolved interface"
+        ]
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.keep_with_next",
@@ -30323,7 +30335,19 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_pagination_evidence": {
+        "file": "paragraph-pagination-26.9.json",
+        "scope": "324 owned nonfirst-paragraph inputs, 1296 style/direct bool edits, live/save/reopen and LDM property mapping",
+        "current_alternative_entrypoint": "DocxDocument paragraph_format, effective_paragraph_format and Style.paragraph_format",
+        "implementation": "partial_alternative_dom_api; direct None means unset and clears; style resolved setters require bool",
+        "tests": "tests/test_paragraph_pagination.py",
+        "delivery": "implemented with frozen property observations; canonical API, complex contexts and final rendering remain incomplete",
+        "limits": [
+          "first-paragraph page_break_before normalization unresolved; see first-paragraph-page-break-26.9.json",
+          "direct paragraph format uses explicit/unset semantics and permits None; differs from native resolved interface"
+        ]
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.left_indent",
@@ -30423,7 +30447,19 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_pagination_evidence": {
+        "file": "paragraph-pagination-26.9.json",
+        "scope": "324 owned nonfirst-paragraph inputs, 1296 style/direct bool edits, live/save/reopen and LDM property mapping",
+        "current_alternative_entrypoint": "DocxDocument paragraph_format, effective_paragraph_format and Style.paragraph_format",
+        "implementation": "partial_alternative_dom_api; direct None means unset and clears; style resolved setters require bool",
+        "tests": "tests/test_paragraph_pagination.py",
+        "delivery": "implemented with frozen property observations; canonical API, complex contexts and final rendering remain incomplete",
+        "limits": [
+          "first-paragraph page_break_before normalization unresolved; see first-paragraph-page-break-26.9.json",
+          "direct paragraph format uses explicit/unset semantics and permits None; differs from native resolved interface"
+        ]
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.right_indent",
@@ -30563,7 +30599,19 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_pagination_evidence": {
+        "file": "paragraph-pagination-26.9.json",
+        "scope": "324 owned nonfirst-paragraph inputs, 1296 style/direct bool edits, live/save/reopen and LDM property mapping",
+        "current_alternative_entrypoint": "DocxDocument paragraph_format, effective_paragraph_format and Style.paragraph_format",
+        "implementation": "partial_alternative_dom_api; direct None means unset and clears; style resolved setters require bool",
+        "tests": "tests/test_paragraph_pagination.py",
+        "delivery": "implemented with frozen property observations; canonical API, complex contexts and final rendering remain incomplete",
+        "limits": [
+          "first-paragraph page_break_before normalization unresolved; see first-paragraph-page-break-26.9.json",
+          "direct paragraph format uses explicit/unset semantics and permits None; differs from native resolved interface"
+        ]
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.word_wrap",
@@ -306097,7 +306145,7 @@
           "CELL": true
         },
         "literal_markup_present": false,
-        "first_paragraph_prefix": "﻿"
+        "first_paragraph_prefix": "\ufeff"
       }
     },
     {
