@@ -8,7 +8,9 @@ tables, shapes, and formatted runs.
 
 import re
 from contextlib import ExitStack, contextmanager
+from decimal import Decimal
 from functools import partial
+from math import isfinite
 from pathlib import Path
 from typing import Iterator, Optional, Union
 
@@ -173,10 +175,27 @@ class LdmPdfWriter:
                 raise ValueError("jpeg_quality must be an integer from 0 to 100")
             if not isinstance(expanded_levels, int) or not 0 <= expanded_levels <= 9:
                 raise ValueError("expanded_outline_levels must be an integer from 0 to 9")
+            zoom = self.options.zoom_factor
+            zoom_destination = None
+            if self.options.zoom_behavior == PdfZoomBehavior.ZOOM_FACTOR:
+                try:
+                    valid = isinstance(zoom, (int, float)) and not isinstance(zoom, bool) and zoom >= 0 and isfinite(zoom)
+                except OverflowError:
+                    valid = False
+                if not valid:
+                    raise ValueError("zoom_factor must be a finite nonnegative number")
+                if zoom:
+                    value = Decimal(zoom) if isinstance(zoom, int) else Decimal(str(zoom))
+                    sign, digits, exponent = value.as_tuple()
+                    zoom_destination = format(Decimal((sign, digits, exponent - 2)), "f")
+                    # Keep the number plus its delimiter within common parser limits.
+                    if len(zoom_destination) > 47:
+                        raise ValueError("zoom_factor exceeds this writer's 47-character PDF number limit")
             with ExitStack() as cleanup:
                 pdf = self._render_pdf(doc, cleanup)
                 pdf_bytes = pdf.output(output_producer_class=partial(
                     OutlineOutputProducer, expanded_levels=expanded_levels,
+                    zoom_destination=zoom_destination,
                 ))
                 if self.options.zoom_behavior == PdfZoomBehavior.NONE:
                     pdf_bytes = _remove_open_action(pdf_bytes)

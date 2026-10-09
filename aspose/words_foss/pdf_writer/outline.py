@@ -4,9 +4,16 @@ from fpdf.output import OutputProducer
 
 
 class OutlineOutputProducer(OutputProducer):
-    def __init__(self, pdf, expanded_levels):
+    def __init__(self, pdf, expanded_levels, zoom_destination=None):
         super().__init__(pdf)
         self.expanded_levels = expanded_levels
+        self.zoom_destination = zoom_destination
+
+    # shortcut: fpdf2 has no public OpenAction hook; verify this override on dependency upgrades.
+    def _finalize_catalog(self, catalog_obj, pages_root_obj, first_page_obj, *args, **kwargs):
+        super()._finalize_catalog(catalog_obj, pages_root_obj, first_page_obj, *args, **kwargs)
+        if self.zoom_destination is not None:
+            catalog_obj.open_action = f"[{first_page_obj.id} 0 R /XYZ null null {self.zoom_destination}]"
 
     # shortcut: fpdf2 has no public outline-count hook; verify this override on dependency upgrades.
     def _add_document_outline(self):

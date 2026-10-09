@@ -1,0 +1,62 @@
+{
+  "baseline_commit": "a958b8ddcdd4ee0ff8db017393a4688c545fe5e1",
+  "scope": "A1 PDF zoom-factor input and serialized first-page destination contract; remaining options and A1/A4 acceptance are incomplete",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "installed_cwd": "/tmp",
+    "pypdf": "6.19.0",
+    "fpdf2": "2.8.9"
+  },
+  "reproduction": {
+    "test": "tests/test_pdf_zoom_contract.py",
+    "old_installed": "46 failed, 17 passed in 7.27s (63 cases before the extra real-DOCX guard)",
+    "source_related": "108 passed, 1 warning in 13.01s (before the extra real-DOCX guard and stricter numerical assertion)",
+    "final_installed_focused": "64 passed, 1 warning in 3.10s"
+  },
+  "contract": {
+    "active_input": "ZOOM_FACTOR consumes finite nonnegative int/float, excluding bool; invalid type, negative, nonfinite, overflow and overlong decimal destination rejected before rendering; original output preserved",
+    "positive": "Decimal tuple exponent scaling writes zoom percent / 100 without scientific notation or Decimal context rounding; serialized Catalog uses first-page reference",
+    "zero": "Existing default /FitH behavior remains",
+    "inactive": "Other zoom modes do not interpret zoom_factor",
+    "numeric_budget": "Destination number limited to 47 characters for this writer. The installed independent pypdf reader checks a 64-byte stream budget before regex matching; its 16+32+64 chunk growth rejects numbers above the 47-character-plus-delimiter safe boundary. This is a reader compatibility bound, not a universal PDF standard limit."
+  },
+  "coverage": [
+    "Memory/path/direct writer with options mutated after writer construction; failures retain original and leave no temporary files",
+    "Strict pypdf parse of fractional/small/large positive percentages with relative tolerance and zero absolute tolerance, including 47-character boundary",
+    "All six zoom modes with compressed/uncompressed streams preserve literal OpenAction-like body text",
+    "Actual python-docx input retains heading outline and body text with non-default zoom"
+  ],
+  "common_pdf": {
+    "result": "Five fixed real DOCX inputs, 113 pages: complete size/words/pixels/drawings/images records unchanged",
+    "record_sha256": "470e8cdaff77bbda91c1becbd1c2f56348e4f51bbd67c74512b7e3418b4a6dcc",
+    "previous_matching_record": "pdf-image-compression-contract.json common_pdf.record_sha256",
+    "probe_source": "import hashlib,json,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-current-performance');results={}\nfor case in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n raw=aw.Document(root/(case+'.docx')).to_bytes(aw.saving.PdfSaveOptions())\n pages=[]\n with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n  for page in pdf:\n   pages.append({key:hashlib.sha256(value).hexdigest() for key,value in {'words':repr(page.get_text('words')).encode(),'pixels':page.get_pixmap().samples,'drawings':repr(page.get_drawings()).encode(),'images':repr(page.get_image_info()).encode()}.items()})\n results[case]={'bytes':len(raw),'pages':pages}\nPath(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\\n');print('five PDF corpora saved')\n",
+    "inputs": {
+      "small": "e5c217ce9ab6e2de6ecadb6380699947826ceb39463fe7ccc055092f2ac0d703",
+      "hundred_pages": "4a58a34bdddd09e80f992dbc7c0055ab4a07ceea21146304564bd4e81b922d4c",
+      "image_table": "a1dae1a70968e0640b959f3fcc09b0a7c363f97556a5b54311be7b068e2bd8c2",
+      "repeated_images": "a19f56933135f9820b43e3e90f3ac091d5e3aed0db48a5a932abc4eedf7df3a2",
+      "mixed_styles": "db06ae569aba30457f3e83782be91d96dca3786684a6d878a767c3e97b48ff26"
+    }
+  },
+  "examples": "31 passed, 13 warnings in 7.47s",
+  "wheel": {
+    "bytes": 26490161,
+    "sha256": "e3df2a6ce7f140c12f9ef1da7eae7b27ca5ffb9ccb43c22e938e4cfdfe384e6d",
+    "source_py_files_matched": 125,
+    "check": "scripts/check_wheel.py verified installed package"
+  },
+  "limits": [
+    "Uses existing OutlineOutputProducer private fpdf2 Catalog hook; six modes and outline must be revalidated on dependency upgrades",
+    "No actual viewer opening/zoom UI validation or fresh Word/LibreOffice comparison",
+    "No speed/RSS benchmark or general size reduction claim",
+    "Installed selected integration passes; no fresh full suite or complete save-options acceptance"
+  ],
+  "installed_integration": {
+    "result": "1246 passed, 760 deselected, 22 warnings in 304.40s (0:05:04)",
+    "selection": "pdf or image or conversion_api or bounded_conversion",
+    "command": "PYPANDOC_PANDOC=/tmp/docweave-pandoc-arm64/pandoc /tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests -q --import-mode=importlib -k 'pdf or image or conversion_api or bounded_conversion' --tb=short",
+    "boundary": "Collected 63 zoom cases before the extra real-DOCX guard; final 64-case focused installed run covers it and the stricter numerical assertion. Production wheel unchanged between runs."
+  }
+}

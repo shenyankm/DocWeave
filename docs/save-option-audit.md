@@ -23,7 +23,7 @@
 | `outline_options` | 下表六项；不是完整 Word TOC 契约 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
 | `preserve_form_fields` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
 | `memory_optimization` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
-| `zoom_factor` | ZOOM_FACTOR 下使用；阅读器行为与全部边界尚待复核 | [aspose/words_foss/pdf_writer/writer.py](../aspose/words_foss/pdf_writer/writer.py) |
+| `zoom_factor` | ZOOM_FACTOR 下使用：有限非负 int/float（拒绝 bool），0 保留默认打开行为；正值按百分比写成普通十进制，PDF 数字最长 47 字符。内存/文件/直接 writer、错误原文件保留及独立解析已验证；实际阅读器打开行为未验收 | [缩放契约](benchmarks/pdf-zoom-contract.json)、[writer](../aspose/words_foss/pdf_writer/writer.py) |
 | `zoom_behavior` | PDF 打开动作；部分行为在序列化后改写 | [aspose/words_foss/pdf_writer/writer.py](../aspose/words_foss/pdf_writer/writer.py) |
 | `display_doc_title` | PDF viewer preference；阅读器可忽略 | [aspose/words_foss/pdf_writer/writer.py](../aspose/words_foss/pdf_writer/writer.py) |
 | `fallback_fonts` | 可信字体路径；覆盖、塑形及源字体替代有独立限制 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
