@@ -132,12 +132,24 @@ class DocxPackage:
             self._dirty.discard(name)
 
     def to_bytes(self):
+        if len(self._entries) > _io.MAX_ZIP_ENTRIES:
+            raise ValueError("DOCX has too many ZIP entries")
         stream = BytesIO()
+        expanded = 0
         with ZipFile(stream, "w") as output:
             output.comment = self._comment
             for entry in self._entries:
-                output.writestr(entry, self.payload(entry.filename))
-        return stream.getvalue()
+                data = self.payload(entry.filename)
+                if len(data) > _io.MAX_PART_BYTES:
+                    raise ValueError("DOCX part exceeds the safety limit")
+                expanded += len(data)
+                if expanded > _io.MAX_EXPANDED_BYTES:
+                    raise ValueError("DOCX expanded size exceeds the safety limit")
+                output.writestr(entry, data)
+        data = stream.getvalue()
+        if len(data) > _io.MAX_INPUT_BYTES:
+            raise ValueError("DOCX output exceeds the safety limit")
+        return data
 
     def save(self, destination):
         with atomic_output(destination) as temporary:
