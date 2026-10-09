@@ -271,6 +271,65 @@ def verify_paragraph_character_indents(root):
     return len(rows)
 
 
+def verify_character_indent_roundtrips(root):
+    from xml.etree import ElementTree as ET
+
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    report = json.loads((root / "paragraph-character-indents-current.json").read_text())
+    assert report["baseline_version"] == "26.9.0"
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    native_raw = (root / report["native_report"]).read_bytes()
+    assert digest(native_raw.replace(b"\r\n", b"\n")) == report["native_report_sha256"]
+    native = json.loads(native_raw)
+    assert native["outputs_sha256"] == report["native_outputs_sha256"]
+    originals = {row["output"]: row for row in native["records"]}
+    rows = report["records"]
+    assert len(rows) == 122
+    assert {(row["native_output"], row["format"]) for row in rows} == {
+        (name, fmt) for name in originals for fmt in ("DOCX", "FLAT_OPC")}
+    raw = (root / report["outputs"]).read_bytes()
+    assert digest(raw) == report["outputs_sha256"]
+    fields = ("character_unit_left_indent", "character_unit_right_indent", "character_unit_first_line_indent")
+    reread = report["official_reread"]
+    assert reread["version"] == "26.9.0" and reread["licensed"] is False
+    assert reread["outputs_sha256"] == report["outputs_sha256"]
+    observed = {row["output"]: row for row in reread["records"]}
+    assert len(observed) == len(reread["records"]) == len(rows)
+    assert set(observed) == {row["output"] for row in rows}
+    with ZipFile(BytesIO(raw)) as outputs:
+        assert len(outputs.namelist()) == len(rows) and set(outputs.namelist()) == {row["output"] for row in rows}
+        for row in rows:
+            original = originals[row["native_output"]]
+            assert row["native_output_sha256"] == original["output_sha256"]
+            expected = {name: original["after_reopen"][name] for name in fields}
+            assert row["character_units"] == expected
+            assert observed[row["output"]]["character_units"] == expected
+            assert observed[row["output"]]["output_sha256"] == row["output_sha256"]
+            data = outputs.read(row["output"])
+            assert digest(data) == row["output_sha256"]
+            if row["format"] == "DOCX":
+                document = Document(BytesIO(data))
+                element = next(p._p for p in document.paragraphs if p.text == "IMPORT")
+            else:
+                package = "{http://schemas.microsoft.com/office/2006/xmlPackage}"
+                parts = [part for part in ET.fromstring(data) if part.get(package + "name") == "/word/document.xml"]
+                assert len(parts) == 1
+                document = parts[0].find(package + "xmlData/" + qn("w:document"))
+                element = next(p for p in document.iter(qn("w:p")) if "".join(t.text or "" for t in p.iter(qn("w:t"))) == "IMPORT")
+            ind = element.find(qn("w:pPr") + "/" + qn("w:ind"))
+            actual = {}
+            for field, attribute in zip(fields, ("leftChars", "rightChars", "firstLineChars")):
+                value = ind.get(qn("w:" + attribute)) if ind is not None else None
+                if value is None and attribute == "firstLineChars" and ind is not None:
+                    hanging = ind.get(qn("w:hangingChars"))
+                    value = str(-int(hanging)) if hanging is not None else None
+                actual[field] = int(value or "0") / 100
+            assert actual == expected
+    return len(rows)
+
+
 def verify_paragraph_dimensions(root, filename="paragraph-dimensions-26.9.json"):
     assert filename in {"paragraph-dimensions-26.9.json", "paragraph-spacing-limits-26.9.json", "paragraph-indent-limits-26.9.json", "paragraph-logical-indents-26.9.json"}
     logical = filename == "paragraph-logical-indents-26.9.json"
@@ -973,6 +1032,7 @@ def verify(root):
     indent_limits = verify_paragraph_dimensions(root, "paragraph-indent-limits-26.9.json")
     logical_indents = verify_paragraph_dimensions(root, "paragraph-logical-indents-26.9.json")
     character_indents = verify_paragraph_character_indents(root)
+    character_roundtrips = verify_character_indent_roundtrips(root)
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
@@ -996,6 +1056,7 @@ def verify(root):
             "checked_paragraph_indent_limits": indent_limits,
             "checked_paragraph_logical_indents": logical_indents,
             "checked_paragraph_character_indents": character_indents,
+            "checked_character_indent_roundtrips": character_roundtrips,
             "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 

@@ -30200,7 +30200,7 @@
       "declaration": "aspose.words.ParagraphFormat.character_unit_first_line_indent",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
+      "implementation": "partial_model_unit_preservation_native_dom_and_layout_not_aligned",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
@@ -30217,6 +30217,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
         "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
         "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
+        "full_acceptance": false
+      },
+      "character_indent_model_evidence": {
+        "implementation": "aspose/words_foss/light_document_model.py, shared paragraph/list reader and OOXML writer",
+        "behavior": "character values retain unset/explicit zero, cascade through paragraph styles, preserve numbering definitions/overrides, model JSON and DOCX/Flat OPC; logical aliases normalize to physical names and negative first-line uses hangingChars",
+        "report": "paragraph-character-indents-current.json",
+        "tests": "tests/test_character_indent_roundtrip.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
+        "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
       }
     },
@@ -30225,7 +30234,7 @@
       "declaration": "aspose.words.ParagraphFormat.character_unit_left_indent",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
+      "implementation": "partial_model_unit_preservation_native_dom_and_layout_not_aligned",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
@@ -30242,6 +30251,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
         "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
         "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
+        "full_acceptance": false
+      },
+      "character_indent_model_evidence": {
+        "implementation": "aspose/words_foss/light_document_model.py, shared paragraph/list reader and OOXML writer",
+        "behavior": "character values retain unset/explicit zero, cascade through paragraph styles, preserve numbering definitions/overrides, model JSON and DOCX/Flat OPC; logical aliases normalize to physical names and negative first-line uses hangingChars",
+        "report": "paragraph-character-indents-current.json",
+        "tests": "tests/test_character_indent_roundtrip.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
+        "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
       }
     },
@@ -30250,7 +30268,7 @@
       "declaration": "aspose.words.ParagraphFormat.character_unit_right_indent",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
+      "implementation": "partial_model_unit_preservation_native_dom_and_layout_not_aligned",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
@@ -30267,6 +30285,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
         "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
         "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
+        "full_acceptance": false
+      },
+      "character_indent_model_evidence": {
+        "implementation": "aspose/words_foss/light_document_model.py, shared paragraph/list reader and OOXML writer",
+        "behavior": "character values retain unset/explicit zero, cascade through paragraph styles, preserve numbering definitions/overrides, model JSON and DOCX/Flat OPC; logical aliases normalize to physical names and negative first-line uses hangingChars",
+        "report": "paragraph-character-indents-current.json",
+        "tests": "tests/test_character_indent_roundtrip.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
+        "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
       }
     },
@@ -30363,6 +30390,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
         "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
         "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
+        "full_acceptance": false
+      },
+      "character_indent_model_evidence": {
+        "implementation": "aspose/words_foss/light_document_model.py, shared paragraph/list reader and OOXML writer",
+        "behavior": "character values retain unset/explicit zero, cascade through paragraph styles, preserve numbering definitions/overrides, model JSON and DOCX/Flat OPC; logical aliases normalize to physical names and negative first-line uses hangingChars",
+        "report": "paragraph-character-indents-current.json",
+        "tests": "tests/test_character_indent_roundtrip.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
+        "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
       }
     },
@@ -30547,6 +30583,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
         "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
         "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
+        "full_acceptance": false
+      },
+      "character_indent_model_evidence": {
+        "implementation": "aspose/words_foss/light_document_model.py, shared paragraph/list reader and OOXML writer",
+        "behavior": "character values retain unset/explicit zero, cascade through paragraph styles, preserve numbering definitions/overrides, model JSON and DOCX/Flat OPC; logical aliases normalize to physical names and negative first-line uses hangingChars",
+        "report": "paragraph-character-indents-current.json",
+        "tests": "tests/test_character_indent_roundtrip.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
+        "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
       }
     },
@@ -30741,6 +30786,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
         "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
         "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
+        "full_acceptance": false
+      },
+      "character_indent_model_evidence": {
+        "implementation": "aspose/words_foss/light_document_model.py, shared paragraph/list reader and OOXML writer",
+        "behavior": "character values retain unset/explicit zero, cascade through paragraph styles, preserve numbering definitions/overrides, model JSON and DOCX/Flat OPC; logical aliases normalize to physical names and negative first-line uses hangingChars",
+        "report": "paragraph-character-indents-current.json",
+        "tests": "tests/test_character_indent_roundtrip.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
+        "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
       }
     },

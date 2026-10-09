@@ -331,6 +331,9 @@ class ParagraphFormat(BaseModel):
     left_indent: float = 0.0
     right_indent: float = 0.0
     first_line_indent: float = 0.0
+    character_unit_left_indent: float | None = None
+    character_unit_right_indent: float | None = None
+    character_unit_first_line_indent: float | None = None
     space_before: float = 0.0
     space_after: float = 0.0
     space_before_auto: bool = False
@@ -364,7 +367,7 @@ class ParagraphFormat(BaseModel):
     # 0=None, 1=Normal, 2=Margin.
     drop_cap_position: int = 0
 
-    # REMOVED: bidi, character_unit_*, line_unit_*,
+    # REMOVED: bidi, line_unit_*,
     #          far_east_line_break_control, word_wrap, hanging_punctuation,
     #          mirror_indents
 
@@ -1140,6 +1143,9 @@ class ListLevel(BaseModel):
     alignment: int = 0
     number_position: float = 0.0
     text_position: float = 0.0
+    character_unit_left_indent: float | None = None
+    character_unit_right_indent: float | None = None
+    character_unit_first_line_indent: float | None = None
     # ``<w:lvl><w:rPr>`` — formatting of the bullet / number glyph itself
     # (font name, size, italic, color).  Distinct from the paragraph
     # mark font carried on each individual list-item paragraph.

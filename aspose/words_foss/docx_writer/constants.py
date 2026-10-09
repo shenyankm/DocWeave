@@ -172,3 +172,29 @@ TAB_LEADER_VAL = {
     4: "heavy",
     5: "middleDot",
 }
+
+
+def character_indent_attrs(pf, base=None):
+    """Validate and serialize character hundredths for paragraphs and list levels."""
+    from decimal import Decimal
+
+    attrs = {}
+    for field, attribute in (("character_unit_left_indent", "leftChars"),
+                             ("character_unit_right_indent", "rightChars"),
+                             ("character_unit_first_line_indent", "firstLineChars")):
+        value = getattr(pf, field)
+        if value is None:
+            continue
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise TypeError("Character indents require a finite number or None")
+        if not -21474836.48 <= value <= 21474836.47:
+            raise ValueError("Character indents exceed the signed hundredths range")
+        if base is None or value != getattr(base, field):
+            numerator, denominator = Decimal(str(value)).as_integer_ratio()
+            hundredths = abs(numerator) * 100 // denominator
+            if numerator < 0:
+                hundredths = -hundredths
+            if field == "character_unit_first_line_indent" and hundredths < 0:
+                attribute, hundredths = "hangingChars", -hundredths
+            attrs["w:" + attribute] = str(hundredths)
+    return attrs

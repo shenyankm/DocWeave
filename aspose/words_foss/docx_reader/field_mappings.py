@@ -196,6 +196,7 @@ MERGE_FONT_FIELDS: tuple[str, ...] = (
 MERGE_PF_FIELDS: tuple[str, ...] = (
     "style_name", "style_identifier", "alignment",
     "left_indent", "right_indent", "first_line_indent",
+    "character_unit_left_indent", "character_unit_right_indent", "character_unit_first_line_indent",
     "space_before", "space_after", "space_before_auto", "space_after_auto",
     "line_spacing", "line_spacing_rule",
     "keep_with_next", "page_break_before",

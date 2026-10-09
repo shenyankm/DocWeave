@@ -11,6 +11,7 @@ from aspose.words_foss.docx_writer.constants import (
     TAB_ALIGNMENT_VAL,
     TAB_LEADER_VAL,
     pt_to_twips,
+    character_indent_attrs,
 )
 from aspose.words_foss.docx_writer.numbering_part import remap_num_id
 from aspose.words_foss.docx_writer.runs import color_to_hex, render_rPr, render_run
@@ -236,6 +237,7 @@ def _ind_attrs(pf: ldm.ParagraphFormat, base: ldm.ParagraphFormat) -> dict[str, 
             attrs["w:firstLine"] = pt_to_twips(pf.first_line_indent)
         else:
             attrs["w:hanging"] = pt_to_twips(-pf.first_line_indent)
+    attrs.update(character_indent_attrs(pf, base))
     return attrs
 
 

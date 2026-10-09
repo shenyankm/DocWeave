@@ -1,0 +1,2590 @@
+{
+  "version": "26.7.0.post2",
+  "baseline_version": "26.9.0",
+  "python": "3.14.7",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "native_report": "paragraph-character-indents-26.9.json",
+  "native_report_sha256": "bb6ce5113fcd4f7aa41c6016781abdee59111d5f669a8ef3c71eb47bb53a8f66",
+  "native_outputs_sha256": "e18280b3ac1c99a8dee0066ee03949632a7b9351a26dcc3db06dcc056380ee8a",
+  "outputs": "corpus/paragraph-character-indents-current.zip",
+  "outputs_sha256": "77fc77ae01992ed2fa931215d73a35450383afef6e05e3cbc17e10ce00b64ba0",
+  "records": [
+    {
+      "native_output": "000.docx",
+      "native_output_sha256": "a3db6c94fe3e50fcce631d4a6beb22ea0914ba550c9459d3fe79b53e8545e4b3",
+      "format": "DOCX",
+      "output": "DOCX/000.docx",
+      "output_sha256": "d3b1221b52f42da8b7dba0a95c132e84b4e98a98c1e30a041858a4524c9dc13e",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "000.docx",
+      "native_output_sha256": "a3db6c94fe3e50fcce631d4a6beb22ea0914ba550c9459d3fe79b53e8545e4b3",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/000.docx",
+      "output_sha256": "9adbec47fc0d9ed289252efb2e304fdd3b68eb32d88883a0122e3f677660a2c5",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "001.docx",
+      "native_output_sha256": "95f804a98452b981cf453fdbf087932ac4aefeedd4697c739dd560247733093c",
+      "format": "DOCX",
+      "output": "DOCX/001.docx",
+      "output_sha256": "d3b1221b52f42da8b7dba0a95c132e84b4e98a98c1e30a041858a4524c9dc13e",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "001.docx",
+      "native_output_sha256": "95f804a98452b981cf453fdbf087932ac4aefeedd4697c739dd560247733093c",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/001.docx",
+      "output_sha256": "9adbec47fc0d9ed289252efb2e304fdd3b68eb32d88883a0122e3f677660a2c5",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "002.docx",
+      "native_output_sha256": "33ba667b0f712108acd6e7ec57de866ad6be9ef91c739683f5039f717ad5143a",
+      "format": "DOCX",
+      "output": "DOCX/002.docx",
+      "output_sha256": "0620956dafa008c0b2f223e93a3d7d335a811158ce42b2e87452b36dcf6fb7ea",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "002.docx",
+      "native_output_sha256": "33ba667b0f712108acd6e7ec57de866ad6be9ef91c739683f5039f717ad5143a",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/002.docx",
+      "output_sha256": "53212b40907aa9fd808891a2e4493d033e6542dde7300cfa69804dacb6a28df6",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "003.docx",
+      "native_output_sha256": "19cf45aaa0a961352f3e117394d25698542f4a8e164a1baf6b637b7eb01ea107",
+      "format": "DOCX",
+      "output": "DOCX/003.docx",
+      "output_sha256": "0620956dafa008c0b2f223e93a3d7d335a811158ce42b2e87452b36dcf6fb7ea",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "003.docx",
+      "native_output_sha256": "19cf45aaa0a961352f3e117394d25698542f4a8e164a1baf6b637b7eb01ea107",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/003.docx",
+      "output_sha256": "53212b40907aa9fd808891a2e4493d033e6542dde7300cfa69804dacb6a28df6",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "004.docx",
+      "native_output_sha256": "c3ade70916cb7931151b4b42458185670b1d954fc8f155158e2a464f0dbc38a8",
+      "format": "DOCX",
+      "output": "DOCX/004.docx",
+      "output_sha256": "ded382bd51f73ba018b232c6bfeea1b187e875063ef4d73b3e786dd9e945265e",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "004.docx",
+      "native_output_sha256": "c3ade70916cb7931151b4b42458185670b1d954fc8f155158e2a464f0dbc38a8",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/004.docx",
+      "output_sha256": "d19ed6c17eed115d2ee43f17dbbbcd01f52ef333a8c300f9f382cdd435c775d2",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "005.docx",
+      "native_output_sha256": "2b9c2d3db139c52849fb4285d49a9917d960e4fae22d8fe6dea258b8a24c3561",
+      "format": "DOCX",
+      "output": "DOCX/005.docx",
+      "output_sha256": "ded382bd51f73ba018b232c6bfeea1b187e875063ef4d73b3e786dd9e945265e",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "005.docx",
+      "native_output_sha256": "2b9c2d3db139c52849fb4285d49a9917d960e4fae22d8fe6dea258b8a24c3561",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/005.docx",
+      "output_sha256": "d19ed6c17eed115d2ee43f17dbbbcd01f52ef333a8c300f9f382cdd435c775d2",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "006.docx",
+      "native_output_sha256": "289a829dac150676d00263ea73afcc3579dc27ad2031b6e049052a4d54800702",
+      "format": "DOCX",
+      "output": "DOCX/006.docx",
+      "output_sha256": "ead19e574680926f27e1047d09379216ba888965d0046dffb405a615ad5d0aa5",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "006.docx",
+      "native_output_sha256": "289a829dac150676d00263ea73afcc3579dc27ad2031b6e049052a4d54800702",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/006.docx",
+      "output_sha256": "6701d6f2e8cadcb17476a30a8057e0bc96a32bffd052db42078e7479f7227c12",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "007.docx",
+      "native_output_sha256": "8bc9826252e14359601e0b832e17c672722cf9f89dabe70491c157beea0db595",
+      "format": "DOCX",
+      "output": "DOCX/007.docx",
+      "output_sha256": "ead19e574680926f27e1047d09379216ba888965d0046dffb405a615ad5d0aa5",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "007.docx",
+      "native_output_sha256": "8bc9826252e14359601e0b832e17c672722cf9f89dabe70491c157beea0db595",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/007.docx",
+      "output_sha256": "6701d6f2e8cadcb17476a30a8057e0bc96a32bffd052db42078e7479f7227c12",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "008.docx",
+      "native_output_sha256": "cc513f8785bef0782d35e8f9148d991a111f48208f26246c10d14bd4fca81f19",
+      "format": "DOCX",
+      "output": "DOCX/008.docx",
+      "output_sha256": "ed0a61628177720e351fdb42a012143e56b5923d657c949152fdf6da05fc112d",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "008.docx",
+      "native_output_sha256": "cc513f8785bef0782d35e8f9148d991a111f48208f26246c10d14bd4fca81f19",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/008.docx",
+      "output_sha256": "b0e1eddbad912753f2659b51eb9b652b930605da24f78a6a758881506a814c9c",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "009.docx",
+      "native_output_sha256": "13085f2471d4a2434921d904d223dfb4fc25a5dafd2aa72297a22db75b576fe8",
+      "format": "DOCX",
+      "output": "DOCX/009.docx",
+      "output_sha256": "ed0a61628177720e351fdb42a012143e56b5923d657c949152fdf6da05fc112d",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "009.docx",
+      "native_output_sha256": "13085f2471d4a2434921d904d223dfb4fc25a5dafd2aa72297a22db75b576fe8",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/009.docx",
+      "output_sha256": "b0e1eddbad912753f2659b51eb9b652b930605da24f78a6a758881506a814c9c",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "010.docx",
+      "native_output_sha256": "e81f423b41d0d5bc94c152c6482e990575e366233c57139d61a143d726a73f97",
+      "format": "DOCX",
+      "output": "DOCX/010.docx",
+      "output_sha256": "4a9cfabf9c4edae199d63a58647b246e113dde9c70361d9977146ae1c5c6751a",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "010.docx",
+      "native_output_sha256": "e81f423b41d0d5bc94c152c6482e990575e366233c57139d61a143d726a73f97",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/010.docx",
+      "output_sha256": "2cac2fe1814b00acd28a9ee9f572f8ba9b133454e8f71ac5014853ee7e539697",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "011.docx",
+      "native_output_sha256": "3708f78d34378d0a6b88003d6d8789a15b281c3e3b9a1b208aac92ca1ba8561c",
+      "format": "DOCX",
+      "output": "DOCX/011.docx",
+      "output_sha256": "4a9cfabf9c4edae199d63a58647b246e113dde9c70361d9977146ae1c5c6751a",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "011.docx",
+      "native_output_sha256": "3708f78d34378d0a6b88003d6d8789a15b281c3e3b9a1b208aac92ca1ba8561c",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/011.docx",
+      "output_sha256": "2cac2fe1814b00acd28a9ee9f572f8ba9b133454e8f71ac5014853ee7e539697",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "012.docx",
+      "native_output_sha256": "7c38c5d9f93e9eaa4fa0cdc26699c9bfe183cb50442d5cb2880b146c58c636c3",
+      "format": "DOCX",
+      "output": "DOCX/012.docx",
+      "output_sha256": "7a2c87aafbfb842e9c9729b026caca99787d72a2fa140851a895b2c772ae3e16",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "012.docx",
+      "native_output_sha256": "7c38c5d9f93e9eaa4fa0cdc26699c9bfe183cb50442d5cb2880b146c58c636c3",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/012.docx",
+      "output_sha256": "828e845bd37953f091f39c947526a2c92f55bc49d81d23352f6b17927f76ad96",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "013.docx",
+      "native_output_sha256": "3e4f34ede4a72ff5b7b6770987971e6d10df250abeb4a37090b7262d0aceedcc",
+      "format": "DOCX",
+      "output": "DOCX/013.docx",
+      "output_sha256": "7a2c87aafbfb842e9c9729b026caca99787d72a2fa140851a895b2c772ae3e16",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "013.docx",
+      "native_output_sha256": "3e4f34ede4a72ff5b7b6770987971e6d10df250abeb4a37090b7262d0aceedcc",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/013.docx",
+      "output_sha256": "828e845bd37953f091f39c947526a2c92f55bc49d81d23352f6b17927f76ad96",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "014.docx",
+      "native_output_sha256": "5129f82c2aca4569b27b347dd7479475ceaaf71f9fa7cc12ba088cdfd22deff4",
+      "format": "DOCX",
+      "output": "DOCX/014.docx",
+      "output_sha256": "d3a0c8e04198445761a4fcd5184d2f53fe0088ed732efafd1f4dac5d1c9c8da5",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "014.docx",
+      "native_output_sha256": "5129f82c2aca4569b27b347dd7479475ceaaf71f9fa7cc12ba088cdfd22deff4",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/014.docx",
+      "output_sha256": "eb1a4f47450760a6e9ef9aad5f8182b6a98c83b2f3cffdce6caa8dc120fc27f5",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "015.docx",
+      "native_output_sha256": "46c38cacc3f60eb537c4d1fa0986a35e723d95058e28fac6c0da91d4b1fdeee0",
+      "format": "DOCX",
+      "output": "DOCX/015.docx",
+      "output_sha256": "d3a0c8e04198445761a4fcd5184d2f53fe0088ed732efafd1f4dac5d1c9c8da5",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "015.docx",
+      "native_output_sha256": "46c38cacc3f60eb537c4d1fa0986a35e723d95058e28fac6c0da91d4b1fdeee0",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/015.docx",
+      "output_sha256": "eb1a4f47450760a6e9ef9aad5f8182b6a98c83b2f3cffdce6caa8dc120fc27f5",
+      "character_units": {
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "native_output": "016.docx",
+      "native_output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "format": "DOCX",
+      "output": "DOCX/016.docx",
+      "output_sha256": "741de2f85d652d70d7618ee1ccc530820d5793cec0d0bf32bd0cb989f74fb5c1",
+      "character_units": {
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "016.docx",
+      "native_output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/016.docx",
+      "output_sha256": "6e766d9b1d0736cbf7dcdd805c6c69334878f41d0e018758997caed3058eb01d",
+      "character_units": {
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "017.docx",
+      "native_output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "format": "DOCX",
+      "output": "DOCX/017.docx",
+      "output_sha256": "12f48eabc04779b831db03cb401ee7f9495dc1953c8a93ffc8dc85c05ee23576",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "017.docx",
+      "native_output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/017.docx",
+      "output_sha256": "c7cd55d8cd18f56786ad98a8dcc2e42427a219f4fe0d9f7c15d424e6b7db144b",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "018.docx",
+      "native_output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "format": "DOCX",
+      "output": "DOCX/018.docx",
+      "output_sha256": "03973f14246213f1ffa1205af86340fcb1e17e51a07d79e4f655cd9253e886b9",
+      "character_units": {
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "018.docx",
+      "native_output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/018.docx",
+      "output_sha256": "908ab78fda96d38e16570361f9f58f8931d811192036ba4e82042e6dd13d67ef",
+      "character_units": {
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "019.docx",
+      "native_output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "format": "DOCX",
+      "output": "DOCX/019.docx",
+      "output_sha256": "4be128c6e548ada68eb3e2ab737967b0cddec1cd33ef6513953c10ae5683c0b5",
+      "character_units": {
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "019.docx",
+      "native_output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/019.docx",
+      "output_sha256": "81f297fbe1b7e0446157ced72edb7c4ed77d5dd0948b3b3dc431cd4f008c029f",
+      "character_units": {
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "020.docx",
+      "native_output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "format": "DOCX",
+      "output": "DOCX/020.docx",
+      "output_sha256": "ccbdec1237464189c1ff8ca8ebb699559c8cff459ed1da6dd965132beb05b2d0",
+      "character_units": {
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "020.docx",
+      "native_output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/020.docx",
+      "output_sha256": "c6c9cf335a5bc0a9a60a899666f4a04c5dbcafdd2af399c54be36a05cf6108cc",
+      "character_units": {
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "021.docx",
+      "native_output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "format": "DOCX",
+      "output": "DOCX/021.docx",
+      "output_sha256": "741de2f85d652d70d7618ee1ccc530820d5793cec0d0bf32bd0cb989f74fb5c1",
+      "character_units": {
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "021.docx",
+      "native_output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/021.docx",
+      "output_sha256": "6e766d9b1d0736cbf7dcdd805c6c69334878f41d0e018758997caed3058eb01d",
+      "character_units": {
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "022.docx",
+      "native_output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "format": "DOCX",
+      "output": "DOCX/022.docx",
+      "output_sha256": "12f48eabc04779b831db03cb401ee7f9495dc1953c8a93ffc8dc85c05ee23576",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "022.docx",
+      "native_output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/022.docx",
+      "output_sha256": "c7cd55d8cd18f56786ad98a8dcc2e42427a219f4fe0d9f7c15d424e6b7db144b",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "023.docx",
+      "native_output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "format": "DOCX",
+      "output": "DOCX/023.docx",
+      "output_sha256": "03973f14246213f1ffa1205af86340fcb1e17e51a07d79e4f655cd9253e886b9",
+      "character_units": {
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "023.docx",
+      "native_output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/023.docx",
+      "output_sha256": "908ab78fda96d38e16570361f9f58f8931d811192036ba4e82042e6dd13d67ef",
+      "character_units": {
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "024.docx",
+      "native_output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "format": "DOCX",
+      "output": "DOCX/024.docx",
+      "output_sha256": "4be128c6e548ada68eb3e2ab737967b0cddec1cd33ef6513953c10ae5683c0b5",
+      "character_units": {
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "024.docx",
+      "native_output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/024.docx",
+      "output_sha256": "81f297fbe1b7e0446157ced72edb7c4ed77d5dd0948b3b3dc431cd4f008c029f",
+      "character_units": {
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "025.docx",
+      "native_output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "format": "DOCX",
+      "output": "DOCX/025.docx",
+      "output_sha256": "ccbdec1237464189c1ff8ca8ebb699559c8cff459ed1da6dd965132beb05b2d0",
+      "character_units": {
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "025.docx",
+      "native_output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/025.docx",
+      "output_sha256": "c6c9cf335a5bc0a9a60a899666f4a04c5dbcafdd2af399c54be36a05cf6108cc",
+      "character_units": {
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "026.docx",
+      "native_output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "format": "DOCX",
+      "output": "DOCX/026.docx",
+      "output_sha256": "741de2f85d652d70d7618ee1ccc530820d5793cec0d0bf32bd0cb989f74fb5c1",
+      "character_units": {
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "026.docx",
+      "native_output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/026.docx",
+      "output_sha256": "6e766d9b1d0736cbf7dcdd805c6c69334878f41d0e018758997caed3058eb01d",
+      "character_units": {
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "027.docx",
+      "native_output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "format": "DOCX",
+      "output": "DOCX/027.docx",
+      "output_sha256": "12f48eabc04779b831db03cb401ee7f9495dc1953c8a93ffc8dc85c05ee23576",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "027.docx",
+      "native_output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/027.docx",
+      "output_sha256": "c7cd55d8cd18f56786ad98a8dcc2e42427a219f4fe0d9f7c15d424e6b7db144b",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "028.docx",
+      "native_output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "format": "DOCX",
+      "output": "DOCX/028.docx",
+      "output_sha256": "03973f14246213f1ffa1205af86340fcb1e17e51a07d79e4f655cd9253e886b9",
+      "character_units": {
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "028.docx",
+      "native_output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/028.docx",
+      "output_sha256": "908ab78fda96d38e16570361f9f58f8931d811192036ba4e82042e6dd13d67ef",
+      "character_units": {
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "029.docx",
+      "native_output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "format": "DOCX",
+      "output": "DOCX/029.docx",
+      "output_sha256": "8ccd6653fab5e5eeebf8fe590390ec49e30fc981142c632e1fa41a035e8c6cc1",
+      "character_units": {
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "029.docx",
+      "native_output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/029.docx",
+      "output_sha256": "81f297fbe1b7e0446157ced72edb7c4ed77d5dd0948b3b3dc431cd4f008c029f",
+      "character_units": {
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "030.docx",
+      "native_output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "format": "DOCX",
+      "output": "DOCX/030.docx",
+      "output_sha256": "73163a69c429c8f53db587dd0500b5d5ebf326398664e664da2882706be0c138",
+      "character_units": {
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "030.docx",
+      "native_output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/030.docx",
+      "output_sha256": "c6c9cf335a5bc0a9a60a899666f4a04c5dbcafdd2af399c54be36a05cf6108cc",
+      "character_units": {
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "031.docx",
+      "native_output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "format": "DOCX",
+      "output": "DOCX/031.docx",
+      "output_sha256": "c431c0aae51aaa10e7f3700c0728a6fa46377c7833d3db42d168f2b0cf120ded",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "031.docx",
+      "native_output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/031.docx",
+      "output_sha256": "c0914acb9d5ce9f460856322bcc4027ba755c3e4d472469bc54bc6267e016f84",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "032.docx",
+      "native_output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "format": "DOCX",
+      "output": "DOCX/032.docx",
+      "output_sha256": "31249bb0f3dc08aab4cff74c4e49f12da3ba13cbd46e27967ce6549e1678d6b6",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "032.docx",
+      "native_output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/032.docx",
+      "output_sha256": "ced9eac57e6780b33fc52cf3e0ead9f7b1bc1d92ef4aab9ced2a49b5f887ba53",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "033.docx",
+      "native_output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "format": "DOCX",
+      "output": "DOCX/033.docx",
+      "output_sha256": "f37bfa1c4773a37a48f1466848fcdb3b620444494009b78d4200cd740bb30036",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "033.docx",
+      "native_output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/033.docx",
+      "output_sha256": "74d3f9b38e2feab6a76695cbc56ddedc137332da8de180fb0c1c7f7084aff493",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "034.docx",
+      "native_output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "format": "DOCX",
+      "output": "DOCX/034.docx",
+      "output_sha256": "a36447c303a5d54e2bd6c507362d1799a46126579d0ee3b32893f3681be4b3b5",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "034.docx",
+      "native_output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/034.docx",
+      "output_sha256": "150aec5e0ec0a04588ddf3b6b1cbe0d6d89f4ee2b9f3026635fecaead2978168",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "035.docx",
+      "native_output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "format": "DOCX",
+      "output": "DOCX/035.docx",
+      "output_sha256": "069c3c8e21612b38fb8da4995e1971c24a78153b3b55b354895d94c8c6ee79d8",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "035.docx",
+      "native_output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/035.docx",
+      "output_sha256": "a1e52834c6b19e390850b8871bf7eacc78fdd5d2931133a4ca3db66a5d8df42c",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "036.docx",
+      "native_output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "format": "DOCX",
+      "output": "DOCX/036.docx",
+      "output_sha256": "c431c0aae51aaa10e7f3700c0728a6fa46377c7833d3db42d168f2b0cf120ded",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "036.docx",
+      "native_output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/036.docx",
+      "output_sha256": "c0914acb9d5ce9f460856322bcc4027ba755c3e4d472469bc54bc6267e016f84",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "037.docx",
+      "native_output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "format": "DOCX",
+      "output": "DOCX/037.docx",
+      "output_sha256": "31249bb0f3dc08aab4cff74c4e49f12da3ba13cbd46e27967ce6549e1678d6b6",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "037.docx",
+      "native_output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/037.docx",
+      "output_sha256": "ced9eac57e6780b33fc52cf3e0ead9f7b1bc1d92ef4aab9ced2a49b5f887ba53",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "038.docx",
+      "native_output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "format": "DOCX",
+      "output": "DOCX/038.docx",
+      "output_sha256": "f37bfa1c4773a37a48f1466848fcdb3b620444494009b78d4200cd740bb30036",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "038.docx",
+      "native_output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/038.docx",
+      "output_sha256": "74d3f9b38e2feab6a76695cbc56ddedc137332da8de180fb0c1c7f7084aff493",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "039.docx",
+      "native_output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "format": "DOCX",
+      "output": "DOCX/039.docx",
+      "output_sha256": "a36447c303a5d54e2bd6c507362d1799a46126579d0ee3b32893f3681be4b3b5",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "039.docx",
+      "native_output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/039.docx",
+      "output_sha256": "150aec5e0ec0a04588ddf3b6b1cbe0d6d89f4ee2b9f3026635fecaead2978168",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "040.docx",
+      "native_output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "format": "DOCX",
+      "output": "DOCX/040.docx",
+      "output_sha256": "069c3c8e21612b38fb8da4995e1971c24a78153b3b55b354895d94c8c6ee79d8",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "040.docx",
+      "native_output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/040.docx",
+      "output_sha256": "a1e52834c6b19e390850b8871bf7eacc78fdd5d2931133a4ca3db66a5d8df42c",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "041.docx",
+      "native_output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "format": "DOCX",
+      "output": "DOCX/041.docx",
+      "output_sha256": "c431c0aae51aaa10e7f3700c0728a6fa46377c7833d3db42d168f2b0cf120ded",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "041.docx",
+      "native_output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/041.docx",
+      "output_sha256": "c0914acb9d5ce9f460856322bcc4027ba755c3e4d472469bc54bc6267e016f84",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "042.docx",
+      "native_output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "format": "DOCX",
+      "output": "DOCX/042.docx",
+      "output_sha256": "31249bb0f3dc08aab4cff74c4e49f12da3ba13cbd46e27967ce6549e1678d6b6",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "042.docx",
+      "native_output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/042.docx",
+      "output_sha256": "ced9eac57e6780b33fc52cf3e0ead9f7b1bc1d92ef4aab9ced2a49b5f887ba53",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "043.docx",
+      "native_output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "format": "DOCX",
+      "output": "DOCX/043.docx",
+      "output_sha256": "f37bfa1c4773a37a48f1466848fcdb3b620444494009b78d4200cd740bb30036",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "043.docx",
+      "native_output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/043.docx",
+      "output_sha256": "74d3f9b38e2feab6a76695cbc56ddedc137332da8de180fb0c1c7f7084aff493",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "044.docx",
+      "native_output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "format": "DOCX",
+      "output": "DOCX/044.docx",
+      "output_sha256": "a36447c303a5d54e2bd6c507362d1799a46126579d0ee3b32893f3681be4b3b5",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "044.docx",
+      "native_output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/044.docx",
+      "output_sha256": "150aec5e0ec0a04588ddf3b6b1cbe0d6d89f4ee2b9f3026635fecaead2978168",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "045.docx",
+      "native_output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "format": "DOCX",
+      "output": "DOCX/045.docx",
+      "output_sha256": "069c3c8e21612b38fb8da4995e1971c24a78153b3b55b354895d94c8c6ee79d8",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "045.docx",
+      "native_output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/045.docx",
+      "output_sha256": "a1e52834c6b19e390850b8871bf7eacc78fdd5d2931133a4ca3db66a5d8df42c",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "046.docx",
+      "native_output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "format": "DOCX",
+      "output": "DOCX/046.docx",
+      "output_sha256": "e7985c6c78f74f0efd48f266010db011e837fc3a4ce6355a4b9540600c7447cc",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "native_output": "046.docx",
+      "native_output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/046.docx",
+      "output_sha256": "e2387390219a7b61b06a285a0c08f892a7db7748c5d7f9638f9c6d5d1d685733",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "native_output": "047.docx",
+      "native_output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "format": "DOCX",
+      "output": "DOCX/047.docx",
+      "output_sha256": "c0e5f0b843d4e54a085d911abc16bc56aa3b3b860a5f77525965224342cb0326",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "047.docx",
+      "native_output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/047.docx",
+      "output_sha256": "1697ac79889656a932a851ea10f621de9bc42f8a5886d418b60755a6b2f7b809",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "048.docx",
+      "native_output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "format": "DOCX",
+      "output": "DOCX/048.docx",
+      "output_sha256": "6f658b9b0b408b0d19c5cac9f050d897d146e0109b3b9e9fdbeda265a11a6bfd",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "native_output": "048.docx",
+      "native_output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/048.docx",
+      "output_sha256": "4a90ed5458cbaf3d5902f695833cb007e86517198800d3118f8f1d53f0f5db06",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "native_output": "049.docx",
+      "native_output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "format": "DOCX",
+      "output": "DOCX/049.docx",
+      "output_sha256": "88ea76ad118f8d0efc63fdf26f8c02b3619a151a6f7739f6bab54d2dbe4ff6cc",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "native_output": "049.docx",
+      "native_output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/049.docx",
+      "output_sha256": "184a6093e4980e3f3c388de7de43f9dffed24fb790279a2f1b6c46dd7f4c62e8",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "native_output": "050.docx",
+      "native_output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "format": "DOCX",
+      "output": "DOCX/050.docx",
+      "output_sha256": "f51d0028d1c18ad258fcaed24fbf848542e0b99689640395b0a23ab3d2b8462a",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    },
+    {
+      "native_output": "050.docx",
+      "native_output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/050.docx",
+      "output_sha256": "33fcf7914fc36bd8f00e571174472b4600424ea8f78c42fc124ea5703c9ec6e7",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    },
+    {
+      "native_output": "051.docx",
+      "native_output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "format": "DOCX",
+      "output": "DOCX/051.docx",
+      "output_sha256": "e7985c6c78f74f0efd48f266010db011e837fc3a4ce6355a4b9540600c7447cc",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "native_output": "051.docx",
+      "native_output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/051.docx",
+      "output_sha256": "e2387390219a7b61b06a285a0c08f892a7db7748c5d7f9638f9c6d5d1d685733",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "native_output": "052.docx",
+      "native_output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "format": "DOCX",
+      "output": "DOCX/052.docx",
+      "output_sha256": "c0e5f0b843d4e54a085d911abc16bc56aa3b3b860a5f77525965224342cb0326",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "052.docx",
+      "native_output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/052.docx",
+      "output_sha256": "1697ac79889656a932a851ea10f621de9bc42f8a5886d418b60755a6b2f7b809",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "053.docx",
+      "native_output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "format": "DOCX",
+      "output": "DOCX/053.docx",
+      "output_sha256": "6f658b9b0b408b0d19c5cac9f050d897d146e0109b3b9e9fdbeda265a11a6bfd",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "native_output": "053.docx",
+      "native_output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/053.docx",
+      "output_sha256": "4a90ed5458cbaf3d5902f695833cb007e86517198800d3118f8f1d53f0f5db06",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "native_output": "054.docx",
+      "native_output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "format": "DOCX",
+      "output": "DOCX/054.docx",
+      "output_sha256": "88ea76ad118f8d0efc63fdf26f8c02b3619a151a6f7739f6bab54d2dbe4ff6cc",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "native_output": "054.docx",
+      "native_output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/054.docx",
+      "output_sha256": "184a6093e4980e3f3c388de7de43f9dffed24fb790279a2f1b6c46dd7f4c62e8",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "native_output": "055.docx",
+      "native_output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "format": "DOCX",
+      "output": "DOCX/055.docx",
+      "output_sha256": "f51d0028d1c18ad258fcaed24fbf848542e0b99689640395b0a23ab3d2b8462a",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    },
+    {
+      "native_output": "055.docx",
+      "native_output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/055.docx",
+      "output_sha256": "33fcf7914fc36bd8f00e571174472b4600424ea8f78c42fc124ea5703c9ec6e7",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    },
+    {
+      "native_output": "056.docx",
+      "native_output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "format": "DOCX",
+      "output": "DOCX/056.docx",
+      "output_sha256": "e7985c6c78f74f0efd48f266010db011e837fc3a4ce6355a4b9540600c7447cc",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "native_output": "056.docx",
+      "native_output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/056.docx",
+      "output_sha256": "e2387390219a7b61b06a285a0c08f892a7db7748c5d7f9638f9c6d5d1d685733",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "native_output": "057.docx",
+      "native_output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "format": "DOCX",
+      "output": "DOCX/057.docx",
+      "output_sha256": "c0e5f0b843d4e54a085d911abc16bc56aa3b3b860a5f77525965224342cb0326",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "057.docx",
+      "native_output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/057.docx",
+      "output_sha256": "1697ac79889656a932a851ea10f621de9bc42f8a5886d418b60755a6b2f7b809",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "native_output": "058.docx",
+      "native_output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "format": "DOCX",
+      "output": "DOCX/058.docx",
+      "output_sha256": "6f658b9b0b408b0d19c5cac9f050d897d146e0109b3b9e9fdbeda265a11a6bfd",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "native_output": "058.docx",
+      "native_output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/058.docx",
+      "output_sha256": "4a90ed5458cbaf3d5902f695833cb007e86517198800d3118f8f1d53f0f5db06",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "native_output": "059.docx",
+      "native_output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "format": "DOCX",
+      "output": "DOCX/059.docx",
+      "output_sha256": "88ea76ad118f8d0efc63fdf26f8c02b3619a151a6f7739f6bab54d2dbe4ff6cc",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "native_output": "059.docx",
+      "native_output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/059.docx",
+      "output_sha256": "184a6093e4980e3f3c388de7de43f9dffed24fb790279a2f1b6c46dd7f4c62e8",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "native_output": "060.docx",
+      "native_output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "format": "DOCX",
+      "output": "DOCX/060.docx",
+      "output_sha256": "f51d0028d1c18ad258fcaed24fbf848542e0b99689640395b0a23ab3d2b8462a",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    },
+    {
+      "native_output": "060.docx",
+      "native_output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "format": "FLAT_OPC",
+      "output": "FLAT_OPC/060.docx",
+      "output_sha256": "33fcf7914fc36bd8f00e571174472b4600424ea8f78c42fc124ea5703c9ec6e7",
+      "character_units": {
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    }
+  ],
+  "full_format_acceptance": false,
+  "rendering_acceptance": false,
+  "scope": "installed wheel reads native DOCX, model JSON roundtrip, writes DOCX/Flat OPC, reloads character-unit values; point coupling, font resolution and layout are not accepted",
+  "reproduce": "tests/test_character_indent_roundtrip.py:test_native_character_units_survive_model_json_and_ooxml_output",
+  "installed_module": "/private/tmp/docweave-target-3.14/lib/python3.14/site-packages/aspose/words_foss/__init__.py",
+  "official_reread": {
+    "version": "26.9.0",
+    "licensed": false,
+    "python": "3.13.15",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "outputs_sha256": "77fc77ae01992ed2fa931215d73a35450383afef6e05e3cbc17e10ce00b64ba0",
+    "records": [
+      {
+        "output": "DOCX/000.docx",
+        "output_sha256": "d3b1221b52f42da8b7dba0a95c132e84b4e98a98c1e30a041858a4524c9dc13e",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/000.docx",
+        "output_sha256": "9adbec47fc0d9ed289252efb2e304fdd3b68eb32d88883a0122e3f677660a2c5",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/001.docx",
+        "output_sha256": "d3b1221b52f42da8b7dba0a95c132e84b4e98a98c1e30a041858a4524c9dc13e",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/001.docx",
+        "output_sha256": "9adbec47fc0d9ed289252efb2e304fdd3b68eb32d88883a0122e3f677660a2c5",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/002.docx",
+        "output_sha256": "0620956dafa008c0b2f223e93a3d7d335a811158ce42b2e87452b36dcf6fb7ea",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/002.docx",
+        "output_sha256": "53212b40907aa9fd808891a2e4493d033e6542dde7300cfa69804dacb6a28df6",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/003.docx",
+        "output_sha256": "0620956dafa008c0b2f223e93a3d7d335a811158ce42b2e87452b36dcf6fb7ea",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/003.docx",
+        "output_sha256": "53212b40907aa9fd808891a2e4493d033e6542dde7300cfa69804dacb6a28df6",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/004.docx",
+        "output_sha256": "ded382bd51f73ba018b232c6bfeea1b187e875063ef4d73b3e786dd9e945265e",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/004.docx",
+        "output_sha256": "d19ed6c17eed115d2ee43f17dbbbcd01f52ef333a8c300f9f382cdd435c775d2",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/005.docx",
+        "output_sha256": "ded382bd51f73ba018b232c6bfeea1b187e875063ef4d73b3e786dd9e945265e",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/005.docx",
+        "output_sha256": "d19ed6c17eed115d2ee43f17dbbbcd01f52ef333a8c300f9f382cdd435c775d2",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/006.docx",
+        "output_sha256": "ead19e574680926f27e1047d09379216ba888965d0046dffb405a615ad5d0aa5",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/006.docx",
+        "output_sha256": "6701d6f2e8cadcb17476a30a8057e0bc96a32bffd052db42078e7479f7227c12",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/007.docx",
+        "output_sha256": "ead19e574680926f27e1047d09379216ba888965d0046dffb405a615ad5d0aa5",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/007.docx",
+        "output_sha256": "6701d6f2e8cadcb17476a30a8057e0bc96a32bffd052db42078e7479f7227c12",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/008.docx",
+        "output_sha256": "ed0a61628177720e351fdb42a012143e56b5923d657c949152fdf6da05fc112d",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/008.docx",
+        "output_sha256": "b0e1eddbad912753f2659b51eb9b652b930605da24f78a6a758881506a814c9c",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/009.docx",
+        "output_sha256": "ed0a61628177720e351fdb42a012143e56b5923d657c949152fdf6da05fc112d",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/009.docx",
+        "output_sha256": "b0e1eddbad912753f2659b51eb9b652b930605da24f78a6a758881506a814c9c",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/010.docx",
+        "output_sha256": "4a9cfabf9c4edae199d63a58647b246e113dde9c70361d9977146ae1c5c6751a",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/010.docx",
+        "output_sha256": "2cac2fe1814b00acd28a9ee9f572f8ba9b133454e8f71ac5014853ee7e539697",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/011.docx",
+        "output_sha256": "4a9cfabf9c4edae199d63a58647b246e113dde9c70361d9977146ae1c5c6751a",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/011.docx",
+        "output_sha256": "2cac2fe1814b00acd28a9ee9f572f8ba9b133454e8f71ac5014853ee7e539697",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/012.docx",
+        "output_sha256": "7a2c87aafbfb842e9c9729b026caca99787d72a2fa140851a895b2c772ae3e16",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/012.docx",
+        "output_sha256": "828e845bd37953f091f39c947526a2c92f55bc49d81d23352f6b17927f76ad96",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/013.docx",
+        "output_sha256": "7a2c87aafbfb842e9c9729b026caca99787d72a2fa140851a895b2c772ae3e16",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/013.docx",
+        "output_sha256": "828e845bd37953f091f39c947526a2c92f55bc49d81d23352f6b17927f76ad96",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/014.docx",
+        "output_sha256": "d3a0c8e04198445761a4fcd5184d2f53fe0088ed732efafd1f4dac5d1c9c8da5",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/014.docx",
+        "output_sha256": "eb1a4f47450760a6e9ef9aad5f8182b6a98c83b2f3cffdce6caa8dc120fc27f5",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/015.docx",
+        "output_sha256": "d3a0c8e04198445761a4fcd5184d2f53fe0088ed732efafd1f4dac5d1c9c8da5",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "FLAT_OPC/015.docx",
+        "output_sha256": "eb1a4f47450760a6e9ef9aad5f8182b6a98c83b2f3cffdce6caa8dc120fc27f5",
+        "character_units": {
+          "character_unit_left_indent": 1.0,
+          "character_unit_right_indent": 2.0,
+          "character_unit_first_line_indent": 0.5
+        }
+      },
+      {
+        "output": "DOCX/016.docx",
+        "output_sha256": "741de2f85d652d70d7618ee1ccc530820d5793cec0d0bf32bd0cb989f74fb5c1",
+        "character_units": {
+          "character_unit_left_indent": -1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/016.docx",
+        "output_sha256": "6e766d9b1d0736cbf7dcdd805c6c69334878f41d0e018758997caed3058eb01d",
+        "character_units": {
+          "character_unit_left_indent": -1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/017.docx",
+        "output_sha256": "12f48eabc04779b831db03cb401ee7f9495dc1953c8a93ffc8dc85c05ee23576",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/017.docx",
+        "output_sha256": "c7cd55d8cd18f56786ad98a8dcc2e42427a219f4fe0d9f7c15d424e6b7db144b",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/018.docx",
+        "output_sha256": "03973f14246213f1ffa1205af86340fcb1e17e51a07d79e4f655cd9253e886b9",
+        "character_units": {
+          "character_unit_left_indent": 1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/018.docx",
+        "output_sha256": "908ab78fda96d38e16570361f9f58f8931d811192036ba4e82042e6dd13d67ef",
+        "character_units": {
+          "character_unit_left_indent": 1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/019.docx",
+        "output_sha256": "4be128c6e548ada68eb3e2ab737967b0cddec1cd33ef6513953c10ae5683c0b5",
+        "character_units": {
+          "character_unit_left_indent": 1.22,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/019.docx",
+        "output_sha256": "81f297fbe1b7e0446157ced72edb7c4ed77d5dd0948b3b3dc431cd4f008c029f",
+        "character_units": {
+          "character_unit_left_indent": 1.22,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/020.docx",
+        "output_sha256": "ccbdec1237464189c1ff8ca8ebb699559c8cff459ed1da6dd965132beb05b2d0",
+        "character_units": {
+          "character_unit_left_indent": 12.37,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/020.docx",
+        "output_sha256": "c6c9cf335a5bc0a9a60a899666f4a04c5dbcafdd2af399c54be36a05cf6108cc",
+        "character_units": {
+          "character_unit_left_indent": 12.37,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/021.docx",
+        "output_sha256": "741de2f85d652d70d7618ee1ccc530820d5793cec0d0bf32bd0cb989f74fb5c1",
+        "character_units": {
+          "character_unit_left_indent": -1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/021.docx",
+        "output_sha256": "6e766d9b1d0736cbf7dcdd805c6c69334878f41d0e018758997caed3058eb01d",
+        "character_units": {
+          "character_unit_left_indent": -1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/022.docx",
+        "output_sha256": "12f48eabc04779b831db03cb401ee7f9495dc1953c8a93ffc8dc85c05ee23576",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/022.docx",
+        "output_sha256": "c7cd55d8cd18f56786ad98a8dcc2e42427a219f4fe0d9f7c15d424e6b7db144b",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/023.docx",
+        "output_sha256": "03973f14246213f1ffa1205af86340fcb1e17e51a07d79e4f655cd9253e886b9",
+        "character_units": {
+          "character_unit_left_indent": 1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/023.docx",
+        "output_sha256": "908ab78fda96d38e16570361f9f58f8931d811192036ba4e82042e6dd13d67ef",
+        "character_units": {
+          "character_unit_left_indent": 1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/024.docx",
+        "output_sha256": "4be128c6e548ada68eb3e2ab737967b0cddec1cd33ef6513953c10ae5683c0b5",
+        "character_units": {
+          "character_unit_left_indent": 1.22,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/024.docx",
+        "output_sha256": "81f297fbe1b7e0446157ced72edb7c4ed77d5dd0948b3b3dc431cd4f008c029f",
+        "character_units": {
+          "character_unit_left_indent": 1.22,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/025.docx",
+        "output_sha256": "ccbdec1237464189c1ff8ca8ebb699559c8cff459ed1da6dd965132beb05b2d0",
+        "character_units": {
+          "character_unit_left_indent": 12.37,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/025.docx",
+        "output_sha256": "c6c9cf335a5bc0a9a60a899666f4a04c5dbcafdd2af399c54be36a05cf6108cc",
+        "character_units": {
+          "character_unit_left_indent": 12.37,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/026.docx",
+        "output_sha256": "741de2f85d652d70d7618ee1ccc530820d5793cec0d0bf32bd0cb989f74fb5c1",
+        "character_units": {
+          "character_unit_left_indent": -1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/026.docx",
+        "output_sha256": "6e766d9b1d0736cbf7dcdd805c6c69334878f41d0e018758997caed3058eb01d",
+        "character_units": {
+          "character_unit_left_indent": -1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/027.docx",
+        "output_sha256": "12f48eabc04779b831db03cb401ee7f9495dc1953c8a93ffc8dc85c05ee23576",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/027.docx",
+        "output_sha256": "c7cd55d8cd18f56786ad98a8dcc2e42427a219f4fe0d9f7c15d424e6b7db144b",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/028.docx",
+        "output_sha256": "03973f14246213f1ffa1205af86340fcb1e17e51a07d79e4f655cd9253e886b9",
+        "character_units": {
+          "character_unit_left_indent": 1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/028.docx",
+        "output_sha256": "908ab78fda96d38e16570361f9f58f8931d811192036ba4e82042e6dd13d67ef",
+        "character_units": {
+          "character_unit_left_indent": 1.23,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/029.docx",
+        "output_sha256": "8ccd6653fab5e5eeebf8fe590390ec49e30fc981142c632e1fa41a035e8c6cc1",
+        "character_units": {
+          "character_unit_left_indent": 1.22,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/029.docx",
+        "output_sha256": "81f297fbe1b7e0446157ced72edb7c4ed77d5dd0948b3b3dc431cd4f008c029f",
+        "character_units": {
+          "character_unit_left_indent": 1.22,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/030.docx",
+        "output_sha256": "73163a69c429c8f53db587dd0500b5d5ebf326398664e664da2882706be0c138",
+        "character_units": {
+          "character_unit_left_indent": 12.37,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/030.docx",
+        "output_sha256": "c6c9cf335a5bc0a9a60a899666f4a04c5dbcafdd2af399c54be36a05cf6108cc",
+        "character_units": {
+          "character_unit_left_indent": 12.37,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/031.docx",
+        "output_sha256": "c431c0aae51aaa10e7f3700c0728a6fa46377c7833d3db42d168f2b0cf120ded",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": -1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/031.docx",
+        "output_sha256": "c0914acb9d5ce9f460856322bcc4027ba755c3e4d472469bc54bc6267e016f84",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": -1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/032.docx",
+        "output_sha256": "31249bb0f3dc08aab4cff74c4e49f12da3ba13cbd46e27967ce6549e1678d6b6",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/032.docx",
+        "output_sha256": "ced9eac57e6780b33fc52cf3e0ead9f7b1bc1d92ef4aab9ced2a49b5f887ba53",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/033.docx",
+        "output_sha256": "f37bfa1c4773a37a48f1466848fcdb3b620444494009b78d4200cd740bb30036",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/033.docx",
+        "output_sha256": "74d3f9b38e2feab6a76695cbc56ddedc137332da8de180fb0c1c7f7084aff493",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/034.docx",
+        "output_sha256": "a36447c303a5d54e2bd6c507362d1799a46126579d0ee3b32893f3681be4b3b5",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.22,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/034.docx",
+        "output_sha256": "150aec5e0ec0a04588ddf3b6b1cbe0d6d89f4ee2b9f3026635fecaead2978168",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.22,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/035.docx",
+        "output_sha256": "069c3c8e21612b38fb8da4995e1971c24a78153b3b55b354895d94c8c6ee79d8",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 12.37,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/035.docx",
+        "output_sha256": "a1e52834c6b19e390850b8871bf7eacc78fdd5d2931133a4ca3db66a5d8df42c",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 12.37,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/036.docx",
+        "output_sha256": "c431c0aae51aaa10e7f3700c0728a6fa46377c7833d3db42d168f2b0cf120ded",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": -1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/036.docx",
+        "output_sha256": "c0914acb9d5ce9f460856322bcc4027ba755c3e4d472469bc54bc6267e016f84",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": -1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/037.docx",
+        "output_sha256": "31249bb0f3dc08aab4cff74c4e49f12da3ba13cbd46e27967ce6549e1678d6b6",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/037.docx",
+        "output_sha256": "ced9eac57e6780b33fc52cf3e0ead9f7b1bc1d92ef4aab9ced2a49b5f887ba53",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/038.docx",
+        "output_sha256": "f37bfa1c4773a37a48f1466848fcdb3b620444494009b78d4200cd740bb30036",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/038.docx",
+        "output_sha256": "74d3f9b38e2feab6a76695cbc56ddedc137332da8de180fb0c1c7f7084aff493",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/039.docx",
+        "output_sha256": "a36447c303a5d54e2bd6c507362d1799a46126579d0ee3b32893f3681be4b3b5",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.22,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/039.docx",
+        "output_sha256": "150aec5e0ec0a04588ddf3b6b1cbe0d6d89f4ee2b9f3026635fecaead2978168",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.22,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/040.docx",
+        "output_sha256": "069c3c8e21612b38fb8da4995e1971c24a78153b3b55b354895d94c8c6ee79d8",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 12.37,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/040.docx",
+        "output_sha256": "a1e52834c6b19e390850b8871bf7eacc78fdd5d2931133a4ca3db66a5d8df42c",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 12.37,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/041.docx",
+        "output_sha256": "c431c0aae51aaa10e7f3700c0728a6fa46377c7833d3db42d168f2b0cf120ded",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": -1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/041.docx",
+        "output_sha256": "c0914acb9d5ce9f460856322bcc4027ba755c3e4d472469bc54bc6267e016f84",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": -1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/042.docx",
+        "output_sha256": "31249bb0f3dc08aab4cff74c4e49f12da3ba13cbd46e27967ce6549e1678d6b6",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/042.docx",
+        "output_sha256": "ced9eac57e6780b33fc52cf3e0ead9f7b1bc1d92ef4aab9ced2a49b5f887ba53",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/043.docx",
+        "output_sha256": "f37bfa1c4773a37a48f1466848fcdb3b620444494009b78d4200cd740bb30036",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/043.docx",
+        "output_sha256": "74d3f9b38e2feab6a76695cbc56ddedc137332da8de180fb0c1c7f7084aff493",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.23,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/044.docx",
+        "output_sha256": "a36447c303a5d54e2bd6c507362d1799a46126579d0ee3b32893f3681be4b3b5",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.22,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/044.docx",
+        "output_sha256": "150aec5e0ec0a04588ddf3b6b1cbe0d6d89f4ee2b9f3026635fecaead2978168",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 1.22,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/045.docx",
+        "output_sha256": "069c3c8e21612b38fb8da4995e1971c24a78153b3b55b354895d94c8c6ee79d8",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 12.37,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/045.docx",
+        "output_sha256": "a1e52834c6b19e390850b8871bf7eacc78fdd5d2931133a4ca3db66a5d8df42c",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 12.37,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/046.docx",
+        "output_sha256": "e7985c6c78f74f0efd48f266010db011e837fc3a4ce6355a4b9540600c7447cc",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": -1.23
+        }
+      },
+      {
+        "output": "FLAT_OPC/046.docx",
+        "output_sha256": "e2387390219a7b61b06a285a0c08f892a7db7748c5d7f9638f9c6d5d1d685733",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": -1.23
+        }
+      },
+      {
+        "output": "DOCX/047.docx",
+        "output_sha256": "c0e5f0b843d4e54a085d911abc16bc56aa3b3b860a5f77525965224342cb0326",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/047.docx",
+        "output_sha256": "1697ac79889656a932a851ea10f621de9bc42f8a5886d418b60755a6b2f7b809",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/048.docx",
+        "output_sha256": "6f658b9b0b408b0d19c5cac9f050d897d146e0109b3b9e9fdbeda265a11a6bfd",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.23
+        }
+      },
+      {
+        "output": "FLAT_OPC/048.docx",
+        "output_sha256": "4a90ed5458cbaf3d5902f695833cb007e86517198800d3118f8f1d53f0f5db06",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.23
+        }
+      },
+      {
+        "output": "DOCX/049.docx",
+        "output_sha256": "88ea76ad118f8d0efc63fdf26f8c02b3619a151a6f7739f6bab54d2dbe4ff6cc",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.22
+        }
+      },
+      {
+        "output": "FLAT_OPC/049.docx",
+        "output_sha256": "184a6093e4980e3f3c388de7de43f9dffed24fb790279a2f1b6c46dd7f4c62e8",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.22
+        }
+      },
+      {
+        "output": "DOCX/050.docx",
+        "output_sha256": "f51d0028d1c18ad258fcaed24fbf848542e0b99689640395b0a23ab3d2b8462a",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 12.37
+        }
+      },
+      {
+        "output": "FLAT_OPC/050.docx",
+        "output_sha256": "33fcf7914fc36bd8f00e571174472b4600424ea8f78c42fc124ea5703c9ec6e7",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 12.37
+        }
+      },
+      {
+        "output": "DOCX/051.docx",
+        "output_sha256": "e7985c6c78f74f0efd48f266010db011e837fc3a4ce6355a4b9540600c7447cc",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": -1.23
+        }
+      },
+      {
+        "output": "FLAT_OPC/051.docx",
+        "output_sha256": "e2387390219a7b61b06a285a0c08f892a7db7748c5d7f9638f9c6d5d1d685733",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": -1.23
+        }
+      },
+      {
+        "output": "DOCX/052.docx",
+        "output_sha256": "c0e5f0b843d4e54a085d911abc16bc56aa3b3b860a5f77525965224342cb0326",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/052.docx",
+        "output_sha256": "1697ac79889656a932a851ea10f621de9bc42f8a5886d418b60755a6b2f7b809",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/053.docx",
+        "output_sha256": "6f658b9b0b408b0d19c5cac9f050d897d146e0109b3b9e9fdbeda265a11a6bfd",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.23
+        }
+      },
+      {
+        "output": "FLAT_OPC/053.docx",
+        "output_sha256": "4a90ed5458cbaf3d5902f695833cb007e86517198800d3118f8f1d53f0f5db06",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.23
+        }
+      },
+      {
+        "output": "DOCX/054.docx",
+        "output_sha256": "88ea76ad118f8d0efc63fdf26f8c02b3619a151a6f7739f6bab54d2dbe4ff6cc",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.22
+        }
+      },
+      {
+        "output": "FLAT_OPC/054.docx",
+        "output_sha256": "184a6093e4980e3f3c388de7de43f9dffed24fb790279a2f1b6c46dd7f4c62e8",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.22
+        }
+      },
+      {
+        "output": "DOCX/055.docx",
+        "output_sha256": "f51d0028d1c18ad258fcaed24fbf848542e0b99689640395b0a23ab3d2b8462a",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 12.37
+        }
+      },
+      {
+        "output": "FLAT_OPC/055.docx",
+        "output_sha256": "33fcf7914fc36bd8f00e571174472b4600424ea8f78c42fc124ea5703c9ec6e7",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 12.37
+        }
+      },
+      {
+        "output": "DOCX/056.docx",
+        "output_sha256": "e7985c6c78f74f0efd48f266010db011e837fc3a4ce6355a4b9540600c7447cc",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": -1.23
+        }
+      },
+      {
+        "output": "FLAT_OPC/056.docx",
+        "output_sha256": "e2387390219a7b61b06a285a0c08f892a7db7748c5d7f9638f9c6d5d1d685733",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": -1.23
+        }
+      },
+      {
+        "output": "DOCX/057.docx",
+        "output_sha256": "c0e5f0b843d4e54a085d911abc16bc56aa3b3b860a5f77525965224342cb0326",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "FLAT_OPC/057.docx",
+        "output_sha256": "1697ac79889656a932a851ea10f621de9bc42f8a5886d418b60755a6b2f7b809",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 0.0
+        }
+      },
+      {
+        "output": "DOCX/058.docx",
+        "output_sha256": "6f658b9b0b408b0d19c5cac9f050d897d146e0109b3b9e9fdbeda265a11a6bfd",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.23
+        }
+      },
+      {
+        "output": "FLAT_OPC/058.docx",
+        "output_sha256": "4a90ed5458cbaf3d5902f695833cb007e86517198800d3118f8f1d53f0f5db06",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.23
+        }
+      },
+      {
+        "output": "DOCX/059.docx",
+        "output_sha256": "88ea76ad118f8d0efc63fdf26f8c02b3619a151a6f7739f6bab54d2dbe4ff6cc",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.22
+        }
+      },
+      {
+        "output": "FLAT_OPC/059.docx",
+        "output_sha256": "184a6093e4980e3f3c388de7de43f9dffed24fb790279a2f1b6c46dd7f4c62e8",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 1.22
+        }
+      },
+      {
+        "output": "DOCX/060.docx",
+        "output_sha256": "f51d0028d1c18ad258fcaed24fbf848542e0b99689640395b0a23ab3d2b8462a",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 12.37
+        }
+      },
+      {
+        "output": "FLAT_OPC/060.docx",
+        "output_sha256": "33fcf7914fc36bd8f00e571174472b4600424ea8f78c42fc124ea5703c9ec6e7",
+        "character_units": {
+          "character_unit_left_indent": 0.0,
+          "character_unit_right_indent": 0.0,
+          "character_unit_first_line_indent": 12.37
+        }
+      }
+    ],
+    "scope": "character-unit getters only; point values, layout and trial document fidelity not accepted"
+  }
+}

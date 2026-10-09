@@ -66,8 +66,16 @@ def warn_about_conversion(pdf, doc, options, fallback_families):
     needs_shaping = False
     fallback_style_loss = False
     script_layout_loss = False
+    character_fields = ("character_unit_left_indent", "character_unit_right_indent", "character_unit_first_line_indent")
+    character_indent_loss = any(getattr(level, name) is not None for item in doc.lists
+                                for level in (*item.list_levels, *(o.list_level for o in item.overrides if o.list_level is not None))
+                                for name in character_fields)
+    character_indent_loss |= any(getattr(style.paragraph_format, name) is not None for style in doc.styles
+                                 if style.paragraph_format is not None for name in character_fields)
     fallback_coverage = set().union(*(pdf.fonts[name.lower()].cmap for name in fallback_families))
     for node in document_nodes(doc):
+        if isinstance(node, ldm.Paragraph):
+            character_indent_loss |= any(getattr(node.paragraph_format, name) is not None for name in character_fields)
         if isinstance(node, ldm.Cell) and node.cell_format.orientation:
             positions = {("sup" if run.font.superscript else "sub" if run.font.subscript else "normal")
                          for run in document_nodes(node)
@@ -106,6 +114,10 @@ def warn_about_conversion(pdf, doc, options, fallback_families):
         uncovered = {code for code in codes if code not in coverage}
         missing.update(uncovered - fallback_coverage)
         fallback_style_loss |= bool(style and uncovered & fallback_coverage)
+    if character_indent_loss:
+        # shortcut: preserve character values in OOXML until font-aware PDF resolution is verified.
+        warn("Character-unit paragraph indents are not resolved for PDF layout",
+             PdfContentLossWarning, stacklevel=3, code="pdf.character_indents_ignored")
     if script_layout_loss:
         warn("Mixed-position rotated cells do not retain per-run superscript/subscript layout",
              PdfContentLossWarning, stacklevel=3, code="pdf.script_layout_loss")

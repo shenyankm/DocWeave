@@ -313,6 +313,21 @@ class ParagraphFormatBuilder:
                 value = read_twip(ind, attribute[len(W_NS):])
                 if value is not None:
                     setattr(pf, dimensions[attribute], -value if attribute == f"{W_NS}hanging" else value)
+        ParagraphFormatBuilder.apply_character_indents(ind, pf)
+
+    @staticmethod
+    def apply_character_indents(ind: ET.Element, pf: ldm.ParagraphFormat | ldm.ListLevel) -> None:
+        characters = {f"{W_NS}{name}": target for name, target in
+                      (("leftChars", "character_unit_left_indent"), ("startChars", "character_unit_left_indent"),
+                       ("rightChars", "character_unit_right_indent"), ("endChars", "character_unit_right_indent"),
+                       ("firstLineChars", "character_unit_first_line_indent"), ("hangingChars", "character_unit_first_line_indent"))}
+        for attribute, raw in ind.attrib.items():
+            if attribute in characters:
+                try:
+                    value = int(raw) / 100
+                except (ValueError, OverflowError):
+                    raise ValueError("Character indents require integer hundredths") from None
+                setattr(pf, characters[attribute], -value if attribute == f"{W_NS}hangingChars" else value)
 
     @staticmethod
     def _apply_spacing(pPr: ET.Element, pf: ldm.ParagraphFormat) -> None:

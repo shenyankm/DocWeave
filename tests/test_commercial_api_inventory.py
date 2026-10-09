@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents"])
+@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_character_indent_roundtrips"])
 def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, name):
     from zipfile import ZipInfo
 
@@ -19,7 +19,7 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     monkeypatch.setattr(ZipInfo, "__init__", windows_info)
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))[name]
-    assert check(root / "docs/benchmarks") in {10, 18, 61, 360, 1296}
+    assert check(root / "docs/benchmarks") in {10, 18, 61, 122, 360, 1296}
 
 
 
@@ -313,6 +313,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
+    names += ["paragraph-character-indents-current.json", "corpus/paragraph-character-indents-current.zip"]
     names += ["paragraph-character-indents-26.9.json", "corpus/paragraph-character-indents-26.9.zip",
               "corpus/paragraph-character-indents-26.9-outputs.zip"]
     names += ["paragraph-logical-indents-26.9.json", "corpus/paragraph-logical-indents-26.9.zip",
@@ -362,6 +363,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_paragraph_indent_limits"] == 54
     assert result["checked_paragraph_logical_indents"] == 168
     assert result["checked_paragraph_character_indents"] == 61
+    assert result["checked_character_indent_roundtrips"] == 122
     assert result["checked_paragraph_dimension_rendering_pairs"] == 10
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
@@ -708,5 +710,32 @@ def test_character_indent_evidence_checks_xml_after_digests_are_updated(tmp_path
             archive.writestr(name, data)
     report["outputs_sha256"] = sha256(archive_path.read_bytes()).hexdigest()
     (tmp_path / "paragraph-character-indents-26.9.json").write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+@pytest.mark.parametrize("tamper", ["character_units", "coverage", "native_digest", "acceptance", "official_reread"])
+def test_character_roundtrip_evidence_rejects_forged_observation(tmp_path, tamper):
+    import json
+    import shutil
+
+    root = Path(__file__).parents[1]
+    benchmarks = root / "docs/benchmarks"
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_character_indent_roundtrips"]
+    report = json.loads((benchmarks / "paragraph-character-indents-current.json").read_text())
+    (tmp_path / "corpus").mkdir()
+    shutil.copyfile(benchmarks / report["outputs"], tmp_path / report["outputs"])
+    shutil.copyfile(benchmarks / report["native_report"], tmp_path / report["native_report"])
+    if tamper == "coverage":
+        report["records"][-1] = report["records"][-2]
+    elif tamper == "native_digest":
+        report["native_report_sha256"] = "forged"
+    elif tamper == "acceptance":
+        report["full_format_acceptance"] = True
+    elif tamper == "official_reread":
+        report["official_reread"]["records"][0]["character_units"]["character_unit_left_indent"] += 1
+    else:
+        report["records"][0]["character_units"]["character_unit_left_indent"] += 1
+    (tmp_path / "paragraph-character-indents-current.json").write_text(json.dumps(report))
     with pytest.raises(AssertionError):
         check(tmp_path)

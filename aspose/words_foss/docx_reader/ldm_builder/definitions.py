@@ -346,6 +346,7 @@ class ListBuilder:
         ind = pPr.find(f"{W_NS}ind")
         if ind is None:
             return
+        ParagraphFormatBuilder.apply_character_indents(ind, ll)
         left = ind.get(f"{W_NS}left", "")
         hanging = ind.get(f"{W_NS}hanging", "")
         first_line = ind.get(f"{W_NS}firstLine", "")

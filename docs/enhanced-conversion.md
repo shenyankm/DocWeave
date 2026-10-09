@@ -7,7 +7,7 @@
 
 ## 保存选项与实际格式
 
-`OoxmlSaveOptions.save_format` 只接受 DOCX，`MarkdownSaveOptions.save_format` 只接受 Markdown。
+`OoxmlSaveOptions.save_format` 支持 DOCX 和四种 Flat OPC 变体，`MarkdownSaveOptions.save_format` 只接受 Markdown。
 可使用 `SaveFormat`、对应整数或已有字符串别名（大小写不敏感，如 `docx`、`markdown`、`md`）。
 不匹配或未知值在渲染前抛出 `ValueError`，文件输出保留原文件，内存输出不返回错误格式的字节。
 `OoxmlSaveOptions(None)` 仍使用默认 DOCX；创建后显式改为 `None` 属于无效值。
@@ -255,11 +255,20 @@ run 字体读取时先应用字符样式继承，再应用直接格式；写出�
 DOCX 禁止重复/加密 ZIP 条目、不安全条目路径和 XML 实体扩展。SVG 不允许外部图片引用，
 只接受内部引用及内嵌光栅图片。超限会抛出错误；大文件业务需先评估资源需求再调整源码中的上限。
 
-DOCX/Flat OPC 的字符单位缩进尚未映射到转换模型。加载时汇总 `leftChars/rightChars`、
+DOCX/Flat OPC 的字符单位缩进保留到模型，但尚未换算为排版点值。加载时汇总 `leftChars/rightChars`、
 `startChars/endChars`、`firstLineChars/hangingChars`，发出 `load.character_indents_ignored`
 损失诊断；扫描正文、样式、编号和附属 story，包含显式零值，诊断不含正文或属性值。
 `ContentLossWarning` 错误过滤及 CLI `--strict` 在输出前拒绝；原包 DOM 保存仍保留这些属性。
-见[检测与拒绝复验](../tests/test_character_indent_diagnostics.py)。这是损失检测，不是字符缩进支持。
+`ParagraphFormat` 和编号 `ListLevel` 保留 `character_unit_left_indent`、`character_unit_right_indent`
+和 `character_unit_first_line_indent`，
+以字符为单位；`None` 表示未设置，`0` 保留显式零值。样式继承、编号定义/覆盖、DOCX/Flat OPC
+及模型 JSON 保留已支持路径中的这些值（脚注/尾注等输出限制仍适用），输出归一为 `leftChars/rightChars/firstLineChars` 或 `hangingChars`。
+直接修改转换模型后保存 OOXML 会写入整数百分之一字符；非有限值、错误类型及超出有符号
+32 位百分之一字符范围的值在输出前拒绝。整数换算不依赖调用方的 Decimal 精度；
+损坏的字符属性错误不在异常链中暴露原始值。原包 DOM 的字符 getter/setter 与基准点值联动仍未实现。
+PDF writer 对模型中的字符值另发 `pdf.character_indents_ignored`；错误过滤可拒绝并保留原输出。
+见[检测与拒绝](../tests/test_character_indent_diagnostics.py)及[模型往返](../tests/test_character_indent_roundtrip.py)。
+这些是单位值保留和损失检测，不能视为字符缩进排版验收。
 
 Markdown 默认不读取本地图片，仍支持内嵌 base64 图片。可信文件需要本地图片时显式开启：
 
@@ -365,7 +374,7 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 
 | 字段 | 当前行为/限制 | 证据或复验入口 |
 |---|---|---|
-| `save_format` | 只支持 DOCX；其他值在输出前拒绝 | [test_save_option_formats.py](../tests/test_save_option_formats.py) |
+| `save_format` | 支持 DOCX 和四种 Flat OPC 变体；其他值在输出前拒绝 | [test_save_option_formats.py](../tests/test_save_option_formats.py) |
 | `compliance` | ECMA376_2006 与 ISO29500_2008_TRANSITIONAL 使用同一输出；Strict 抛出 NotImplementedError | [test_bounded_conversion.py](../tests/test_bounded_conversion.py) |
 | `compression_level` | 四档 ZIP deflate；不是内容精简 | [ApiExamples/working_with_ooxml_save_options.py](../ApiExamples/working_with_ooxml_save_options.py) |
 | `zip_64_mode` | NEVER/IF_NECESSARY；ALWAYS 仍等同按需，但现在警告 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |

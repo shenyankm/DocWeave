@@ -11,7 +11,7 @@ allows that.
 from typing import Iterable, Mapping
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer.constants import W_URI, pt_to_twips
+from aspose.words_foss.docx_writer.constants import W_URI, pt_to_twips, character_indent_attrs
 from aspose.words_foss.docx_writer.xml_utils import XML_DECL, el
 from aspose.words_foss.docx_writer.runs import render_rPr
 from aspose.words_foss.model.list_limits import MAX_LIST_LEVELS
@@ -151,13 +151,16 @@ def _ind_attrs_for_level(level: ldm.ListLevel) -> dict[str, object]:
     ``w:left`` so the reader's "left only" branch fires and stores the
     value into ``number_position`` rather than ``text_position``.
     """
+    attrs = character_indent_attrs(level)
     tp, np = level.text_position, level.number_position
     if not tp and not np:
-        return {}
+        return attrs
     if not tp:
-        return {"w:left": pt_to_twips(np)}
+        attrs["w:left"] = pt_to_twips(np)
+        return attrs
     hanging = max(tp - np, 0.0)
-    return {"w:left": pt_to_twips(tp), "w:hanging": pt_to_twips(hanging)}
+    attrs.update({"w:left": pt_to_twips(tp), "w:hanging": pt_to_twips(hanging)})
+    return attrs
 
 
 def _abstract_num(doc_list: ldm.DocList, num_id_map: Mapping[int, int]) -> str:

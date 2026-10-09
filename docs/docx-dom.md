@@ -145,7 +145,7 @@ for style in editable.styles:
   值按 1/20pt 四舍六入五成双量化，如 12.375→12.4。负首行缩进写为 hanging，
   与 firstLine 同层出现时取 XML 中后出现的属性；编辑保留 ind/spacing 中未涉及的属性。
   [360 次官方编辑及 270 次错误观察](benchmarks/paragraph-dimensions-26.9.json)覆盖 45 个普通输入；
-  本项目直接值接受 `None` 清除，与官方已解析值接口不同。字符缩进的字号上下文与加载/保存状态不同，见[原生生命周期观察](benchmarks/paragraph-character-indents-26.9.json)；当前有效格式明确拒绝；
+  本项目直接值接受 `None` 清除，与官方已解析值接口不同。字符缩进的字号上下文与加载/保存状态不同，见[原生生命周期观察](benchmarks/paragraph-character-indents-26.9.json)；当前 DOM 有效格式明确拒绝；
   逻辑字符缩进、相对行间距、编号/条件表格上下文和完整 ParagraphFormat API 仍未对齐。
   `start/left`、`end/right` 及 `firstLine/hanging` 点值在同层冲突时按官方观察取 XML 中后出现的属性，
   这属于固定版本行为，不将属性顺序敏感解释为格式标准要求。不同层按就近属性继承；修改或清除 left/right
@@ -353,7 +353,9 @@ ldm_snapshot = editable.to_light_document()
 当前要求主文档是 `word/document.xml`；样式查询按它的内部 styles relationship 解析实际部件。
 页眉页脚使用同一份文档样式表；图片/链接关系在自身 part 内管理，跨 part/跨文档导入仍未实现。
 
-`to_light_document()` 调用现有 reader，从当前 DOM 生成独立快照。快照可用于现有 Markdown/PDF writer；
+`to_light_document()` 调用现有 reader，从当前 DOM 生成独立快照。字符单位缩进保留在快照的
+`character_unit_*_indent` 字段中；正文、表格、默认页眉页脚、样式和编号的受测路径可写回
+DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 Markdown/PDF writer；
 **修改快照不会反写 DOM**，并且旧 reader 的内容损失警告和限制仍然适用。
 也可以将 `editable.to_bytes()` 交给 `aw.Document(BytesIO(...))` 继续现有转换。
 
