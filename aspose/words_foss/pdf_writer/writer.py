@@ -17,7 +17,7 @@ from fpdf.prefs import ViewerPreferences
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.model.enums import ParagraphAlignment
-from aspose.words_foss._visible_runs import visible_runs
+from aspose.words_foss._visible_runs import visible_children, visible_runs
 from aspose.words_foss._io import atomic_output, validate_image
 from aspose.words_foss.pdf_writer.constants import (
     A4_HEIGHT_MM,
@@ -501,7 +501,7 @@ class LdmPdfWriter:
         from aspose.words_foss.model.wrap_type import WrapType
 
         anchored = [
-            item for item in para._children
+            item for item in visible_children(para)
             if isinstance(item, ldm.Shape)
             and not item._is_positioned
             and item.is_inline is False
@@ -582,7 +582,7 @@ class LdmPdfWriter:
 
         wrap_h = 0.0  # anchored, treated as floating (no inline cost)
         inline_shape_h = 0.0
-        for item in para._children:
+        for item in visible_children(para):
             if not isinstance(item, ldm.Shape):
                 continue
             if item._is_positioned or item.wrap_type == WrapType.NONE:

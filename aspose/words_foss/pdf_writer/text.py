@@ -4,7 +4,7 @@
 from typing import Optional, Tuple
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._visible_runs import visible_runs
+from aspose.words_foss._visible_runs import visible_children, visible_runs
 from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_SIZE_PT, LINE_HEIGHT_FACTOR
 from aspose.words_foss._links import INLINE_LINK_RE, decode_link
 from aspose.words_foss.pdf_writer.color import parse_color
@@ -70,7 +70,7 @@ def cell_text(cell: ldm.Cell) -> str:
 
 def is_pure_page_break(para: ldm.Paragraph) -> bool:
     """True when the paragraph contains only form-feeds and no images."""
-    for item in para._children or ():
+    for item in visible_children(para):
         if isinstance(item, ldm.Shape) and item.has_image:
             return False
     visible = False

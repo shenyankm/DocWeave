@@ -14,7 +14,7 @@ from aspose.words_foss.pdf_writer.page_bands import register_bookmarks
 from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._visible_runs import visible_runs
+from aspose.words_foss._visible_runs import visible_children, visible_runs
 from aspose.words_foss.model.enums import LineStyle, ParagraphAlignment
 from aspose.words_foss.pdf_writer.color import parse_color
 from aspose.words_foss.pdf_writer.constants import (
@@ -234,7 +234,7 @@ class TableRenderer:
         lines = []
         w = self._writer
         if cell.cell_format.orientation in _VERTICAL_ORIENTATIONS:
-            if cell.tables or any(isinstance(item, ldm.Shape) for para in cell.paragraphs for item in para._children):
+            if cell.tables or any(isinstance(item, ldm.Shape) for para in cell.paragraphs for item in visible_children(para)):
                 raise ValueError("Rotated table cells with shapes or nested tables are unsupported")
             text = safe_text(cell_text(cell))
             height = max(self._measure_text_width(pdf, text, cell), DEFAULT_FONT_SIZE_PT * PT_TO_MM * MIN_ROW_HEIGHT_FACTOR)
@@ -320,7 +320,7 @@ class TableRenderer:
             if para.paragraph_format.space_before:
                 lines.append(_CellLine(para.paragraph_format.space_before * PT_TO_MM))
             visible = {id(run) for run in visible_runs(para)}
-            for item in para._children:
+            for item in visible_children(para):
                 if isinstance(item, ldm.Run) and id(item) in visible and not item.font.hidden:
                     apply_run_font(pdf, item.font)
                     text = w._run_renderer._resolve_run_text(pdf, item.text).replace("\t", " ").replace("\f", "")

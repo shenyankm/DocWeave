@@ -232,7 +232,7 @@ class LdmMarkdownWriter:
 
         # Header images
         for para in doc.header_paragraphs:
-            for item in para._children:
+            for item in visible_children(para):
                 if isinstance(item, ldm.Shape) and item.has_image and item.image_data:
                     blocks.append((_BlockTag(self._BLOCK), self._render_image(item)))
 
@@ -250,7 +250,7 @@ class LdmMarkdownWriter:
 
         # Footer images
         for para in doc.footer_paragraphs:
-            for item in para._children:
+            for item in visible_children(para):
                 if isinstance(item, ldm.Shape) and item.has_image and item.image_data:
                     blocks.append((_BlockTag(self._BLOCK), self._render_image(item)))
 
@@ -577,7 +577,7 @@ class LdmMarkdownWriter:
         # text runs.  Every DOCX-reader paragraph has a non-empty content_sequence,
         # so checking merely for non-emptiness would send image-free paragraphs
         # (code-blocks, quotes, list items) down this path unnecessarily.
-        if any(isinstance(i, ldm.Shape) for i in para._children):
+        if any(isinstance(i, ldm.Shape) for i in visible_children(para)):
             output_parts: list[str] = []
             pending_runs: list[ldm.Run] = []
 
@@ -591,7 +591,7 @@ class LdmMarkdownWriter:
                     if formatted is not None:
                         output_parts.append(formatted)
 
-            for item in para._children:
+            for item in visible_children(para):
                 if (
                     isinstance(item, ldm.Shape)
                     and item.has_image
@@ -613,7 +613,7 @@ class LdmMarkdownWriter:
         # Images from inline_extras come first, then the paragraph text.
         image_parts = [
             self._render_image(item)
-            for item in para._children
+            for item in visible_children(para)
             if isinstance(item, ldm.Shape) and item.has_image and item.image_data is not None
         ]
 
@@ -819,11 +819,11 @@ class LdmMarkdownWriter:
         if visible_runs(para) and any(r.text and r.text.strip() for r in visible_runs(para)):
             return False
         if para._children and any(
-            isinstance(i, ldm.Shape) for i in para._children
+            isinstance(i, ldm.Shape) for i in visible_children(para)
         ):
             return False
         if para._children and any(
-            isinstance(i, ldm.Shape) and i.has_image for i in para._children
+            isinstance(i, ldm.Shape) and i.has_image for i in visible_children(para)
         ):
             return False
         text = para.text.strip() if para.text else ""
@@ -1484,7 +1484,7 @@ class LdmMarkdownWriter:
             para = self._with_note_markers(para)
             visible = {id(run) for run in visible_runs(para) if not run.font.hidden}
             para_parts = []
-            for item in para._children:
+            for item in visible_children(para):
                 if isinstance(item, ldm.Shape) and item.has_image and item.image_data:
                     para_parts.append(self._render_image(item))
                 elif isinstance(item, ldm.Run) and id(item) in visible and item.text:

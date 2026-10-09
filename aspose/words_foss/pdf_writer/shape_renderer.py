@@ -7,7 +7,7 @@ from typing import Optional
 from fpdf import FPDF
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._visible_runs import is_horizontal_rule_shape
+from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_children
 from aspose.words_foss.model.wrap_type import WrapType
 from aspose.words_foss.model.enums import CellVerticalAlignment
 from aspose.words_foss.pdf_writer.color import parse_color
@@ -115,7 +115,7 @@ class ShapeRenderer:
 
     def render_floating_images(self, pdf: FPDF, para: ldm.Paragraph) -> None:
         """Draw ``wrapNone`` images at their anchor coordinates."""
-        for extra in para._children:
+        for extra in visible_children(para):
             if not isinstance(extra, ldm.Shape):
                 continue
             if not extra.has_image or extra.image_data is None:
@@ -140,7 +140,7 @@ class ShapeRenderer:
     def render_anchored_wrapped_shapes(self, pdf: FPDF, para: ldm.Paragraph) -> None:
         """Draw anchored (non-inline) shapes that wrap text around them."""
         writer = self._writer
-        for extra in para._children:
+        for extra in visible_children(para):
             if not isinstance(extra, ldm.Shape):
                 continue
             if extra._is_positioned:
@@ -201,7 +201,7 @@ class ShapeRenderer:
             return
         saved_x, saved_y = pdf.get_x(), pdf.get_y()
         for para in paragraphs:
-            for extra in para._children:
+            for extra in visible_children(para):
                 if not isinstance(extra, ldm.Shape) or not extra._is_positioned:
                     continue
                 if extra.relative_vertical_position == 2:

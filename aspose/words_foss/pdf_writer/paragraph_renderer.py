@@ -13,7 +13,7 @@ from fpdf import FPDF
 from fpdf.enums import CharVPos
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_runs
+from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_children, visible_runs
 from aspose.words_foss.model.wrap_type import WrapType
 from aspose.words_foss.pdf_writer.baseline import baseline_scope, baseline_size
 from aspose.words_foss.pdf_writer.constants import (
@@ -238,7 +238,7 @@ class ParagraphRenderer:
         places it.
         """
         extras = [
-            e for e in para._children
+            e for e in visible_children(para)
             if isinstance(e, ldm.Shape) and e._is_positioned
             and e.relative_vertical_position == 2
         ]
@@ -355,14 +355,14 @@ class ParagraphRenderer:
             and i.is_inline is not False
             and not i._is_positioned
             and i.wrap_type != WrapType.NONE
-            for i in para._children
+            for i in visible_children(para)
         )
         if has_mixed:
             self._render_content_sequence(pdf, para)
             return
 
         # Legacy path: no inline images — emit any standalone shapes first.
-        for item in para._children:
+        for item in visible_children(para):
             if isinstance(item, ldm.Shape):
                 if item._is_positioned or item.wrap_type == WrapType.NONE:
                     continue
@@ -612,7 +612,7 @@ class ParagraphRenderer:
                 pdf, runs_snapshot, pf, para.list_format, para.list_label, align
             )
 
-        for item in para._children:
+        for item in visible_children(para):
             if isinstance(item, ldm.Shape):
                 if item._is_positioned or item.wrap_type == WrapType.NONE:
                     continue  # drawn by positioned/floating pass
