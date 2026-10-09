@@ -11,6 +11,7 @@ from pypdf import PdfReader
 
 from aspose.words_foss._process import run_process
 from aspose.words_foss import libreoffice
+from aspose.words_foss import _process
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "tests/data/input/chinese_pdf.docx"
@@ -159,3 +160,75 @@ def test_memory_watchdog_kills_worker():
     script = "import time; payload=bytearray(50*1024*1024); time.sleep(10)"
     with pytest.raises(RuntimeError, match="exceeded.*memory"):
         run_process([sys.executable, "-c", script], 5, memory_mb=12)
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Process groups require POSIX")
+def test_parent_crash_cleans_descendant_and_next_task_runs(tmp_path):
+    pid_file = tmp_path / "child.pid"
+    script = (
+        "import subprocess,sys,os,pathlib; "
+        "p=subprocess.Popen([sys.executable,'-c','import time;time.sleep(30)']); "
+        f"pathlib.Path({str(pid_file)!r}).write_text(str(p.pid)); os._exit(9)"
+    )
+    with pytest.raises(subprocess.CalledProcessError) as failure:
+        run_process([sys.executable, "-c", script], 5)
+    assert failure.value.returncode == 9
+    pid = pid_file.read_text()
+    for _ in range(20):
+        state = subprocess.run(["ps", "-o", "stat=", "-p", pid], capture_output=True, text=True)
+        if not state.stdout.strip() or state.stdout.lstrip().startswith("Z"):
+            break
+        time.sleep(0.05)
+    else:
+        pytest.fail("Crashed parent's child is still running")
+    assert run_process([sys.executable, "-c", "print('healthy next task')"], 5).strip() == "healthy next task"
+
+
+@pytest.mark.parametrize("idle", [False, True])
+@pytest.mark.parametrize("channel", ["stdout", "stderr"])
+def test_excessive_logs_fail_even_when_worker_exits_quickly(monkeypatch, idle, channel):
+    monkeypatch.setattr(_process, "MAX_PROCESS_LOG_BYTES", 64 * 1024)
+    script = f"import sys,time;sys.{channel}.buffer.write(b'x'*262144);sys.{channel}.flush()"
+    if idle:
+        script += ";time.sleep(20)"
+    with pytest.raises(RuntimeError, match="log output"):
+        run_process([sys.executable, "-c", script], 2)
+    assert run_process([sys.executable, "-c", "print('healthy after log limit')"], 2).strip() == "healthy after log limit"
+
+
+def test_exact_log_limit_keeps_existing_return_prefix(monkeypatch):
+    monkeypatch.setattr(_process, "MAX_PROCESS_LOG_BYTES", 64 * 1024)
+    script = "import sys;sys.stdout.buffer.write(b'x'*65536)"
+    assert run_process([sys.executable, "-c", script], 2) == "x" * 4096
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Process groups require POSIX")
+def test_native_log_failure_reaps_descendant_and_preserves_existing_output(tmp_path, monkeypatch):
+    output = tmp_path / "output.pdf"
+    output.write_bytes(b"original output")
+    pid_file = tmp_path / "child.pid"
+    monkeypatch.setattr(_process, "MAX_PROCESS_LOG_BYTES", 64 * 1024)
+    monkeypatch.setattr(libreoffice.shutil, "which", lambda name: "/fake/soffice")
+
+    def noisy(command, timeout, **kwargs):
+        script = (
+            "import subprocess,sys,time,pathlib; "
+            "p=subprocess.Popen([sys.executable,'-c','import time;time.sleep(20)']); "
+            f"pathlib.Path({str(pid_file)!r}).write_text(str(p.pid)); "
+            "sys.stdout.buffer.write(b'x'*262144);sys.stdout.flush();time.sleep(20)"
+        )
+        return run_process([sys.executable, "-c", script], timeout, **kwargs)
+
+    monkeypatch.setattr(libreoffice, "run_process", noisy)
+    with pytest.raises(RuntimeError, match="log output"):
+        libreoffice.convert_to_pdf(SOURCE, output, timeout=2)
+    assert output.read_bytes() == b"original output"
+    assert not list(tmp_path.glob(".libreoffice-*"))
+    pid = pid_file.read_text()
+    for _ in range(20):
+        state = subprocess.run(["ps", "-o", "stat=", "-p", pid], capture_output=True, text=True)
+        if not state.stdout.strip() or state.stdout.lstrip().startswith("Z"):
+            break
+        time.sleep(0.05)
+    else:
+        pytest.fail("Log-limited child's descendant is still running")

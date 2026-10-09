@@ -9,6 +9,8 @@ import time
 import sys
 from pathlib import Path
 
+MAX_PROCESS_LOG_BYTES = 64 * 1024 * 1024
+
 
 def _group_rss_kib(group):
     if sys.platform.startswith("linux"):
@@ -47,7 +49,11 @@ def run_process(command, timeout, *, new_session=True, memory_mb=0):
         )
         deadline = time.monotonic() + timeout
         try:
-            while process.poll() is None:
+            while True:
+                if os.fstat(log.fileno()).st_size > MAX_PROCESS_LOG_BYTES:
+                    raise RuntimeError("Conversion worker exceeded the log output limit")
+                if process.poll() is not None:
+                    break
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:
                     raise subprocess.TimeoutExpired(command, timeout)
