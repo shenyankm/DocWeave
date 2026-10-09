@@ -70,7 +70,7 @@ def test_invalid_option_preserves_existing_output(tmp_path, option, value):
     target = tmp_path / "existing.pdf"
     target.write_bytes(b"existing output")
     options = PdfSaveOptions()
-    setattr(options, option, value)
     with pytest.raises(ValueError):
+        setattr(options, option, value)
         document().save(target, options)
     assert target.read_bytes() == b"existing output"

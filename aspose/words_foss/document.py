@@ -28,7 +28,7 @@ from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._io import atomic_output, check_input_size, read_bounded
 from aspose.words_foss.models import ConversionOptions
 from aspose.words_foss.diagnostics import (
-    ContentLossWarning, ConversionDiagnostic, collect_diagnostics, source_story_losses, warn,
+    ContentLossWarning, ConversionDiagnostic, ConversionWarning, collect_diagnostics, source_story_losses, warn,
 )
 from aspose.words_foss.reader_factory import create_reader
 from aspose.words_foss.saving import (
@@ -481,6 +481,9 @@ class Document:
 
         if options is not None and _coerce_save_format(options.save_format) != SaveFormat.MARKDOWN:
             raise ValueError("MarkdownSaveOptions.save_format must be MARKDOWN")
+        if options is not None and options.image_resolution != 96:
+            warn("Markdown image_resolution is not applied; source image bytes are preserved",
+                 ConversionWarning, code="markdown.unsupported_option")
         conversion_opts = ConversionOptions()
         encoding = "utf-8"
         if options is not None:

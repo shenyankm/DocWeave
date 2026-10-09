@@ -1,0 +1,208 @@
+{
+  "baseline_commit": "aedc1c0784fc587fc1cd228cb70e877547c73d09",
+  "scope": "A1/E12 invalid enum boundary and valid unsupported requests; not full public-option effect acceptance",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "installed_tests_cwd": "/tmp"
+  },
+  "public_field_inventory": {
+    "OutlineOptions": [
+      "headings_outline_levels",
+      "expanded_outline_levels",
+      "default_bookmarks_outline_level",
+      "bookmarks_outline_levels",
+      "create_outlines_for_headings_in_tables",
+      "create_missing_outline_levels"
+    ],
+    "PdfSaveOptions": [
+      "compliance",
+      "export_document_structure",
+      "image_compression",
+      "jpeg_quality",
+      "text_compression",
+      "embed_full_fonts",
+      "use_core_fonts",
+      "font_embedding_mode",
+      "page_mode",
+      "color_mode",
+      "export_bookmarks_outline",
+      "outline_options",
+      "preserve_form_fields",
+      "memory_optimization",
+      "zoom_factor",
+      "zoom_behavior",
+      "display_doc_title",
+      "fallback_fonts",
+      "text_shaping"
+    ],
+    "OoxmlSaveOptions": [
+      "save_format",
+      "compliance",
+      "compression_level",
+      "zip_64_mode",
+      "pretty_format",
+      "reference_docx"
+    ],
+    "MarkdownSaveOptions": [
+      "table_content_alignment",
+      "list_export_mode",
+      "export_images_as_base64",
+      "images_folder",
+      "images_folder_alias",
+      "export_underline_formatting",
+      "link_export_mode",
+      "export_as_html",
+      "empty_paragraph_export_mode",
+      "image_resolution",
+      "save_format",
+      "encoding",
+      "paragraph_break",
+      "style_map",
+      "export_notes"
+    ]
+  },
+  "enum_descriptors": [
+    [
+      "PdfSaveOptions",
+      "compliance"
+    ],
+    [
+      "PdfSaveOptions",
+      "image_compression"
+    ],
+    [
+      "PdfSaveOptions",
+      "text_compression"
+    ],
+    [
+      "PdfSaveOptions",
+      "font_embedding_mode"
+    ],
+    [
+      "PdfSaveOptions",
+      "page_mode"
+    ],
+    [
+      "PdfSaveOptions",
+      "color_mode"
+    ],
+    [
+      "PdfSaveOptions",
+      "zoom_behavior"
+    ],
+    [
+      "OoxmlSaveOptions",
+      "compliance"
+    ],
+    [
+      "OoxmlSaveOptions",
+      "compression_level"
+    ],
+    [
+      "OoxmlSaveOptions",
+      "zip_64_mode"
+    ],
+    [
+      "MarkdownSaveOptions",
+      "table_content_alignment"
+    ],
+    [
+      "MarkdownSaveOptions",
+      "list_export_mode"
+    ],
+    [
+      "MarkdownSaveOptions",
+      "link_export_mode"
+    ],
+    [
+      "MarkdownSaveOptions",
+      "export_as_html"
+    ],
+    [
+      "MarkdownSaveOptions",
+      "empty_paragraph_export_mode"
+    ]
+  ],
+  "reproduction": {
+    "test_save_option_enums.py": "80 failed, 15 passed against old installed wheel",
+    "test_unsupported_save_requests.py": "11 failed, 2 passed against old installed wheel"
+  },
+  "installed_integration": {
+    "result": "250 passed, 2 warnings in 16.57s; no skips",
+    "files": [
+      "test_save_option_enums.py",
+      "test_unsupported_save_requests.py",
+      "test_save_option_formats.py",
+      "test_conversion_api.py",
+      "test_pdf_stream_options.py",
+      "test_pdf_outline_options.py",
+      "test_pdf_diagnostics.py",
+      "test_optional_ecosystem.py",
+      "test_reference_styles.py"
+    ],
+    "independent_tools": "Actual Mammoth/Pandoc/python-docx comparisons and pypdf output checks"
+  },
+  "examples": "31 passed, 13 warnings in 8.56s",
+  "full_suite": {
+    "status": "passed",
+    "result": "1782 passed, 176 warnings in 367.31s (0:06:07)",
+    "log": "/tmp/docweave-save-contract-full.txt",
+    "log_sha256": "77a34732fe81bfb5e094fcf5adfabfa262dd418343a9fc4fadf01156f31a46da",
+    "scope": "Installed wheel, outside checkout, Python 3.13.15; not all-platform CI"
+  },
+  "wheel": {
+    "bytes": 26487276,
+    "sha256": "b9be302c0280bee04377b6fcb3187bab65ceb011bca8af6238a1476a54d6b6e5",
+    "source_files_byte_equal": 133,
+    "check_wheel": "passed"
+  },
+  "commands": {
+    "build": "/tmp/docweave-ecosystem-venv/bin/python -m build --wheel --outdir /tmp/docweave-wheels/save-option-contract",
+    "full_suite": "PYPANDOC_PANDOC=/tmp/docweave-pandoc-arm64/pandoc /tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests -q --import-mode=importlib --tb=short"
+  },
+  "checks": [
+    "Production fatal/unused-import Ruff subset passed",
+    "Full Ruff on new tests passed",
+    "15 descriptors and 46 initialized fields checked against AST",
+    "Existing PDF invalid-option tests include earlier assignment failure and retain original-output assertion",
+    "Local document links/fences, 46 inventory rows, JSON and test AST verified; git diff --check passed"
+  ],
+  "limits": [
+    "Known but unimplemented requests remain unimplemented; warnings describe the fallback",
+    "Unknown enum assignments now fail earlier; callers must catch ValueError at assignment too",
+    "Markdown image_resolution default 96 remains unused; only non-default requests warn",
+    "Full scalar ranges, combinations, direct ConversionOptions non-enum fields and HTML complex tables remain unverified",
+    "Not an optimization or native-layout change; no performance or visual-fidelity claim",
+    "Latest CI delivery is reported separately"
+  ],
+  "html_followup_reproduction": {
+    "tool": "Actual python-docx DOCX generation and installed package Markdown TABLES output",
+    "cases": [
+      {
+        "case": "horizontal merge",
+        "input": "2x2 table, first row cells merged in python-docx",
+        "output": "<tr><th>HEAD_A HEAD_B</th></tr> followed by two td cells",
+        "diagnostics": [],
+        "gap": "Merged row has one cell but no colspan=2 attribute"
+      },
+      {
+        "case": "nested table",
+        "input": "1x1 nested table in CELL_A",
+        "output": "<td>CELL_A NESTED</td>",
+        "diagnostics": [
+          "markdown.nested_table_flattened"
+        ],
+        "gap": "Known flattened layout; diagnosis already present"
+      },
+      {
+        "case": "bold run",
+        "input": "CELL_A run bold=True in python-docx",
+        "output": "<td>**CELL_A**</td>",
+        "diagnostics": [],
+        "gap": "HTML contains literal Markdown markers instead of strong markup"
+      }
+    ],
+    "status": "Reproduced; merge and rich HTML correction/diagnosis remains A1 work"
+  }
+}

@@ -14,6 +14,17 @@
 扩展名不覆盖显式选项。此规则也适用于直接使用 `LdmDocxWriter`，以及创建 writer 后修改选项。
 这是行为修正：此前不匹配的 `save_format` 被静默忽略；切换格式应传入对应的 `SaveFormat` 或选项类。
 
+三个保存选项类的 15 个枚举字段接受已定义成员、对应整数和大小写不敏感的成员名；
+未知字符串、越界整数及错误类型现在在赋值时抛出 `ValueError`，保留原属性值。
+此前部分请求被静默忽略或在保存时才失败；调用方应在赋值与保存边界处理异常。
+直接 `ConversionOptions` 构造的五个共享枚举使用相同校验，详见[完整字段审计入口](save-option-audit.md)。
+
+有效但未实现的请求不会因枚举校验而成为已实现功能：`NON_COMPATIBLE_TABLES` 仍等同 `NONE`，
+`Zip64Mode.ALWAYS` 仍等同 `IF_NECESSARY`，Markdown 非默认 `image_resolution` 不会重采样图片。
+这三种请求现在产生 `ConversionWarning` 及 `markdown.unsupported_option` / `docx.unsupported_option`
+诊断；默认设置不增加警告。需要拒绝这些退回行为时，可将 `ConversionWarning` 升级为错误，
+输出前失败会保留原主文件。`--strict` 针对内容损失，并非拒绝所有选项退回的通用开关。
+
 ### Markdown 页眉页脚损失
 
 Markdown 当前只导出默认页眉/页脚中顶层段落的图片，省略文字、表格、注引用、横线和变体图片。

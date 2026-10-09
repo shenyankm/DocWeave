@@ -15,7 +15,7 @@ from typing import NamedTuple, Optional
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._links import INLINE_LINK_RE
-from aspose.words_foss.diagnostics import ContentLossWarning, document_nodes, source_story_losses, warn
+from aspose.words_foss.diagnostics import ContentLossWarning, ConversionWarning, document_nodes, source_story_losses, warn
 from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_runs
 from aspose.words_foss.md_import.document_builder import (
     _link_destination,
@@ -182,6 +182,9 @@ class LdmMarkdownWriter:
         output_path: Optional[Path] = None,
     ) -> str:
         """Convert *doc* to Markdown and return the result string."""
+        if self.options.export_as_html == MarkdownExportAsHtml.NON_COMPATIBLE_TABLES:
+            warn("Markdown export_as_html=NON_COMPATIBLE_TABLES is not implemented; behaves like NONE",
+                 ConversionWarning, code="markdown.unsupported_option")
         if any(
             isinstance(node, ldm.Table)
             or (isinstance(node, ldm.Paragraph) and (

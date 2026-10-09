@@ -17,7 +17,7 @@ from dataclasses import dataclass
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._io import atomic_output
-from aspose.words_foss.diagnostics import ContentLossWarning, document_nodes, header_footer_losses, source_story_losses, warn
+from aspose.words_foss.diagnostics import ContentLossWarning, ConversionWarning, document_nodes, header_footer_losses, source_story_losses, warn
 from aspose.words_foss.saving import (
     CompressionLevel,
     OoxmlCompliance,
@@ -147,6 +147,9 @@ class LdmDocxWriter:
 
         if _coerce_save_format(getattr(self.options, "save_format", SaveFormat.DOCX)) != SaveFormat.DOCX:
             raise ValueError("OoxmlSaveOptions.save_format must be DOCX")
+        if coerce_enum(Zip64Mode, getattr(self.options, "zip_64_mode", Zip64Mode.NEVER)) == Zip64Mode.ALWAYS:
+            warn("DOCX zip_64_mode=ALWAYS does not force ZIP64 records; behaves like IF_NECESSARY",
+                 ConversionWarning, code="docx.unsupported_option")
         _warn_about_unsupported_constructs(doc)
         # The hyperlink table and image state are mutated by :mod:`runs`
         # / :mod:`paragraphs` while rendering the document body; gather

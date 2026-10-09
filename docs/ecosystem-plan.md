@@ -139,5 +139,6 @@
 - A1：已定位 `test_conversion_safety.py`、`test_content_integrity.py`、`test_bounded_conversion.py` 的既有内容/安全断言入口；尚未完成本轮系统覆盖审计。阶段 63 的安装包测试记录可复用，但独立工具和组合缺口仍须逐项核对。
 - A1 首个闭环：DOCX/Markdown 的公开 `save_format` 契约已修复，覆盖文件/内存、直接 writer、选项后改和失败原输出保留；见[复验记录](benchmarks/save-option-formats.json)。旧包 29 failed / 3 passed，新安装包 32 项通过；相关集成 126 项及 31 项示例通过，最后新增的三个构造参数案例另行通过。公开选项全矩阵、固定内容语料组合和原生批任务吞吐仍未完成，不将该闭环算作整个 A1 验收。
 - A1 内容损失闭环：Markdown 页眉页脚省略不再静默，覆盖文字/表格/文本框/横线/可见注/变体图片、文件/内存/直接 writer 与严格 CLI；[复验记录](benchmarks/markdown-story-losses.json)保留真实 DOCX、隐藏内容守卫、原输出保护和五类语料字节对照。仅补损失诊断与拒绝机制，未新增页眉页脚渲染；其他公开选项和完整内容清单仍未验收。
+- A1 公开选项边界：已建立[46 个字段审计入口](save-option-audit.md)，覆盖当前三个保存选项类与嵌套 outline 配置。15 个枚举字段及直接转换模型的五个共享枚举拒绝未知值，三个有效但未实现请求补齐诊断；安装包相关 250 项、全量 1,782 项及 31 项示例通过，验证另见[复验记录](benchmarks/save-option-contract.json)。字段入口不等于全效果验收；HTML 合并/嵌套与富内容分支、标量范围和跨选项组合保留为 A1/A4 缺口。
 - A2：已保留空行复现原型；原生期望、页边容量和 whitespace 变体待校准，尚未修改生产代码。
 - A3/A4：待前置闭环完成；不为制造优化阶段而增加无证据功能。

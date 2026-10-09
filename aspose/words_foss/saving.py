@@ -14,19 +14,20 @@ from typing import Any, Optional, Type, TypeVar
 _E = TypeVar("_E", bound=IntEnum)
 
 
-def coerce_enum(enum_cls: Type[_E], value: Any) -> Any:
-    """Normalise *value* to a member of *enum_cls*, or return it unchanged."""
+def coerce_enum(enum_cls: Type[_E], value: Any) -> _E:
+    """Normalise known members and legacy spellings; reject unknown requests."""
     if isinstance(value, enum_cls):
         return value
     if isinstance(value, str):
         member = enum_cls.__members__.get(value.upper())
-        return member if member is not None else value
+        if member is not None:
+            return member
     if isinstance(value, int):
         try:
             return enum_cls(value)
         except ValueError:
-            return value
-    return value
+            pass
+    raise ValueError(f"Invalid {enum_cls.__name__} value: {value!r}")
 
 
 class _EnumField:
