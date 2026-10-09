@@ -1213,6 +1213,7 @@ class SourceStory(BaseModel):
 class Document(BaseModel):
     type: str = Field(default="Document", alias="_type")
     default_tab_stop: float = 36.0
+    do_not_expand_shift_return: bool = False
     page_color: str = ""
     page_count: int = 0
     doc_defaults_font: Optional[Font] = None

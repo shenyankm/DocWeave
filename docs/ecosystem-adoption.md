@@ -1318,3 +1318,35 @@ wheel 26,258,089 字节，增加 552 字节，133 个包文件与源码一致，
 左对齐中位数 0.123548→0.123150 s，两端对齐 0.122813→0.123641 s；
 差异不足 1%，不宣称速度或内存改善。左对齐 PDF 12,595 字节不变，两端对齐
 从 12,595 增至 12,874 字节，属于恢复空格布局的成本。RSS 包含解释器与导入，原始样本保留。
+
+## 手动换行兼容设置验收（2026-10-09）
+
+将文档级 do_not_expand_shift_return（默认 False）加入 LDM，DOCX reader 使用既有
+OnOff 解析器读取 settings.xml 的 w:compat/w:doNotExpandShiftReturn；writer 在既有
+兼容块中写出启用标志，不重复创建兼容块。完整 LDM JSON 保留该字段。
+共享 PDF 路径按该标志处理显式换行：默认伸展，启用标志后保持自然宽度；
+段末仍不伸展。塑形路径末尾显式换行即使没有单独空行记录，也遵循相同规则。
+默认行为较第 53 节改变，依赖旧手动换行自然宽度的调用方应将该字段设为 True。
+
+新增 40 项源码专项通过（15.56 s，36 warnings），覆盖八种布尔写法、普通/代码段落、
+塑形、公开 DOCX 保存往返、末尾换行、缺失 settings part、LDM JSON 与源模型不变。
+发现共享 parse_onoff 把合法 off 当作启用，已在共同函数修复；新增真实 DOCX 用例验证
+off 关闭继承的粗体和段落 keepNext，而非只测辅助函数。
+首轮 19 failed / 55 passed 不计为通过：除 off 缺陷外，大伸展被提取器拆为多个片段，
+改用独立末词坐标/内容验证；自然宽度随塑形变化，未再套用固定未塑形坐标。
+
+16 类新旧安装对照显示旧包忽略设置，全部自然宽度；新包缺省/off/0 伸展至
+197.1608–197.1660 pt，on 保持 90.6820–90.8940 pt，文字和页数保持一致。
+八类页眉/页脚探针也按同一文档设置切换。五类既有 DOCX 共 113 页全部记录和大小不变。
+实际 LibreOffice 两份 Arial 12 pt 原始 DOCX 及双方预览已检查，缺省与启用分别伸展/不伸展；
+原生末词坐标 200.0760/92.0400 pt，本库 197.1608/90.8940 pt，字体、行距及内边距仍不同。
+行为方向一致不代表 Word 完整保真；表格直接绘制与 CJK 字符分布仍未完成。
+
+wheel 26,258,423 字节，增加 334 字节，133 个包文件与源码一致，
+导入/typing marker/字体检查通过，无新生产依赖或 PDF 公共选项。
+第 53 节“手动换行始终自然、尚未读取兼容设置”的边界由本节所列范围替代；
+没有新增吞吐/内存基准，不宣称性能改善。证据见 [手动换行记录](benchmarks/shift-return.json)，
+规则依据 [Microsoft Open XML 说明](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.donotexpandshiftreturn?view=openxml-3.0.1)。
+
+最终全量安装 1,341 passed（306.88 s，54 warnings，无跳过项），
+相关安装专项 75 passed（24.04 s，37 warnings），示例 31 passed（7.61 s，13 warnings）。

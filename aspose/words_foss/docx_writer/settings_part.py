@@ -2,7 +2,7 @@
 
 Always emitted: the Aspose blank baseline carries a ``<w:compat>``
 block that Word2010+ expects on every package.  LDM-tracked values
-(currently :attr:`Document.default_tab_stop`) are added when they
+(default tabs and manual-break justification) are added when they
 differ from Word's compiled-in default.
 """
 
@@ -28,6 +28,10 @@ def render_settings_xml(doc: ldm.Document) -> str:
         children.append(
             el("w:defaultTabStop", {"w:val": pt_to_twips(doc.default_tab_stop)})
         )
-    children.append(settings_compat())
+    compat = settings_compat()
+    if doc.do_not_expand_shift_return:
+        compat = (compat or "<w:compat></w:compat>").replace(
+            "</w:compat>", el("w:doNotExpandShiftReturn") + "</w:compat>")
+    children.append(compat)
     root = el("w:settings", {"xmlns:w": W_URI}, children)
     return XML_DECL + root

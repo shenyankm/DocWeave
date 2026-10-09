@@ -59,6 +59,7 @@ def test_justified_soft_rows_reach_margin_and_final_row_stays_natural(style, sha
 @pytest.mark.parametrize("shaping", [False, True])
 def test_explicit_breaks_keep_short_rows_natural(style, shaping):
     model, _ = justified_model(style, text="SHORT LINE\n" + WORDS)
+    model.do_not_expand_shift_return = True
     with pymupdf.open(stream=render(model, shaping), filetype="pdf") as pdf:
         rows = lines(pdf[0])
         assert rows[0]["bbox"][2] < 120

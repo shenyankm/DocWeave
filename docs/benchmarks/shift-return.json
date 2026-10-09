@@ -1,0 +1,828 @@
+{
+  "date": "2026-10-09",
+  "purpose": "Carry Word doNotExpandShiftReturn through LDM, DOCX settings and native PDF rich-run justification; fix shared off boolean parsing.",
+  "specification": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.donotexpandshiftreturn?view=openxml-3.0.1",
+  "wheel": {
+    "bytes": 26258423,
+    "previous_bytes": 26258089,
+    "sha256": "67037dfd5a75f1de7d0e6068581bcde124e702b14989ffb8a5abf02a2578e46d",
+    "source_package_files_equal": 133
+  },
+  "before": {
+    "Normal-None-False": {
+      "flag": null,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4718
+    },
+    "Normal-None-True": {
+      "flag": null,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4755
+    },
+    "Normal-on-False": {
+      "flag": null,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4718
+    },
+    "Normal-on-True": {
+      "flag": null,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4755
+    },
+    "Normal-off-False": {
+      "flag": null,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4718
+    },
+    "Normal-off-True": {
+      "flag": null,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4755
+    },
+    "Normal-0-False": {
+      "flag": null,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4718
+    },
+    "Normal-0-True": {
+      "flag": null,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4755
+    },
+    "Code-None-False": {
+      "flag": null,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4767
+    },
+    "Code-None-True": {
+      "flag": null,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4805
+    },
+    "Code-on-False": {
+      "flag": null,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4767
+    },
+    "Code-on-True": {
+      "flag": null,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4805
+    },
+    "Code-off-False": {
+      "flag": null,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4767
+    },
+    "Code-off-True": {
+      "flag": null,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4805
+    },
+    "Code-0-False": {
+      "flag": null,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4767
+    },
+    "Code-0-True": {
+      "flag": null,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4805
+    }
+  },
+  "after": {
+    "Normal-None-False": {
+      "flag": false,
+      "manual_right_pt": 197.1608428955078,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4727
+    },
+    "Normal-None-True": {
+      "flag": false,
+      "manual_right_pt": 197.16600036621094,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4761
+    },
+    "Normal-on-False": {
+      "flag": true,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4718
+    },
+    "Normal-on-True": {
+      "flag": true,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4755
+    },
+    "Normal-off-False": {
+      "flag": false,
+      "manual_right_pt": 197.1608428955078,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4727
+    },
+    "Normal-off-True": {
+      "flag": false,
+      "manual_right_pt": 197.16600036621094,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4761
+    },
+    "Normal-0-False": {
+      "flag": false,
+      "manual_right_pt": 197.1608428955078,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4727
+    },
+    "Normal-0-True": {
+      "flag": false,
+      "manual_right_pt": 197.16600036621094,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4761
+    },
+    "Code-None-False": {
+      "flag": false,
+      "manual_right_pt": 197.1608428955078,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4777
+    },
+    "Code-None-True": {
+      "flag": false,
+      "manual_right_pt": 197.16600036621094,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4810
+    },
+    "Code-on-False": {
+      "flag": true,
+      "manual_right_pt": 90.89400482177734,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4767
+    },
+    "Code-on-True": {
+      "flag": true,
+      "manual_right_pt": 90.68199920654297,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4805
+    },
+    "Code-off-False": {
+      "flag": false,
+      "manual_right_pt": 197.1608428955078,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4777
+    },
+    "Code-off-True": {
+      "flag": false,
+      "manual_right_pt": 197.16600036621094,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4810
+    },
+    "Code-0-False": {
+      "flag": false,
+      "manual_right_pt": 197.1608428955078,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4777
+    },
+    "Code-0-True": {
+      "flag": false,
+      "manual_right_pt": 197.16600036621094,
+      "words": [
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "pages": 1,
+      "bytes": 4810
+    }
+  },
+  "native_comparison": {
+    "None": {
+      "native": {
+        "pages": 1,
+        "manual_right_pt": 200.0760040283203,
+        "words": [
+          "SHORT",
+          "LINE",
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX",
+          "SEVEN",
+          "EIGHT",
+          "NINE",
+          "TEN"
+        ]
+      },
+      "library": {
+        "pages": 1,
+        "manual_right_pt": 197.1608428955078,
+        "words": [
+          "SHORT",
+          "LINE",
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX",
+          "SEVEN",
+          "EIGHT",
+          "NINE",
+          "TEN"
+        ]
+      }
+    },
+    "on": {
+      "native": {
+        "pages": 1,
+        "manual_right_pt": 92.04000091552734,
+        "words": [
+          "SHORT",
+          "LINE",
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX",
+          "SEVEN",
+          "EIGHT",
+          "NINE",
+          "TEN"
+        ]
+      },
+      "library": {
+        "pages": 1,
+        "manual_right_pt": 90.89400482177734,
+        "words": [
+          "SHORT",
+          "LINE",
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX",
+          "SEVEN",
+          "EIGHT",
+          "NINE",
+          "TEN"
+        ]
+      }
+    }
+  },
+  "page_band_probe": {
+    "0-False-False": {
+      "manual_right_pt": 197.1608428955078,
+      "pages": 1
+    },
+    "0-False-True": {
+      "manual_right_pt": 197.16600036621094,
+      "pages": 1
+    },
+    "0-True-False": {
+      "manual_right_pt": 90.89400482177734,
+      "pages": 1
+    },
+    "0-True-True": {
+      "manual_right_pt": 90.68199920654297,
+      "pages": 1
+    },
+    "1-False-False": {
+      "manual_right_pt": 197.1608428955078,
+      "pages": 1
+    },
+    "1-False-True": {
+      "manual_right_pt": 197.16600036621094,
+      "pages": 1
+    },
+    "1-True-False": {
+      "manual_right_pt": 90.89400482177734,
+      "pages": 1
+    },
+    "1-True-True": {
+      "manual_right_pt": 90.68199920654297,
+      "pages": 1
+    }
+  },
+  "existing_corpora": {
+    "small": {
+      "equal": true,
+      "pages": 1,
+      "bytes": 6138
+    },
+    "hundred_pages": {
+      "equal": true,
+      "pages": 100,
+      "bytes": 75129
+    },
+    "image_table": {
+      "equal": true,
+      "pages": 3,
+      "bytes": 11337
+    },
+    "repeated_images": {
+      "equal": true,
+      "pages": 4,
+      "bytes": 5545
+    },
+    "mixed_styles": {
+      "equal": true,
+      "pages": 5,
+      "bytes": 19607
+    }
+  },
+  "validation": {
+    "source_new": {
+      "passed": 40,
+      "warnings": 36,
+      "seconds": 15.56
+    },
+    "examples": {
+      "passed": 31,
+      "warnings": 13,
+      "seconds": 7.61
+    },
+    "full_installed": {
+      "passed": 1341,
+      "warnings": 54,
+      "seconds": 306.88,
+      "skipped": 0
+    },
+    "related_installed": {
+      "passed": 75,
+      "warnings": 37,
+      "seconds": 24.04
+    }
+  },
+  "probes": {
+    "docweave-shift-return-probe.py": "from io import BytesIO\nfrom pathlib import Path\nimport json,sys\nfrom docx import Document\nfrom docx.shared import Pt\nfrom docx.enum.style import WD_STYLE_TYPE\nfrom docx.enum.text import WD_ALIGN_PARAGRAPH\nfrom docx.oxml import OxmlElement\nfrom docx.oxml.ns import qn\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nresults={}\nfor style in ['Normal','Code']:\n for value in [None,'on','off','0']:\n  doc=Document();doc.styles.add_style('Code',WD_STYLE_TYPE.PARAGRAPH)\n  sec=doc.sections[0];sec.page_width=Pt(220);sec.page_height=Pt(200)\n  sec.left_margin=sec.right_margin=sec.top_margin=sec.bottom_margin=Pt(20)\n  p=doc.add_paragraph(style=style);p.alignment=WD_ALIGN_PARAGRAPH.JUSTIFY\n  r=p.add_run('SHORT LINE\\nONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE TEN');r.font.name='Arial';r.font.size=Pt(12)\n  if value:\n   flag=OxmlElement('w:doNotExpandShiftReturn');flag.set(qn('w:val'),value);doc.settings.element.find(qn('w:compat')).append(flag)\n  stream=BytesIO();doc.save(stream);source=stream.getvalue()\n  key=f'{style}-{value}'\n  if style=='Code' and value in (None,'on'):Path('/tmp/docweave-shift-return-'+str(value)+'.docx').write_bytes(source)\n  for shaping in [False,True]:\n   parsed=aw.Document(BytesIO(source));options=aw.saving.PdfSaveOptions();options.text_shaping=shaping\n   raw=parsed.to_bytes(options)\n   with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n    words=[w for page in pdf for w in page.get_text('words')]\n    end=next(w[2] for w in words if w[4]=='LINE')\n    results[f'{key}-{shaping}']={'flag':getattr(parsed.light_document_model,'do_not_expand_shift_return',None),'manual_right_pt':end,'words':[w[4] for w in words],'pages':len(pdf),'bytes':len(raw)}\n    if style=='Code' and value in (None,'on') and not shaping:\n     Path('/tmp/docweave-shift-return-'+str(value)+'-'+sys.argv[1]+'.pdf').write_bytes(raw)\n     pdf[0].get_pixmap(matrix=pymupdf.Matrix(3,3)).save('/tmp/docweave-shift-return-'+str(value)+'-'+sys.argv[1]+'.png')\nPath('/tmp/docweave-shift-return-'+sys.argv[1]+'.json').write_text(json.dumps(results,indent=2)+'\\n')\nprint({k:v['manual_right_pt'] for k,v in results.items()})\n",
+    "docweave-shift-return-bands.py": "import json\nfrom pathlib import Path\nimport pymupdf\nfrom aspose.words_foss import light_document_model as ldm\nfrom aspose.words_foss.pdf_writer import LdmPdfWriter\nfrom aspose.words_foss.saving import PdfSaveOptions\nresult={}\nfor location in [0,1]:\n for disabled in [False,True]:\n  for shaping in [False,True]:\n   paragraph=ldm.Paragraph(children=[ldm.Run(text='SHORT LINE\\nLAST',font=ldm.Font(size=12))],paragraph_format=ldm.ParagraphFormat(alignment=3))\n   model=ldm.Document(do_not_expand_shift_return=disabled,sections=[ldm.Section(page_setup=ldm.PageSetup(page_width=220,page_height=260,left_margin=20,right_margin=20,top_margin=80,bottom_margin=80),body=ldm.Body(children=[ldm.Paragraph(children=[ldm.Run(text='BODY')])]),headers_footers=[ldm.HeaderFooter(header_footer_type=location,children=[paragraph])])])\n   options=PdfSaveOptions();options.text_shaping=shaping\n   with pymupdf.open(stream=LdmPdfWriter(options).write_to_bytes(model),filetype='pdf') as pdf:\n    words=[w for page in pdf for w in page.get_text('words')]\n    assert sorted(w[4] for w in words)==['BODY','LAST','LINE','SHORT']\n    end=next(w[2] for w in words if w[4]=='LINE')\n    assert end<120 if disabled else abs(end-(200-72/25.4))<0.05\n    result[f'{location}-{disabled}-{shaping}']={'manual_right_pt':end,'pages':len(pdf)}\nPath('/tmp/docweave-shift-return-bands.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint(result)\n"
+  },
+  "limits": [
+    "Source font, line-height and padding still differ from native Word/LibreOffice.",
+    "Direct table-cell justification and CJK distribution remain incomplete.",
+    "No new throughput/memory benchmark; no claimed performance gain.",
+    "Latest cross-platform CI must be verified separately."
+  ],
+  "early_failures": "First new test run: 19 failed / 55 passed. off parsing was a real shared bug; other failures used extracted line chunks or a shaping-independent exact natural width. Tests now check independent last-word coordinates and unchanged content, retaining strict justified-edge assertions."
+}

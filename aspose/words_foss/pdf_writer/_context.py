@@ -15,6 +15,7 @@ from aspose.words_foss.saving import PdfSaveOptions
 
 class PDFWriterContext(Protocol):
     options: PdfSaveOptions
+    _doc: ldm.Document
 
     _page_width: float
     _page_height: float

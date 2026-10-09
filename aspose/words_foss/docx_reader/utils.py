@@ -129,12 +129,12 @@ def parse_onoff(elem: ET.Element | None, *, default: bool = False) -> bool:
 
     Returns ``default`` when *elem* is ``None``.  When *elem* is present
     without ``@w:val``, returns ``True`` (Word's "tag present = on"
-    convention).  Anything except ``"0"`` / ``"false"`` is also ``True``.
+    convention).  ``"0"``, ``"false"`` and ``"off"`` disable the property.
     """
     if elem is None:
         return default
     val = elem.get(f"{W_NS}val")
-    return val is None or val not in ("false", "0")
+    return val is None or val not in ("false", "0", "off")
 
 
 def apply_onoff_attrs(

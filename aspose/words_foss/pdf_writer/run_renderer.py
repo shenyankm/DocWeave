@@ -337,7 +337,7 @@ class RunRenderer:
         first_offset = pdf.get_x() - pdf.l_margin
         rows = (self.wrap_segments(pdf, visible, text_width,
                                    first_width=text_width - first_offset)
-                if visible else [[]])
+                if visible else [_SegmentRow()])
         for index, row in enumerate(rows):
             if (pf is not None and pf.widow_control and len(rows) > 1 and
                     index in (0, len(rows) - 2) and pdf.auto_page_break and
@@ -346,7 +346,8 @@ class RunRenderer:
                 getattr(pdf, "_advance_region", pdf.add_page)()
             offset = first_offset if index == 0 else 0.0
             word_spacing = 0.0
-            if align == "J" and index < len(rows) - 1 and not row.hard_break:
+            if (align == "J" and (index < len(rows) - 1 or row.hard_break) and
+                    (not row.hard_break or not self._writer._doc.do_not_expand_shift_return)):
                 row = self._trim_row_end(pdf, row)
                 spaces = sum(segment[1].count(" ") for segment in row)
                 if spaces:
@@ -568,7 +569,7 @@ class RunRenderer:
                     run, _, _, size, link = segments[fragment.link]
                     row.append(_ShapedSegment((run, fragment.string, fragment.get_width(), size, link), fragment))
                 rows.append(row)
-            return rows or [[]]
+            return rows or [_SegmentRow()]
         finally:
             pdf.char_vpos = saved_vpos
             pdf.text_color = saved_color

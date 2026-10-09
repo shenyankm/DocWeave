@@ -20,6 +20,7 @@ from aspose.words_foss.docx_reader.constants import (
 from aspose.words_foss.docx_reader.utils import (
     _canonicalize_style_name,
     _hex_to_ldm_color,
+    parse_onoff,
 )
 
 from .cascading import (
@@ -43,6 +44,9 @@ class LdmBuilderMixin:
         doc = ldm.Document()
         doc.page_color = self._get_page_color()
         doc.default_tab_stop = self._get_default_tab_stop()
+        if self._settings_xml is not None:
+            doc.do_not_expand_shift_return = parse_onoff(
+                self._settings_xml.find(f"{W_NS}compat/{W_NS}doNotExpandShiftReturn"))
         self._bookmark_id_to_name = {}
 
         self._build_name_to_style_id_map()
