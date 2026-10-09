@@ -4,9 +4,9 @@ import math
 import os
 import signal
 import subprocess
+import sys
 import tempfile
 import time
-import sys
 from pathlib import Path
 
 MAX_PROCESS_LOG_BYTES = 64 * 1024 * 1024
@@ -48,6 +48,7 @@ def run_process(command, timeout, *, new_session=True, memory_mb=0):
             command, stdout=log, stderr=subprocess.STDOUT, start_new_session=grouped
         )
         deadline = time.monotonic() + timeout
+        group_cleaned = False
         try:
             while True:
                 if os.fstat(log.fileno()).st_size > MAX_PROCESS_LOG_BYTES:
@@ -69,6 +70,7 @@ def run_process(command, timeout, *, new_session=True, memory_mb=0):
                     os.killpg(process.pid, signal.SIGKILL)
                 except ProcessLookupError:
                     pass
+                group_cleaned = True
             else:
                 try:
                     process.kill()
@@ -77,7 +79,7 @@ def run_process(command, timeout, *, new_session=True, memory_mb=0):
             process.wait(timeout=5)
             raise
         finally:
-            if grouped:
+            if grouped and not group_cleaned:
                 # Clean up descendants even when the parent exits first.
                 try:
                     os.killpg(process.pid, signal.SIGKILL)

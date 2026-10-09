@@ -1,17 +1,16 @@
 """Real subprocess checks; LibreOffice protocol is mocked when not installed."""
 
 import os
-from pathlib import Path
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 import pytest
 from pypdf import PdfReader
 
+from aspose.words_foss import _process, libreoffice
 from aspose.words_foss._process import run_process
-from aspose.words_foss import libreoffice
-from aspose.words_foss import _process
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "tests/data/input/chinese_pdf.docx"
@@ -153,6 +152,23 @@ def test_timeout_kills_descendants(tmp_path):
         time.sleep(0.05)
     else:
         pytest.fail("Timed-out child is still running")
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Process groups require POSIX")
+def test_timeout_does_not_signal_reaped_process_group_twice(monkeypatch):
+    original = os.killpg
+    calls = []
+
+    def signal_group(group, sig):
+        calls.append((group, sig))
+        if len(calls) > 1:
+            raise PermissionError("reaped process group cannot be signalled again")
+        return original(group, sig)
+
+    monkeypatch.setattr(_process.os, "killpg", signal_group)
+    with pytest.raises(subprocess.TimeoutExpired):
+        run_process([sys.executable, "-c", "import time; time.sleep(30)"], 0.2)
+    assert len(calls) == 1
 
 
 @pytest.mark.skipif(os.name != "posix", reason="RSS watchdog requires POSIX")
