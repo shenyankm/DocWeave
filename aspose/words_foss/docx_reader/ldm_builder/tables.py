@@ -71,7 +71,7 @@ class TableBuilder:
 
     def build(self, tbl_elem: ET.Element) -> ldm.Table:
         """Translate one ``<w:tbl>`` into :class:`ldm.Table` (rows + cells inclusive)."""
-        tbl = ldm.Table()
+        tbl = ldm.Table(source_location=self._ctx._source_locations.get(tbl_elem))
         table_borders: list[ldm.Border] = []
         tblPr = tbl_elem.find(f"{W_NS}tblPr")
         if tblPr is not None:

@@ -7,7 +7,7 @@ The reader flattens hyperlinks into runs whose text reads
 
 
 import re
-from typing import Optional
+from typing import Mapping, Optional
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.docx_reader.constants import PAGE_FIELD_SENTINEL
@@ -115,6 +115,8 @@ def render_rPr(
     style_id: str = "",
     base: Optional[ldm.Font] = None,
     for_style: bool = False,
+    preserve_explicit_off: bool = False,
+    style_id_map: Optional[Mapping[str, str]] = None,
 ) -> str:
     """Render a ``<w:rPr>`` element for a run.
 
@@ -122,6 +124,8 @@ def render_rPr(
     (``CT_RPr``): rStyle, rFonts, b, i, caps, smallCaps, strike, vanish,
     color, sz, szCs, highlight, u, vertAlign, shd.  ECMA-376 strict
     consumers reject out-of-order properties.
+
+    ``preserve_explicit_off=True`` retains explicit false flags in raw style fonts.
 
     ``for_style=True`` switches to ``CT_StyleRPr`` rules (used inside
     ``<w:style>``), which forbids ``<w:highlight>``.
@@ -146,10 +150,10 @@ def render_rPr(
     # font.  Prefer the locale-independent ``style_identifier`` (maps to
     # the canonical English ``w:styleId``); fall back to ``style_name``
     # for custom / user-defined character styles.
+    if not style_id and style_id_map is not None and font.style_name not in _DEFAULT_FONT_STYLE_NAMES:
+        style_id = style_id_map.get(font.style_name, "")
     if not style_id and font.style_identifier and font.style_identifier in IDENTIFIER_TO_STYLE_ID:
         style_id = IDENTIFIER_TO_STYLE_ID[font.style_identifier]
-    # TODO: plumb style_id_map here so custom character styles with name
-    # collisions get the collision-resolved id instead of the naive fallback.
     if not style_id and font.style_name and font.style_name not in _DEFAULT_FONT_STYLE_NAMES:
         from aspose.words_foss.docx_writer.styles_part import _sanitize_style_id
         # Sanitize so non-alphanumeric characters in a custom style name
@@ -180,22 +184,20 @@ def render_rPr(
             attrs["w:eastAsia"] = ea_name
         if attrs:
             children.append(el("w:rFonts", attrs))
-    for tag, val, base_val in (
-        ("w:b", font.bold, base.bold),
-        ("w:bCs", font.bold_bi, base.bold_bi),
-        ("w:i", font.italic, base.italic),
-        ("w:iCs", font.italic_bi, base.italic_bi),
-        ("w:caps", font.all_caps, base.all_caps),
-        ("w:smallCaps", font.small_caps, base.small_caps),
-        ("w:strike", font.strike_through, base.strike_through),
-        ("w:outline", font.outline, base.outline),
-        ("w:shadow", font.shadow, base.shadow),
-        ("w:emboss", font.emboss, base.emboss),
-        ("w:imprint", font.engrave, base.engrave),
-        ("w:noProof", font.no_proofing, base.no_proofing),
-        ("w:vanish", font.hidden, base.hidden),
+    for tag, field in (
+        ("w:b", "bold"), ("w:bCs", "bold_bi"),
+        ("w:i", "italic"), ("w:iCs", "italic_bi"),
+        ("w:caps", "all_caps"), ("w:smallCaps", "small_caps"),
+        ("w:strike", "strike_through"), ("w:outline", "outline"),
+        ("w:shadow", "shadow"), ("w:emboss", "emboss"),
+        ("w:imprint", "engrave"), ("w:noProof", "no_proofing"),
+        ("w:vanish", "hidden"),
     ):
-        toggle = _bool_toggle(tag, val, base_val)
+        val = getattr(font, field)
+        if preserve_explicit_off and field in font.model_fields_set and not val:
+            toggle = el(tag, {"w:val": "0"})
+        else:
+            toggle = _bool_toggle(tag, val, getattr(base, field))
         if toggle is not None:
             children.append(toggle)
     if font.color != base.color:
@@ -289,6 +291,7 @@ def _render_plain_run(
     style_id: str = "",
     base_font: Optional[ldm.Font] = None,
     instr: bool = False,
+    style_id_map: Optional[Mapping[str, str]] = None,
 ) -> str:
     """Render a single ``<w:r>``.
 
@@ -306,7 +309,7 @@ def _render_plain_run(
     used for runs that sit inside a field's code section (between
     ``begin`` and ``separate``).
     """
-    rpr = render_rPr(run.font, style_id=style_id, base=base_font)
+    rpr = render_rPr(run.font, style_id=style_id, base=base_font, style_id_map=style_id_map)
     parts: list[str] = []
     if rpr:
         parts.append(rpr)
@@ -329,6 +332,7 @@ def _render_hyperlink_run(
     rels: dict,
     *,
     base_font: Optional[ldm.Font] = None,
+    style_id_map: Optional[Mapping[str, str]] = None,
 ) -> str:
     """Emit ``<w:hyperlink>`` for an inline ``[text](url)`` run.
 
@@ -347,8 +351,9 @@ def _render_hyperlink_run(
     inner = ldm.Run(text=text, font=run.font)
     inner_xml = _render_plain_run(
         inner,
-        style_id=_HYPERLINK_STYLE_ID if use_hyperlink_style else "",
+        style_id=(style_id_map or {}).get(run.font.style_name, _HYPERLINK_STYLE_ID) if use_hyperlink_style else "",
         base_font=base_font,
+        style_id_map=style_id_map,
     )
     if url.startswith("#"):
         anchor = url[1:]
@@ -365,7 +370,8 @@ def _render_hyperlink_run(
     )
 
 
-def _render_page_field_run(run: ldm.Run) -> str:
+def _render_page_field_run(run: ldm.Run, style_id_map: Optional[Mapping[str, str]] = None,
+                           base_font: Optional[ldm.Font] = None) -> str:
     """Re-emit a ``PAGE`` field whose body the reader collapsed to a sentinel.
 
     The reader replaces a four-run field chain (``begin`` → ``instrText`` →
@@ -378,7 +384,7 @@ def _render_page_field_run(run: ldm.Run) -> str:
     the ``rPr`` of the LDM run must travel with that specific ``<w:r>``.
     Other field-chain runs carry no formatting.
     """
-    rpr = render_rPr(run.font)
+    rpr = render_rPr(run.font, style_id_map=style_id_map, base=base_font)
     rpr_part = rpr if rpr else ""
     begin = el("w:r", None, el("w:fldChar", {"w:fldCharType": "begin"}))
     instr = el(
@@ -401,6 +407,7 @@ def render_run(
     *,
     base_font: Optional[ldm.Font] = None,
     instr: bool = False,
+    style_id_map: Optional[Mapping[str, str]] = None,
 ) -> str:
     """Render a single LDM run to OOXML.
 
@@ -422,16 +429,17 @@ def render_run(
     if not run.text:
         return ""
     if run.text == PAGE_FIELD_SENTINEL:
-        return _render_page_field_run(run)
+        return _render_page_field_run(run, style_id_map, base_font)
     if not instr:
         token, separator, suffix = run.text.partition("\t")
         match = INLINE_LINK_RE.fullmatch(token)
         if match:
             label, target = decode_link(match)
             if _URL_RE.match(target):
-                parts = _render_hyperlink_run(label, target, run, rels, base_font=base_font)
+                parts = _render_hyperlink_run(label, target, run, rels, base_font=base_font,
+                                              style_id_map=style_id_map)
                 if separator:
                     suffix_run = ldm.Run(text=separator + suffix, font=run.font)
-                    parts += _render_plain_run(suffix_run, base_font=base_font)
+                    parts += _render_plain_run(suffix_run, base_font=base_font, style_id_map=style_id_map)
                 return parts
-    return _render_plain_run(run, base_font=base_font, instr=instr)
+    return _render_plain_run(run, base_font=base_font, instr=instr, style_id_map=style_id_map)

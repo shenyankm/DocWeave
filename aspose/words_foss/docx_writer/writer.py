@@ -40,6 +40,7 @@ from aspose.words_foss.docx_writer.styles_part import (
     build_style_font_map,
     build_style_id_map,
     render_styles_xml,
+    apply_reference_styles,
 )
 
 
@@ -160,6 +161,14 @@ class LdmDocxWriter:
             has_footer=has_footer,
         )
         styles_xml = render_styles_xml(doc)
+        reference = getattr(self.options, "reference_docx", None)
+        if reference is not None:
+            if not isinstance(reference, (str, Path)):
+                raise ValueError("reference_docx must be a DOCX path")
+            from aspose.words_foss.docx_reader import DocumentReader
+            reader = DocumentReader()
+            reader.load_file(reference)
+            styles_xml = apply_reference_styles(styles_xml, reader.to_light_document())
         numbering_xml = render_numbering_xml(doc) or None
         settings_xml = render_settings_xml(doc) if needs_settings(doc) else None
 

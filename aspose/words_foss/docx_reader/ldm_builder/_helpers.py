@@ -104,7 +104,7 @@ def parse_universal_measure(
 
 
 def is_truthy_onoff(raw: str) -> bool:
-    return raw in ("1", "true")
+    return raw in ("1", "true", "on")
 
 
 _PADDING_SIDES: tuple[tuple[str, str], ...] = (

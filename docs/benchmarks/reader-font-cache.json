@@ -1,0 +1,1051 @@
+{
+  "python": "3.13.15 | packaged by Anaconda, Inc. | (main, Aug 14 2026, 17:19:34) [Clang 20.1.8 ]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "scope": "DOCX parsing after import; five reads per fresh process; gc outside timing; canonical Python model dump with binary image bytes encoded as base64; SHA256 outside timing",
+  "baseline": "installed wheel immediately before FontResolver cache; not repository HEAD",
+  "worker_source": "import base64, gc, hashlib, json, sys, time\nfrom io import BytesIO\nfrom pathlib import Path\nimport aspose.words_foss as aw\nresults = {}\nfor filename in sys.argv[1:]:\n    path = Path(filename)\n    raw = path.read_bytes()\n    times, hashes = [], []\n    for _ in range(5):\n        gc.collect()\n        started = time.perf_counter()\n        doc = aw.Document(BytesIO(raw))\n        model = doc.light_document_model\n        times.append((time.perf_counter() - started) * 1000)\n        hashes.append(hashlib.sha256(json.dumps(model.model_dump(by_alias=True), sort_keys=True, ensure_ascii=False, default=lambda value: {'bytes_base64':base64.b64encode(value).decode()} if isinstance(value, bytes) else str(value)).encode()).hexdigest())\n        del doc, model\n    assert len(set(hashes)) == 1, path\n    results[path.name] = {'input_sha256': hashlib.sha256(raw).hexdigest(), 'samples_ms': times, 'model_sha256': hashes[0]}\nprint(json.dumps({'module': aw.__file__, 'cases': results}))\n",
+  "controller_source": "import hashlib, json, os, platform, statistics, subprocess, sys, time\nfrom pathlib import Path\n\nroot = Path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python')\npython = '/tmp/docweave-wheel-test/bin/python'\nworker = '''import base64, gc, hashlib, json, sys, time\nfrom io import BytesIO\nfrom pathlib import Path\nimport aspose.words_foss as aw\nresults = {}\nfor filename in sys.argv[1:]:\n    path = Path(filename)\n    raw = path.read_bytes()\n    times, hashes = [], []\n    for _ in range(5):\n        gc.collect()\n        started = time.perf_counter()\n        doc = aw.Document(BytesIO(raw))\n        model = doc.light_document_model\n        times.append((time.perf_counter() - started) * 1000)\n        hashes.append(hashlib.sha256(json.dumps(model.model_dump(by_alias=True), sort_keys=True, ensure_ascii=False, default=lambda value: {'bytes_base64':base64.b64encode(value).decode()} if isinstance(value, bytes) else str(value)).encode()).hexdigest())\n        del doc, model\n    assert len(set(hashes)) == 1, path\n    results[path.name] = {'input_sha256': hashlib.sha256(raw).hexdigest(), 'samples_ms': times, 'model_sha256': hashes[0]}\nprint(json.dumps({'module': aw.__file__, 'cases': results}))\n'''\npaths = [Path('/tmp/docweave-reader-style-probe.docx'), *sorted((root/'tests/data/input').glob('*.docx'))]\n# Cache churn: 300 unique character styles exceed the per-reader capacity.\nfrom docx import Document\nfrom docx.enum.style import WD_STYLE_TYPE\nfrom docx.shared import Pt\nsource = Document()\nfor index in range(300):\n    style = source.styles.add_style(f'Unique {index}', WD_STYLE_TYPE.CHARACTER)\n    style.font.size = Pt(9 + index % 12)\n    source.add_paragraph().add_run(f'独立样式 {index}').style = style\nchurn = Path('/tmp/docweave-reader-cache-churn.docx')\nsource.save(churn)\npaths.append(churn)\nreport = {'python':sys.version, 'platform':platform.platform(), 'scope':'DOCX parsing after import; five reads per fresh process; gc outside timing; canonical Python model dump with binary image bytes encoded as base64; SHA256 outside timing', 'baseline':'installed wheel immediately before FontResolver cache; not repository HEAD', 'worker_source':worker, 'controller_source':Path(__file__).read_text(), 'style_fixture_source':Path('/tmp/docweave-reader-style-probe.py').read_text(), 'pairs':[], 'median':{}}\nfor pair in range(3):\n    samples = {}\n    for mode in (('before','current') if pair % 2 == 0 else ('current','before')):\n        env = os.environ.copy()\n        env.pop('PYTHONPATH',None)\n        if mode == 'current':\n            env['PYTHONPATH'] = str(root)\n        run = subprocess.run([python,'-c',worker,*map(str,paths)],cwd='/tmp',env=env,capture_output=True,text=True,timeout=120)\n        if run.returncode:\n            raise RuntimeError(run.stderr)\n        samples[mode] = json.loads(run.stdout)\n    for name in samples['before']['cases']:\n        assert samples['before']['cases'][name]['model_sha256'] == samples['current']['cases'][name]['model_sha256'],name\n    report['pairs'].append(samples)\nfor path in paths:\n    values = {mode:statistics.median(value for pair in report['pairs'] for value in pair[mode]['cases'][path.name]['samples_ms']) for mode in ('before','current')}\n    values['reduction_percent'] = 100*(1-values['current']/values['before'])\n    report['median'][path.name] = values\nout = root/'docs/benchmarks/reader-font-cache.json'\nout.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\\n')\nprint(json.dumps(report['median'],ensure_ascii=False,indent=2))\n",
+  "style_fixture_source": "import hashlib, json, statistics, sys, time\nfrom io import BytesIO\nfrom pathlib import Path\n\npath=Path('/tmp/docweave-reader-style-probe.docx')\nif '--create' in sys.argv:\n    from docx import Document\n    from docx.enum.style import WD_STYLE_TYPE\n    from docx.shared import Pt, RGBColor\n    doc=Document()\n    paragraph=doc.styles['Normal']\n    for index in range(5):\n        style=doc.styles.add_style(f'Paragraph Level {index}', WD_STYLE_TYPE.PARAGRAPH)\n        style.base_style=paragraph\n        style.font.size=Pt(12+index)\n        style.paragraph_format.space_after=Pt(index+2)\n        paragraph=style\n    character=doc.styles['Default Paragraph Font']\n    for index in range(3):\n        style=doc.styles.add_style(f'Character Level {index}', WD_STYLE_TYPE.CHARACTER)\n        style.base_style=character\n        style.font.color.rgb=RGBColor.from_string('0055AA')\n        style.font.italic=bool(index%2)\n        character=style\n    for index in range(1000):\n        para=doc.add_paragraph(style=paragraph)\n        for j in range(4):\n            run=para.add_run(f'{index}:{j} 中文 style ')\n            run.style=character\n            if j==3:\n                run.font.size=Pt(21)\n    doc.save(path)\n    print(path)\nelse:\n    import aspose.words_foss as aw\n    raw=path.read_bytes()\n    durations=[]\n    fingerprints=[]\n    for _ in range(5):\n        started=time.perf_counter()\n        doc=aw.Document(BytesIO(raw))\n        model=doc.light_document_model\n        durations.append((time.perf_counter()-started)*1000)\n        fingerprints.append(hashlib.sha256(model.model_dump_json().encode()).hexdigest())\n    assert len(set(fingerprints))==1\n    print(json.dumps({'module':aw.__file__, 'paragraphs':1000, 'runs':4000, 'samples_ms':durations, 'median_ms':statistics.median(durations), 'model_sha256':fingerprints[0]}))\n",
+  "pairs": [
+    {
+      "before": {
+        "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py",
+        "cases": {
+          "docweave-reader-style-probe.docx": {
+            "input_sha256": "9e9ce7d550924e3ae2ddde467d466dca4733333e7be3516c3a395fe9e4f2ee3d",
+            "samples_ms": [
+              437.8199999991921,
+              406.5397500016843,
+              404.4545420038048,
+              401.88024999952177,
+              404.7664169993368
+            ],
+            "model_sha256": "4e8ec1ef5f513387b08fbd777b2a1f26823132c201444efa02dfedbc5121175a"
+          },
+          "chinese_pdf.docx": {
+            "input_sha256": "66d8ed5981fdd418b894c4ff8d06729f8af686d3fe611f7fa8b39cd5c7538ab5",
+            "samples_ms": [
+              25.43866699852515,
+              24.601541001175065,
+              24.711000005481765,
+              24.726875002670567,
+              25.091332994634286
+            ],
+            "model_sha256": "7bc2cf28675dd17595a0fd171ebc1d134c2db9596911073c7a0fa2f93a8cdc59"
+          },
+          "consecutive_images.docx": {
+            "input_sha256": "ecb453a49dcef5c3ad317bc2e8283c7b16b1dfb724e948b9b03056d1767cd059",
+            "samples_ms": [
+              43.53958399588009,
+              21.87466699979268,
+              21.747667000454385,
+              22.04229200287955,
+              22.041832999093458
+            ],
+            "model_sha256": "e9deb9137732f24ea00ced47f78287c5ace7d9b3fb40dcf1560541542514fc18"
+          },
+          "image_in_footer.docx": {
+            "input_sha256": "96703469378421f024e25dd2b1d4105846b3e12a84305b7a242bf4f2b2b3b7e1",
+            "samples_ms": [
+              22.003208003297914,
+              22.090958002081607,
+              21.699332995922305,
+              21.665665997716133,
+              21.841249996214174
+            ],
+            "model_sha256": "43eca46062cb3852fbb02e86895ca9ff68e85f790aa1e2dae5ac9e45e07b9b1c"
+          },
+          "image_in_header.docx": {
+            "input_sha256": "f673b333d419f5973ee10c5d4a64e3a4e23474084a6a24fc05519613cb116f52",
+            "samples_ms": [
+              21.916375000728294,
+              21.708833002776373,
+              23.074166994774714,
+              22.19229199545225,
+              22.181166998052504
+            ],
+            "model_sha256": "4c7f5f1f1677dee6708731e30ce9f13aa240d38f8d5e77cd3a2a4719b0d6c06d"
+          },
+          "image_in_table.docx": {
+            "input_sha256": "8213086ab73ad1cc7aede4e4e0c8fbca4a5fad2a0b1e2691fdeab19b83e6e2eb",
+            "samples_ms": [
+              22.04241599974921,
+              21.992499998304993,
+              21.58712500386173,
+              21.894083001825493,
+              22.46654200280318
+            ],
+            "model_sha256": "3585fb51be215f009b2f0121498970cf6e3bcb8fcbcd721764c4231d73d5d526"
+          },
+          "image_with_caption.docx": {
+            "input_sha256": "a45828e386186458f0bd410134f094595b2beee7f243eed0f09c8a28bae6bb71",
+            "samples_ms": [
+              21.779791997687425,
+              22.091500002716202,
+              22.182375003467314,
+              22.138541004096624,
+              21.807083998282906
+            ],
+            "model_sha256": "33656cd9335e39a47a901ee824d2ea344166f419028857c1f8beec864947a480"
+          },
+          "multi_image_ordered.docx": {
+            "input_sha256": "e9f63f43d715a9ecaa03f47825fa6648c041eae3126ad5ebbe86ac6674ff30c3",
+            "samples_ms": [
+              22.076166998886038,
+              22.013499998138286,
+              22.320000003674068,
+              22.41387499816483,
+              22.353125001245644
+            ],
+            "model_sha256": "654af3fa820584088e4b3a79f0b2fe81fa3ef8915f22d5774de0bd9ccae49904"
+          },
+          "no_images.docx": {
+            "input_sha256": "14579b0a4ceb13e5b1b37af3a40dbbd38f558ba4733d3eee1d4b2809634eea20",
+            "samples_ms": [
+              21.720708995417226,
+              21.470874999067746,
+              21.219500005827285,
+              21.277584004565142,
+              22.025375001248904
+            ],
+            "model_sha256": "d4310df7a315f5f5a4551f94eff1860000b02c33267bb629ef6ce2fd793d28ff"
+          },
+          "simple_inline.docx": {
+            "input_sha256": "6c73b82abca4995640f35163d4d073d503613c62661195f87b9219e3cf278078",
+            "samples_ms": [
+              21.75899999565445,
+              22.26820900250459,
+              21.77004199620569,
+              23.20641599362716,
+              21.91566699912073
+            ],
+            "model_sha256": "4cc10d891b6949642b6a66d2e56e5648480861085773f7938bd3f26da2e380d1"
+          },
+          "test_full_article.docx": {
+            "input_sha256": "bd690862ef605bfafa2648d9497334f759cd27609b76c437970cf1a1a7430df6",
+            "samples_ms": [
+              4.056582998600788,
+              4.00120799895376,
+              4.039958999783266,
+              3.9972079975996166,
+              4.202415999316145
+            ],
+            "model_sha256": "b84ad0aa89d5e34511c421741e2e31da85113ff5ad9fbfc4a999810fe71e47fb"
+          },
+          "test_underline_text.docx": {
+            "input_sha256": "1e706d5b6a730fb9bd8de01afd460cd4c9c2c4e22a486ec02233642712594507",
+            "samples_ms": [
+              1.0509169951546937,
+              0.9634169982746243,
+              0.9206249960698187,
+              0.9182920039165765,
+              0.9691669984022155
+            ],
+            "model_sha256": "87521ce8c5de239c685049c6241c23bb70982de3b3cc74ba46f40eb97b354e18"
+          },
+          "wide_image.docx": {
+            "input_sha256": "cd4e6c05568e600bb4a7fea4d9742621c11845051d7e0f382ac7d7a39d3c3e49",
+            "samples_ms": [
+              22.416624997276813,
+              21.84641700296197,
+              21.91520899941679,
+              21.589916999801062,
+              22.62016700115055
+            ],
+            "model_sha256": "720787f45edf19362cc351c4a8162c5cb166307f15ac802555b4d17d2a843044"
+          },
+          "docweave-reader-cache-churn.docx": {
+            "input_sha256": "86c19aa25be19822b117a54b9b073ccf21dc6c3b21f32567e4494dc5e4e291a5",
+            "samples_ms": [
+              59.98129100044025,
+              58.30870900535956,
+              59.22379100229591,
+              59.615124999254476,
+              58.48275000607828
+            ],
+            "model_sha256": "fb58309120089391b55691db472a82f4c068908d00b6c6c668c7fb91fd1d4a39"
+          }
+        }
+      },
+      "current": {
+        "module": "/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/aspose/words_foss/__init__.py",
+        "cases": {
+          "docweave-reader-style-probe.docx": {
+            "input_sha256": "9e9ce7d550924e3ae2ddde467d466dca4733333e7be3516c3a395fe9e4f2ee3d",
+            "samples_ms": [
+              267.8632919996744,
+              274.54579200275475,
+              251.6799169970909,
+              251.86570799996844,
+              275.02716700109886
+            ],
+            "model_sha256": "4e8ec1ef5f513387b08fbd777b2a1f26823132c201444efa02dfedbc5121175a"
+          },
+          "chinese_pdf.docx": {
+            "input_sha256": "66d8ed5981fdd418b894c4ff8d06729f8af686d3fe611f7fa8b39cd5c7538ab5",
+            "samples_ms": [
+              27.827082994917873,
+              27.30633299506735,
+              27.93833400210133,
+              28.169457997137215,
+              28.062292003596667
+            ],
+            "model_sha256": "7bc2cf28675dd17595a0fd171ebc1d134c2db9596911073c7a0fa2f93a8cdc59"
+          },
+          "consecutive_images.docx": {
+            "input_sha256": "ecb453a49dcef5c3ad317bc2e8283c7b16b1dfb724e948b9b03056d1767cd059",
+            "samples_ms": [
+              35.76854100538185,
+              22.74175000638934,
+              22.500332997879013,
+              22.598875002586283,
+              22.964000003412366
+            ],
+            "model_sha256": "e9deb9137732f24ea00ced47f78287c5ace7d9b3fb40dcf1560541542514fc18"
+          },
+          "image_in_footer.docx": {
+            "input_sha256": "96703469378421f024e25dd2b1d4105846b3e12a84305b7a242bf4f2b2b3b7e1",
+            "samples_ms": [
+              22.551292000571266,
+              22.54433299822267,
+              23.080666003806982,
+              22.986916999798268,
+              22.17558299889788
+            ],
+            "model_sha256": "43eca46062cb3852fbb02e86895ca9ff68e85f790aa1e2dae5ac9e45e07b9b1c"
+          },
+          "image_in_header.docx": {
+            "input_sha256": "f673b333d419f5973ee10c5d4a64e3a4e23474084a6a24fc05519613cb116f52",
+            "samples_ms": [
+              22.46120800555218,
+              23.923083004774526,
+              22.905584002728574,
+              22.36224999796832,
+              22.688249999191612
+            ],
+            "model_sha256": "4c7f5f1f1677dee6708731e30ce9f13aa240d38f8d5e77cd3a2a4719b0d6c06d"
+          },
+          "image_in_table.docx": {
+            "input_sha256": "8213086ab73ad1cc7aede4e4e0c8fbca4a5fad2a0b1e2691fdeab19b83e6e2eb",
+            "samples_ms": [
+              22.56387499801349,
+              24.696417000086512,
+              22.640000002866145,
+              22.07895900210133,
+              22.250791000260506
+            ],
+            "model_sha256": "3585fb51be215f009b2f0121498970cf6e3bcb8fcbcd721764c4231d73d5d526"
+          },
+          "image_with_caption.docx": {
+            "input_sha256": "a45828e386186458f0bd410134f094595b2beee7f243eed0f09c8a28bae6bb71",
+            "samples_ms": [
+              22.94149999943329,
+              22.43366699985927,
+              22.37529100239044,
+              21.92891699814936,
+              23.180167001555674
+            ],
+            "model_sha256": "33656cd9335e39a47a901ee824d2ea344166f419028857c1f8beec864947a480"
+          },
+          "multi_image_ordered.docx": {
+            "input_sha256": "e9f63f43d715a9ecaa03f47825fa6648c041eae3126ad5ebbe86ac6674ff30c3",
+            "samples_ms": [
+              22.951541999645997,
+              22.894041998370085,
+              22.607584003708325,
+              23.32820900483057,
+              23.020749998977408
+            ],
+            "model_sha256": "654af3fa820584088e4b3a79f0b2fe81fa3ef8915f22d5774de0bd9ccae49904"
+          },
+          "no_images.docx": {
+            "input_sha256": "14579b0a4ceb13e5b1b37af3a40dbbd38f558ba4733d3eee1d4b2809634eea20",
+            "samples_ms": [
+              23.182917000667658,
+              22.426416995585896,
+              22.80612500180723,
+              22.01004199741874,
+              22.10654199734563
+            ],
+            "model_sha256": "d4310df7a315f5f5a4551f94eff1860000b02c33267bb629ef6ce2fd793d28ff"
+          },
+          "simple_inline.docx": {
+            "input_sha256": "6c73b82abca4995640f35163d4d073d503613c62661195f87b9219e3cf278078",
+            "samples_ms": [
+              23.0598749985802,
+              23.80658299807692,
+              24.916832997405436,
+              25.004667004395742,
+              23.99654199689394
+            ],
+            "model_sha256": "4cc10d891b6949642b6a66d2e56e5648480861085773f7938bd3f26da2e380d1"
+          },
+          "test_full_article.docx": {
+            "input_sha256": "bd690862ef605bfafa2648d9497334f759cd27609b76c437970cf1a1a7430df6",
+            "samples_ms": [
+              4.253207996953279,
+              4.112541995709762,
+              4.378707999421749,
+              3.938624999136664,
+              3.946208998968359
+            ],
+            "model_sha256": "b84ad0aa89d5e34511c421741e2e31da85113ff5ad9fbfc4a999810fe71e47fb"
+          },
+          "test_underline_text.docx": {
+            "input_sha256": "1e706d5b6a730fb9bd8de01afd460cd4c9c2c4e22a486ec02233642712594507",
+            "samples_ms": [
+              0.9856250035227276,
+              0.9905409970087931,
+              0.9483750036451966,
+              1.0032920035882853,
+              0.9524999986751936
+            ],
+            "model_sha256": "87521ce8c5de239c685049c6241c23bb70982de3b3cc74ba46f40eb97b354e18"
+          },
+          "wide_image.docx": {
+            "input_sha256": "cd4e6c05568e600bb4a7fea4d9742621c11845051d7e0f382ac7d7a39d3c3e49",
+            "samples_ms": [
+              23.90120799827855,
+              23.88841700303601,
+              23.222208001243416,
+              23.742584002320655,
+              22.994792001554742
+            ],
+            "model_sha256": "720787f45edf19362cc351c4a8162c5cb166307f15ac802555b4d17d2a843044"
+          },
+          "docweave-reader-cache-churn.docx": {
+            "input_sha256": "86c19aa25be19822b117a54b9b073ccf21dc6c3b21f32567e4494dc5e4e291a5",
+            "samples_ms": [
+              66.6784999993979,
+              67.40174999868032,
+              67.85341700015124,
+              66.45554200076731,
+              63.513583001622465
+            ],
+            "model_sha256": "fb58309120089391b55691db472a82f4c068908d00b6c6c668c7fb91fd1d4a39"
+          }
+        }
+      }
+    },
+    {
+      "current": {
+        "module": "/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/aspose/words_foss/__init__.py",
+        "cases": {
+          "docweave-reader-style-probe.docx": {
+            "input_sha256": "9e9ce7d550924e3ae2ddde467d466dca4733333e7be3516c3a395fe9e4f2ee3d",
+            "samples_ms": [
+              264.4907499998226,
+              253.59225000283914,
+              252.01199999719393,
+              266.80758300062735,
+              254.60158399801003
+            ],
+            "model_sha256": "4e8ec1ef5f513387b08fbd777b2a1f26823132c201444efa02dfedbc5121175a"
+          },
+          "chinese_pdf.docx": {
+            "input_sha256": "66d8ed5981fdd418b894c4ff8d06729f8af686d3fe611f7fa8b39cd5c7538ab5",
+            "samples_ms": [
+              25.981042002968024,
+              25.356291997013614,
+              24.797040998237208,
+              24.665666998771485,
+              24.801583000225946
+            ],
+            "model_sha256": "7bc2cf28675dd17595a0fd171ebc1d134c2db9596911073c7a0fa2f93a8cdc59"
+          },
+          "consecutive_images.docx": {
+            "input_sha256": "ecb453a49dcef5c3ad317bc2e8283c7b16b1dfb724e948b9b03056d1767cd059",
+            "samples_ms": [
+              35.3657910018228,
+              22.276541996689048,
+              22.958375004236586,
+              22.332332999212667,
+              22.48837500519585
+            ],
+            "model_sha256": "e9deb9137732f24ea00ced47f78287c5ace7d9b3fb40dcf1560541542514fc18"
+          },
+          "image_in_footer.docx": {
+            "input_sha256": "96703469378421f024e25dd2b1d4105846b3e12a84305b7a242bf4f2b2b3b7e1",
+            "samples_ms": [
+              22.167082999658305,
+              22.3555420016055,
+              22.82341600221116,
+              22.393541999917943,
+              22.66162500018254
+            ],
+            "model_sha256": "43eca46062cb3852fbb02e86895ca9ff68e85f790aa1e2dae5ac9e45e07b9b1c"
+          },
+          "image_in_header.docx": {
+            "input_sha256": "f673b333d419f5973ee10c5d4a64e3a4e23474084a6a24fc05519613cb116f52",
+            "samples_ms": [
+              21.953666997433174,
+              22.058749993448146,
+              22.12058299483033,
+              22.549708002770785,
+              22.02320800279267
+            ],
+            "model_sha256": "4c7f5f1f1677dee6708731e30ce9f13aa240d38f8d5e77cd3a2a4719b0d6c06d"
+          },
+          "image_in_table.docx": {
+            "input_sha256": "8213086ab73ad1cc7aede4e4e0c8fbca4a5fad2a0b1e2691fdeab19b83e6e2eb",
+            "samples_ms": [
+              21.8900840045535,
+              22.37112500006333,
+              21.99954200477805,
+              22.331125001073815,
+              23.125290994357783
+            ],
+            "model_sha256": "3585fb51be215f009b2f0121498970cf6e3bcb8fcbcd721764c4231d73d5d526"
+          },
+          "image_with_caption.docx": {
+            "input_sha256": "a45828e386186458f0bd410134f094595b2beee7f243eed0f09c8a28bae6bb71",
+            "samples_ms": [
+              22.74875000148313,
+              22.37783299642615,
+              22.127959004137665,
+              22.96799999749055,
+              22.206208006537054
+            ],
+            "model_sha256": "33656cd9335e39a47a901ee824d2ea344166f419028857c1f8beec864947a480"
+          },
+          "multi_image_ordered.docx": {
+            "input_sha256": "e9f63f43d715a9ecaa03f47825fa6648c041eae3126ad5ebbe86ac6674ff30c3",
+            "samples_ms": [
+              23.367249996226747,
+              23.086291999788955,
+              23.20983300160151,
+              22.58958399761468,
+              22.554916999069974
+            ],
+            "model_sha256": "654af3fa820584088e4b3a79f0b2fe81fa3ef8915f22d5774de0bd9ccae49904"
+          },
+          "no_images.docx": {
+            "input_sha256": "14579b0a4ceb13e5b1b37af3a40dbbd38f558ba4733d3eee1d4b2809634eea20",
+            "samples_ms": [
+              22.004124999511987,
+              22.12724999844795,
+              21.679790996131487,
+              22.30954200058477,
+              21.931167000730056
+            ],
+            "model_sha256": "d4310df7a315f5f5a4551f94eff1860000b02c33267bb629ef6ce2fd793d28ff"
+          },
+          "simple_inline.docx": {
+            "input_sha256": "6c73b82abca4995640f35163d4d073d503613c62661195f87b9219e3cf278078",
+            "samples_ms": [
+              22.110708996478934,
+              22.16670799680287,
+              22.14270900003612,
+              22.146165996673517,
+              22.05524999590125
+            ],
+            "model_sha256": "4cc10d891b6949642b6a66d2e56e5648480861085773f7938bd3f26da2e380d1"
+          },
+          "test_full_article.docx": {
+            "input_sha256": "bd690862ef605bfafa2648d9497334f759cd27609b76c437970cf1a1a7430df6",
+            "samples_ms": [
+              4.102124999917578,
+              4.091916998731904,
+              3.999083004600834,
+              3.948083001887426,
+              4.011375000118278
+            ],
+            "model_sha256": "b84ad0aa89d5e34511c421741e2e31da85113ff5ad9fbfc4a999810fe71e47fb"
+          },
+          "test_underline_text.docx": {
+            "input_sha256": "1e706d5b6a730fb9bd8de01afd460cd4c9c2c4e22a486ec02233642712594507",
+            "samples_ms": [
+              1.0603750051814131,
+              0.9304590057581663,
+              1.0540000002947636,
+              1.035124994814396,
+              0.9186660026898608
+            ],
+            "model_sha256": "87521ce8c5de239c685049c6241c23bb70982de3b3cc74ba46f40eb97b354e18"
+          },
+          "wide_image.docx": {
+            "input_sha256": "cd4e6c05568e600bb4a7fea4d9742621c11845051d7e0f382ac7d7a39d3c3e49",
+            "samples_ms": [
+              23.087541994755156,
+              22.130792000098154,
+              22.67379200202413,
+              22.27754100022139,
+              22.212292002222966
+            ],
+            "model_sha256": "720787f45edf19362cc351c4a8162c5cb166307f15ac802555b4d17d2a843044"
+          },
+          "docweave-reader-cache-churn.docx": {
+            "input_sha256": "86c19aa25be19822b117a54b9b073ccf21dc6c3b21f32567e4494dc5e4e291a5",
+            "samples_ms": [
+              64.80766700406093,
+              63.45650000002934,
+              63.73729200277012,
+              63.26733299647458,
+              64.13616600184469
+            ],
+            "model_sha256": "fb58309120089391b55691db472a82f4c068908d00b6c6c668c7fb91fd1d4a39"
+          }
+        }
+      },
+      "before": {
+        "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py",
+        "cases": {
+          "docweave-reader-style-probe.docx": {
+            "input_sha256": "9e9ce7d550924e3ae2ddde467d466dca4733333e7be3516c3a395fe9e4f2ee3d",
+            "samples_ms": [
+              425.23570899356855,
+              407.56779199728044,
+              411.0898750004708,
+              409.3773330023396,
+              437.15070799953537
+            ],
+            "model_sha256": "4e8ec1ef5f513387b08fbd777b2a1f26823132c201444efa02dfedbc5121175a"
+          },
+          "chinese_pdf.docx": {
+            "input_sha256": "66d8ed5981fdd418b894c4ff8d06729f8af686d3fe611f7fa8b39cd5c7538ab5",
+            "samples_ms": [
+              25.600417000532616,
+              25.000250003358815,
+              25.12491599918576,
+              25.351374999445397,
+              25.19058300094912
+            ],
+            "model_sha256": "7bc2cf28675dd17595a0fd171ebc1d134c2db9596911073c7a0fa2f93a8cdc59"
+          },
+          "consecutive_images.docx": {
+            "input_sha256": "ecb453a49dcef5c3ad317bc2e8283c7b16b1dfb724e948b9b03056d1767cd059",
+            "samples_ms": [
+              34.271791999344714,
+              22.5586660017143,
+              22.45516599941766,
+              22.53529200243065,
+              23.152457994001452
+            ],
+            "model_sha256": "e9deb9137732f24ea00ced47f78287c5ace7d9b3fb40dcf1560541542514fc18"
+          },
+          "image_in_footer.docx": {
+            "input_sha256": "96703469378421f024e25dd2b1d4105846b3e12a84305b7a242bf4f2b2b3b7e1",
+            "samples_ms": [
+              22.561249999853317,
+              22.695540996210184,
+              22.196750003786292,
+              22.21987500524847,
+              22.429832999478094
+            ],
+            "model_sha256": "43eca46062cb3852fbb02e86895ca9ff68e85f790aa1e2dae5ac9e45e07b9b1c"
+          },
+          "image_in_header.docx": {
+            "input_sha256": "f673b333d419f5973ee10c5d4a64e3a4e23474084a6a24fc05519613cb116f52",
+            "samples_ms": [
+              23.30950000032317,
+              22.55591699940851,
+              22.774416996981017,
+              24.483875000441913,
+              22.398957997211255
+            ],
+            "model_sha256": "4c7f5f1f1677dee6708731e30ce9f13aa240d38f8d5e77cd3a2a4719b0d6c06d"
+          },
+          "image_in_table.docx": {
+            "input_sha256": "8213086ab73ad1cc7aede4e4e0c8fbca4a5fad2a0b1e2691fdeab19b83e6e2eb",
+            "samples_ms": [
+              22.861416997329798,
+              23.458042000129353,
+              24.737707994063385,
+              23.69837500009453,
+              22.351083003741223
+            ],
+            "model_sha256": "3585fb51be215f009b2f0121498970cf6e3bcb8fcbcd721764c4231d73d5d526"
+          },
+          "image_with_caption.docx": {
+            "input_sha256": "a45828e386186458f0bd410134f094595b2beee7f243eed0f09c8a28bae6bb71",
+            "samples_ms": [
+              22.940208997169975,
+              22.48212500126101,
+              22.55699999659555,
+              23.29533400188666,
+              23.760167001455557
+            ],
+            "model_sha256": "33656cd9335e39a47a901ee824d2ea344166f419028857c1f8beec864947a480"
+          },
+          "multi_image_ordered.docx": {
+            "input_sha256": "e9f63f43d715a9ecaa03f47825fa6648c041eae3126ad5ebbe86ac6674ff30c3",
+            "samples_ms": [
+              23.687374996370636,
+              22.701959002006333,
+              22.785125001973938,
+              22.7355409951997,
+              22.799500002292916
+            ],
+            "model_sha256": "654af3fa820584088e4b3a79f0b2fe81fa3ef8915f22d5774de0bd9ccae49904"
+          },
+          "no_images.docx": {
+            "input_sha256": "14579b0a4ceb13e5b1b37af3a40dbbd38f558ba4733d3eee1d4b2809634eea20",
+            "samples_ms": [
+              22.37066700035939,
+              21.910583003773354,
+              22.138833002827596,
+              22.051084000850096,
+              22.06208400457399
+            ],
+            "model_sha256": "d4310df7a315f5f5a4551f94eff1860000b02c33267bb629ef6ce2fd793d28ff"
+          },
+          "simple_inline.docx": {
+            "input_sha256": "6c73b82abca4995640f35163d4d073d503613c62661195f87b9219e3cf278078",
+            "samples_ms": [
+              22.55966699885903,
+              21.801499999128282,
+              21.81662500515813,
+              22.319249997963198,
+              22.551833993929904
+            ],
+            "model_sha256": "4cc10d891b6949642b6a66d2e56e5648480861085773f7938bd3f26da2e380d1"
+          },
+          "test_full_article.docx": {
+            "input_sha256": "bd690862ef605bfafa2648d9497334f759cd27609b76c437970cf1a1a7430df6",
+            "samples_ms": [
+              4.140291006478947,
+              4.054332996020094,
+              3.917833004379645,
+              3.940417002013419,
+              4.0533749997848645
+            ],
+            "model_sha256": "b84ad0aa89d5e34511c421741e2e31da85113ff5ad9fbfc4a999810fe71e47fb"
+          },
+          "test_underline_text.docx": {
+            "input_sha256": "1e706d5b6a730fb9bd8de01afd460cd4c9c2c4e22a486ec02233642712594507",
+            "samples_ms": [
+              1.000667005428113,
+              0.96766599745024,
+              1.073916006134823,
+              0.9266250053769909,
+              0.8968339971033856
+            ],
+            "model_sha256": "87521ce8c5de239c685049c6241c23bb70982de3b3cc74ba46f40eb97b354e18"
+          },
+          "wide_image.docx": {
+            "input_sha256": "cd4e6c05568e600bb4a7fea4d9742621c11845051d7e0f382ac7d7a39d3c3e49",
+            "samples_ms": [
+              22.359374997904524,
+              22.741041997505818,
+              22.78741599729983,
+              22.341832998790778,
+              22.5417080000625
+            ],
+            "model_sha256": "720787f45edf19362cc351c4a8162c5cb166307f15ac802555b4d17d2a843044"
+          },
+          "docweave-reader-cache-churn.docx": {
+            "input_sha256": "86c19aa25be19822b117a54b9b073ccf21dc6c3b21f32567e4494dc5e4e291a5",
+            "samples_ms": [
+              59.324000001652166,
+              59.31083299947204,
+              59.83754100452643,
+              59.85812500148313,
+              59.2945000025793
+            ],
+            "model_sha256": "fb58309120089391b55691db472a82f4c068908d00b6c6c668c7fb91fd1d4a39"
+          }
+        }
+      }
+    },
+    {
+      "before": {
+        "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py",
+        "cases": {
+          "docweave-reader-style-probe.docx": {
+            "input_sha256": "9e9ce7d550924e3ae2ddde467d466dca4733333e7be3516c3a395fe9e4f2ee3d",
+            "samples_ms": [
+              423.13424999883864,
+              408.03554200101644,
+              405.31895800086204,
+              410.84104200126603,
+              427.53124999580905
+            ],
+            "model_sha256": "4e8ec1ef5f513387b08fbd777b2a1f26823132c201444efa02dfedbc5121175a"
+          },
+          "chinese_pdf.docx": {
+            "input_sha256": "66d8ed5981fdd418b894c4ff8d06729f8af686d3fe611f7fa8b39cd5c7538ab5",
+            "samples_ms": [
+              25.87054200557759,
+              25.533082996844314,
+              25.46795799571555,
+              24.610291999124456,
+              24.549916000978556
+            ],
+            "model_sha256": "7bc2cf28675dd17595a0fd171ebc1d134c2db9596911073c7a0fa2f93a8cdc59"
+          },
+          "consecutive_images.docx": {
+            "input_sha256": "ecb453a49dcef5c3ad317bc2e8283c7b16b1dfb724e948b9b03056d1767cd059",
+            "samples_ms": [
+              35.512624999682885,
+              22.572207999473903,
+              21.814708998135757,
+              22.84779200272169,
+              22.52670800226042
+            ],
+            "model_sha256": "e9deb9137732f24ea00ced47f78287c5ace7d9b3fb40dcf1560541542514fc18"
+          },
+          "image_in_footer.docx": {
+            "input_sha256": "96703469378421f024e25dd2b1d4105846b3e12a84305b7a242bf4f2b2b3b7e1",
+            "samples_ms": [
+              22.155375001602806,
+              22.5276670025778,
+              22.077415997046046,
+              22.126584000943694,
+              22.260916004597675
+            ],
+            "model_sha256": "43eca46062cb3852fbb02e86895ca9ff68e85f790aa1e2dae5ac9e45e07b9b1c"
+          },
+          "image_in_header.docx": {
+            "input_sha256": "f673b333d419f5973ee10c5d4a64e3a4e23474084a6a24fc05519613cb116f52",
+            "samples_ms": [
+              22.040042000298854,
+              21.847208998224232,
+              22.03400000144029,
+              22.27441600552993,
+              22.248665998631623
+            ],
+            "model_sha256": "4c7f5f1f1677dee6708731e30ce9f13aa240d38f8d5e77cd3a2a4719b0d6c06d"
+          },
+          "image_in_table.docx": {
+            "input_sha256": "8213086ab73ad1cc7aede4e4e0c8fbca4a5fad2a0b1e2691fdeab19b83e6e2eb",
+            "samples_ms": [
+              22.354833999997936,
+              22.518875004607253,
+              22.055499997804873,
+              22.360082999512088,
+              22.256166994338855
+            ],
+            "model_sha256": "3585fb51be215f009b2f0121498970cf6e3bcb8fcbcd721764c4231d73d5d526"
+          },
+          "image_with_caption.docx": {
+            "input_sha256": "a45828e386186458f0bd410134f094595b2beee7f243eed0f09c8a28bae6bb71",
+            "samples_ms": [
+              22.1599580036127,
+              22.209084003407042,
+              22.836167001514696,
+              22.535166994202882,
+              22.653375002846587
+            ],
+            "model_sha256": "33656cd9335e39a47a901ee824d2ea344166f419028857c1f8beec864947a480"
+          },
+          "multi_image_ordered.docx": {
+            "input_sha256": "e9f63f43d715a9ecaa03f47825fa6648c041eae3126ad5ebbe86ac6674ff30c3",
+            "samples_ms": [
+              22.32950000325218,
+              22.770957999455277,
+              22.729165997589007,
+              23.048458999255672,
+              23.109665999072604
+            ],
+            "model_sha256": "654af3fa820584088e4b3a79f0b2fe81fa3ef8915f22d5774de0bd9ccae49904"
+          },
+          "no_images.docx": {
+            "input_sha256": "14579b0a4ceb13e5b1b37af3a40dbbd38f558ba4733d3eee1d4b2809634eea20",
+            "samples_ms": [
+              21.74850000301376,
+              22.526666994963307,
+              21.8490830011433,
+              21.543875001952983,
+              21.55845900415443
+            ],
+            "model_sha256": "d4310df7a315f5f5a4551f94eff1860000b02c33267bb629ef6ce2fd793d28ff"
+          },
+          "simple_inline.docx": {
+            "input_sha256": "6c73b82abca4995640f35163d4d073d503613c62661195f87b9219e3cf278078",
+            "samples_ms": [
+              22.44445899850689,
+              22.107374999905005,
+              22.26087499730056,
+              22.03541599737946,
+              22.353916996507905
+            ],
+            "model_sha256": "4cc10d891b6949642b6a66d2e56e5648480861085773f7938bd3f26da2e380d1"
+          },
+          "test_full_article.docx": {
+            "input_sha256": "bd690862ef605bfafa2648d9497334f759cd27609b76c437970cf1a1a7430df6",
+            "samples_ms": [
+              4.073417003382929,
+              4.0309169999090955,
+              3.950332997192163,
+              3.9356249981210567,
+              4.001125002105255
+            ],
+            "model_sha256": "b84ad0aa89d5e34511c421741e2e31da85113ff5ad9fbfc4a999810fe71e47fb"
+          },
+          "test_underline_text.docx": {
+            "input_sha256": "1e706d5b6a730fb9bd8de01afd460cd4c9c2c4e22a486ec02233642712594507",
+            "samples_ms": [
+              0.9697909990791231,
+              0.8910830001696013,
+              0.9468749994994141,
+              0.9046659979503602,
+              0.8735410010558553
+            ],
+            "model_sha256": "87521ce8c5de239c685049c6241c23bb70982de3b3cc74ba46f40eb97b354e18"
+          },
+          "wide_image.docx": {
+            "input_sha256": "cd4e6c05568e600bb4a7fea4d9742621c11845051d7e0f382ac7d7a39d3c3e49",
+            "samples_ms": [
+              22.20725000370294,
+              22.949790996790398,
+              22.689165998599492,
+              22.092874998634215,
+              22.06879200093681
+            ],
+            "model_sha256": "720787f45edf19362cc351c4a8162c5cb166307f15ac802555b4d17d2a843044"
+          },
+          "docweave-reader-cache-churn.docx": {
+            "input_sha256": "86c19aa25be19822b117a54b9b073ccf21dc6c3b21f32567e4494dc5e4e291a5",
+            "samples_ms": [
+              58.91904199961573,
+              60.020249999070074,
+              60.947040998144075,
+              59.10462499741698,
+              59.17816700093681
+            ],
+            "model_sha256": "fb58309120089391b55691db472a82f4c068908d00b6c6c668c7fb91fd1d4a39"
+          }
+        }
+      },
+      "current": {
+        "module": "/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/aspose/words_foss/__init__.py",
+        "cases": {
+          "docweave-reader-style-probe.docx": {
+            "input_sha256": "9e9ce7d550924e3ae2ddde467d466dca4733333e7be3516c3a395fe9e4f2ee3d",
+            "samples_ms": [
+              271.11470899399137,
+              256.0498750026454,
+              253.81970800663112,
+              255.8470829972066,
+              255.1217500003986
+            ],
+            "model_sha256": "4e8ec1ef5f513387b08fbd777b2a1f26823132c201444efa02dfedbc5121175a"
+          },
+          "chinese_pdf.docx": {
+            "input_sha256": "66d8ed5981fdd418b894c4ff8d06729f8af686d3fe611f7fa8b39cd5c7538ab5",
+            "samples_ms": [
+              25.86779199918965,
+              25.291665995609947,
+              25.547917000949383,
+              25.12104200286558,
+              25.33945799950743
+            ],
+            "model_sha256": "7bc2cf28675dd17595a0fd171ebc1d134c2db9596911073c7a0fa2f93a8cdc59"
+          },
+          "consecutive_images.docx": {
+            "input_sha256": "ecb453a49dcef5c3ad317bc2e8283c7b16b1dfb724e948b9b03056d1767cd059",
+            "samples_ms": [
+              36.33816700312309,
+              24.70875000290107,
+              24.69333299814025,
+              25.615250000555534,
+              24.918416995205916
+            ],
+            "model_sha256": "e9deb9137732f24ea00ced47f78287c5ace7d9b3fb40dcf1560541542514fc18"
+          },
+          "image_in_footer.docx": {
+            "input_sha256": "96703469378421f024e25dd2b1d4105846b3e12a84305b7a242bf4f2b2b3b7e1",
+            "samples_ms": [
+              24.75525000045309,
+              23.719083998003043,
+              24.02254199841991,
+              24.591208006313536,
+              28.809916002501268
+            ],
+            "model_sha256": "43eca46062cb3852fbb02e86895ca9ff68e85f790aa1e2dae5ac9e45e07b9b1c"
+          },
+          "image_in_header.docx": {
+            "input_sha256": "f673b333d419f5973ee10c5d4a64e3a4e23474084a6a24fc05519613cb116f52",
+            "samples_ms": [
+              25.544415999320336,
+              25.817499998083804,
+              26.652125001419336,
+              27.16645799955586,
+              23.893916004453786
+            ],
+            "model_sha256": "4c7f5f1f1677dee6708731e30ce9f13aa240d38f8d5e77cd3a2a4719b0d6c06d"
+          },
+          "image_in_table.docx": {
+            "input_sha256": "8213086ab73ad1cc7aede4e4e0c8fbca4a5fad2a0b1e2691fdeab19b83e6e2eb",
+            "samples_ms": [
+              23.84837499994319,
+              24.16412500315346,
+              24.723458001972176,
+              24.07783300441224,
+              24.526125002012122
+            ],
+            "model_sha256": "3585fb51be215f009b2f0121498970cf6e3bcb8fcbcd721764c4231d73d5d526"
+          },
+          "image_with_caption.docx": {
+            "input_sha256": "a45828e386186458f0bd410134f094595b2beee7f243eed0f09c8a28bae6bb71",
+            "samples_ms": [
+              24.508791000698693,
+              24.23537499998929,
+              24.857624994183425,
+              24.171083998226095,
+              23.20499999768799
+            ],
+            "model_sha256": "33656cd9335e39a47a901ee824d2ea344166f419028857c1f8beec864947a480"
+          },
+          "multi_image_ordered.docx": {
+            "input_sha256": "e9f63f43d715a9ecaa03f47825fa6648c041eae3126ad5ebbe86ac6674ff30c3",
+            "samples_ms": [
+              23.129916997277178,
+              23.91574999637669,
+              23.177791001216974,
+              23.728833002678584,
+              23.310750002565328
+            ],
+            "model_sha256": "654af3fa820584088e4b3a79f0b2fe81fa3ef8915f22d5774de0bd9ccae49904"
+          },
+          "no_images.docx": {
+            "input_sha256": "14579b0a4ceb13e5b1b37af3a40dbbd38f558ba4733d3eee1d4b2809634eea20",
+            "samples_ms": [
+              22.67920799931744,
+              22.58208299463149,
+              22.686832999170292,
+              22.715166996931657,
+              22.16966699779732
+            ],
+            "model_sha256": "d4310df7a315f5f5a4551f94eff1860000b02c33267bb629ef6ce2fd793d28ff"
+          },
+          "simple_inline.docx": {
+            "input_sha256": "6c73b82abca4995640f35163d4d073d503613c62661195f87b9219e3cf278078",
+            "samples_ms": [
+              23.042167005769443,
+              22.620666997681838,
+              23.17337499698624,
+              23.748249994241633,
+              23.06466700247256
+            ],
+            "model_sha256": "4cc10d891b6949642b6a66d2e56e5648480861085773f7938bd3f26da2e380d1"
+          },
+          "test_full_article.docx": {
+            "input_sha256": "bd690862ef605bfafa2648d9497334f759cd27609b76c437970cf1a1a7430df6",
+            "samples_ms": [
+              4.293583995604422,
+              4.469750005227979,
+              3.991958001279272,
+              4.135832998144906,
+              4.021791995910462
+            ],
+            "model_sha256": "b84ad0aa89d5e34511c421741e2e31da85113ff5ad9fbfc4a999810fe71e47fb"
+          },
+          "test_underline_text.docx": {
+            "input_sha256": "1e706d5b6a730fb9bd8de01afd460cd4c9c2c4e22a486ec02233642712594507",
+            "samples_ms": [
+              1.1479999957373366,
+              1.0047079995274544,
+              0.9482500026933849,
+              0.9277499993913807,
+              0.8934169964049943
+            ],
+            "model_sha256": "87521ce8c5de239c685049c6241c23bb70982de3b3cc74ba46f40eb97b354e18"
+          },
+          "wide_image.docx": {
+            "input_sha256": "cd4e6c05568e600bb4a7fea4d9742621c11845051d7e0f382ac7d7a39d3c3e49",
+            "samples_ms": [
+              22.669040998152923,
+              22.49149999988731,
+              23.07508300145855,
+              22.563625003385823,
+              23.36395899328636
+            ],
+            "model_sha256": "720787f45edf19362cc351c4a8162c5cb166307f15ac802555b4d17d2a843044"
+          },
+          "docweave-reader-cache-churn.docx": {
+            "input_sha256": "86c19aa25be19822b117a54b9b073ccf21dc6c3b21f32567e4494dc5e4e291a5",
+            "samples_ms": [
+              65.23749999905704,
+              63.52945799881127,
+              63.40316699788673,
+              64.63795900344849,
+              63.89274999673944
+            ],
+            "model_sha256": "fb58309120089391b55691db472a82f4c068908d00b6c6c668c7fb91fd1d4a39"
+          }
+        }
+      }
+    }
+  ],
+  "median": {
+    "docweave-reader-style-probe.docx": {
+      "before": 409.3773330023396,
+      "current": 255.8470829972066,
+      "reduction_percent": 37.50335879105832
+    },
+    "chinese_pdf.docx": {
+      "before": 25.12491599918576,
+      "current": 25.547917000949383,
+      "reduction_percent": -1.6835917054502048
+    },
+    "consecutive_images.docx": {
+      "before": 22.53529200243065,
+      "current": 22.964000003412366,
+      "reduction_percent": -1.9023849388571268
+    },
+    "image_in_footer.docx": {
+      "before": 22.155375001602806,
+      "current": 22.82341600221116,
+      "reduction_percent": -3.0152547657623874
+    },
+    "image_in_header.docx": {
+      "before": 22.248665998631623,
+      "current": 22.688249999191612,
+      "reduction_percent": -1.9757768874189008
+    },
+    "image_in_table.docx": {
+      "before": 22.354833999997936,
+      "current": 22.640000002866145,
+      "reduction_percent": -1.2756346250132555
+    },
+    "image_with_caption.docx": {
+      "before": 22.48212500126101,
+      "current": 22.94149999943329,
+      "reduction_percent": -2.0432899387691883
+    },
+    "multi_image_ordered.docx": {
+      "before": 22.729165997589007,
+      "current": 23.129916997277178,
+      "reduction_percent": -1.7631575207408767
+    },
+    "no_images.docx": {
+      "before": 21.8490830011433,
+      "current": 22.30954200058477,
+      "reduction_percent": -2.107452287207545
+    },
+    "simple_inline.docx": {
+      "before": 22.26087499730056,
+      "current": 23.0598749985802,
+      "reduction_percent": -3.5892569424001763
+    },
+    "test_full_article.docx": {
+      "before": 4.0309169999090955,
+      "current": 4.091916998731904,
+      "reduction_percent": -1.5133032712949523
+    },
+    "test_underline_text.docx": {
+      "before": 0.9468749994994141,
+      "current": 0.9856250035227276,
+      "reduction_percent": -4.092409667992025
+    },
+    "wide_image.docx": {
+      "before": 22.359374997904524,
+      "current": 22.994792001554742,
+      "reduction_percent": -2.841837053628593
+    },
+    "docweave-reader-cache-churn.docx": {
+      "before": 59.31083299947204,
+      "current": 64.13616600184469,
+      "reduction_percent": -8.135668912988624
+    }
+  },
+  "baseline_cascading_sha256": "ab0ccddd55cfe4838102588fb8cc3e2b1558e41350ac3168bbde41cc6ad9b954",
+  "current_cascading_sha256": "7905d581579848aeb894d4aa002a7a8752771c334e5ccb453ae2b5b8cb97f396",
+  "limitations": [
+    "Local macOS/Python 3.13 measurements, not DOCX-to-PDF throughput or cross-platform results",
+    "Small fixtures and 300 unique styles were slower; no universal speedup or RSS reduction demonstrated",
+    "model_dump_json fails on binary images; canonical Python-mode model dump comparison includes base64 image bytes instead",
+    "Baseline wheel differs from current library only in cascading.py; it already contains preceding ecosystem adoption work"
+  ]
+}

@@ -155,6 +155,12 @@ class LdmMarkdownWriter:
 
     def __init__(self, options: Optional[ConversionOptions] = None):
         self.options = options or ConversionOptions()
+        allowed = {"Normal", "Quote", "Code", *(f"Heading {i}" for i in range(1, 7))}
+        if not isinstance(self.options.style_map, dict) or any(
+            not isinstance(name, str) or not name or not isinstance(target, str) or target not in allowed
+            for name, target in self.options.style_map.items()
+        ):
+            raise ValueError("style_map must map nonempty style names to Normal, Quote, Code, or Heading 1..6")
         self._list_indents: dict[int, int] = {}
         self._doc: Optional[ldm.Document] = None
         self._output_path: Optional[Path] = None
@@ -162,6 +168,9 @@ class LdmMarkdownWriter:
         self._reference_links: list[tuple[str, str]] = []  # (label, url)
         self._in_footnotes = False
         self._trailing_list_indent = 0
+        self._notes: dict[tuple[str, str], tuple[str, ldm.SourceStory]] = {}
+        self._note_queue: list[tuple[str, str]] = []
+        self._referenced_notes: set[tuple[str, str]] = set()
 
     # ------------------------------------------------------------------
     # Public entry point
@@ -176,14 +185,28 @@ class LdmMarkdownWriter:
         if any(isinstance(node, ldm.UnknownNode) for node in document_nodes(doc)):
             warn("Unknown document nodes are omitted from Markdown", ContentLossWarning,
                  code="markdown.unknown_node")
-        for code, message in source_story_losses(doc):
-            warn(message, ContentLossWarning, code="markdown." + code)
+        self._notes.clear()
+        self._note_queue.clear()
+        self._referenced_notes.clear()
+        if self.options.export_notes:
+            for story in doc.source_stories:
+                if story.kind not in {"footnote", "endnote"}:
+                    continue
+                key = (story.kind, story.identifier)
+                if key in self._notes:
+                    raise ValueError("Duplicate note identifier in source stories")
+                self._notes[key] = (f"note{len(self._notes) + 1}", story)
+        else:
+            for code, message in source_story_losses(doc):
+                warn(message, ContentLossWarning, code="markdown." + code)
         if any(isinstance(node, ldm.Cell) and node.tables for node in document_nodes(doc)):
             warn("Nested tables are flattened to ordered cell text in Markdown", ContentLossWarning,
                  code="markdown.nested_table_flattened")
         self._list_indents.clear()
         self._reference_links.clear()
         self._image_counter = 0
+        self._in_footnotes = False
+        self._trailing_list_indent = 0
         self._doc = doc
         self._output_path = output_path
         blocks: list[tuple[_BlockTag, str]] = []  # (tag, markdown_text)
@@ -212,6 +235,21 @@ class LdmMarkdownWriter:
                 if isinstance(item, ldm.Shape) and item.has_image and item.image_data:
                     blocks.append((_BlockTag(self._BLOCK), self._render_image(item)))
 
+        if self.options.export_notes:
+            for key in self._note_queue:
+                label, story = self._notes[key]
+                note_blocks = []
+                self._in_footnotes = False
+                self._list_indents.clear()
+                for child in story.children:
+                    if isinstance(child, ldm.Paragraph):
+                        note_blocks.append(self._convert_paragraph_tagged(child))
+                    elif isinstance(child, ldm.Table):
+                        note_blocks.append((_BlockTag(self._BLOCK), self._convert_table(child)))
+                body = self._join_blocks([(tag, text) for tag, text in note_blocks if text is not None]).strip()
+                lines = body.splitlines() or [""]
+                definition = f"[^{label}]: {lines[0]}" + "".join("\n    " + line for line in lines[1:])
+                blocks.append((_BlockTag(self._BLOCK), definition))
         self._apply_link_export_mode(blocks)
         result = self._join_blocks(blocks)
 
@@ -395,8 +433,55 @@ class LdmMarkdownWriter:
             return 0
         return level.start_at
 
+    def _with_note_markers(self, para: ldm.Paragraph) -> ldm.Paragraph:
+        if self.options.export_notes and (para.note_references or
+                any(isinstance(child, ldm.NoteReference) for child in para._children)):
+            children = []
+            for child in para._children:
+                if isinstance(child, ldm.NoteReference):
+                    if child.hidden:
+                        continue
+                    key = (child.kind, child.identifier)
+                    if key in self._notes:
+                        if key not in self._referenced_notes:
+                            self._referenced_notes.add(key)
+                            self._note_queue.append(key)
+                        label = self._notes[key][0]
+                        children.append(ldm.Run(text=f"[^{label}]", font=ldm.Font(style_name="Footnote Reference")))
+                    else:
+                        warn("Referenced note body is missing", ContentLossWarning,
+                             code="markdown.note_missing", location=f"{child.kind}:{child.identifier}")
+                else:
+                    children.append(child)
+            if not any(isinstance(child, ldm.NoteReference) for child in para._children):
+                warn("Note references have no inline anchors; their placement cannot be exported",
+                     ContentLossWarning, code="markdown.note_anchor_missing")
+            para = para.model_copy()
+            para._children = children
+        return para
+
     def _convert_paragraph_tagged(self, para: ldm.Paragraph) -> tuple[_BlockTag, Optional[str]]:
         """Convert a paragraph and return (block_tag, markdown_text)."""
+        for name in self._style_chain(para.paragraph_format.style_name or "Normal"):
+            if name in self.options.style_map:
+                target = self.options.style_map[name]
+                pf = para.paragraph_format.model_copy(update={
+                    "style_name": target, "is_heading": target.startswith("Heading "),
+                    "outline_level": int(target[-1]) - 1 if target.startswith("Heading ") else 9,
+                })
+                # Export overrides must not mutate the caller's document or its styles.
+                para = para.model_copy(update={"paragraph_format": pf})
+                break
+        para = self._with_note_markers(para)
+        code_notes = []
+        if self._resolve_block_styles(para.paragraph_format.style_name)[1]:
+            code_notes = [child for child in para._children if isinstance(child, ldm.Run)
+                          and child.font.style_name == "Footnote Reference"]
+            if code_notes:
+                para = para.model_copy()
+                para._children = [child for child in para._children if child not in code_notes]
+                warn("Note references in code blocks are moved after the block", ContentLossWarning,
+                     code="markdown.note_reference_relocated")
         is_list = self._is_list_paragraph(para)
         quote_level, code_style, heading_style = self._resolve_block_styles(
             para.paragraph_format.style_name or ""
@@ -430,6 +515,8 @@ class LdmMarkdownWriter:
             ordered_start=self._ordered_start_of(para),
         )
         md = self._convert_paragraph(para)
+        if code_notes:
+            md = (md or "") + "\n\n" + "".join(child.text for child in code_notes)
         return tag, md
 
     def _convert_paragraph(self, para: ldm.Paragraph) -> Optional[str]:
@@ -756,6 +843,8 @@ class LdmMarkdownWriter:
 
         pieces: list[tuple[str, RunFormatting, list[str], str]] = []
         for run in runs:
+            if run.font.hidden:
+                continue
             text = run.text or ""
             if not text:
                 continue
@@ -1360,6 +1449,7 @@ class LdmMarkdownWriter:
 
         parts = []
         for para in paragraphs(cell):
+            para = self._with_note_markers(para)
             visible = {id(run) for run in visible_runs(para) if not run.font.hidden}
             para_parts = []
             for item in para._children:

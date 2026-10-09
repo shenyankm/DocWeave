@@ -28,7 +28,7 @@ from aspose.words_foss.docx_reader.utils import _canonicalize_style_name
 from aspose.words_foss.model.style_identifiers import resolve_style_identifier
 
 from ._context import ReaderContext
-from ._helpers import apply_padding_sides, build_borders, build_shading, find_val, parse_int
+from ._helpers import apply_padding_sides, build_borders, build_shading, find_val, parse_int, is_truthy_onoff
 from .cascading import (
     FontBuilder,
     FontResolver,
@@ -105,6 +105,7 @@ class StyleBuilder:
 
         self._apply_name(style_elem, s, is_custom)
         s.type = _STYLE_TYPE_MAP.get(style_elem.get(f"{W_NS}type", ""), 0)
+        s.is_default = is_truthy_onoff(style_elem.get(f"{W_NS}default", ""))
         self._apply_identifier(s, xml_style_id, is_custom)
         self._apply_priority(style_elem, s)
         self._apply_style_flags(style_elem, s)

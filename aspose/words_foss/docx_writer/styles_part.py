@@ -12,7 +12,8 @@ from typing import Optional
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.docx_reader.utils import _canonicalize_style_name
-from aspose.words_foss.docx_writer.constants import W_URI, pt_to_half_pt, pt_to_twips
+from aspose.words_foss.docx_reader.ldm_builder.cascading import FontResolver
+from aspose.words_foss.docx_writer.constants import W_URI, pt_to_twips
 from aspose.words_foss.docx_writer.paragraphs import pf_to_pPr_children
 from aspose.words_foss.docx_writer.runs import color_to_hex, render_rPr
 from aspose.words_foss.docx_writer.blank_template import latent_styles
@@ -26,16 +27,11 @@ from aspose.words_foss.docx_writer.paragraphs import _resolve_style_id
 # outline_level + is_heading=True after chain resolve, so re-emitting
 # <w:outlineLvl> here would leak the value into descendants on round-trip.
 _HEADING_NAME_RE = re.compile(r"[Hh]eading\s*(\d+)")
+CHARACTER_FONT_PREFIX = "\0character:"
 
 
 def build_style_font_map(doc: ldm.Document) -> dict[str, ldm.Font]:
-    """Map canonical style id → resolved :class:`Font` for paragraph styles.
-
-    Only paragraph styles (``type == 1``) carry a chain-resolved font in
-    the LDM (the reader uses ``_build_resolved_font`` for those), so other
-    style types are skipped.  Used by ``_custom_style`` for diff-based
-    rPr emission against the basedOn chain.
-    """
+    """Paragraph fonts plus sparse character chains for diff-based rPr emission."""
     out: dict[str, ldm.Font] = {}
     for style in doc.styles:
         if style.type != 1 or style.font is None:
@@ -43,6 +39,23 @@ def build_style_font_map(doc: ldm.Document) -> dict[str, ldm.Font]:
         canonical = style.name.replace(" ", "").lower()
         if canonical:
             out[canonical] = style.font
+    characters = {style.name: style for style in doc.styles if style.type == 2}
+    for name in characters:
+        chain = []
+        seen = set()
+        current = name
+        while current in characters and current not in seen:
+            key = CHARACTER_FONT_PREFIX + current
+            if key in out:
+                break
+            seen.add(current)
+            chain.append(current)
+            current = characters[current].base_style_name
+        font = out.get(CHARACTER_FONT_PREFIX + current, ldm.Font()).model_copy(deep=True)
+        for current in reversed(chain):
+            if characters[current].font is not None:
+                FontResolver.merge(font, characters[current].font)
+            out[CHARACTER_FONT_PREFIX + current] = font.model_copy(deep=True)
     return out
 
 
@@ -207,10 +220,10 @@ def _heading_style(level: int) -> str:
     )
 
 
-def _normal_style() -> str:
+def _normal_style(*, is_default: bool = True) -> str:
     return el(
         "w:style",
-        {"w:type": "paragraph", "w:default": "1", "w:styleId": "Normal"},
+        {"w:type": "paragraph", "w:default": "1" if is_default else None, "w:styleId": "Normal"},
         el("w:name", {"w:val": "Normal"}),
     )
 
@@ -263,10 +276,9 @@ def _custom_style(
         style.type, "paragraph"
     )
     style_attrs: dict[str, object] = {"w:type": type_token, "w:styleId": style_id}
-    if style.built_in and style.type == 1:
-        is_default = style.name.lower() == "normal"
-        if is_default:
-            style_attrs["w:default"] = "1"
+    if style.is_default or (style.is_default is None and style.built_in
+                            and style.type == 1 and style.name.lower() == "normal"):
+        style_attrs["w:default"] = "1"
     if not style.built_in and (
         _is_custom_style_name(style.name) or style.style_identifier != 0
     ):
@@ -364,7 +376,8 @@ def _custom_style(
                 base_font = style_font_map.get(canonical)
             else:
                 base_font = doc_defaults_font
-        rPr = render_rPr(font_source, base=base_font, for_style=True) or el("w:rPr")
+        rPr = render_rPr(font_source, base=base_font, for_style=True,
+                        preserve_explicit_off=style.type != 1) or el("w:rPr")
         children.append(rPr)
     if style.table_style_format is not None:
         tblPr = _render_style_tblPr(style.table_style_format)
@@ -443,7 +456,7 @@ def _render_tblStylePr(tsp: ldm.TableStyleProperty) -> str:
         if pf_children:
             children.append(el("w:pPr", None, pf_children))
     if tsp.font is not None:
-        rPr = render_rPr(tsp.font, for_style=True)
+        rPr = render_rPr(tsp.font, for_style=True, preserve_explicit_off=True)
         if rPr:
             children.append(rPr)
     if tsp.shading or tsp.borders:
@@ -596,7 +609,7 @@ def render_styles_xml(doc: ldm.Document) -> str:
     # references it explicitly — emit the empty placeholder when the LDM
     # didn't already supply one.
     if "Normal" not in seen_ids:
-        children.append(_normal_style())
+        children.append(_normal_style(is_default=not any(s.type == 1 and s.is_default for s in doc.styles)))
         seen_ids.add("Normal")
     for level in range(1, 10):
         sid = f"Heading{level}"
@@ -614,3 +627,63 @@ def render_styles_xml(doc: ldm.Document) -> str:
 
 # Re-export so callers don't import from runs just for one helper.
 __all__ = ["render_styles_xml", "color_to_hex"]
+
+
+def apply_reference_styles(generated: str, reference: ldm.Document) -> str:
+    """Overlay reference styles by display name without changing body style IDs."""
+    from xml.etree import ElementTree as ET
+
+    names = [s.name for s in reference.styles if s.name]
+    if len(names) != len(set(names)):
+        raise ValueError("Reference DOCX contains ambiguous style names")
+    root = ET.fromstring(generated)
+    incoming = ET.fromstring(render_styles_xml(reference))
+    w = "{" + W_URI + "}"
+    default_types = {s.get(w + "type") for s in incoming.findall(w + "style")
+                     if s.get(w + "default") == "1"}
+    for style in root.findall(w + "style"):
+        if style.get(w + "type") in default_types:
+            style.attrib.pop(w + "default", None)
+    originals = {s.find(w + "name").get(w + "val"): s for s in root.findall(w + "style")}
+    used = {s.get(w + "styleId") for s in originals.values()}
+    remap = {}
+    names = set()
+    for style in incoming.findall(w + "style"):
+        name = style.find(w + "name").get(w + "val")
+        if name in names:
+            raise ValueError("Reference DOCX contains ambiguous style names")
+        names.add(name)
+        original = originals.get(name)
+        source_id = style.get(w + "styleId")
+        if original is not None:
+            if original.get(w + "type") != style.get(w + "type"):
+                raise ValueError(f"Reference style type differs for {name!r}")
+            target_id = original.get(w + "styleId")
+        else:
+            target_id = source_id
+            index = 2
+            while target_id in used:
+                target_id = f"{source_id}_{index}"
+                index += 1
+        used.add(target_id)
+        remap[source_id] = target_id
+    for style in incoming.findall(w + "style"):
+        name = style.find(w + "name").get(w + "val")
+        style.set(w + "styleId", remap[style.get(w + "styleId")])
+        for tag in ("basedOn", "next", "link"):
+            relation = style.find(w + tag)
+            if relation is not None:
+                old_id = relation.get(w + "val")
+                target = remap.get(old_id, old_id)
+                if target not in used:
+                    raise ValueError(f"Reference style has unresolved {tag}: {old_id!r}")
+                relation.set(w + "val", target)
+        original = originals.get(name)
+        if original is not None:
+            root.remove(original)
+        root.append(style)
+    defaults = root.find(w + "docDefaults")
+    if defaults is not None:
+        root.remove(defaults)
+    root.insert(0, incoming.find(w + "docDefaults"))
+    return XML_DECL + ET.tostring(root, encoding="unicode")

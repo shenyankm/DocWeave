@@ -71,6 +71,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         self._part_links: dict[str, dict[str, str]] = {}
         self._part_images: dict[str, dict[str, str]] = {}
         self._source_story_data = []
+        self._source_locations = {}
         # Theme font mapping: theme name -> resolved font name
         self._theme_fonts: dict[str, str] = {}
         # Theme color mapping: scheme color name (accent1, dk1, lt1, hlink,
@@ -123,6 +124,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         # Parse document.xml
         with zf.open("word/document.xml") as f:
             self._document_xml = parse(f).getroot()
+        self._index_source_locations(self._document_xml, "word/document.xml")
 
         relationships = self._read_relationships(zf, "word/document.xml", namelist)
         targets = {}
@@ -199,6 +201,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             seen_stories.add((kind, name))
             with zf.open(name) as stream:
                 root = parse(stream).getroot()
+            self._index_source_locations(root, name)
             image_rels, links = self._part_resources(zf, name, namelist)
             self._part_images[name] = image_rels
             self._part_links[name] = links
@@ -243,6 +246,14 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                      "the light document model", DocumentLoadWarning, stacklevel=3,
                      code="load.header_footer_flattened", location="word/document.xml/sectPr")
                 break
+
+    def _index_source_locations(self, root, part_name):
+        stack = [(root, [])]
+        while stack:
+            element, path = stack.pop()
+            if element.tag in {W_NS + "p", W_NS + "tbl"}:
+                self._source_locations[element] = {"part_name": part_name, "child_path": path}
+            stack.extend((child, path + [index]) for index, child in enumerate(element))
 
     def _parse_numbering(self) -> None:
         """Parse numbering definitions from numbering.xml."""

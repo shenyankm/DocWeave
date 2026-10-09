@@ -13,11 +13,13 @@ def _paragraph(node: ldm.Paragraph, location: str) -> dict:
             for text, link in (extract_link_segments(run.text) if run.is_hyperlink else [(run.text, None)])]
     result = {
         "type": "paragraph", "location": location,
+        "provenance": node.source_location.model_dump() if node.source_location else None,
         "text": "".join(run["text"] for run in runs), "style": pf.style_name,
         "heading_level": pf.outline_level + 1 if pf.is_heading else None,
         "list": node.list_format.model_dump() if node.list_format else None,
         "runs": runs,
-        "note_references": [reference.model_dump() for reference in node.note_references],
+        "note_references": [reference.model_dump(exclude={"type"}, exclude_defaults=True)
+                            for reference in node.note_references],
         "images": [{"alternative_text": item.alternative_text,
                     "width_pt": item.width, "height_pt": item.height}
                    for item in node._children if isinstance(item, ldm.Shape) and item.has_image],
@@ -47,7 +49,8 @@ def _block(node, location: str) -> dict:
                                for i, t in enumerate(cell.tables)],
                 })
             rows.append({"heading": row.row_format.heading_format, "cells": cells})
-        return {"type": "table", "location": location, "title": node.title, "rows": rows}
+        return {"type": "table", "location": location, "title": node.title, "rows": rows,
+                "provenance": node.source_location.model_dump() if node.source_location else None}
     return {"type": "unsupported", "location": location, "node_type": node.type}
 
 

@@ -5,6 +5,7 @@ from typing import Mapping, Optional
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.docx_reader.constants import PAGE_FIELD_SENTINEL
+from aspose.words_foss.docx_reader.ldm_builder.cascading import FontResolver
 from aspose.words_foss.docx_writer.constants import (
     ALIGNMENT_VAL,
     TAB_ALIGNMENT_VAL,
@@ -255,11 +256,8 @@ def _resolve_style_id(
             return style_id_map[pf.style_name]
         return _heading_style_id(pf.outline_level + 1)
     if pf.style_name:
-        # Even ``"Normal"`` is emitted when explicitly carried — the
-        # reader only assigns ``style_name="Normal"`` when the paragraph
-        # actually had a ``<w:pStyle w:val="Normal"/>`` reference, so
-        # suppressing it on write would erase that distinction on the
-        # next read.
+        # Emit resolved defaults as explicit references too, so changing
+        # the output default style cannot reassign an existing paragraph.
         from aspose.words_foss.docx_writer.styles_part import _sanitize_style_id
         fallback = _sanitize_style_id(pf.style_name.replace(" ", ""))
         if style_id_map is not None:
@@ -733,8 +731,16 @@ def render_paragraph(
     # interleaving is implicit and no positional index is needed.
     for node in para._children:
         if isinstance(node, ldm.Run):
+            run_base = base_font
+            if style_font_map is not None:
+                from aspose.words_foss.docx_writer.styles_part import CHARACTER_FONT_PREFIX
+                character_font = style_font_map.get(CHARACTER_FONT_PREFIX + node.font.style_name)
+                if character_font is not None:
+                    run_base = base_font.model_copy(deep=True) if base_font is not None else ldm.Font()
+                    FontResolver.merge(run_base, character_font)
             rendered_run = render_run(
-                node, rels, base_font=base_font, instr=field_code_depth() > 0
+                node, rels, base_font=run_base, instr=field_code_depth() > 0,
+                style_id_map=style_id_map,
             )
             if rendered_run:
                 children.append(rendered_run)

@@ -236,3 +236,10 @@ ldm_snapshot = editable.to_light_document()
 `tests/test_docx_dom_resources.py`、`tests/test_content_integrity.py` 和 `tests/test_dom_libreoffice_integration.py`；
 保真验证以 part payload、XML 内容和修改约束为准，
 不替代 Microsoft Word 实际打开、修复提示检查及复杂业务文档的兼容性验证。
+
+## 包内容保留报告
+
+`doc.preservation_report()` 返回 `added`、`modified`、`removed`、`unchanged` 四组排序后的部件名。
+它按解压后字节的 SHA-256 与最初加载的包比较，包含资源和关系部件；不以 ZIP 压缩字节
+或 XML 语义等价判定。只读取节点不应产生修改。保存不会重置基线，重新打开保存结果才建立新基线。
+该报告描述部件变化，不证明 Word 视觉保真或所有 OOXML 语义均受支持。

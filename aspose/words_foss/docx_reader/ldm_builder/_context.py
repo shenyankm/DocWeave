@@ -24,6 +24,7 @@ class ReaderContext(Protocol):
     _numbering_xml: Optional[ET.Element]
     _styles_xml: Optional[ET.Element]
     _settings_xml: Optional[ET.Element]
+    _source_locations: dict[ET.Element, dict]
 
     # Relationships and image targets
     _rels: dict[str, str]

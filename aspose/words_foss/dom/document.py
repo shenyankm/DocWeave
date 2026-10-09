@@ -53,6 +53,10 @@ class DocxDocument:
         """Read-only XML snapshot; parsing alone does not mark a part modified."""
         return self._package.tree(name).documentElement.toxml()
 
+    def preservation_report(self):
+        """List added/modified/removed/unchanged parts since loading (not sanitization)."""
+        return self._package.preservation_report()
+
     def story(self, part_name):
         """Access the main body or a header/footer by its original part name."""
         if part_name == "word/document.xml":

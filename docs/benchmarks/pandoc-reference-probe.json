@@ -1,0 +1,20 @@
+{
+  "own": {
+    "heading_effective_size_pt": 30.0,
+    "heading_color": "008800",
+    "normal_font": "Courier New",
+    "text": "Report Body"
+  },
+  "pandoc": {
+    "heading_effective_size_pt": 30.0,
+    "heading_color": "008800",
+    "normal_font": "Courier New",
+    "text": "Report Body"
+  },
+  "scope": "Markdown Heading 1, reference font/color and body exclusion; does not prove complex character inheritance or all reference package parts",
+  "verified_versions": {
+    "mammoth": "1.13.0",
+    "pypandoc_binary": "1.17",
+    "pandoc": "3.8.3"
+  }
+}

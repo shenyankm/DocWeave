@@ -22,6 +22,7 @@ from aspose.words_foss.docx_reader.constants import (
 from aspose.words_foss.docx_reader.utils import _collect_run_text
 
 from ._context import ReaderContext
+from ._helpers import is_truthy_onoff
 from .cascading import (
     FontResolver,
     ParagraphFormatResolver,
@@ -135,6 +136,9 @@ class ParagraphBuilder:
         self._pf_resolver = pf_resolver
         self._chains = chains
         self._run_builder = run_builder
+        self._default_style_id = next((sid for sid, style in reversed(ctx._style_elem_cache.items())
+            if style.get(f"{W_NS}type") == "paragraph"
+            and is_truthy_onoff(style.get(f"{W_NS}default", ""))), "")
 
     def build(
         self,
@@ -149,9 +153,9 @@ class ParagraphBuilder:
         if image_rels is None:
             image_rels = self._ctx._doc_image_rels
 
-        para = ldm.Paragraph()
+        para = ldm.Paragraph(source_location=self._ctx._source_locations.get(p_elem))
         pPr = p_elem.find(f"{W_NS}pPr")
-        para_style_id = self._read_style_id(pPr)
+        para_style_id = self._read_style_id(pPr) or self._default_style_id
 
         para.paragraph_format = self._pf_resolver.resolve(pPr, para_style_id)
         self._apply_paragraph_meta(para.paragraph_format, para_style_id)
@@ -251,11 +255,29 @@ class ParagraphBuilder:
         if tracker.suppress_cached:
             return
         self._extract_drawings(child, para, image_rels)
-        for kind in ("footnote", "endnote"):
-            for reference in child.findall(W_NS + kind + "Reference"):
-                identifier = reference.get(W_NS + "id", "")
-                if identifier:
-                    para.note_references.append(ldm.NoteReference(kind=kind, identifier=identifier))
+        if any(item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference"} for item in child):
+            source_run = self._run_builder.build(child, para_style_id)
+            fragment = ET.Element(W_NS + "r")
+            def flush():
+                text = _collect_run_text(fragment)
+                if text:
+                    run = source_run.model_copy(deep=True)
+                    run.text = text
+                    para._children.append(run)
+                fragment.clear()
+            for item in child:
+                if item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference"}:
+                    flush()
+                    identifier = item.get(W_NS + "id", "")
+                    if identifier:
+                        anchor = ldm.NoteReference(kind=item.tag[len(W_NS):-9], identifier=identifier,
+                                                   hidden=source_run.font.hidden)
+                        para.note_references.append(anchor)
+                        para._children.append(anchor)
+                else:
+                    fragment.append(item)
+            flush()
+            return
         run = self._run_builder.build(child, para_style_id)
         if not run.text:
             return
@@ -323,6 +345,17 @@ class ParagraphBuilder:
         url = self._resolve_hyperlink_url(child)
         head_runs, tail_runs = self._split_at_first_tab(child)
 
+        if head_runs:
+            if any(r.find(W_NS + kind + "Reference") is not None
+                   for r in head_runs for kind in ("footnote", "endnote")):
+                for r in head_runs:
+                    start = len(para._children)
+                    self._handle_run(r, para, tracker, para_style_id, image_rels)
+                    for run in para._children[start:]:
+                        if isinstance(run, ldm.Run) and url:
+                            run.text = format_link(run.text, url)
+                            run.is_hyperlink = True
+                head_runs = []
         if head_runs:
             link_text = "".join(_collect_run_text(r) for r in head_runs)
             if link_text:

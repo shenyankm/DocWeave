@@ -360,6 +360,8 @@ class OoxmlSaveOptions:
         # ALWAYS behaves like IF_NECESSARY; ZIP64 records are never forced.
         self.zip_64_mode = Zip64Mode.NEVER
         self.pretty_format: bool = False
+        # Style definitions only; reference body, media and page setup are not imported.
+        self.reference_docx: str | None = None
 
 
 class MarkdownSaveOptions:
@@ -389,7 +391,7 @@ class MarkdownSaveOptions:
         self.images_folder: str = ""
         self.images_folder_alias: str = ""
         self.export_underline_formatting: bool = False
-        # Only REFERENCE is implemented; AUTO and INLINE behave identically.
+        # AUTO uses references for repeated URLs; INLINE always keeps inline links.
         self.link_export_mode = MarkdownLinkExportMode.AUTO
         # NON_COMPATIBLE_TABLES is not implemented and behaves like NONE.
         self.export_as_html = MarkdownExportAsHtml.NONE
@@ -403,3 +405,6 @@ class MarkdownSaveOptions:
         self.encoding: str = "utf-8"
         # Only applied between top-level blocks; inner line breaks are always "\n".
         self.paragraph_break: str = "\r\n"
+        # Exact source style names mapped to Heading 1..6, Quote, Code, or Normal.
+        self.style_map: dict[str, str] = {}
+        self.export_notes: bool = False

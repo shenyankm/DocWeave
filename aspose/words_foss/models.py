@@ -61,6 +61,8 @@ class ConversionOptions:
     images_folder: str = ""
     images_folder_alias: str = ""
     paragraph_break: str = "\n"
+    style_map: dict[str, str] = field(default_factory=dict)
+    export_notes: bool = False
 
     def __post_init__(self) -> None:
         # Accept the legacy lowercase string spellings as well as members.

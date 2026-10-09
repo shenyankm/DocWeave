@@ -63,8 +63,12 @@ def header_footer_losses(doc):
 
 
 def source_story_losses(doc):
+    from aspose.words_foss import light_document_model as ldm
+
     if (any(story.kind in {"footnote", "endnote"} for story in doc.source_stories) or
-            any(getattr(node, "note_references", None) for node in document_nodes(doc))):
+            any(getattr(node, "note_references", None) or
+                any(isinstance(child, ldm.NoteReference) for child in getattr(node, "_children", []))
+                for node in document_nodes(doc))):
         yield "notes_omitted", ("Footnotes/endnotes and their references/placement are omitted from this output; "
                                "extracted content, when present, remains available in structured source_stories")
 

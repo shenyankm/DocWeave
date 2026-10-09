@@ -1,6 +1,7 @@
 """Original OPC payloads with lazy, namespace-preserving XML trees."""
 
 from io import BytesIO
+from hashlib import sha256
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
@@ -31,6 +32,8 @@ class DocxPackage:
             self._entries = archive.infolist()
             self._payloads = {entry.filename: archive.read(entry) for entry in self._entries}
             self._comment = archive.comment
+        self._original_hashes = {name: sha256(data).digest()
+                                 for name, data in self._payloads.items()}
         if "word/document.xml" not in self._payloads:
             raise ValueError("Source is not a DOCX package")
         if any(name.lower().startswith("_xmlsignatures/") for name in self._payloads):
@@ -57,6 +60,21 @@ class DocxPackage:
         if name in self._dirty:
             return self.tree(name).toxml(encoding="utf-8")
         return self._payloads[name]
+
+    def preservation_report(self):
+        """Compare uncompressed part bytes with the loaded package, including resources."""
+        report = {"added": [], "modified": [], "removed": [], "unchanged": []}
+        for name in sorted(set(self._original_hashes) | set(self._payloads)):
+            if name not in self._payloads:
+                state = "removed"
+            elif name not in self._original_hashes:
+                state = "added"
+            elif sha256(self.payload(name)).digest() != self._original_hashes[name]:
+                state = "modified"
+            else:
+                state = "unchanged"
+            report[state].append(name)
+        return report
 
     def set_parts(self, parts):
         """Commit prebuilt resource parts together, after checking output size limits."""

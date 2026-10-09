@@ -493,6 +493,8 @@ class Document:
             conversion_opts.images_folder = options.images_folder
             conversion_opts.images_folder_alias = options.images_folder_alias
             conversion_opts.paragraph_break = options.paragraph_break
+            conversion_opts.style_map = options.style_map
+            conversion_opts.export_notes = options.export_notes
             encoding = options.encoding
 
         writer = LdmMarkdownWriter(conversion_opts)

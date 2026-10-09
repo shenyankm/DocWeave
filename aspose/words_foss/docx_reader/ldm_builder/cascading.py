@@ -4,6 +4,7 @@ Resolution order: docDefaults → table style chain → para/char style chain �
 """
 
 from typing import Optional
+from functools import lru_cache
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
@@ -422,9 +423,26 @@ class FontResolver:
         self._ctx = ctx
         self._fonts = fonts
         self._chains = chains
+        # Instance-owned cache avoids retaining previous documents through a global method cache.
+        self._inherited_font = lru_cache(maxsize=128)(self._inherited_font)
 
     def resolve(self, rPr: Optional[ET.Element], style_id: str = "") -> ldm.Font:
         """Compose a Font, walking docDefaults, table style, *style_id* chain, then *rPr*."""
+        character_style = rPr.find(f"{W_NS}rStyle") if rPr is not None else None
+        character_id = character_style.get(f"{W_NS}val", "") if character_style is not None else ""
+        table_id = getattr(self._ctx, "_current_table_style_id", "")
+        base = self._inherited_font(table_id, style_id, character_id).model_copy(deep=True)
+        if rPr is not None:
+            self.merge(base, self._fonts.build(rPr))
+        if not base.style_name:
+            base.style_name = _DEFAULT_PARAGRAPH_FONT_NAME
+        if not base.color:
+            base.color = COLOR_EMPTY
+        if not base.highlight_color:
+            base.highlight_color = COLOR_EMPTY
+        return base
+
+    def _inherited_font(self, table_id: str, style_id: str, character_id: str) -> ldm.Font:
         ctx = self._ctx
         base = ldm.Font(color=COLOR_EMPTY, highlight_color=COLOR_EMPTY)
 
@@ -435,22 +453,9 @@ class FontResolver:
             if not base.highlight_color:
                 base.highlight_color = COLOR_EMPTY
 
-        table_style_id = getattr(ctx, "_current_table_style_id", "")
-        if table_style_id:
-            self._merge_style_chain(base, table_style_id)
-
-        if style_id:
-            self._merge_style_chain(base, style_id)
-
-        if rPr is not None:
-            self.merge(base, self._fonts.build(rPr))
-
-        if not base.style_name:
-            base.style_name = _DEFAULT_PARAGRAPH_FONT_NAME
-        if not base.color:
-            base.color = COLOR_EMPTY
-        if not base.highlight_color:
-            base.highlight_color = COLOR_EMPTY
+        for inherited in (table_id, style_id, character_id):
+            if inherited:
+                self._merge_style_chain(base, inherited)
         return base
 
     def _merge_style_chain(self, base: ldm.Font, style_id: str) -> None:

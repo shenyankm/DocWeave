@@ -10,9 +10,13 @@ forward references at the bottom of the file.
 
 from __future__ import annotations
 
+from base64 import b64decode, b64encode
 from typing import Annotated, Any, Literal, Optional, Union
 
-from pydantic import BaseModel, BeforeValidator, Field, PrivateAttr, model_serializer, model_validator
+from pydantic import (
+    BaseModel, BeforeValidator, Field, PrivateAttr, field_serializer, field_validator,
+    model_serializer, model_validator,
+)
 
 from aspose.words_foss._io import MAX_TABLE_COLUMNS
 from aspose.words_foss.model.enums.image import ImageType as _IT, _IMAGE_TYPE_TO_MIME, _MIME_TO_IMAGE_TYPE
@@ -471,6 +475,20 @@ class ImageData(BaseModel):
     crop_right: float = 0
     crop_bottom: float = 0
 
+    @field_serializer("image_bytes", when_used="json")
+    def _encode_image(self, value: bytes) -> dict[str, str]:
+        # A tagged object keeps old UTF-8 strings distinguishable from binary data.
+        return {"encoding": "base64", "data": b64encode(value).decode("ascii")}
+
+    @field_validator("image_bytes", mode="before")
+    @classmethod
+    def _decode_image(cls, value: Any) -> Any:
+        if isinstance(value, dict) and value.get("encoding") == "base64":
+            data = value.get("data")
+            if isinstance(data, str):
+                return b64decode(data, validate=True)
+        return value
+
     @property
     def content_type(self) -> str:
         """MIME content-type string derived from :attr:`image_type`."""
@@ -599,14 +617,22 @@ class BookmarkEnd(BaseModel):
     model_config = {"populate_by_name": True}
 
 
-# REMOVED entirely: CommentNode, FootnoteNode
+class NoteReference(BaseModel):
+    """An inline anchor; note bodies remain separate source stories."""
 
-ChildNode = Union[Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd]
+    type: Literal["NoteReference"] = Field(default="NoteReference", alias="_type")
+    kind: Literal["footnote", "endnote"]
+    identifier: str
+    hidden: bool = False
+
+    model_config = {"populate_by_name": True}
+
+ChildNode = Union[Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference]
 
 _CHILD_NODE_CLASSES: tuple[type, ...] = (
-    Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd,
+    Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference,
 )
-_CHILD_NODE_TYPE_TAGS = {"Run", "Shape", "FieldStart", "FieldSeparator", "FieldEnd", "BookmarkStart", "BookmarkEnd"}
+_CHILD_NODE_TYPE_TAGS = {"Run", "Shape", "FieldStart", "FieldSeparator", "FieldEnd", "BookmarkStart", "BookmarkEnd", "NoteReference"}
 
 
 def _coerce_child_node(item: Any) -> ChildNode | None:
@@ -633,6 +659,8 @@ def _coerce_child_node(item: Any) -> ChildNode | None:
             return BookmarkStart.model_validate(item)
         if t == "BookmarkEnd":
             return BookmarkEnd.model_validate(item)
+        if t == "NoteReference":
+            return NoteReference.model_validate(item)
     return None
 
 
@@ -641,9 +669,11 @@ def _coerce_child_node(item: Any) -> ChildNode | None:
 # ─────────────────────────────────────────────
 
 
-class NoteReference(BaseModel):
-    kind: Literal["footnote", "endnote"]
-    identifier: str
+class SourceLocation(BaseModel):
+    """Original parsed XML element indexes, independent of model edits and XML prefixes."""
+
+    part_name: str
+    child_path: list[int]
 
 
 class Paragraph(BaseModel, NodeCastMixin):
@@ -664,6 +694,7 @@ class Paragraph(BaseModel, NodeCastMixin):
     list_label: Optional[ListLabel] = None
 
     note_references: list[NoteReference] = Field(default_factory=list)
+    source_location: SourceLocation | None = None
     _children: list[ChildNode] = PrivateAttr(default_factory=list)
 
     model_config = {"populate_by_name": True}
@@ -690,10 +721,10 @@ class Paragraph(BaseModel, NodeCastMixin):
         return instance
 
     @model_serializer(mode="wrap")
-    def _emit_children(self, handler) -> dict[str, Any]:
+    def _emit_children(self, handler, info) -> dict[str, Any]:
         """Emit ``children`` and ``_text`` in the serialised form."""
         data = handler(self)
-        data["children"] = [c.model_dump(by_alias=True) for c in self._children]
+        data["children"] = [c.model_dump(mode=info.mode, by_alias=True) for c in self._children]
         data["_text"] = self.text
         return data
 
@@ -889,6 +920,7 @@ def iter_grid_cells(row):
 
 class Table(BaseModel, NodeCastMixin):
     type: Literal["Table"] = Field(default="Table", alias="_type")
+    source_location: SourceLocation | None = None
     alignment: int = 0
     preferred_width: PreferredWidth = Field(default_factory=PreferredWidth)
     left_indent: float = 0.0
@@ -1076,6 +1108,7 @@ class TableStyleProperty(BaseModel):
 
 class Style(BaseModel):
     name: str = ""
+    is_default: bool | None = None  # None keeps legacy built-in Normal inference.
     type: int = 0  # 1=paragraph, 2=character, 3=table
     is_heading: bool = False
     base_style_name: str = ""
@@ -1218,13 +1251,13 @@ class Document(BaseModel):
         return instance
 
     @model_serializer(mode="wrap")
-    def _emit_legacy_hf(self, handler) -> dict[str, Any]:
+    def _emit_legacy_hf(self, handler, info) -> dict[str, Any]:
         """Emit ``header_paragraphs`` / ``footer_paragraphs`` in the
         serialized form for backward compatibility.
         """
         data = handler(self)
-        data["header_paragraphs"] = [p.model_dump(by_alias=True) for p in self.header_paragraphs]
-        data["footer_paragraphs"] = [p.model_dump(by_alias=True) for p in self.footer_paragraphs]
+        data["header_paragraphs"] = [p.model_dump(mode=info.mode, by_alias=True) for p in self.header_paragraphs]
+        data["footer_paragraphs"] = [p.model_dump(mode=info.mode, by_alias=True) for p in self.footer_paragraphs]
         return data
 
     @property
