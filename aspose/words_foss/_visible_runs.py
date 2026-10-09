@@ -17,19 +17,24 @@ def is_horizontal_rule_shape(shape: ldm.Shape) -> bool:
     )
 
 
-def visible_runs(para: ldm.Paragraph) -> list[ldm.Run]:
-    """Return *para*'s runs minus the ones inside a field's code section."""
-    code_depth = 0
+def visible_children(para: ldm.Paragraph) -> list:
+    """Exclude instructions while retaining each nested field's code/result state."""
+    code_sections = []
     out: list[ldm.Run] = []
     for child in para._children:
         if isinstance(child, ldm.FieldStart):
-            code_depth += 1
+            code_sections.append(True)
         elif isinstance(child, ldm.FieldSeparator):
-            if code_depth > 0:
-                code_depth -= 1
+            if code_sections:
+                code_sections[-1] = False
         elif isinstance(child, ldm.FieldEnd):
-            if code_depth > 0:
-                code_depth -= 1
-        elif isinstance(child, ldm.Run) and code_depth == 0:
+            if code_sections:
+                code_sections.pop()
+        elif not any(code_sections):
             out.append(child)
     return out
+
+
+def visible_runs(para: ldm.Paragraph) -> list[ldm.Run]:
+    """Return visible runs; hidden-font filtering remains the caller's policy."""
+    return [child for child in visible_children(para) if isinstance(child, ldm.Run)]

@@ -12,11 +12,12 @@ import os
 import re
 from pathlib import Path
 from typing import NamedTuple, Optional
+from urllib.parse import urlsplit
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._links import INLINE_LINK_RE
+from aspose.words_foss._links import INLINE_LINK_RE, decode_link
 from aspose.words_foss.diagnostics import ContentLossWarning, ConversionWarning, document_nodes, source_story_losses, warn
-from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_runs
+from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_children, visible_runs
 from aspose.words_foss.md_import.document_builder import (
     _link_destination,
     _link_title,
@@ -216,7 +217,8 @@ class LdmMarkdownWriter:
         else:
             for code, message in source_story_losses(doc):
                 warn(message, ContentLossWarning, code="markdown." + code)
-        if any(isinstance(node, ldm.Cell) and node.tables for node in document_nodes(doc)):
+        if self.options.export_as_html != MarkdownExportAsHtml.TABLES and any(
+                isinstance(node, ldm.Cell) and node.tables for node in document_nodes(doc)):
             warn("Nested tables are flattened to ordered cell text in Markdown", ContentLossWarning,
                  code="markdown.nested_table_flattened")
         self._list_indents.clear()
@@ -367,13 +369,19 @@ class LdmMarkdownWriter:
 
     def _render_image(self, shape: ldm.Shape) -> str:
         """Render a Shape with image data as a Markdown inline image tag."""
+        source, alt = self._image_source(shape)
+        if not shape.image_data.image_bytes:
+            source = _link_destination(source)
+        return f"![{alt}]({source})"
+
+    def _image_source(self, shape: ldm.Shape) -> tuple[str, str]:
+        """Resolve an image once for Markdown or HTML output."""
         img = shape.image_data
         assert img is not None
         if not img.image_bytes:
             # A linked picture has no bytes of its own; its source is the link,
             # and only its alternative text names it.
-            source = _link_destination(img.source_full_name)
-            return f"![{shape.alternative_text}]({source})"
+            return img.source_full_name, shape.alternative_text
         alt = shape.alternative_text or img.source_full_name
 
         # If images_folder is set, save to file instead of base64
@@ -395,11 +403,11 @@ class LdmMarkdownWriter:
                 url = os.path.relpath(filepath, self._output_path.parent)
             else:
                 url = str(filepath)
-            return f"![{alt}]({url})"
+            return url, alt
 
         # Default: inline base64 data URI
         b64 = base64.b64encode(img.image_bytes).decode("ascii")
-        return f"![{alt}](data:{img.content_type};base64,{b64})"
+        return f"data:{img.content_type};base64,{b64}", alt
 
     @staticmethod
     def _guess_image_extension(content_type: str, filename: str) -> str:
@@ -454,9 +462,10 @@ class LdmMarkdownWriter:
         if self.options.export_notes and (para.note_references or
                 any(isinstance(child, ldm.NoteReference) for child in para._children)):
             children = []
+            visible = {id(child) for child in visible_children(para)}
             for child in para._children:
                 if isinstance(child, ldm.NoteReference):
-                    if child.hidden:
+                    if child.hidden or id(child) not in visible:
                         continue
                     key = (child.kind, child.identifier)
                     if key in self._notes:
@@ -927,7 +936,10 @@ class LdmMarkdownWriter:
                 code, result = stack.pop()
                 target = self._hyperlink_target([r for r in code if r is not None])
                 folded = self._fold_hyperlink(target, result, is_code_block)
-                (stack[-1][1] if stack else out).extend(folded)
+                if stack and None not in stack[-1][0]:
+                    stack[-1][0].extend(result)
+                else:
+                    (stack[-1][1] if stack else out).extend(folded)
             elif isinstance(child, ldm.Run):
                 if not stack:
                     out.append(child)
@@ -1508,17 +1520,108 @@ class LdmMarkdownWriter:
 
     def _convert_table_as_html(self, table: ldm.Table) -> str:
         """Render a table as raw HTML."""
+        grid = [list(ldm.iter_grid_cells(row)) for row in table.rows]
+        covered = set()
         lines: list[str] = ['<table dir="rtl">' if table.bidi else "<table>"]
-        for i, row in enumerate(table.rows):
+        for i, row in enumerate(grid):
             lines.append("<tr>")
             tag = "th" if i == 0 else "td"
-            for cell in row.cells:
-                text = html.escape(self._extract_cell_text(cell))
+            for cell, column, span in row:
+                if (i, column) in covered:
+                    continue
+                children = list(cell.children)
+                rowspan = 1
+                if cell.cell_format.vertical_merge == 1:
+                    for following in range(i + 1, len(grid)):
+                        continuation = next((other for other, col, width in grid[following]
+                                             if col == column and width == span
+                                             and other.cell_format.vertical_merge == 2), None)
+                        if continuation is None:
+                            break
+                        children.extend(continuation.children)
+                        covered.add((following, column))
+                        rowspan += 1
+                elif cell.cell_format.vertical_merge == 2:
+                    warn("Orphan HTML vertical-merge continuation is emitted as a separate cell",
+                         ContentLossWarning, code="markdown.html_orphan_merge")
+                text = self._html_cell_content(children)
+                attributes = f' colspan="{span}"' if span > 1 else ""
+                if rowspan > 1:
+                    attributes += f' rowspan="{rowspan}"'
                 align = self._resolve_cell_alignment(cell)
                 if align != "left":
-                    lines.append(f'<{tag} style="text-align: {align}">{text}</{tag}>')
-                else:
-                    lines.append(f"<{tag}>{text}</{tag}>")
+                    attributes += f' style="text-align: {align}"'
+                lines.append(f"<{tag}{attributes}>{text}</{tag}>")
             lines.append("</tr>")
         lines.append("</table>")
         return "\n".join(lines)
+
+    @staticmethod
+    def _html_url_allowed(source: str, image: bool = False) -> bool:
+        try:
+            scheme = urlsplit(source).scheme.lower()
+        except ValueError:
+            return False
+        if image and scheme == "data":
+            return source.lstrip().lower().startswith("data:image/")
+        return scheme in ({"", "http", "https", "file"} if image else
+                          {"", "http", "https", "mailto", "ftp"})
+
+    def _html_run(self, run: ldm.Run) -> str:
+        text = run.text or ""
+        parts, position = [], 0
+        if run.font.style_name == _HYPERLINK_STYLE_NAME:
+            for match in INLINE_LINK_RE.finditer(text):
+                parts.append(html.escape(text[position:match.start()]))
+                label, target = decode_link(match)
+                if self._html_url_allowed(target):
+                    parts.append(f'<a href="{html.escape(target, quote=True)}">{html.escape(label)}</a>')
+                else:
+                    warn("Unsafe HTML hyperlink target omitted", ContentLossWarning,
+                         code="markdown.html_unsafe_link")
+                    parts.append(html.escape(label))
+                position = match.end()
+        parts.append(html.escape(text[position:]))
+        result = "".join(parts).replace("\n", "<br />")
+        fmt = self._get_run_formatting(run)
+        for enabled, tag in ((fmt.bold, "strong"), (fmt.italic, "em"),
+                             (fmt.strikethrough and self.options.export_strikethrough, "del"),
+                             (fmt.superscript, "sup"), (fmt.subscript, "sub"),
+                             (fmt.underline and self.options.export_underline, "u"), (fmt.code, "code")):
+            if enabled:
+                result = f"<{tag}>{result}</{tag}>"
+        return result
+
+    def _html_cell_content(self, children) -> str:
+        blocks = []
+        for child in children:
+            if isinstance(child, ldm.Table):
+                blocks.append(self._convert_table_as_html(child))
+                continue
+            if any(isinstance(item, ldm.FieldStart) for item in child._children):
+                warn("HTML table fields retain visible results but omit field actions and targets",
+                     ContentLossWarning, code="markdown.html_field_actions")
+            if self.options.export_notes and any(isinstance(item, ldm.NoteReference) and not item.hidden
+                                                 for item in visible_children(child)):
+                warn("HTML table note labels are retained without semantic note anchors",
+                     ContentLossWarning, code="markdown.html_note_anchors")
+            paragraph = self._with_note_markers(child)
+            visible = {id(item) for item in visible_children(paragraph)
+                       if not isinstance(item, ldm.Run) or not item.font.hidden}
+            parts = []
+            for item in paragraph._children:
+                if isinstance(item, ldm.Run) and id(item) in visible:
+                    parts.append(self._html_run(item))
+                elif isinstance(item, ldm.Shape) and id(item) in visible and item.has_image and item.image_data:
+                    source, alt = self._image_source(item)
+                    if self._html_url_allowed(source, image=True):
+                        parts.append(f'<img src="{html.escape(source, quote=True)}" alt="{html.escape(alt, quote=True)}" />')
+                    else:
+                        warn("Unsafe HTML image source omitted", ContentLossWarning,
+                             code="markdown.html_unsafe_image")
+                        parts.append(html.escape(alt))
+                elif isinstance(item, ldm.Shape) and id(item) in visible:
+                    warn("Unsupported non-image shape omitted from HTML table", ContentLossWarning,
+                         code="markdown.html_shape_omitted")
+            blocks.append("<p>" + "".join(parts) + "</p>")
+        return "".join(blocks)
