@@ -107,6 +107,12 @@ def build(declarations, baseline, current, observations=None, formats=None):
                 "scope": "five owned implicit-size Run/Style getter observations; full default-font semantics unverified",
                 "delivery": "implicit size migration guarded; canonical default-font mapping remains incomplete",
             }
+        if name in {"aspose.words.Style.font", "aspose.words.Document.save", "aspose.words.DocumentBase.import_node", "aspose.words.Document.import_node"}:
+            records[-1]["save_state_evidence"] = {
+                "file": "style-save-state-26.9.json",
+                "scope": "379 owned default-mode imports; live save preserves observed Run/Style getters; reopening changes Run getters in 22 cases and Style getters in none",
+                "delivery": "serialization projection and canonical editable Style API remain incomplete; not rendering acceptance",
+            }
     assert len({item["id"] for item in records}) == len(records)
     return {"schema": 1, "baseline_version": declarations["version"], "current_runtime_version": current["runtime_version"],
             "record_defaults": declarations["capability_defaults"],

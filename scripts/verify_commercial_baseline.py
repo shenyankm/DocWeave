@@ -273,6 +273,71 @@ def verify_style_roundtrips(root):
     return len(rows)
 
 
+def saved_style_fonts(data):
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    document = Document(BytesIO(data))
+    defaults = document.styles.element.find(qn("w:docDefaults"))
+    properties = defaults.find(qn("w:rPrDefault")).find(qn("w:rPr"))
+    values = {}
+    for name, tag in (("bold", "b"), ("italic", "i"), ("size", "sz")):
+        element = properties.find(qn("w:" + tag))
+        raw = None if element is None else element.get(qn("w:val"))
+        values[name] = float(raw) / 2 if name == "size" else element is not None and raw not in {"0", "false", "off"}
+    result = {}
+    for name in ("Ancestor", "Base", "Derived", "P", "C"):
+        if name not in document.styles:
+            continue
+        style, chain = document.styles[name], []
+        while style is not None:
+            assert style.style_id not in {item.style_id for item in chain}, "cyclic owned style"
+            chain.append(style)
+            style = style.base_style
+        font = values.copy()
+        for style in reversed(chain):
+            for attribute in font:
+                value = getattr(style.font, attribute)
+                if value is not None:
+                    font[attribute] = value.pt if attribute == "size" else value
+        result[name] = font
+    return result
+
+
+def verify_style_save_state(root):
+    report = json.loads((root / "style-save-state-26.9.json").read_text())
+    raw = (root / report["outputs"]["archive"]).read_bytes()
+    assert digest(raw) == report["outputs"]["sha256"]
+    changes, members = [], set()
+    with ZipFile(BytesIO(raw)) as outputs:
+        for expected, observed in zip((247, 132), report["reports"], strict=True):
+            assert observed["version"] == "26.9.0" and observed["licensed"] is False
+            corpus = (root / observed["corpus"]).read_bytes()
+            assert digest(corpus) == observed["corpus_sha256"]
+            rows = {row["case"]: row for row in observed["records"]}
+            assert len(rows) == len(observed["records"]) == expected
+            with ZipFile(BytesIO(corpus)) as inputs:
+                assert set(inputs.namelist()) == {key + "/" + phase + ".docx" for key in rows for phase in ("source", "destination")}
+                for key, row in rows.items():
+                    for phase in ("source", "destination"):
+                        assert digest(inputs.read(key + "/" + phase + ".docx")) == row["inputs"][phase]
+                    assert row["before_save"] == row["after_save_live"], "live save observation changed"
+                    data = outputs.read(row["output"])
+                    assert digest(data) == row["output_sha256"]
+                    assert saved_story_formats(data) == row["after_reopen"]["paragraphs"], "reopened paragraph observation"
+                    assert saved_style_fonts(data) == row["after_reopen"]["styles"], "reopened style observation"
+                    assert row["before_save"]["styles"] == row["after_reopen"]["styles"]
+                    if row["before_save"]["paragraphs"] != row["after_reopen"]["paragraphs"]:
+                        changes.append(str(expected) + "/" + key)
+                    assert row["output"] not in members
+                    members.add(row["output"])
+        assert members == set(outputs.namelist())
+    assert sorted(changes) == report["reopen_paragraph_changes"]
+    assert report["live_changes"] == report["reopen_style_changes"] == []
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    return len(members)
+
+
 def verify(root):
     def read(name):
         return json.loads((root / name).read_text())
@@ -318,6 +383,7 @@ def verify(root):
     style_imports += verify_style_imports(root, "style-import-default-on.json")
     style_imports += verify_style_imports(root, "paragraph-style-defaults-26.9.json")
     roundtrips = verify_style_roundtrips(root)
+    save_states = verify_style_save_state(root)
     defaults = verify_font_defaults(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
@@ -325,6 +391,7 @@ def verify(root):
             "checked_style_import_outputs": style_imports,
             "checked_font_default_inputs": defaults,
             "checked_style_roundtrip_outputs": roundtrips,
+            "checked_style_save_states": save_states,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

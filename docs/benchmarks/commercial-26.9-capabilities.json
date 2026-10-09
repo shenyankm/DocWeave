@@ -10532,6 +10532,11 @@
       "paragraph_default_evidence": {
         "file": "paragraph-style-defaults-26.9.json",
         "scope": "132 default-on paragraph/character combinations; 114 returned, 18 serialization contexts unsupported"
+      },
+      "save_state_evidence": {
+        "file": "style-save-state-26.9.json",
+        "scope": "379 owned default-mode imports; live save preserves observed Run/Style getters; reopening changes Run getters in 22 cases and Style getters in none",
+        "delivery": "serialization projection and canonical editable Style API remain incomplete; not rendering acceptance"
       }
     },
     {
@@ -11046,7 +11051,12 @@
       "implementation": "name_present_behavior_unverified",
       "gap": "behavior_not_compared",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "save_state_evidence": {
+        "file": "style-save-state-26.9.json",
+        "scope": "379 owned default-mode imports; live save preserves observed Run/Style getters; reopening changes Run getters in 22 cases and Style getters in none",
+        "delivery": "serialization projection and canonical editable Style API remain incomplete; not rendering acceptance"
+      }
     },
     {
       "id": "aspose.words.Document.sections",
@@ -12016,6 +12026,11 @@
       "paragraph_default_evidence": {
         "file": "paragraph-style-defaults-26.9.json",
         "scope": "132 default-on paragraph/character combinations; 114 returned, 18 serialization contexts unsupported"
+      },
+      "save_state_evidence": {
+        "file": "style-save-state-26.9.json",
+        "scope": "379 owned default-mode imports; live save preserves observed Run/Style getters; reopening changes Run getters in 22 cases and Style getters in none",
+        "delivery": "serialization projection and canonical editable Style API remain incomplete; not rendering acceptance"
       }
     },
     {
@@ -37223,7 +37238,12 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "save_state_evidence": {
+        "file": "style-save-state-26.9.json",
+        "scope": "379 owned default-mode imports; live save preserves observed Run/Style getters; reopening changes Run getters in 22 cases and Style getters in none",
+        "delivery": "serialization projection and canonical editable Style API remain incomplete; not rendering acceptance"
+      }
     },
     {
       "id": "aspose.words.Style.get_type",

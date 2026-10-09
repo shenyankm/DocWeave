@@ -192,7 +192,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-import-default-on.json", "corpus/style-import-default-on.zip",
              "paragraph-style-defaults-26.9.json", "corpus/paragraph-style-defaults-26.9.zip",
              "corpus/paragraph-style-default-outputs.zip", "corpus/paragraph-default-repeat-outputs.zip",
-             "style-save-roundtrips-26.9.json", "corpus/style-save-roundtrips-26.9.zip"]
+             "style-save-roundtrips-26.9.json", "corpus/style-save-roundtrips-26.9.zip",
+             "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -206,6 +207,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_style_inputs"] == 745
     assert result["checked_style_import_outputs"] == 1631
     assert result["checked_style_roundtrip_outputs"] == 494
+    assert result["checked_style_save_states"] == 379
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]
@@ -356,6 +358,30 @@ def test_roundtrip_evidence_rejects_forged_after_format(tmp_path):
         copyfile(source / file, path)
     assert check(tmp_path) == 494
     report["report"]["records"][0]["after"]["bold"] = not report["report"]["records"][0]["after"]["bold"]
+    (tmp_path / name).write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+@pytest.mark.parametrize("phase,category", [("after_save_live", "styles"), ("after_reopen", "styles"),
+                                           ("after_reopen", "paragraphs")])
+def test_save_state_evidence_rejects_forged_getters(tmp_path, phase, category):
+    import json
+    from shutil import copyfile
+
+    root = Path(__file__).parents[1]
+    check = runpy.run_path(str(root / "scripts" / "verify_commercial_baseline.py"))["verify_style_save_state"]
+    source = root / "docs" / "benchmarks"
+    name = "style-save-state-26.9.json"
+    report = json.loads((source / name).read_text())
+    for file in (name, report["outputs"]["archive"], *(item["corpus"] for item in report["reports"])):
+        path = tmp_path / file
+        path.parent.mkdir(exist_ok=True)
+        copyfile(source / file, path)
+    assert check(tmp_path) == 379
+    fonts = report["reports"][0]["records"][0][phase][category]
+    font = next(iter(fonts.values()))
+    font["bold"] = not font["bold"]
     (tmp_path / name).write_text(json.dumps(report))
     with pytest.raises(AssertionError):
         check(tmp_path)
