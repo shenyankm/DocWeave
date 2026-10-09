@@ -1,0 +1,39 @@
+{
+  "validated_commit": "6fc464e633d8407558fcae5da31d309ac5f2d1a2",
+  "scope": "A1 independent installed Python process ownership and rollback for external Markdown images on the current local filesystem",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "cwd": "/tmp",
+    "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py",
+    "source_py_files_matched": 125,
+    "wheel_sha256": "fca6b46af1f3c5bdd3a652b7f02d95ceff572c0f4bafc24f6166182c1dd06e36"
+  },
+  "test": "tests/test_markdown_image_processes.py",
+  "input": "Two independently generated python-docx DOCX packages: same picture basename, red/blue or blue/blue payload and Chinese paragraph",
+  "scenarios": {
+    "claim": "Hold the first process after exclusive marker creation; run the second to completion before releasing the first. Both final Markdown links resolve to the right red/blue pixels.",
+    "rollback": "Hold a first process with a published pending blue image before ASCII encoding; second same-content export completes; release first to fail. Original first Markdown and second output/image remain, failed first image and marker disappear.",
+    "interrupted": "Kill a held process after image rendering. The original main file remains, pending marker and image remain, and a new independent process safely chooses another name. No automatic deletion/recovery claimed."
+  },
+  "evidence": {
+    "processes": "Actual Popen/subprocess.run interpreters, distinct reported PIDs, module origin matched against the installed parent package; both handles reaped",
+    "images": "Pillow decodes final image pixels after both processes finish; actual Markdown links checked",
+    "single_test_run": "3 passed in 1.18s",
+    "installed_related": "24 passed in 2.47s",
+    "baseline": "46ea8f7 wheel extracted to /tmp/docweave-image-rollback-baseline: rollback case fails because successful second output reuses assets/image.png, 1 failed, 2 deselected in 0.92s"
+  },
+  "command": "/tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_markdown_image_processes.py /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_markdown_image_rollback.py /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_markdown_image_collisions.py -q --import-mode=importlib --tb=short",
+  "changes": "Tests and acceptance documentation only; production package bytes match the already built/installed wheel, no production change or dependency added",
+  "not_repeated": [
+    "Full suite",
+    "Examples",
+    "PDF or Word/LibreOffice visual comparisons"
+  ],
+  "remaining": [
+    "No power-loss atomicity or automatic stale-marker recovery",
+    "Network filesystem behavior not accepted",
+    "Cross-platform results depend on the latest CI; not implied by local macOS results",
+    "Remaining A1/A2/A3/A4 requirements stay open"
+  ]
+}
