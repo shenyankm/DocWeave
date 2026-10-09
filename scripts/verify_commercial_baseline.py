@@ -299,6 +299,110 @@ def verify_paragraph_character_reads(root):
     return len(rows)
 
 
+def verify_paragraph_character_inheritance_edits(root):
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    probes = Path(__file__).parents[1] / "docs/probes"
+    source_probe = runpy.run_path(str(probes / "paragraph_character_reads.py"))
+    edits = runpy.run_path(str(probes / "paragraph_character_inheritance_edits.py"))
+    properties = runpy.run_path(str(probes / "paragraph_character_indents.py"))["PROPERTIES"]
+    report = json.loads((root / "paragraph-character-inheritance-edits-26.9.json").read_text())
+    baseline = json.loads((root / "paragraph-character-reads-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["python"].startswith("3.13.") and report["platform"].startswith("macOS-")
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is report["sdk_acceptance"] is False
+    assert report["corpus"] == baseline["corpus"] and report["corpus_sha256"] == baseline["corpus_sha256"]
+    generated = dict(source_probe["inputs"]())
+    rows = report["records"]
+    expected = {(name, target, value) for name in generated for target in edits["TARGETS"] for value in edits["VALUES"]}
+    assert len(rows) == len(expected) == 216
+    assert {(row["input"], row["target"], row["value"]) for row in rows} == expected
+    initial_chars = {row["input"]: row["values"] for row in baseline["records"]}
+    attributes = {"left": properties[0], "start": properties[0], "right": properties[1], "end": properties[1],
+                  "firstLine": properties[2], "hanging": properties[2], "leftChars": properties[3], "startChars": properties[3],
+                  "rightChars": properties[4], "endChars": properties[4], "firstLineChars": properties[5], "hangingChars": properties[5]}
+    word_namespace = qn("w:p")[:-1]
+
+    def saved(layers):
+        result = dict.fromkeys(properties, 0.0)
+        for layer in layers:
+            ind = layer.find(qn("w:ind")) if layer is not None else None
+            if ind is not None:
+                for key, raw in ind.attrib.items():
+                    if key.startswith(word_namespace):
+                        name = key.split("}")[1]
+                        if name in attributes:
+                            divisor = 100 if name.endswith("Chars") else 20
+                            result[attributes[name]] = int(raw) / (-divisor if name in {"hanging", "hangingChars"} else divisor)
+        return result
+
+    source, raw = ((root / report[key]).read_bytes() for key in ("corpus", "outputs"))
+    assert digest(source) == report["corpus_sha256"] and digest(raw) == report["outputs_sha256"]
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        assert len(inputs.namelist()) == 24 and set(inputs.namelist()) == set(generated)
+        assert len(outputs.namelist()) == 216 and set(outputs.namelist()) == {row["output"] for row in rows}
+        for row in rows:
+            data = inputs.read(row["input"])
+            assert digest(data) == row["input_sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[row["input"]])) as original:
+                assert {name: actual.read(name) for name in actual.namelist()} == {name: original.read(name) for name in original.namelist()}
+            for phase in ("loaded", "after_edit", "after_save_live", "after_reopen"):
+                assert set(row[phase]) == set(edits["TARGETS"])
+                assert all(set(values) == set(properties) for values in row[phase].values())
+            prop = row["input"].split("/")[0]
+            assert row["property"] == prop
+            index = properties.index(prop) - 3
+            point = properties[index]
+            layers = list(source_probe["LAYERS"][int(Path(row["input"]).stem)])
+            _, base, derived, direct = layers
+            # Measured load/edit rules for these 24 fixtures; not a general font resolver.
+            size = 11 if index == 2 else 5
+            base_point = (base or 0) * size / 100
+            derived_point = derived * size / 100 if derived is not None else base_point
+            paragraph_point = direct * (11 if index == 2 else 10) / 100 if direct else derived_point
+            quantized = {0.0: 0.0, 1.235: 1.23, -1.235: -1.23}[row["value"]]
+            for target, value in zip(edits["TARGETS"], (base_point, derived_point, paragraph_point)):
+                initial = dict.fromkeys(properties, 0.0)
+                initial.update(initial_chars[row["input"]][target])
+                initial[point] = value
+                assert row["loaded"][target] == initial
+            layers[edits["TARGETS"].index(row["target"]) + 1] = quantized * 100
+            for target, end in (("base", 2), ("derived", 3), ("paragraph", 4)):
+                expected_edit = dict(row["loaded"][target])
+                expected_edit[prop] = next((value / 100 for value in reversed(layers[:end]) if value is not None), 0.0)
+                if target == row["target"] == "paragraph":
+                    expected_edit[point] = round(quantized * 11 * 20) / 20 if quantized else expected_edit[point]
+                    if index == 2 and quantized < 0:
+                        expected_edit["left_indent"] = -expected_edit[point]
+                assert row["after_edit"][target] == expected_edit
+            assert row["after_save_live"] == row["after_reopen"]
+            if row["target"] == "paragraph":
+                assert row["after_edit"] == row["after_save_live"]
+            output = outputs.read(row["output"])
+            assert digest(output) == row["output_sha256"]
+            document = Document(BytesIO(output))
+            assert document.styles["Base"].element.find(qn("w:basedOn")) is None
+            reference = document.styles["Derived"].element.find(qn("w:basedOn"))
+            assert reference is not None and reference.get(qn("w:val")) == "Base"
+            default = document.styles.element.find(qn("w:docDefaults") + "/" + qn("w:pPrDefault") + "/" + qn("w:pPr"))
+            base = document.styles["Base"].element.find(qn("w:pPr"))
+            derived = document.styles["Derived"].element.find(qn("w:pPr"))
+            paragraph = next(p for p in document.paragraphs if "IMPORT" in p.text)
+            paragraph = paragraph._p.find(qn("w:pPr"))
+            reference = paragraph.find(qn("w:pStyle"))
+            assert reference is not None and reference.get(qn("w:val")) == "Derived"
+            for target, layers in (("base", [default, base]), ("derived", [default, base, derived]),
+                                   ("paragraph", [default, base, derived, paragraph])):
+                assert saved(layers) == row["after_reopen"][target]
+    errors = report["setter_errors"]
+    assert len(errors) == 216
+    assert {(row["input"], row["target"], repr(row["value"])) for row in errors} == {
+        (name, target, repr(value)) for name in generated for target in edits["TARGETS"] for value in (None, True, "bad")}
+    assert all(row["error"] == "TypeError" and row["property"] == row["input"].split("/")[0] for row in errors)
+    return len(rows)
+
+
 def verify_paragraph_character_setters(root):
     from docx import Document
     from docx.oxml.ns import qn
@@ -1151,6 +1255,7 @@ def verify(root):
     character_indents = verify_paragraph_character_indents(root)
     character_setters = verify_paragraph_character_setters(root)
     character_reads = verify_paragraph_character_reads(root)
+    character_inheritance_edits = verify_paragraph_character_inheritance_edits(root)
     character_roundtrips = verify_character_indent_roundtrips(root)
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
@@ -1177,6 +1282,7 @@ def verify(root):
             "checked_paragraph_character_indents": character_indents,
             "checked_paragraph_character_setters": character_setters,
             "checked_paragraph_character_reads": character_reads,
+            "checked_paragraph_character_inheritance_edits": character_inheritance_edits,
             "checked_character_indent_roundtrips": character_roundtrips,
             "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}

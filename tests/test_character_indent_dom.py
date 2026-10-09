@@ -19,6 +19,19 @@ NATIVE = [json.loads((BENCHMARKS / name).read_text()) for name in
           ("paragraph-character-indents-26.9.json", "paragraph-character-setters-26.9.json")]
 source = runpy.run_path(str(ROOT / "tests/test_character_indent_diagnostics.py"))["source"]
 with_direct_properties = runpy.run_path(str(ROOT / "tests/test_paragraph_dimensions.py"))["with_direct_properties"]
+INHERITANCE_EDITS = json.loads((BENCHMARKS / "paragraph-character-inheritance-edits-26.9.json").read_text())
+
+
+@pytest.mark.parametrize("row", INHERITANCE_EDITS["records"], ids=lambda row: row["output"])
+def test_native_edited_style_character_values_survive_dom_read_and_save(row):
+    with ZipFile(BENCHMARKS / INHERITANCE_EDITS["outputs"]) as corpus:
+        document = DocxDocument(BytesIO(corpus.read(row["output"])))
+    before = document.to_bytes()
+    for target in ("base", "derived"):
+        fmt = document.styles.get_by_name(target.capitalize()).paragraph_format
+        assert {prop: getattr(fmt, prop) for prop in PROPERTIES} == {
+            prop: row["after_reopen"][target][prop] for prop in PROPERTIES}
+    assert document.to_bytes() == before
 
 
 @pytest.mark.parametrize("row", READS["records"], ids=lambda row: row["input"])

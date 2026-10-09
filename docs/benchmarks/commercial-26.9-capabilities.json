@@ -30251,6 +30251,15 @@
           "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
           "native_malformed_input_recovery": "not_measured"
         }
+      },
+      "character_indent_inheritance_edit_evidence": {
+        "report": "docs/benchmarks/paragraph-character-inheritance-edits-26.9.json",
+        "probe": "docs/probes/paragraph_character_inheritance_edits.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_inheritance_edits",
+        "scope": "216 native edits and 216 TypeError observations through docDefaults/Base/Derived/direct paragraph; six point/character getters before and after edit, save and cold reread; independently parsed saved inheritance chains",
+        "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30309,6 +30318,15 @@
           "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
           "native_malformed_input_recovery": "not_measured"
         }
+      },
+      "character_indent_inheritance_edit_evidence": {
+        "report": "docs/benchmarks/paragraph-character-inheritance-edits-26.9.json",
+        "probe": "docs/probes/paragraph_character_inheritance_edits.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_inheritance_edits",
+        "scope": "216 native edits and 216 TypeError observations through docDefaults/Base/Derived/direct paragraph; six point/character getters before and after edit, save and cold reread; independently parsed saved inheritance chains",
+        "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30367,6 +30385,15 @@
           "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
           "native_malformed_input_recovery": "not_measured"
         }
+      },
+      "character_indent_inheritance_edit_evidence": {
+        "report": "docs/benchmarks/paragraph-character-inheritance-edits-26.9.json",
+        "probe": "docs/probes/paragraph_character_inheritance_edits.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_inheritance_edits",
+        "scope": "216 native edits and 216 TypeError observations through docDefaults/Base/Derived/direct paragraph; six point/character getters before and after edit, save and cold reread; independently parsed saved inheritance chains",
+        "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30496,6 +30523,15 @@
           "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
           "native_malformed_input_recovery": "not_measured"
         }
+      },
+      "character_indent_inheritance_edit_evidence": {
+        "report": "docs/benchmarks/paragraph-character-inheritance-edits-26.9.json",
+        "probe": "docs/probes/paragraph_character_inheritance_edits.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_inheritance_edits",
+        "scope": "216 native edits and 216 TypeError observations through docDefaults/Base/Derived/direct paragraph; six point/character getters before and after edit, save and cold reread; independently parsed saved inheritance chains",
+        "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30713,6 +30749,15 @@
           "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
           "native_malformed_input_recovery": "not_measured"
         }
+      },
+      "character_indent_inheritance_edit_evidence": {
+        "report": "docs/benchmarks/paragraph-character-inheritance-edits-26.9.json",
+        "probe": "docs/probes/paragraph_character_inheritance_edits.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_inheritance_edits",
+        "scope": "216 native edits and 216 TypeError observations through docDefaults/Base/Derived/direct paragraph; six point/character getters before and after edit, save and cold reread; independently parsed saved inheritance chains",
+        "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30940,6 +30985,15 @@
           "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
           "native_malformed_input_recovery": "not_measured"
         }
+      },
+      "character_indent_inheritance_edit_evidence": {
+        "report": "docs/benchmarks/paragraph-character-inheritance-edits-26.9.json",
+        "probe": "docs/probes/paragraph_character_inheritance_edits.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_inheritance_edits",
+        "scope": "216 native edits and 216 TypeError observations through docDefaults/Base/Derived/direct paragraph; six point/character getters before and after edit, save and cold reread; independently parsed saved inheritance chains",
+        "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
