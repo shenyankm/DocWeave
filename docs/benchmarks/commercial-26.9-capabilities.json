@@ -30203,7 +30203,14 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "character_indent_loss_evidence": {
+        "code": "load.character_indents_ignored",
+        "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
+        "tests": "tests/test_character_indent_diagnostics.py",
+        "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.character_unit_left_indent",
@@ -30213,7 +30220,14 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "character_indent_loss_evidence": {
+        "code": "load.character_indents_ignored",
+        "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
+        "tests": "tests/test_character_indent_diagnostics.py",
+        "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.character_unit_right_indent",
@@ -30223,7 +30237,14 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "character_indent_loss_evidence": {
+        "code": "load.character_indents_ignored",
+        "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
+        "tests": "tests/test_character_indent_diagnostics.py",
+        "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.clear_formatting",
@@ -30303,6 +30324,13 @@
         "implementation": "start/left, end/right and firstLine/hanging conflicts follow same-layer XML attribute order; nearer layers win; setters clear matching aliases; 42 inputs and 168 native edits with save/reopen and LDM mapping",
         "tests": "tests/test_paragraph_dimensions.py",
         "limits": "character-based indents, bidi rendering, nonfinite behavior, canonical API and complete paragraph formatting remain incomplete",
+        "full_acceptance": false
+      },
+      "character_indent_loss_evidence": {
+        "code": "load.character_indents_ignored",
+        "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
+        "tests": "tests/test_character_indent_diagnostics.py",
+        "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
         "full_acceptance": false
       }
     },
@@ -30472,6 +30500,13 @@
         "implementation": "start/left, end/right and firstLine/hanging conflicts follow same-layer XML attribute order; nearer layers win; setters clear matching aliases; 42 inputs and 168 native edits with save/reopen and LDM mapping",
         "tests": "tests/test_paragraph_dimensions.py",
         "limits": "character-based indents, bidi rendering, nonfinite behavior, canonical API and complete paragraph formatting remain incomplete",
+        "full_acceptance": false
+      },
+      "character_indent_loss_evidence": {
+        "code": "load.character_indents_ignored",
+        "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
+        "tests": "tests/test_character_indent_diagnostics.py",
+        "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
         "full_acceptance": false
       }
     },
@@ -30651,6 +30686,13 @@
         "implementation": "start/left, end/right and firstLine/hanging conflicts follow same-layer XML attribute order; nearer layers win; setters clear matching aliases; 42 inputs and 168 native edits with save/reopen and LDM mapping",
         "tests": "tests/test_paragraph_dimensions.py",
         "limits": "character-based indents, bidi rendering, nonfinite behavior, canonical API and complete paragraph formatting remain incomplete",
+        "full_acceptance": false
+      },
+      "character_indent_loss_evidence": {
+        "code": "load.character_indents_ignored",
+        "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
+        "tests": "tests/test_character_indent_diagnostics.py",
+        "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
         "full_acceptance": false
       }
     },

@@ -153,6 +153,9 @@ for style in editable.styles:
   [168 次缩进别名编辑](benchmarks/paragraph-logical-indents-26.9.json)覆盖 42 个继承/别名输入，
   包含 bidi 开/关 getter、保存重开及排版模型映射；不是双向段落排版验收。
   `startChars/endChars` 和其他字符缩进仍需字体解析，有效格式读取明确拒绝，不以 0 冒充。
+  `to_light_document()` 及 `Document` 的 DOCX/Flat OPC 加载会汇总为
+  `load.character_indents_ignored` 损失诊断；将 `ContentLossWarning` 升级为错误可拒绝快照转换。
+  原包保存不触发转换诊断，也不移除原属性。
   [32 次间距边界编辑](benchmarks/paragraph-spacing-limits-26.9.json)覆盖段落/样式、合法边界、
   量化和保存重开；[极端 setter 观察](benchmarks/paragraph-dimension-extremes-26.9.json)发现官方缩进
   会夹紧大值，NaN/Infinity 可产生负边界哨兵。本项目仍拒绝非有限值，错误行为差异未解决；

@@ -255,6 +255,12 @@ run 字体读取时先应用字符样式继承，再应用直接格式；写出�
 DOCX 禁止重复/加密 ZIP 条目、不安全条目路径和 XML 实体扩展。SVG 不允许外部图片引用，
 只接受内部引用及内嵌光栅图片。超限会抛出错误；大文件业务需先评估资源需求再调整源码中的上限。
 
+DOCX/Flat OPC 的字符单位缩进尚未映射到转换模型。加载时汇总 `leftChars/rightChars`、
+`startChars/endChars`、`firstLineChars/hangingChars`，发出 `load.character_indents_ignored`
+损失诊断；扫描正文、样式、编号和附属 story，包含显式零值，诊断不含正文或属性值。
+`ContentLossWarning` 错误过滤及 CLI `--strict` 在输出前拒绝；原包 DOM 保存仍保留这些属性。
+见[检测与拒绝复验](../tests/test_character_indent_diagnostics.py)。这是损失检测，不是字符缩进支持。
+
 Markdown 默认不读取本地图片，仍支持内嵌 base64 图片。可信文件需要本地图片时显式开启：
 
 ```python

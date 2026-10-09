@@ -242,6 +242,19 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             warn("DOCX constructs are not fully retained: " + ", ".join(sorted(found)),
                  DocumentLoadWarning, stacklevel=3, location="word/document.xml and headers/footers")
 
+        # shortcut: keep this guard until font-aware character-indent mapping is verified.
+        character_indents = {W_NS + name for name in (
+            "leftChars", "rightChars", "startChars", "endChars", "firstLineChars", "hangingChars"
+        )}
+        format_roots = roots + [root for root in (self._styles_xml, self._numbering_xml) if root is not None]
+        ignored = {attribute[len(W_NS):] for root in format_roots for node in root.iter(W_NS + "ind")
+                   for attribute in node.attrib if attribute in character_indents}
+        if ignored:
+            warn("DOCX character-unit paragraph indents are not resolved by the conversion model: " +
+                 ", ".join(sorted(ignored)) + "; use original-package editing to preserve them",
+                 DocumentLoadWarning, stacklevel=3, code="load.character_indents_ignored",
+                 location="DOCX paragraph formatting, styles, numbering and source stories")
+
         references = list(self._document_xml.iter(W_NS + "headerReference")) + list(
             self._document_xml.iter(W_NS + "footerReference"))
         for kind in ("headerReference", "footerReference"):
