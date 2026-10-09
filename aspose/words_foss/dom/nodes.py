@@ -306,7 +306,7 @@ class Node:
             raise NotImplementedError("Deleting complex content requires relationship/range support")
         parent._validate_removal(self)
         parent._element.removeChild(self._element)
-        self._changed()
+        parent._changed()
         return self
 
     def clone(self):

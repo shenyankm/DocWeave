@@ -142,6 +142,10 @@ runs = editable.get_child_nodes(aw.NodeType.RUN, deep=True)
   单元格的段落与嵌套表格不再分开存储，原始交错顺序得以保留。
 - 节点提供 `parent_node`、`owner_document`、`part_name`、`clone()`、`remove()`；容器提供
   `append_child()`、`insert_before()`。插入已有节点会移动它，不会复制。
+- 单独删除节点后保存也会更新原 part；删除节点仍归属原文档，但不再有父节点。
+  [商业基准与保存回读记录](benchmarks/commercial-26.9-dom-structure.json)保留了删除未持久化
+  问题的修复前后证据。当前 `remove()` 返回自身、无父节点时抛出 `ValueError`，与商业基准的
+  返回值/异常仍有差异；浅克隆与跨文档导入也尚未对齐。
 - 检查合法父子类型、循环、跨文档/part 插入和单元格末尾段落。
   正文新增内容放在最后的 `sectPr` 前面，不重新解释分节。
 - 只允许移动、删除、复制受支持的简单结构。含未知元素、复杂范围或关系属性的结构明确拒绝。

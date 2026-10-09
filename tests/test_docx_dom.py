@@ -187,6 +187,39 @@ def test_ordered_structure_and_parent_ownership(tmp_path):
     assert list(root.find(f'{{{W}}}body'))[-1].tag == f'{{{W}}}sectPr'
 
 
+@pytest.mark.parametrize("kind", ["paragraph", "run", "table", "cell_paragraph", "header_paragraph"])
+def test_first_edit_removal_persists_and_preserves_unaffected_parts(tmp_path, kind):
+    source = tmp_path / "source.docx"
+    header = f'<w:hdr xmlns:w="{W}"><w:p><w:r><w:t>first header</w:t></w:r></w:p><w:p><w:r><w:t>second header</w:t></w:r></w:p></w:hdr>'
+    original = package(source,
+                       '<w:p><w:r><w:t>FIRST</w:t></w:r><w:r><w:t>tail</w:t></w:r></w:p>'
+                       '<w:p><w:r><w:t>SECOND</w:t></w:r></w:p>'
+                       '<w:tbl><w:tblGrid><w:gridCol/></w:tblGrid><w:tr><w:tc>'
+                       '<w:p><w:r><w:t>first cell</w:t></w:r></w:p>'
+                       '<w:p><w:r><w:t>second cell</w:t></w:r></w:p>'
+                       '</w:tc></w:tr></w:tbl><w:sectPr/>',
+                       extras={"word/header1.xml": header.encode()})
+    doc = aw.DocxDocument(source)
+    part = "word/header1.xml" if kind == "header_paragraph" else "word/document.xml"
+    targets = {"paragraph": lambda: doc.body.paragraphs[0],
+               "run": lambda: doc.body.paragraphs[0].runs[0],
+               "table": lambda: doc.body.tables[0],
+               "cell_paragraph": lambda: doc.body.tables[0].rows[0].cells[0].paragraphs[0],
+               "header_paragraph": lambda: doc.story(part).paragraphs[0]}
+    removed = targets[kind]()
+    removed.remove()
+    assert removed.parent_node is None and removed.owner_document is doc
+    saved = payloads(doc.to_bytes())
+    assert {name for name in original if original[name] != saved[name]} == {part}
+    expected_removed = {"paragraph": "FIRSTtail", "run": "FIRST", "table": "first cellsecond cell",
+                        "cell_paragraph": "first cell", "header_paragraph": "first header"}[kind]
+    visible = "".join(node.text or "" for node in fromstring(saved[part]).iter(f'{{{W}}}t'))
+    assert expected_removed not in visible
+    assert ("second header" if kind == "header_paragraph" else "SECOND") in visible
+    reloaded = aw.DocxDocument(BytesIO(doc.to_bytes()))
+    assert reloaded.part_xml(part) == doc.part_xml(part)
+
+
 @pytest.mark.parametrize("inline", [
     '<w:bookmarkStart w:id="1" w:name="b"/>',
     '<w:hyperlink><w:r><w:t>link</w:t></w:r></w:hyperlink>',
