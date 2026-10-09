@@ -21,7 +21,6 @@ from aspose.words_foss.pdf_writer.constants import (
     DEFAULT_CELL_LINE_H_FACTOR,
     DEFAULT_SHAPE_DIM_PT,
     FPDF_ALIGN,
-    LINE_HEIGHT_FACTOR,
     LIST_INDENT_PER_LEVEL_MM,
     DEFAULT_CELL_PAD_LEFT_MM,
     DEFAULT_CELL_PAD_TOP_MM,
@@ -346,7 +345,7 @@ class TableRenderer:
                         lines.extend(self._cell_lines(pdf, nested_cell, width))
             flush(final=True)
             if not para._children:
-                lines.append(_CellLine(DEFAULT_FONT_SIZE_PT * PT_TO_MM * LINE_HEIGHT_FACTOR))
+                lines.append(_CellLine(w._paragraph_renderer.line_height_mm(DEFAULT_FONT_SIZE_PT, para.paragraph_format)))
             if para.paragraph_format.space_after:
                 lines.append(_CellLine(para.paragraph_format.space_after * PT_TO_MM))
             if len(lines) > first_line:
