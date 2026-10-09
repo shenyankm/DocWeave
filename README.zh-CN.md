@@ -324,6 +324,12 @@ LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼�
 这会改变此前忽略旧模式的 PDF 横坐标；设为 15 可使用现代位置。该字段不代表完整版本兼容，
 浮动/嵌套定位和边框度量仍有限制，见[表格定位验收](docs/benchmarks/table-compatibility.json)。
 
+表格、单元格与表格样式的四侧边距以 pt 为单位：`None` 表示未设置/继承，`0` 表示显式零边距。
+DOCX 读写保留零值，PDF 测量与绘制采用单元格覆盖、表格默认、渲染器回退的相同顺序；
+DOCX 表格默认边距包括已支持的样式继承。表格上下边距是单元格内部间距，不再额外增加表外空白。
+旧 LDM JSON 若用 `0` 表示默认间距，应改为 `null`；显式零值现在会改变布局。
+逻辑 `start/end`、条件表格样式及行级边距例外仍未实现，见[边距验收](docs/benchmarks/cell-margins.json)。
+
 阿拉伯语等复杂文字可安装塑形支持，并部署适合语言的可信 fallback 字体：
 
 ```bash
@@ -482,7 +488,7 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-最新本地安装包验收环境为 macOS/Python 3.13.15：**1,448 项回归测试、31 项 API 示例通过**，
+最新本地安装包验收环境为 macOS/Python 3.13.15：**1,484 项回归测试、31 项 API 示例通过**，
 并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
 环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
 这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。

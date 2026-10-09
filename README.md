@@ -338,6 +338,14 @@ center/right tables ignore table indents. This changes PDF positions previously 
 set 15 for modern placement. The field does not guarantee full version compatibility. Floating/nested
 placement and border metrics remain limited; see [table-placement validation](docs/benchmarks/table-compatibility.json).
 
+Table, cell, and table-style margins are in pt: `None` means unset/inherited and `0` means an explicit
+zero margin. DOCX preserves zero values. PDF measurement and painting share cell overrides, table
+defaults, then renderer fallbacks; supported DOCX style inheritance supplies table defaults.
+Table top/bottom margins are inside cells and no longer add space outside the table.
+Old LDM JSON using `0` for default spacing must use `null` instead; explicit zeros now affect layout.
+Logical `start/end`, conditional table styles, and row-level margin exceptions remain unsupported;
+see [margin validation](docs/benchmarks/cell-margins.json).
+
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
 ```bash
@@ -503,7 +511,7 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Latest installed-wheel verification on macOS/Python 3.13.15: **1,448 regression tests and 31 API examples passed**;
+Latest installed-wheel verification on macOS/Python 3.13.15: **1,484 regression tests and 31 API examples passed**;
 installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
 See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
 These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.

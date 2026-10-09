@@ -231,9 +231,8 @@ class StyleBuilder:
         has_borders = any(
             b.line_style != 0 or b.line_width != 0.0 for b in tsf.borders
         )
-        has_padding = any(
-            (tsf.left_padding, tsf.right_padding, tsf.top_padding, tsf.bottom_padding)
-        )
+        has_padding = any(value is not None for value in
+            (tsf.left_padding, tsf.right_padding, tsf.top_padding, tsf.bottom_padding))
         if not (has_borders or has_padding):
             return
         if not has_borders:

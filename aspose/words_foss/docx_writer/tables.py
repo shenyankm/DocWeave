@@ -144,17 +144,17 @@ def _render_tcMar(fmt: ldm.CellFormat) -> str:
 
     OOXML schema (CT_TcMar) accepts ``top`` / ``left`` / ``bottom`` /
     ``right`` children, each carrying ``w:w`` (twips) + ``w:type="dxa"``.
-    Only sides with a non-zero LDM value are emitted so cells without
+    Only explicitly set sides are emitted so cells without
     custom padding don't get a noisy element.
     """
-    sides: list[tuple[str, float]] = [
+    sides: list[tuple[str, Optional[float]]] = [
         ("w:top", fmt.top_padding),
         ("w:left", fmt.left_padding),
         ("w:bottom", fmt.bottom_padding),
         ("w:right", fmt.right_padding),
     ]
     children = [
-        el(side, {"w:w": pt_to_twips(value), "w:type": "dxa"}) for side, value in sides if value
+        el(side, {"w:w": pt_to_twips(value), "w:type": "dxa"}) for side, value in sides if value is not None
     ]
     if not children:
         return ""
@@ -409,7 +409,7 @@ def _tblPr(
         "right": table.right_padding,
     }
     for side, val in margin_map.items():
-        if val > 0:
+        if val is not None:
             margins.append(
                 el(
                     f"w:{side}",

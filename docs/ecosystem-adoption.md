@@ -1432,3 +1432,47 @@ wheel 26,259,420 字节，较第 55 节增加 462 字节，133 个包文件与�
 
 最终全量安装 1,448 passed（332.63 s，112 warnings，无跳过项），
 示例 31 passed（7.26 s，13 warnings）。Ruff 致命错误/未使用导入和 diff whitespace 检查通过。
+
+
+## 57. 显式零边距、默认样式与共享表格测量
+
+CellFormat、Table、TableStyleFormat 的四侧边距改为可选非负有限点数：None 为未设置/继承，
+0 为显式零边距。DOCX 的 tcMar、tblCellMar 与表格样式 writer 不再丢弃零值；reader 保留
+全零样式，复用现有样式链解析器应用默认表格样式及 basedOn 边距，再应用直接表格覆盖。
+单元格只存直接覆盖，不再把继承值复制为覆盖；缺失 tcPr/tblPr 仍能继承默认样式。
+非 dxa 边距忽略且不解析其 w 值，负边距明确拒绝；并未实现所有 OOXML 边距类型。
+
+PDF 共用单元格覆盖 → 表格默认 → 既有渲染器回退；该结果用于折行、行高、分页、绘制及
+嵌套表格。Table 上下边距属于单元格内部，移除重复添加的表外间距，保留既有固定表后间距。
+多栏表格高度测量复用实际布局/行高，且与绘制一致处理左对齐正缩进，删除未使用的测量包装。
+
+迁移：旧 LDM JSON 中用于“默认间距”的 0 应改为 null；缺失字段默认 None，显式 0 现在生效。
+依赖旧 Table 上下边距产生表外空白的调用方，应使用周围段落的间距表达该意图。
+这会改变相应文档布局，不声称历史 JSON 或旧 PDF 坐标完全不变。
+
+新增 36 项专项，覆盖塑形开关、零/正/未设置覆盖、DOCX 与 JSON 往返、样式链、默认样式、
+缺失属性块、非法数值/单位、嵌套表格不修改源模型、满宽图片以及测量与实际绘制边框对照。
+相关源码回归 217 passed（45.89 s，75 warnings）。早期专项 13 failed / 17 passed 不计为通过：
+测试输入继承 Normal 的 1.15 行距，使纵坐标多出 1.26 pt；将夹具明确设为单倍行距和零段前/后间距，
+以隔离边距因素，随后 30 项通过，再补充缺属性块与实际高度对照至 36 项。
+
+六份固定源 DOCX、12 个塑形/非塑形旧新安装包输出与实际 LibreOffice 26.2.6.3 对照，
+内容和单页页数全部一致。首词 x/y 与伸展末词 x 最大误差（pt）分别从
+2.7300/7.4300/2.9152 降至 0.1001/0.0100/0.0840。
+继承上边距不再重复叠加：首词 y 从 32 到 26 pt（原生 25.9900）；显式零单元格由
+22.83/27.42 移至 20/20 pt（原生 20.1/19.9900）。四组旧/新/原生视觉预览已检查。
+字体字形和行距仍有差异，该坐标验收不能证明完整 Word 排版一致。
+
+五类既有 DOCX 共 113 页，逐页文字坐标、绘图、图片记录、像素摘要及 PDF 大小全部不变。
+wheel 为 26,259,825 字节，比第 56 节增加 405 字节；133 个包文件与源码一致，
+源码目录外导入/typing marker/字体检查通过，无新生产依赖。
+本阶段未新增速度/RSS 基准，不宣称提速或缩小安装体积。
+逻辑 start/end、条件表格样式边距、行级 tblPrEx 例外、边框度量和完整 Office 布局仍待深化。
+第 56 节的零边距边界在本节所列范围内改善，证据和可复验探针见
+[边距记录](benchmarks/cell-margins.json)。
+规范依据 [tcMar](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tablecellmargin?view=openxml-3.0.1)
+与 [tblCellMar](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tablecellmargindefault?view=openxml-3.0.1)。
+
+最终源码目录外安装包全量 1,484 passed（372.61 s，127 warnings，无跳过项），
+API 示例 31 passed（7.29 s，13 warnings）。Ruff 致命错误/未使用导入与 diff whitespace 检查通过；
+四份文档的 134 个本地链接、代码围栏及 Python 示例语法检查通过。

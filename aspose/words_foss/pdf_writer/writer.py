@@ -16,6 +16,7 @@ from fpdf import FPDF
 from fpdf.prefs import ViewerPreferences
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss.model.enums import ParagraphAlignment
 from aspose.words_foss._visible_runs import visible_runs
 from aspose.words_foss._io import atomic_output, validate_image
 from aspose.words_foss.pdf_writer.constants import (
@@ -641,11 +642,13 @@ class LdmPdfWriter:
             register_fonts(self._measurement_pdf, fallback_fonts=self.options.fallback_fonts)
             self._measurement_pdf.add_page()
         measure = self._measurement_pdf
-        widths = self._table_renderer._compute_col_widths(table, count, col_w_mm)
+        indent = table.left_indent * PT_TO_MM if table.alignment == ParagraphAlignment.LEFT else 0.0
+        widths = self._table_renderer._compute_col_widths(table, count, col_w_mm - max(0, indent))
         with measure._disable_writing():
-            height = sum(self._table_renderer._compute_row_height(measure, row, widths, count)
+            height = sum(self._table_renderer._row_height(row,
+                         self._table_renderer._layout_row(measure, row, widths, table), table)
                          for row in table.rows)
-        return height + table.top_padding * PT_TO_MM + (table.bottom_padding * PT_TO_MM or POST_TABLE_SPACING_MM)
+        return height + POST_TABLE_SPACING_MM
 
     # ------------------------------------------------------------------
     # Multi-column layout helpers

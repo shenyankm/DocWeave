@@ -807,10 +807,10 @@ class CellFormat(BaseModel):
     vertical_merge: int = 0  # 0=None, 1=First, 2=Previous
     horizontal_merge: int = 0  # 0=None, 1=First, 2=Previous
     grid_span: int = Field(default=1, ge=1, le=MAX_TABLE_COLUMNS)
-    top_padding: float = 0.0
-    bottom_padding: float = 0.0
-    left_padding: float = 0.0
-    right_padding: float = 0.0
+    top_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    bottom_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    left_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    right_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
     shading: Shading = Field(default_factory=Shading)
     borders: list[Border] = Field(default_factory=list)
     orientation: int = 0
@@ -924,10 +924,10 @@ class Table(BaseModel, NodeCastMixin):
     alignment: int = 0
     preferred_width: PreferredWidth = Field(default_factory=PreferredWidth)
     left_indent: float = 0.0
-    left_padding: float = 0.0
-    right_padding: float = 0.0
-    top_padding: float = 0.0
-    bottom_padding: float = 0.0
+    left_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    right_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    top_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    bottom_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
     style_name: str = ""
     text_wrapping: int = 0  # 0=None, 1=Default/Around
     title: str = ""
@@ -1090,10 +1090,10 @@ class TableStyleFormat(BaseModel):
     """Table-level properties stored on table styles (``w:tblPr`` inside ``w:style``)."""
 
     borders: list[Border] = Field(default_factory=list)
-    left_padding: float = 0.0
-    right_padding: float = 0.0
-    top_padding: float = 0.0
-    bottom_padding: float = 0.0
+    left_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    right_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    top_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
+    bottom_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
 
 
 class TableStyleProperty(BaseModel):

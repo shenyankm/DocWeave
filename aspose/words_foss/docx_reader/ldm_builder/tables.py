@@ -6,7 +6,7 @@ paragraph and table builders depend on each other without a cyclic
 import.
 """
 
-from typing import Callable, Optional
+from typing import Callable
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
@@ -22,6 +22,7 @@ from aspose.words_foss.model.enums import CellVerticalAlignment as _CVA
 
 from ._helpers import apply_padding_sides, build_borders, build_shading
 from ._context import ReaderContext
+from .cascading import StyleChainResolver
 
 
 # Paragraph builder callback signature: (p_elem, image_rels?) -> ldm.Paragraph.
@@ -68,19 +69,16 @@ class TableBuilder:
         self._ctx = ctx
         self._paragraph_builder = paragraph_builder
         self._row_builder = RowBuilder(ctx, paragraph_builder, self)
+        self._default_style_id = next((sid for sid, elem in ctx._style_elem_cache.items()
+            if elem.get(f"{W_NS}type") == "table" and elem.get(f"{W_NS}default") in ("1", "true", "on")), "")
 
     def build(self, tbl_elem: ET.Element) -> ldm.Table:
         """Translate one ``<w:tbl>`` into :class:`ldm.Table` (rows + cells inclusive)."""
         tbl = ldm.Table(source_location=self._ctx._source_locations.get(tbl_elem))
-        table_borders: list[ldm.Border] = []
         tblPr = tbl_elem.find(f"{W_NS}tblPr")
-        if tblPr is not None:
-            table_borders = self._apply_table_properties(tbl, tblPr)
+        table_borders = self._apply_table_properties(tbl, tblPr if tblPr is not None else ET.Element(f"{W_NS}tblPr"))
 
-        default_paddings = (
-            tbl.left_padding, tbl.right_padding, tbl.top_padding, tbl.bottom_padding,
-        )
-        self._build_rows(tbl_elem, tbl, table_borders, default_paddings)
+        self._build_rows(tbl_elem, tbl, table_borders)
         return tbl
 
     def _apply_table_properties(
@@ -89,6 +87,12 @@ class TableBuilder:
         tblPr: ET.Element,
     ) -> list[ldm.Border]:
         tblStyle = tblPr.find(f"{W_NS}tblStyle")
+        raw_id = tblStyle.get(f"{W_NS}val", "") if tblStyle is not None else self._default_style_id
+        for sid in StyleChainResolver(self._ctx).chain(raw_id):
+            style = self._ctx._style_elem_cache.get(sid)
+            margins = style.find(f"{W_NS}tblPr/{W_NS}tblCellMar") if style is not None else None
+            if margins is not None:
+                apply_padding_sides(tbl, margins)
         if tblStyle is not None:
             # Resolve the styleId to the style's display name (same as
             # ``<w:pStyle>`` handling) so the LDM holds a stable
@@ -150,14 +154,13 @@ class TableBuilder:
         tbl_elem: ET.Element,
         tbl: ldm.Table,
         table_borders: list[ldm.Border],
-        default_paddings: tuple[float, float, float, float],
     ) -> None:
         ctx = self._ctx
         previous_style = getattr(ctx, "_current_table_style_id", "")
         ctx._current_table_style_id = tbl.style_name
         try:
             for tr_elem in tbl_elem.findall(f"{W_NS}tr"):
-                row = self._row_builder.build(tr_elem, default_paddings)
+                row = self._row_builder.build(tr_elem)
                 if table_borders:
                     row.row_format.borders = table_borders
                 tbl.rows.append(row)
@@ -179,9 +182,8 @@ class RowBuilder:
     def build(
         self,
         tr_elem: ET.Element,
-        default_paddings: Optional[tuple[float, float, float, float]] = None,
     ) -> ldm.Row:
-        """Translate one ``<w:tr>``; *default_paddings* fall through to each cell."""
+        """Translate one ``<w:tr>``."""
         row = ldm.Row()
         trPr = tr_elem.find(f"{W_NS}trPr")
         if trPr is not None:
@@ -193,7 +195,7 @@ class RowBuilder:
             if tblW is not None:
                 row.preferred_width = TableBuilder._parse_preferred_width(tblW)
         for tc_elem in tr_elem.findall(f"{W_NS}tc"):
-            row.cells.append(self._cell_builder.build(tc_elem, default_paddings))
+            row.cells.append(self._cell_builder.build(tc_elem))
         return row
 
     @staticmethod
@@ -235,13 +237,12 @@ class CellBuilder:
     def build(
         self,
         tc_elem: ET.Element,
-        default_paddings: Optional[tuple[float, float, float, float]] = None,
     ) -> ldm.Cell:
-        """Translate one ``<w:tc>``; *default_paddings* inherit from the parent table."""
+        """Translate one ``<w:tc>`` without turning inherited margins into direct overrides."""
         cell = ldm.Cell()
         tcPr = tc_elem.find(f"{W_NS}tcPr")
         if tcPr is not None:
-            cell.cell_format = self._build_cell_format(tcPr, default_paddings)
+            cell.cell_format = self._build_cell_format(tcPr)
 
         for child in self._ctx._resolve_body_children(tc_elem):
             if child.tag == f"{W_NS}p":
@@ -255,16 +256,8 @@ class CellBuilder:
     def _build_cell_format(
         self,
         tcPr: ET.Element,
-        default_paddings: Optional[tuple[float, float, float, float]],
     ) -> ldm.CellFormat:
         cf = ldm.CellFormat()
-        if default_paddings is not None:
-            (
-                cf.left_padding,
-                cf.right_padding,
-                cf.top_padding,
-                cf.bottom_padding,
-            ) = default_paddings
         self._apply_width(tcPr, cf)
         self._apply_vertical_align(tcPr, cf)
         self._apply_merge(tcPr, cf)

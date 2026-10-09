@@ -121,8 +121,12 @@ def apply_padding_sides(target: object, parent: ET.Element) -> None:
         side_elem = parent.find(f"{W_NS}{side}")
         if side_elem is None:
             continue
+        if side_elem.get(f"{W_NS}type", "dxa") != "dxa":
+            continue
         value = read_twip(side_elem, "w")
         if value is not None:
+            if value < 0:
+                raise ValueError("Table cell margins must be nonnegative")
             setattr(target, attr, value)
 
 

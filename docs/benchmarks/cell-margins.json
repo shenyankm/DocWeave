@@ -1,0 +1,600 @@
+{
+  "environment": "macOS / Python 3.13.15 / fpdf2 2.8.9 / PyMuPDF 1.28.2 / LibreOffice 26.2.6.3; installed wheels imported outside checkout",
+  "baseline_commit": "09e9edccd4af1eec71aa932fe9142c94efe96d42",
+  "baseline_wheel_sha256": "d14717fa1c736b03c4f4c9c1aaf60686a262e053d8ab7bc8bf7876e9cea00bb8",
+  "geometry_units": "pt; first word x, first word y, justified LINE end x",
+  "cases": {
+    "inherited": {
+      "source_sha256": "78f95a84c1ce67c8211f2c525abc3da8f9b89e8040f76c4c262d3fbeb5b60bad",
+      "native_pdf_sha256": "2afdab7c817620b4ffdbe0345c58e2b8dfbcdb3b057ae81bd9326a49f4c4d3b8",
+      "native": {
+        "pages": 1,
+        "words": [
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "geometry": [
+          28.100000381469727,
+          25.990005493164062,
+          192.0800018310547
+        ],
+        "producer": "LibreOffice 26.2.6.3 (AARCH64)"
+      },
+      "before": {
+        "False": {
+          "bytes": 4258,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            28.0,
+            32.0,
+            192.00010681152344
+          ]
+        },
+        "True": {
+          "bytes": 4273,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            28.0,
+            32.0,
+            191.99600219726562
+          ]
+        }
+      },
+      "after": {
+        "False": {
+          "bytes": 4258,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            28.0,
+            26.0,
+            192.00010681152344
+          ]
+        },
+        "True": {
+          "bytes": 4272,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            28.0,
+            26.0,
+            191.99600219726562
+          ]
+        }
+      }
+    },
+    "zero-cell": {
+      "source_sha256": "a0d0ec414c13543d165db383664151892c185d80734c0087165c4a6ed1217aff",
+      "native_pdf_sha256": "45a35e63b1f61abe28d1158bb604e127dc4f46d5319a31546d46350a8b5b7774",
+      "native": {
+        "pages": 1,
+        "words": [
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "geometry": [
+          20.100000381469727,
+          19.990005493164062,
+          200.0760040283203
+        ],
+        "producer": "LibreOffice 26.2.6.3 (AARCH64)"
+      },
+      "before": {
+        "False": {
+          "bytes": 4261,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            22.829999923706055,
+            27.419998168945312,
+            197.1608428955078
+          ]
+        },
+        "True": {
+          "bytes": 4274,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            22.829999923706055,
+            27.419998168945312,
+            197.16600036621094
+          ]
+        }
+      },
+      "after": {
+        "False": {
+          "bytes": 4257,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            20.0,
+            20.0,
+            200.0001220703125
+          ]
+        },
+        "True": {
+          "bytes": 4272,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            20.0,
+            20.0,
+            199.99600219726562
+          ]
+        }
+      }
+    },
+    "four-cell": {
+      "source_sha256": "dcb97de3113444352e07eba71125ab6f28ef9a8c55bad29a04a0a06adec4d704",
+      "native_pdf_sha256": "dce493e78b5c822dd1c76a20f8b93d4ab311258d4e0fb818ed698268d283c7c1",
+      "native": {
+        "pages": 1,
+        "words": [
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "geometry": [
+          24.100000381469727,
+          23.990005493164062,
+          196.07200622558594
+        ],
+        "producer": "LibreOffice 26.2.6.3 (AARCH64)"
+      },
+      "before": {
+        "False": {
+          "bytes": 4257,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            24.0,
+            30.0,
+            196.00010681152344
+          ]
+        },
+        "True": {
+          "bytes": 4272,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            24.0,
+            30.0,
+            195.99600219726562
+          ]
+        }
+      },
+      "after": {
+        "False": {
+          "bytes": 4257,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            24.0,
+            24.0,
+            196.00010681152344
+          ]
+        },
+        "True": {
+          "bytes": 4271,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            24.0,
+            24.0,
+            195.99600219726562
+          ]
+        }
+      }
+    },
+    "zero-table": {
+      "source_sha256": "987e5b5fb3b3f5a8535db343f900ba41c4373f676a81263432c2f35bf37d68f4",
+      "native_pdf_sha256": "e516d9cdf19e084738ebb0caa8e0248c2d16f25d456b643d0fcd36c51bd8a0c7",
+      "native": {
+        "pages": 1,
+        "words": [
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "geometry": [
+          20.100000381469727,
+          19.990005493164062,
+          200.0760040283203
+        ],
+        "producer": "LibreOffice 26.2.6.3 (AARCH64)"
+      },
+      "before": {
+        "False": {
+          "bytes": 4258,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            22.829999923706055,
+            21.419998168945312,
+            197.1608428955078
+          ]
+        },
+        "True": {
+          "bytes": 4275,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            22.829999923706055,
+            21.419998168945312,
+            197.16600036621094
+          ]
+        }
+      },
+      "after": {
+        "False": {
+          "bytes": 4257,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            20.0,
+            20.0,
+            200.0001220703125
+          ]
+        },
+        "True": {
+          "bytes": 4272,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            20.0,
+            20.0,
+            199.99600219726562
+          ]
+        }
+      }
+    },
+    "zero-style": {
+      "source_sha256": "ae5c2f20dcb756b336c54e87c479ef14c162ccb819708e14a34986dd3d426ef4",
+      "native_pdf_sha256": "a6631bde0c4b9cccacdd2d707d360b23c797dc8554be96ec3af34a6690e49c57",
+      "native": {
+        "pages": 1,
+        "words": [
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "geometry": [
+          20.100000381469727,
+          19.990005493164062,
+          200.0760040283203
+        ],
+        "producer": "LibreOffice 26.2.6.3 (AARCH64)"
+      },
+      "before": {
+        "False": {
+          "bytes": 4258,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            22.829999923706055,
+            21.419998168945312,
+            197.1608428955078
+          ]
+        },
+        "True": {
+          "bytes": 4275,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            22.829999923706055,
+            21.419998168945312,
+            197.16600036621094
+          ]
+        }
+      },
+      "after": {
+        "False": {
+          "bytes": 4257,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            20.0,
+            20.0,
+            200.0001220703125
+          ]
+        },
+        "True": {
+          "bytes": 4272,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            20.0,
+            20.0,
+            199.99600219726562
+          ]
+        }
+      }
+    },
+    "implicit": {
+      "source_sha256": "3e96c703929dfdd74644f610a708782aebdc41ae41c02171ecef95cbd18091e3",
+      "native_pdf_sha256": "36cd3ba6457ca35802f0a1ed26af14d7f61e8655bc7e2a65d4692e7269c52d00",
+      "native": {
+        "pages": 1,
+        "words": [
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "geometry": [
+          25.5,
+          19.990005493164062,
+          194.67601013183594
+        ],
+        "producer": "LibreOffice 26.2.6.3 (AARCH64)"
+      },
+      "before": {
+        "False": {
+          "bytes": 4258,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            22.829999923706055,
+            21.419998168945312,
+            197.1608428955078
+          ]
+        },
+        "True": {
+          "bytes": 4275,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            22.829999923706055,
+            21.419998168945312,
+            197.16600036621094
+          ]
+        }
+      },
+      "after": {
+        "False": {
+          "bytes": 4259,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            25.399999618530273,
+            20.0,
+            194.60012817382812
+          ]
+        },
+        "True": {
+          "bytes": 4273,
+          "pages": 1,
+          "words": [
+            "SHORT",
+            "LINE",
+            "LAST"
+          ],
+          "geometry": [
+            25.399999618530273,
+            20.0,
+            194.59600830078125
+          ]
+        }
+      }
+    }
+  },
+  "max_absolute_error_vs_libreoffice": {
+    "before": [
+      2.729999542236328,
+      7.42999267578125,
+      2.9151611328125
+    ],
+    "after": [
+      0.10000038146972656,
+      0.0099945068359375,
+      0.0839996337890625
+    ]
+  },
+  "common_corpora": {
+    "cases": {
+      "small": {
+        "pages": 1,
+        "before_bytes": 6138,
+        "after_bytes": 6138,
+        "before_records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889",
+        "after_records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889",
+        "fields_compared": [
+          "words",
+          "pixels",
+          "drawings",
+          "images"
+        ],
+        "all_records_equal": true
+      },
+      "hundred_pages": {
+        "pages": 100,
+        "before_bytes": 75129,
+        "after_bytes": 75129,
+        "before_records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9",
+        "after_records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9",
+        "fields_compared": [
+          "words",
+          "pixels",
+          "drawings",
+          "images"
+        ],
+        "all_records_equal": true
+      },
+      "image_table": {
+        "pages": 3,
+        "before_bytes": 11337,
+        "after_bytes": 11337,
+        "before_records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19",
+        "after_records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19",
+        "fields_compared": [
+          "words",
+          "pixels",
+          "drawings",
+          "images"
+        ],
+        "all_records_equal": true
+      },
+      "repeated_images": {
+        "pages": 4,
+        "before_bytes": 5545,
+        "after_bytes": 5545,
+        "before_records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51",
+        "after_records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51",
+        "fields_compared": [
+          "words",
+          "pixels",
+          "drawings",
+          "images"
+        ],
+        "all_records_equal": true
+      },
+      "mixed_styles": {
+        "pages": 5,
+        "before_bytes": 19607,
+        "after_bytes": 19607,
+        "before_records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37",
+        "after_records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37",
+        "fields_compared": [
+          "words",
+          "pixels",
+          "drawings",
+          "images"
+        ],
+        "all_records_equal": true
+      }
+    },
+    "all_equal": true,
+    "pages": 113,
+    "record_digest": "SHA256 of JSON page records sorted keys and compact separators; per-page field digests use common_probe"
+  },
+  "wheel": {
+    "bytes": 26259825,
+    "delta_bytes": 405,
+    "sha256": "384c4c3cda2cc0b3adaf62dc03fd227e0d99a3c19c006c3288dca821e3f8fb50",
+    "source_files_verified": 133
+  },
+  "probe": "import json,sys,runpy\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nfrom aspose.words_foss.saving import PdfSaveOptions\nassert 'site-packages' in aw.__file__,aw.__file__\nns=runpy.run_path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_table_cell_margins.py')\nroot=Path('/tmp/docweave-cell-margins');root.mkdir(exist_ok=True)\nbase={'left':8,'right':8,'top':6,'bottom':6}\ncases={'inherited':{'table':base},'zero-cell':{'table':base,'cell':dict.fromkeys(base,0)},\n 'four-cell':{'table':base,'cell':dict.fromkeys(base,4)},'zero-table':{'table':dict.fromkeys(base,0)},\n 'zero-style':{'styled':True,'table':{'right':0}},'implicit':{}}\nresult={}\nfor kind,kwargs in cases.items():\n source=root/(kind+'.docx')\n if not source.exists(): source.write_bytes(ns['source_docx'](**kwargs))\n for shaping in (False,True):\n  options=PdfSaveOptions();options.text_shaping=shaping\n  document=aw.Document(source);pdf_raw=document.to_bytes(options)\n  with pymupdf.open(stream=pdf_raw,filetype='pdf') as pdf:\n   words=pdf[0].get_text('words')\n   result[f'{kind}-{shaping}']={'bytes':len(pdf_raw),'pages':len(pdf),'words':[w[4] for w in words],\n    'geometry':[words[0][0],words[0][1],next(w[2] for w in words if w[4]=='LINE')]}\n   if not shaping:\n    (root/(kind+'-'+sys.argv[1]+'.pdf')).write_bytes(pdf_raw)\n    pdf[0].get_pixmap(matrix=pymupdf.Matrix(2,2)).save(root/(kind+'-'+sys.argv[1]+'.png'))\nPath('/tmp/docweave-cell-margins-'+sys.argv[1]+'.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint(result)\n",
+  "fixture": "tests/test_table_cell_margins.py: source_docx; source uses single line spacing and zero paragraph before/after spacing",
+  "common_probe": "import hashlib,json,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-current-performance');results={}\nfor case in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n raw=aw.Document(root/(case+'.docx')).to_bytes(aw.saving.PdfSaveOptions())\n pages=[]\n with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n  for page in pdf:\n   pages.append({key:hashlib.sha256(value).hexdigest() for key,value in {'words':repr(page.get_text('words')).encode(),'pixels':page.get_pixmap().samples,'drawings':repr(page.get_drawings()).encode(),'images':repr(page.get_image_info()).encode()}.items()})\n results[case]={'bytes':len(raw),'pages':pages}\nPath(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\\n');print('five PDF corpora saved')\n",
+  "limits": [
+    "Visual inspection: inherited, zero-cell, zero-style, implicit before/after/native",
+    "Native coordinates validate margin behavior, not complete font metrics or Word compatibility",
+    "No new speed/RSS benchmark; wheel increased 405 bytes",
+    "Logical start/end, conditional table style margins, row-level margin exceptions are not implemented"
+  ],
+  "validation": {
+    "full_installed_tests": {
+      "passed": 1484,
+      "warnings": 127,
+      "seconds": 372.61,
+      "skipped": 0
+    },
+    "api_examples": {
+      "passed": 31,
+      "warnings": 13,
+      "seconds": 7.29
+    },
+    "source_related_tests": {
+      "passed": 217,
+      "warnings": 75,
+      "seconds": 45.89
+    },
+    "ruff": "E9,F63,F7,F82,F401 passed",
+    "local_document_links_checked": 134
+  }
+}

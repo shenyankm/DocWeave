@@ -105,11 +105,11 @@ class TableRenderer:
         legacy_offset = 0.0
         if w._doc.compatibility_mode < 15 and table.alignment == ParagraphAlignment.LEFT:
             first_cell = next(cell for row in table.rows for cell in row.cells)
-            legacy_offset = self._padding(first_cell)[3]
-        layouts = [self._layout_row(pdf, row, widths) for row in table.rows]
+            legacy_offset = self._padding(first_cell, table)[3]
+        layouts = [self._layout_row(pdf, row, widths, table) for row in table.rows]
         for row, layout in zip(table.rows, layouts):
             if (row.row_format.height_rule == 1 and row.row_format.height > 0
-                    and self._row_height(None, layout) > row.row_format.height * PT_TO_MM + 1e-7):
+                    and self._row_height(None, layout, table) > row.row_format.height * PT_TO_MM + 1e-7):
                 warn("Exact table row height is expanded to avoid clipping content",
                      PdfContentLossWarning, code="pdf.table_row_height")
         headers = []
@@ -117,13 +117,12 @@ class TableRenderer:
             if not row.row_format.heading_format:
                 break
             headers.append(i)
-        header_height = sum(self._row_height(table.rows[i], layouts[i]) for i in headers)
+        header_height = sum(self._row_height(table.rows[i], layouts[i], table) for i in headers)
         in_hf = getattr(pdf, "_in_header_render", False) or getattr(pdf, "_in_footer_render", False)
         bottom = pdf.h - pdf.b_margin
         full_height = bottom - pdf.t_margin
         if not in_hf and header_height >= full_height:
             raise ValueError("Table headers do not fit the printable page area")
-        pdf.ln(table.top_padding * PT_TO_MM)
 
         def table_x():
             free = usable_w - sum(widths)
@@ -136,7 +135,7 @@ class TableRenderer:
                 raise ValueError("Table cannot flow into a narrower column")
             if repeat_headers:
                 for index in headers:
-                    height = self._row_height(table.rows[index], layouts[index])
+                    height = self._row_height(table.rows[index], layouts[index], table)
                     self._paint_row(pdf, table, index, layouts[index], table_x(), pdf.get_y(), height,
                                     emit_navigation=False)
                     pdf.set_y(pdf.get_y() + height)
@@ -150,7 +149,7 @@ class TableRenderer:
                          for cell, col, span, width, lines in layouts[row_index]]
             first_fragment = True
             while True:
-                height = self._row_height(row, remaining) if first_fragment else self._row_height(None, remaining)
+                height = self._row_height(row if first_fragment else None, remaining, table)
                 available = bottom - pdf.get_y()
                 capacity = full_height - (header_height if row_index not in headers else 0)
                 if in_hf or height <= available + 1e-7:
@@ -170,7 +169,7 @@ class TableRenderer:
                          PdfContentLossWarning, code="pdf.table_row_split")
                 fragment, rest, taken = [], [], 0
                 for cell, col, span, width, lines in remaining:
-                    top, right, bottom_pad, left = self._padding(cell)
+                    top, right, bottom_pad, left = self._padding(cell, table)
                     room = available - top - bottom_pad
                     selected, used = [], 0.0
                     for line in lines:
@@ -191,7 +190,7 @@ class TableRenderer:
                         raise ValueError("A table cell content line is taller than the printable page area")
                     advance()
                     continue
-                height = self._row_height(None, fragment)
+                height = self._row_height(None, fragment, table)
                 self._paint_row(pdf, table, row_index, fragment, table_x(), pdf.get_y(), height)
                 pdf.set_y(pdf.get_y() + height)
                 remaining = rest
@@ -200,25 +199,29 @@ class TableRenderer:
                 first_fragment = False
                 advance()
         pdf.set_x(w._page_margin_left)
-        pdf.ln(table.bottom_padding * PT_TO_MM or POST_TABLE_SPACING_MM)
+        pdf.ln(POST_TABLE_SPACING_MM)
 
     @staticmethod
-    def _padding(cell):
+    def _padding(cell, table=None):
         cf = cell.cell_format
-        return (cf.top_padding * PT_TO_MM or DEFAULT_CELL_PAD_TOP_MM,
-                cf.right_padding * PT_TO_MM or DEFAULT_CELL_PAD_LEFT_MM,
-                cf.bottom_padding * PT_TO_MM or DEFAULT_CELL_PAD_TOP_MM,
-                cf.left_padding * PT_TO_MM or DEFAULT_CELL_PAD_LEFT_MM)
+        values = []
+        for side, fallback in (("top", DEFAULT_CELL_PAD_TOP_MM), ("right", DEFAULT_CELL_PAD_LEFT_MM),
+                               ("bottom", DEFAULT_CELL_PAD_TOP_MM), ("left", DEFAULT_CELL_PAD_LEFT_MM)):
+            value = getattr(cf, side + "_padding")
+            if value is None and table is not None:
+                value = getattr(table, side + "_padding")
+            values.append(fallback if value is None else value * PT_TO_MM)
+        return tuple(values)
 
     @staticmethod
     def _row_cells(row):
         return ldm.iter_grid_cells(row)
 
-    def _layout_row(self, pdf, row, widths):
+    def _layout_row(self, pdf, row, widths, table=None):
         layout = []
         for cell, col, span in self._row_cells(row):
             width = sum(widths[col:col + span])
-            top, right, bottom, left = self._padding(cell)
+            top, right, bottom, left = self._padding(cell, table)
             inner_width = width - left - right
             if inner_width <= 0:
                 raise ValueError("No usable text width in table cell")
@@ -243,8 +246,8 @@ class TableRenderer:
                     occurrence = object()
                     widths = self._compute_col_widths(child, count, width)
                     for i, row in enumerate(child.rows):
-                        layout = self._layout_row(pdf, row, widths)
-                        lines.append(_CellLine(self._row_height(row, layout), nested=(child, i, layout, occurrence)))
+                        layout = self._layout_row(pdf, row, widths, child)
+                        lines.append(_CellLine(self._row_height(row, layout, child), nested=(child, i, layout, occurrence)))
                 continue
             para = child
             first_line = len(lines)
@@ -360,10 +363,10 @@ class TableRenderer:
         reset_font(pdf)
         return lines
 
-    def _row_height(self, row, layout):
+    def _row_height(self, row, layout, table=None):
         height = DEFAULT_FONT_SIZE_PT * MIN_ROW_HEIGHT_FACTOR
         for cell, _, _, _, lines in layout:
-            top, _, bottom, _ = self._padding(cell)
+            top, _, bottom, _ = self._padding(cell, table)
             height = max(height, sum(line.height for line in lines) + top + bottom)
         return max(height, row.row_format.height * PT_TO_MM if row else 0)
 
@@ -390,7 +393,7 @@ class TableRenderer:
         pdf.c_margin = 0
         try:
             for cell, col, span, width, lines in layout:
-                top, right, bottom, left = self._padding(cell)
+                top, right, bottom, left = self._padding(cell, table)
                 cf = cell.cell_format
                 bg_color = parse_color(cf.shading.background_pattern_color)
                 if bg_color:
@@ -590,11 +593,6 @@ class TableRenderer:
         if total > usable_w:
             widths = [width * usable_w / total for width in widths]
         return widths
-
-    def _compute_row_height(
-        self, pdf: FPDF, row: ldm.Row, col_widths: list[float], num_cols: int
-    ) -> float:
-        return self._row_height(row, self._layout_row(pdf, row, col_widths))
 
     @staticmethod
     def _render_rotated_cell(

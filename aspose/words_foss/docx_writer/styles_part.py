@@ -440,7 +440,7 @@ def _render_style_tblPr(tsf: ldm.TableStyleFormat) -> str:
         ("bottom", tsf.bottom_padding),
         ("right", tsf.right_padding),
     ]:
-        if val > 0:
+        if val is not None:
             margins.append(el(f"w:{side}", {"w:w": pt_to_twips(val), "w:type": "dxa"}))
     if margins:
         children.append(el("w:tblCellMar", None, margins))
