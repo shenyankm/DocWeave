@@ -28,8 +28,8 @@ def script_model(location="body", *, widow=True, size=20):
         section.body.children = [normal]
         section.headers_footers = [ldm.HeaderFooter(header_footer_type=0 if location == "header" else 1,
                                                    children=[paragraph])]
-    elif location in ("heading", "quote"):
-        paragraph.paragraph_format.style_name = "Heading 1" if location == "heading" else "Quote"
+    elif location in ("heading", "quote", "code"):
+        paragraph.paragraph_format.style_name = "Heading 1" if location == "heading" else "Code" if location == "code" else "Quote"
         if location == "heading":
             paragraph.paragraph_format.outline_level = 0
     elif location == "list":
@@ -43,7 +43,7 @@ def characters(page):
             for line in block.get("lines", []) for span in line["spans"] for c in span["chars"]}
 
 
-@pytest.mark.parametrize("location", ["body", "table", "header", "footer", "list", "heading", "quote"])
+@pytest.mark.parametrize("location", ["body", "table", "header", "footer", "list", "heading", "quote", "code"])
 @pytest.mark.parametrize("shaping", [False, True])
 @pytest.mark.parametrize("widow", [False, True])
 def test_source_script_sizes_rises_and_following_normal_text(location, shaping, widow):
@@ -53,7 +53,7 @@ def test_source_script_sizes_rises_and_following_normal_text(location, shaping, 
     options.text_shaping = shaping
     with pymupdf.open(stream=LdmPdfWriter(options).write_to_bytes(model), filetype="pdf") as pdf:
         chars = characters(pdf[0])
-        if location in ("body", "table", "list", "heading", "quote"):
+        if location in ("body", "table", "list", "heading", "quote", "code"):
             assert chars["W"][0]["bbox"][1] >= 30 - 0.05
         assert set(chars) >= set("QWERT")
         assert [chars[c][1] for c in "QWERT"] == pytest.approx([20, 14, 14, 20, 20], abs=0.05)
@@ -65,8 +65,9 @@ def test_source_script_sizes_rises_and_following_normal_text(location, shaping, 
 
 
 @pytest.mark.parametrize("shaping", [False, True])
-def test_script_links_and_decorations_match_reduced_raised_glyphs(shaping):
-    model, paragraph = script_model()
+@pytest.mark.parametrize("location", ["body", "code"])
+def test_script_links_and_decorations_match_reduced_raised_glyphs(shaping, location):
+    model, paragraph = script_model(location)
     for run in paragraph.runs:
         run.text = f"[{run.text}](https://example.test/{run.text})"
         run.font.strike_through = True
@@ -173,14 +174,10 @@ def test_wrapped_scripts_keep_all_glyphs_inside_page_regions(location, columns, 
                 assert char["bbox"][3] <= page.rect.height - 30 + 0.05
 
 
-@pytest.mark.parametrize("location", ["code", "rotated"])
-def test_unimplemented_script_layout_is_reported(location):
+def test_unimplemented_rotated_script_layout_is_reported():
     from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
 
-    model, paragraph = script_model("table" if location == "rotated" else "body")
-    if location == "rotated":
-        model.sections[0].body.children[0].rows[0].cells[0].cell_format.orientation = 1
-    else:
-        paragraph.paragraph_format.style_name = "Code"
+    model, _ = script_model("table")
+    model.sections[0].body.children[0].rows[0].cells[0].cell_format.orientation = 1
     with pytest.warns(PdfContentLossWarning, match="superscript/subscript"):
         assert LdmPdfWriter().write_to_bytes(model).startswith(b"%PDF")

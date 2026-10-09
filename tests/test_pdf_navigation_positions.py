@@ -58,7 +58,7 @@ def test_targets_follow_first_draw_after_spacing_and_page_break(style, bands):
     options.outline_options.headings_outline_levels = 6
     raw = LdmPdfWriter(options).write_to_bytes(navigation_model(style, bands=bands))
     page, _, _ = assert_navigation_matches_content(raw)
-    assert page == (1 if bands or style in ("heading", "Normal") else 0)
+    assert page == (1 if bands or style in ("heading", "Normal", "Code") else 0)
 
 
 def test_targets_follow_column_position():

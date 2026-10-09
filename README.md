@@ -313,11 +313,14 @@ Chinese, Latin text, and punctuation. It uses a dedicated bold face and derived 
 WOFF resources total about **24.6 MiB**. Original font families, monospace metrics, and exact pagination
 are not preserved. Missing glyphs warn; source-font substitution may change layout.
 
-Source superscript/subscript flags are rendered in body, table, page-band, list, heading and quote
+Source superscript/subscript flags are rendered in body, table, page-band, list, heading, quote and code
 formatted runs, including shaped text. Glyph scaling/rise, decorations and links follow fpdf2 metrics;
 automatic line advance reserves superscript ascent, while fixed spacing retains the source value.
-Code-block scripts and mixed-position rotated cells report a conversion loss. These metrics are not
-Word-identical; see the [script validation](docs/benchmarks/vertical-positions.json).
+Code paragraphs retain per-run size, color, bold/oblique styles, decorations and script positions;
+backgrounds are painted per row after page/column breaks. Mixed-position rotated cells still report
+a conversion loss. These metrics are not Word-identical; see the
+[script validation](docs/benchmarks/vertical-positions.json) and
+[code-run validation](docs/benchmarks/code-runs.json).
 
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
@@ -484,7 +487,7 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Latest installed-wheel verification on macOS/Python 3.13.15: **1,254 regression tests and 31 API examples passed**;
+Latest installed-wheel verification on macOS/Python 3.13.15: **1,266 regression tests and 31 API examples passed**;
 installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
 See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
 These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.

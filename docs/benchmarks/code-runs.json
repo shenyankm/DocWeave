@@ -1,0 +1,198 @@
+{
+  "date": "2026-10-09",
+  "purpose": "Preserve per-run Code formatting through the existing rich-text renderer; paint row backgrounds after pagination without altering source models.",
+  "wheel": {
+    "bytes": 26257537,
+    "sha256": "ab8aa63ecf683b1a2a5ddce5407ff0d065099ac512b35af8b28823909956e506",
+    "previous_bytes": 26257278,
+    "source_package_files_equal": 133
+  },
+  "before": {
+    "bytes": 8905,
+    "pages": 1,
+    "spans": [
+      {
+        "size": 10.0,
+        "flags": 4,
+        "bidi": 0,
+        "char_flags": 16,
+        "font": "DocumentSansSC",
+        "color": 0,
+        "alpha": 255,
+        "ascender": 1.0,
+        "descender": -0.20000000298023224,
+        "text": "QWER",
+        "origin": [
+          22.829999923706055,
+          30.0
+        ],
+        "bbox": [
+          22.829999923706055,
+          20.0,
+          51.27000045776367,
+          32.0
+        ]
+      }
+    ]
+  },
+  "after": {
+    "bytes": 9033,
+    "pages": 1,
+    "spans": [
+      {
+        "size": 24.0,
+        "flags": 20,
+        "bidi": 0,
+        "char_flags": 24,
+        "font": "DocumentSansSCBold",
+        "color": 16711680,
+        "alpha": 255,
+        "ascender": 1.0,
+        "descender": -0.20000000298023224,
+        "text": "Q",
+        "origin": [
+          22.829999923706055,
+          44.0
+        ],
+        "bbox": [
+          22.829999923706055,
+          20.0,
+          41.310001373291016,
+          48.79999923706055
+        ]
+      },
+      {
+        "size": 12.0,
+        "flags": 6,
+        "bidi": 0,
+        "char_flags": 16,
+        "font": "DocumentSansSCOblique",
+        "color": 255,
+        "alpha": 255,
+        "ascender": 1.0,
+        "descender": -0.20000000298023224,
+        "text": "W",
+        "origin": [
+          41.310001373291016,
+          44.0
+        ],
+        "bbox": [
+          41.310001373291016,
+          32.0,
+          51.84600067138672,
+          46.400001525878906
+        ]
+      },
+      {
+        "size": 14.0,
+        "flags": 5,
+        "bidi": 0,
+        "char_flags": 16,
+        "font": "DocumentSansSC",
+        "color": 0,
+        "alpha": 255,
+        "ascender": 1.0,
+        "descender": -0.20000000298023224,
+        "text": "E",
+        "origin": [
+          51.849998474121094,
+          36.0
+        ],
+        "bbox": [
+          51.849998474121094,
+          22.0,
+          60.09600067138672,
+          38.79999923706055
+        ]
+      },
+      {
+        "size": 20.0,
+        "flags": 4,
+        "bidi": 0,
+        "char_flags": 16,
+        "font": "DocumentSansSC",
+        "color": 0,
+        "alpha": 255,
+        "ascender": 1.0,
+        "descender": -0.20000000298023224,
+        "text": "R",
+        "origin": [
+          60.099998474121094,
+          44.0
+        ],
+        "bbox": [
+          60.099998474121094,
+          24.0,
+          72.80000305175781,
+          48.0
+        ]
+      }
+    ]
+  },
+  "structure": {
+    "code_tag": true,
+    "background_artifacts": 1,
+    "right_aligned_start_pt": 193.75999450683594,
+    "text": "Q          R"
+  },
+  "validation": {
+    "targeted": {
+      "passed": 74,
+      "warnings": 1,
+      "seconds": 16.99
+    },
+    "examples": {
+      "passed": 31,
+      "warnings": 13,
+      "seconds": 9.34
+    },
+    "full_installed": {
+      "passed": 1266,
+      "warnings": 17,
+      "seconds": 296.72,
+      "skipped": 0
+    },
+    "early_targeted_failures": [
+      "Navigation expected page 0 from old forced 10pt Code rendering; source 30pt now breaks to page 1 and destinations still match actual glyphs.",
+      "New test incorrectly expected fallback 11pt rather than existing Code 10pt.",
+      "New test incorrectly expected font name Italic rather than bundled Oblique."
+    ]
+  },
+  "probes": {
+    "docweave-code-probe.py": "import json, sys, runpy\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__, aw.__file__\nnamespace = runpy.run_path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_pdf_code_runs.py')\nldm = namespace['ldm']\nmodel = namespace['code_model']([ldm.Run(text='Q', font=ldm.Font(size=24,bold=True,color='FF0000')),ldm.Run(text='W',font=ldm.Font(size=12,italic=True,color='0000FF')),ldm.Run(text='E',font=ldm.Font(size=20,superscript=True)),ldm.Run(text='R',font=ldm.Font(size=20))])\nraw = namespace['LdmPdfWriter']().write_to_bytes(model)\nlabel = sys.argv[1]\nPath(f'/tmp/docweave-code-{label}.pdf').write_bytes(raw)\nwith pymupdf.open(stream=raw,filetype='pdf') as pdf:\n    spans = [s for b in pdf[0].get_text('dict')['blocks'] for line in b.get('lines',[]) for s in line['spans']]\n    result={'bytes':len(raw),'pages':len(pdf),'spans':spans}\n    pdf[0].get_pixmap(matrix=pymupdf.Matrix(3,3)).save(f'/tmp/docweave-code-{label}.png')\nPath(f'/tmp/docweave-code-{label}.json').write_text(json.dumps(result,indent=2))\nprint(json.dumps(result))\n",
+    "docweave-code-structure-probe.py": "import runpy,json\nfrom io import BytesIO\nfrom pathlib import Path\nimport pymupdf\nfrom pypdf import PdfReader\nfrom pypdf.generic import ContentStream\nns=runpy.run_path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_pdf_code_runs.py')\nldm=ns['ldm'];model=ns['code_model']([ldm.Run(text='Q          R',font=ldm.Font(size=12))],align=2)\nfrom aspose.words_foss.saving import PdfSaveOptions\noptions=PdfSaveOptions();options.export_document_structure=True\nraw=ns['LdmPdfWriter'](options).write_to_bytes(model)\nreader=PdfReader(BytesIO(raw))\nnode=reader.trailer['/Root']['/StructTreeRoot']['/K'][0].get_object()['/K'][0].get_object()\nassert node['/S']=='/Code'\nstack=[];artifacts=0\nfor args,op in ContentStream(reader.pages[0]['/Contents'],reader).operations:\n if op in (b'BMC',b'BDC'): stack.append(str(args[0]))\n elif op==b'EMC':stack.pop()\n elif op==b're':\n  assert '/Artifact' in stack,stack\n  artifacts+=1\nwith pymupdf.open(stream=raw,filetype='pdf') as pdf:\n chars=[c for b in pdf[0].get_text('rawdict')['blocks'] for line in b.get('lines',[]) for span in line['spans'] for c in span['chars']]\n assert ''.join(c['c'] for c in chars)=='Q          R'\n assert chars[0]['origin'][0]>100\n assert len(ns['backgrounds'](pdf[0]))==1\n result={'code_tag':True,'background_artifacts':artifacts,'right_aligned_start_pt':chars[0]['origin'][0],'text':''.join(c['c'] for c in chars)}\nPath('/tmp/docweave-code-structure.json').write_text(json.dumps(result,indent=2))\nprint(result)\n"
+  },
+  "limits": [
+    "No new Word/LibreOffice comparison or throughput/memory benchmark.",
+    "Source monospace metrics, complete tabs, justified rich-code layout and table-cell Code backgrounds remain incomplete.",
+    "Mixed-position rotated-cell scripts remain diagnosed as losses.",
+    "Local installed-wheel tests do not prove the latest cross-platform CI passed."
+  ],
+  "existing_corpora": {
+    "small": {
+      "equal": true,
+      "pages": 1,
+      "bytes": 6138
+    },
+    "hundred_pages": {
+      "equal": true,
+      "pages": 100,
+      "bytes": 75129
+    },
+    "image_table": {
+      "equal": true,
+      "pages": 3,
+      "bytes": 11337
+    },
+    "repeated_images": {
+      "equal": true,
+      "pages": 4,
+      "bytes": 5545
+    },
+    "mixed_styles": {
+      "equal": true,
+      "pages": 5,
+      "bytes": 19607
+    }
+  }
+}

@@ -68,10 +68,6 @@ def warn_about_conversion(pdf, doc, options, fallback_families):
     script_layout_loss = False
     fallback_coverage = set().union(*(pdf.fonts[name.lower()].cmap for name in fallback_families))
     for node in document_nodes(doc):
-        if isinstance(node, ldm.Paragraph) and any(
-                name in (node.paragraph_format.style_name or "") for name in ("Code", "code")):
-            script_layout_loss |= any(run.text and not run.font.hidden and
-                                      (run.font.superscript or run.font.subscript) for run in node.runs)
         if isinstance(node, ldm.Cell) and node.cell_format.orientation:
             positions = {("sup" if run.font.superscript else "sub" if run.font.subscript else "normal")
                          for run in document_nodes(node)
@@ -111,7 +107,7 @@ def warn_about_conversion(pdf, doc, options, fallback_families):
         missing.update(uncovered - fallback_coverage)
         fallback_style_loss |= bool(style and uncovered & fallback_coverage)
     if script_layout_loss:
-        warn("Code blocks and mixed-position rotated cells do not retain per-run superscript/subscript layout",
+        warn("Mixed-position rotated cells do not retain per-run superscript/subscript layout",
              PdfContentLossWarning, stacklevel=3, code="pdf.script_layout_loss")
     if needs_shaping and not options.text_shaping:
         warn("Complex-script or bidirectional text needs text_shaping=True and suitable fallback fonts",

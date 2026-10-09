@@ -210,6 +210,7 @@ class RunRenderer:
         line_h_override: Optional[float] = None,
         is_toc: bool = False,
         pf: Optional[ldm.ParagraphFormat] = None,
+        background: Optional[Tuple[int, int, int]] = None,
     ) -> None:
         """Render runs with per-run formatting inside an aligned line.
 
@@ -312,7 +313,7 @@ class RunRenderer:
         # as a single right-aligned paragraph with a long run of spaces
         # between the two halves.  Detect the padding idiom and render
         # the halves at the margins instead.
-        if align == "R":
+        if align == "R" and background is None:
             split_idx = self._find_gap_split(visible, usable_w)
             if split_idx is not None:
                 left = visible[:split_idx]
@@ -344,7 +345,7 @@ class RunRenderer:
                 x_start += (usable_w - offset - row_w - 2 * pdf.c_margin) / 2
             elif align == "R":
                 x_start += usable_w - offset - row_w - 2 * pdf.c_margin
-            self._render_segment_row(pdf, row, line_h, fs, at_x=x_start)
+            self._render_segment_row(pdf, row, line_h, fs, at_x=x_start, background=background)
             if trailing and index == len(rows) - 1:
                 right_x = pdf.l_margin + trailing_right - right_w - pdf.c_margin
                 pdf.set_y(pdf.get_y() - line_h)
@@ -549,12 +550,16 @@ class RunRenderer:
         fs: float,
         *,
         at_x: float,
+        background: Optional[Tuple[int, int, int]] = None,
     ) -> None:
         """Emit *segments* on a single line starting at *at_x*."""
         offset = at_x - pdf.l_margin
         pdf.set_x(at_x)
         pdf.cell(w=0, h=line_h)  # Break pages/columns before painting the background.
         pdf.set_x(pdf.l_margin + offset)
+        if background is not None:
+            with self._writer._artifact(pdf), pdf.local_context(fill_color=background):
+                pdf.rect(pdf.l_margin, pdf.get_y(), pdf.epw, line_h, "F")
         for segment in segments:
             run, safe, seg_w, size, link = segment
             apply_run_font(pdf, run.font, default_size=fs)

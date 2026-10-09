@@ -470,19 +470,17 @@ class ParagraphRenderer:
         is_code = bool(style_name and ("Code" in style_name or "code" in style_name))
         if is_code:
             code_size = fs - 1
-            line_h = self.line_height_mm(code_size, pf)
-            text = self._plain_text_from_runs(runs)
-            with w._tag(pdf, "/Code"):
-                pdf.set_fill_color(*CODE_BLOCK_BG_RGB)
-                pdf.set_font(DEFAULT_FONT_NAME, size=code_size)
-                usable_w = pdf.epw
-                pdf.multi_cell(
-                    w=usable_w,
-                    h=line_h,
-                    text=safe_text(text),
-                    fill=True,
-                    align=align,
-                )
+            code_runs = [run if run.font.size > 0 else run.model_copy(update={
+                "font": run.font.model_copy(update={"size": code_size})}) for run in runs]
+            line_h = self.line_height_mm(get_line_font_size(code_runs) if code_runs else code_size, pf)
+            with w._tag(pdf, "/Code"), baseline_scope(pdf, baseline_size(code_runs)):
+                if any(run.text for run in code_runs):
+                    w._run_renderer.render_formatted_runs_aligned(
+                        pdf, code_runs, align=align, line_h_override=line_h, pf=pf,
+                        background=CODE_BLOCK_BG_RGB)
+                else:
+                    w._run_renderer._render_segment_row(pdf, [], line_h, code_size,
+                        at_x=pdf.l_margin, background=CODE_BLOCK_BG_RGB)
             self._apply_space_after(pdf, pf)
             reset_font(pdf)
             return
