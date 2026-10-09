@@ -1,0 +1,2788 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "records": [
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "style",
+      "value": -0.001,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "style",
+      "value": 0.0,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "001.docx",
+      "output_sha256": "66d1b3524463e41a10a66f81335bcc9fc6bb371936c1c26092cc65f603cfc1ea",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "style",
+      "value": 0.025,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "002.docx",
+      "output_sha256": "66d1b3524463e41a10a66f81335bcc9fc6bb371936c1c26092cc65f603cfc1ea",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "style",
+      "value": 0.075,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.1,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "003.docx",
+      "output_sha256": "53bacb07081d57cd29ab9d1a361ebacf0936c2320850b64a6060143934693fbd",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.1,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.1,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "style",
+      "value": 1583.975,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "004.docx",
+      "output_sha256": "cde39a7b312ce8a87b2e311ff0fac1e0e445e35b7d5c9741a461787f8cff74ee",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "style",
+      "value": 1584.0,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "005.docx",
+      "output_sha256": "cde39a7b312ce8a87b2e311ff0fac1e0e445e35b7d5c9741a461787f8cff74ee",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "style",
+      "value": 1584.001,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "style",
+      "value": 1e+100,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": -0.001,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": 0.0,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "009.docx",
+      "output_sha256": "aee5534c21134ce305e537e5f217c898eff1990ee4ea3d56641e3c197669e82a",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": 0.025,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "010.docx",
+      "output_sha256": "aee5534c21134ce305e537e5f217c898eff1990ee4ea3d56641e3c197669e82a",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": 0.075,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.1,
+          "space_after": 0.0
+        }
+      },
+      "output": "011.docx",
+      "output_sha256": "00826250efd381f4c63491b95ff80fdd5bea892516fcc2f5a954f0bf1c2fd0ab",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.1,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.1,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": 1583.975,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "012.docx",
+      "output_sha256": "ca6208fbff592c2fc7a134d87ed75307f430222daa358ea2fb51ef0aef95fe50",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": 1584.0,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "013.docx",
+      "output_sha256": "ca6208fbff592c2fc7a134d87ed75307f430222daa358ea2fb51ef0aef95fe50",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 1584.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": 1584.001,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_before/5.docx",
+      "input_sha256": "8540e9040132426e4fb86ddd41a511dea5d32dc90bbd1a6cfc87d5da711bf520",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": 1e+100,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 18.0,
+          "space_after": 0.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 24.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 30.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "style",
+      "value": -0.001,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "style",
+      "value": 0.0,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "output": "017.docx",
+      "output_sha256": "a43ef6886236686b7e9082b15df8c0d985f32a92e3e7f67790dbfa67519dfd4a",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "style",
+      "value": 0.025,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "output": "018.docx",
+      "output_sha256": "a43ef6886236686b7e9082b15df8c0d985f32a92e3e7f67790dbfa67519dfd4a",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "style",
+      "value": 0.075,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.1
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "output": "019.docx",
+      "output_sha256": "29b934de461a8cdacd68664349cec7582aa31376bf77b972de5780d24a0bdb5d",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.1
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.1
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "style",
+      "value": 1583.975,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "output": "020.docx",
+      "output_sha256": "d38d7124e832a8040a731a484582d23536666eee8abb4681f4eb0803a543c6ec",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "style",
+      "value": 1584.0,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "output": "021.docx",
+      "output_sha256": "d38d7124e832a8040a731a484582d23536666eee8abb4681f4eb0803a543c6ec",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "style",
+      "value": 1584.001,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "style",
+      "value": 1e+100,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": -0.001,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": 0.0,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "025.docx",
+      "output_sha256": "e2a52f4e28322e325cd7a533d05244e2cca6df4f46d2410a2655812aed2fe29a",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": 0.025,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      },
+      "output": "026.docx",
+      "output_sha256": "e2a52f4e28322e325cd7a533d05244e2cca6df4f46d2410a2655812aed2fe29a",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": 0.075,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.1
+        }
+      },
+      "output": "027.docx",
+      "output_sha256": "0d3b3d340ff91bb42f191ff328596766131f43215dabf714093cfc60b317fcb4",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.1
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 0.1
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": 1583.975,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        }
+      },
+      "output": "028.docx",
+      "output_sha256": "352c0983bed8fc3ee3ea866ce3f338adc8679dc291efc0b7aad226d651dfda25",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": 1584.0,
+      "error": null,
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        }
+      },
+      "output": "029.docx",
+      "output_sha256": "352c0983bed8fc3ee3ea866ce3f338adc8679dc291efc0b7aad226d651dfda25",
+      "after_save_live": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        }
+      },
+      "after_reopen": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 1584.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": 1584.001,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    },
+    {
+      "input": "space_after/5.docx",
+      "input_sha256": "20338d3167d0b6c2fed74f331c995b05f84d0a83d7698a479f13748be3060daf",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": 1e+100,
+      "error": "RuntimeError",
+      "before_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      },
+      "after_edit": {
+        "base": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 18.0
+        },
+        "derived": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 24.0
+        },
+        "paragraph": {
+          "left_indent": 0.0,
+          "right_indent": 0.0,
+          "first_line_indent": 0.0,
+          "space_before": 0.0,
+          "space_after": 30.0
+        }
+      }
+    }
+  ],
+  "setter_errors": [
+    {
+      "input": "space_before/5.docx",
+      "property": "space_before",
+      "target": "style",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "space_before/5.docx",
+      "property": "space_before",
+      "target": "style",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "space_before/5.docx",
+      "property": "space_before",
+      "target": "style",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "space_before/5.docx",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "space_before/5.docx",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "space_before/5.docx",
+      "property": "space_before",
+      "target": "paragraph",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "space_after/5.docx",
+      "property": "space_after",
+      "target": "style",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "space_after/5.docx",
+      "property": "space_after",
+      "target": "style",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "space_after/5.docx",
+      "property": "space_after",
+      "target": "style",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "space_after/5.docx",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "space_after/5.docx",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "space_after/5.docx",
+      "property": "space_after",
+      "target": "paragraph",
+      "value": "bad",
+      "error": "TypeError"
+    }
+  ],
+  "corpus": "corpus/paragraph-spacing-limits-26.9.zip",
+  "corpus_sha256": "fb75ac3c4e92a871a9679387729d30e87c8863f63621c64978136014aeaaa906",
+  "outputs": "corpus/paragraph-spacing-limits-26.9-outputs.zip",
+  "outputs_sha256": "fc8e235193bf66bac7e0ce5acae45a35a01e727d338da6382614b48f42e94017",
+  "scope": "two owned inherited inputs; paragraph/style finite spacing range, rounding and save/reopen; no rendering or nonfinite acceptance",
+  "full_paragraph_formatting_acceptance": false
+}

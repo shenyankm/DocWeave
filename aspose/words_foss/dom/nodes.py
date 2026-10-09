@@ -749,10 +749,10 @@ class ParagraphFormat(_Format):
         if value is not None:
             if isinstance(value, bool) or not isinstance(value, (int, float)):
                 raise TypeError("Paragraph dimensions require a number or None for an unset direct value")
-            if not isfinite(value) or abs(value) > 2147483647 / 20:
+            if tag == "spacing" and (value < 0 or value > 1584):
+                raise RuntimeError("Paragraph spacing must be between 0 and 1584 points")
+            if abs(value) > 2147483647 / 20 or not isfinite(value):
                 raise ValueError("Paragraph dimension exceeds finite signed twip limits")
-            if tag == "spacing" and value < 0:
-                raise RuntimeError("Paragraph spacing cannot be negative")
             twips = round(value * 20)
             if prop == "first_line_indent" and twips < 0:
                 attribute, twips = "hanging", -twips

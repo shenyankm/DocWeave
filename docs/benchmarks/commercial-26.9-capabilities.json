@@ -30285,6 +30285,11 @@
         "observed_black_ink_difference_ratio": 0.00411433521004764,
         "tests": "tests/test_paragraph_dimensions.py",
         "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      },
+      "dimension_extremes_evidence": {
+        "file": "paragraph-dimension-extremes-26.9.json",
+        "status": "unresolved",
+        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
       }
     },
     {
@@ -30435,6 +30440,11 @@
         "observed_black_ink_difference_ratio": 0.00411433521004764,
         "tests": "tests/test_paragraph_dimensions.py",
         "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      },
+      "dimension_extremes_evidence": {
+        "file": "paragraph-dimension-extremes-26.9.json",
+        "status": "unresolved",
+        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
       }
     },
     {
@@ -30595,6 +30605,11 @@
         "observed_black_ink_difference_ratio": 0.00411433521004764,
         "tests": "tests/test_paragraph_dimensions.py",
         "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      },
+      "dimension_extremes_evidence": {
+        "file": "paragraph-dimension-extremes-26.9.json",
+        "status": "unresolved",
+        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
       }
     },
     {
@@ -30647,6 +30662,17 @@
         "observed_black_ink_difference_ratio": 0.00411433521004764,
         "tests": "tests/test_paragraph_dimensions.py",
         "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      },
+      "dimension_extremes_evidence": {
+        "file": "paragraph-dimension-extremes-26.9.json",
+        "status": "unresolved",
+        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
+      },
+      "spacing_limits_evidence": {
+        "file": "paragraph-spacing-limits-26.9.json",
+        "implementation": "finite 0..1584pt before quantization; RuntimeError outside range, mutation-free; paragraph and style edits and save/reopen",
+        "tests": "tests/test_paragraph_dimensions.py",
+        "full_acceptance": false
       }
     },
     {
@@ -30689,6 +30715,17 @@
         "observed_black_ink_difference_ratio": 0.00411433521004764,
         "tests": "tests/test_paragraph_dimensions.py",
         "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      },
+      "dimension_extremes_evidence": {
+        "file": "paragraph-dimension-extremes-26.9.json",
+        "status": "unresolved",
+        "limits": "native finite indent clamping, signed lower boundary and nonfinite sentinel differ; live getters only"
+      },
+      "spacing_limits_evidence": {
+        "file": "paragraph-spacing-limits-26.9.json",
+        "implementation": "finite 0..1584pt before quantization; RuntimeError outside range, mutation-free; paragraph and style edits and save/reopen",
+        "tests": "tests/test_paragraph_dimensions.py",
+        "full_acceptance": false
       }
     },
     {

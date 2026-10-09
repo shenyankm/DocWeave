@@ -1,0 +1,197 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "scope": "live setters only; no save/reopen or rendering acceptance",
+  "records": [
+    {
+      "property": "left_indent",
+      "value": "-107374182.4",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "left_indent",
+      "value": "-107374182.35",
+      "read": "-107374182.35"
+    },
+    {
+      "property": "left_indent",
+      "value": "107374182.35",
+      "read": "107374182.35"
+    },
+    {
+      "property": "left_indent",
+      "value": "107374182.4",
+      "read": "107374182.35"
+    },
+    {
+      "property": "left_indent",
+      "value": "1e+100",
+      "read": "107374182.35"
+    },
+    {
+      "property": "left_indent",
+      "value": "inf",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "left_indent",
+      "value": "nan",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "right_indent",
+      "value": "-107374182.4",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "right_indent",
+      "value": "-107374182.35",
+      "read": "-107374182.35"
+    },
+    {
+      "property": "right_indent",
+      "value": "107374182.35",
+      "read": "107374182.35"
+    },
+    {
+      "property": "right_indent",
+      "value": "107374182.4",
+      "read": "107374182.35"
+    },
+    {
+      "property": "right_indent",
+      "value": "1e+100",
+      "read": "107374182.35"
+    },
+    {
+      "property": "right_indent",
+      "value": "inf",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "right_indent",
+      "value": "nan",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "first_line_indent",
+      "value": "-107374182.4",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "first_line_indent",
+      "value": "-107374182.35",
+      "read": "-107374182.35"
+    },
+    {
+      "property": "first_line_indent",
+      "value": "107374182.35",
+      "read": "107374182.35"
+    },
+    {
+      "property": "first_line_indent",
+      "value": "107374182.4",
+      "read": "107374182.35"
+    },
+    {
+      "property": "first_line_indent",
+      "value": "1e+100",
+      "read": "107374182.35"
+    },
+    {
+      "property": "first_line_indent",
+      "value": "inf",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "first_line_indent",
+      "value": "nan",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "space_before",
+      "value": "-107374182.4",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceBefore')"
+    },
+    {
+      "property": "space_before",
+      "value": "-107374182.35",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceBefore')"
+    },
+    {
+      "property": "space_before",
+      "value": "107374182.35",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceBefore')"
+    },
+    {
+      "property": "space_before",
+      "value": "107374182.4",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceBefore')"
+    },
+    {
+      "property": "space_before",
+      "value": "1e+100",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceBefore')"
+    },
+    {
+      "property": "space_before",
+      "value": "inf",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceBefore')"
+    },
+    {
+      "property": "space_before",
+      "value": "nan",
+      "read": "-107374182.4"
+    },
+    {
+      "property": "space_after",
+      "value": "-107374182.4",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceAfter')"
+    },
+    {
+      "property": "space_after",
+      "value": "-107374182.35",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceAfter')"
+    },
+    {
+      "property": "space_after",
+      "value": "107374182.35",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceAfter')"
+    },
+    {
+      "property": "space_after",
+      "value": "107374182.4",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceAfter')"
+    },
+    {
+      "property": "space_after",
+      "value": "1e+100",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceAfter')"
+    },
+    {
+      "property": "space_after",
+      "value": "inf",
+      "error": "RuntimeError",
+      "message": "Proxy error(ArgumentOutOfRangeException): Specified argument was out of the range of valid values. (Parameter 'SpaceAfter')"
+    },
+    {
+      "property": "space_after",
+      "value": "nan",
+      "read": "-107374182.4"
+    }
+  ],
+  "status": "unresolved: indent clamping, signed lower boundary and nonfinite sentinel behavior differ from SDK validation"
+}

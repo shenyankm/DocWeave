@@ -12,6 +12,7 @@ from aspose.words_foss import DocxDocument
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / "docs/benchmarks"
 REPORT = json.loads((BENCHMARKS / "paragraph-dimensions-26.9.json").read_text())
+LIMITS = json.loads((BENCHMARKS / "paragraph-spacing-limits-26.9.json").read_text())
 PROPERTIES = ("left_indent", "right_indent", "first_line_indent", "space_before", "space_after")
 
 
@@ -26,14 +27,14 @@ def snapshot(document):
                               ("paragraph", paragraph(document).effective_paragraph_format))}
 
 
-def load(name):
-    with ZipFile(BENCHMARKS / REPORT["corpus"]) as archive:
+def load(name, report=REPORT):
+    with ZipFile(BENCHMARKS / report["corpus"]) as archive:
         return DocxDocument(BytesIO(archive.read(name)))
 
 
-@pytest.mark.parametrize("row", REPORT["records"], ids=lambda row: f'{row["input"]}-{row["target"]}-{row["value"]}')
+@pytest.mark.parametrize("row", REPORT["records"] + LIMITS["records"], ids=lambda row: f'{row["input"]}-{row["target"]}-{row["value"]}')
 def test_dimensions_match_native_edit_and_reopen(row):
-    document = load(row["input"])
+    document = load(row["input"], LIMITS if row in LIMITS["records"] else REPORT)
     assert snapshot(document) == row["before_edit"]
     before = document.to_bytes()
     node = document.styles.get_by_name("Derived") if row["target"] == "style" else paragraph(document)
@@ -73,7 +74,8 @@ def test_wrong_dimension_types_fail_without_mutation(row):
 def test_nonfinite_or_overflow_dimensions_fail_without_mutation(prop, value):
     document = load("left_indent/0.docx")
     before = document.to_bytes()
-    with pytest.raises(ValueError):
+    error = RuntimeError if prop.startswith("space_") and value > 1584 else ValueError
+    with pytest.raises(error):
         setattr(paragraph(document).paragraph_format, prop, value)
     assert document.to_bytes() == before
 

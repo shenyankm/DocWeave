@@ -313,7 +313,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
-    names += ["paragraph-dimensions-26.9.json", "corpus/paragraph-dimensions-26.9.zip",
+    names += ["paragraph-spacing-limits-26.9.json", "corpus/paragraph-spacing-limits-26.9.zip",
+              "corpus/paragraph-spacing-limits-26.9-outputs.zip", "paragraph-dimensions-26.9.json", "corpus/paragraph-dimensions-26.9.zip",
               "corpus/paragraph-dimensions-26.9-outputs.zip", "paragraph-dimensions-rendering-26.9.json",
               "corpus/paragraph-dimensions-rendering-26.9.zip", "corpus/paragraph-dimensions-rendering-26.9-commercial.zip",
               "corpus/paragraph-dimensions-rendering-26.9-current.zip"]

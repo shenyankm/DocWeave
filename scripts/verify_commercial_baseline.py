@@ -184,12 +184,14 @@ def saved_dimensions(data):
             "paragraph": resolved(paragraph.style, paragraph.paragraph_format)}
 
 
-def verify_paragraph_dimensions(root):
-    report = json.loads((root / "paragraph-dimensions-26.9.json").read_text())
+def verify_paragraph_dimensions(root, filename="paragraph-dimensions-26.9.json"):
+    assert filename in {"paragraph-dimensions-26.9.json", "paragraph-spacing-limits-26.9.json"}
+    limits = filename == "paragraph-spacing-limits-26.9.json"
+    report = json.loads((root / filename).read_text())
     assert report["version"] == "26.9.0" and report["licensed"] is False
-    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_dimensions.py"))
+    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes" / ("paragraph_spacing_limits.py" if limits else "paragraph_dimensions.py")))
     generated = {name: (prop, data) for name, prop, data in probe["inputs"]()}
-    assert len(generated) == 45 and len(report["records"]) == 360 and len(report["setter_errors"]) == 270
+    assert (len(generated), len(report["records"]), len(report["setter_errors"])) == ((2, 32, 12) if limits else (45, 360, 270))
     archives = {}
     for key in ("corpus", "outputs"):
         raw = (root / report[key]).read_bytes()
@@ -208,7 +210,7 @@ def verify_paragraph_dimensions(root):
     for row in report["records"]:
         assert row["input_sha256"] == digest(archives["corpus"][row["input"]])
         assert row["property"] == generated[row["input"]][0] and row["before_edit"] == before[row["input"]]
-        if row["property"].startswith("space_") and row["value"] < 0:
+        if row["property"].startswith("space_") and (row["value"] < 0 or row["value"] > 1584):
             assert row["error"] == "RuntimeError" and row["after_edit"] == row["before_edit"]
         else:
             assert row["error"] is None
@@ -858,6 +860,7 @@ def verify(root):
     first_trial = verify_first_paragraph_trial(root)
     pagination_rendering = verify_pagination_rendering(root)
     dimensions = verify_paragraph_dimensions(root)
+    spacing_limits = verify_paragraph_dimensions(root, "paragraph-spacing-limits-26.9.json")
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
@@ -877,6 +880,7 @@ def verify(root):
             "checked_trial_first_paragraph_outputs": first_trial,
             "checked_pagination_rendering_pairs": pagination_rendering,
             "checked_paragraph_dimension_edits": dimensions,
+            "checked_paragraph_spacing_limits": spacing_limits,
             "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 

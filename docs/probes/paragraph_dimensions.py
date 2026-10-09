@@ -65,7 +65,7 @@ def snapshot(document, aw):
                                ("paragraph", paragraph(document, aw)))}
 
 
-def main():
+def main(input_generator=inputs, values=VALUES):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
@@ -74,14 +74,15 @@ def main():
     assert version("aspose-words") == "26.9.0"
     args.output.mkdir(parents=True, exist_ok=True)
     records, errors = [], []
+    generated = list(input_generator())
     with ZipFile(args.output / "inputs.zip", "w", compression=ZIP_DEFLATED) as corpus, \
             ZipFile(args.output / "outputs.zip", "w", compression=ZIP_DEFLATED) as outputs:
-        for name, prop, raw in inputs():
+        for name, prop, raw in generated:
             info = ZipInfo(name, (2020, 1, 1, 0, 0, 0))
             info.compress_type = ZIP_DEFLATED
             corpus.writestr(info, raw)
             for target in ("style", "paragraph"):
-                for value in VALUES:
+                for value in values:
                     document = aw.Document(BytesIO(raw))
                     before = snapshot(document, aw)
                     node = document.styles.get_by_name("Derived") if target == "style" else paragraph(document, aw)
@@ -120,13 +121,13 @@ def main():
                     after = snapshot(document, aw)
                     assert after == before
                     errors.append({"input": name, "property": prop, "target": target, "value": value, "error": error})
-    assert len(records) == 360 and len(errors) == 270
+    assert len(records) == len(generated) * 2 * len(values) and len(errors) == len(generated) * 6
     report = {"version": version("aspose-words"), "licensed": False,
               "python": platform.python_version(), "platform": platform.platform(),
               "records": records, "setter_errors": errors,
               "corpus": "inputs.zip", "corpus_sha256": hashlib.sha256((args.output / "inputs.zip").read_bytes()).hexdigest(),
               "outputs": "outputs.zip", "outputs_sha256": hashlib.sha256((args.output / "outputs.zip").read_bytes()).hexdigest(),
-              "scope": "five point dimensions, nine owned inheritance patterns including sibling attributes, style/direct edits and DOCX reopening; not complete paragraph formatting or rendering acceptance"}
+              "scope": "owned point-valued paragraph inputs, style/direct edits and DOCX reopening; not complete paragraph formatting or rendering acceptance"}
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"records": len(records), "setter_errors": len(errors)}))
 
