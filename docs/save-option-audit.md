@@ -55,8 +55,8 @@
 | `table_content_alignment` | 表格对齐覆盖 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `list_export_mode` | Markdown 列表或纯文本路径 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `export_images_as_base64` | 无 images_folder 时始终内联；有目录时选择内联/外部 | [test_conversion_api.py](../tests/test_conversion_api.py) |
-| `images_folder` | 同名不同内容分配序号，已有文件及目标符号链接保留；普通失败回滚新图片，占用标记保护待提交图片；非断电安全多文件事务 | [test_markdown_image_rollback.py](../tests/test_markdown_image_rollback.py)、[test_markdown_image_collisions.py](../tests/test_markdown_image_collisions.py) |
-| `images_folder_alias` | 外部图片链接目录别名 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
+| `images_folder` | 同名不同内容分配序号，已有文件及目标符号链接保留；普通失败回滚新图片，占用标记保护待提交图片；非断电安全多文件事务；链接使用编码 URI 路径 | [test_markdown_image_rollback.py](../tests/test_markdown_image_rollback.py)、[test_markdown_image_collisions.py](../tests/test_markdown_image_collisions.py) |
+| `images_folder_alias` | URL 前缀：编码文件名追加到 path，保留 query/fragment；激活时拒绝非字符串/原始 ASCII 控制字符及非法 URL | [图片 URI 契约](benchmarks/markdown-image-links.json)、[独立解析](../tests/test_markdown_image_links.py) |
 | `export_underline_formatting` | 普通 Markdown 使用 `++` 扩展标记，HTML 表格使用 u 标签；不是所有 Markdown 阅读器都支持该扩展 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py)、[实际输出](../tests/test_boolean_save_contract.py) |
 | `link_export_mode` | 自动/内联/引用链接 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `export_as_html` | TABLES 走已有 HTML 路径；NON_COMPATIBLE_TABLES 仍等同 NONE，但现在警告 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |

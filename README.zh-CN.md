@@ -488,7 +488,7 @@ python -m pytest tests -q
 python -m pytest ApiExamples -q --rootdir=ApiExamples -c ApiExamples/pytest.ini
 ```
 
-`[dev]` 包含 pytest、PyMuPDF、pypdf、python-docx、docx2python，用于回归、独立 PDF 检查和 DOCX 内容对照。
+`[dev]` 包含 pytest、PyMuPDF、pypdf、python-docx、docx2python、markdown-it-py，用于回归、独立 PDF/Markdown 检查和 DOCX 内容对照。
 塑形与 docxtpl 是可选运行时集成；按上面命令安装，可运行相关测试而非跳过。
 未安装 LibreOffice 时，真实原生渲染测试会跳过。
 

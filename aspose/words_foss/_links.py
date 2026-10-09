@@ -16,8 +16,12 @@ INLINE_LINK_RE = re.compile(
 )
 
 
+def _escape_label(label):
+    return "".join("\\" + char if char in punctuation else char for char in label)
+
+
 def format_link(label, target):
-    label = "".join("\\" + char if char in punctuation else char for char in label)
+    label = _escape_label(label)
     target = target.replace("\\", "\\\\").replace("&", "\\&")
     return f"[{label}]({_link_destination(target)})"
 

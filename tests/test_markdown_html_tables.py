@@ -133,7 +133,9 @@ def test_html_images_preserve_bytes_and_escape_attributes(tmp_path):
     output = tmp_path / "table.md"
     doc.save(output, options)
     image = ET.fromstring(output.read_text()).find(".//img")
-    assert image.get("src") == 'img&"quoted/image1.png'
+    from urllib.parse import unquote
+
+    assert unquote(image.get("src")) == 'img&"quoted/image1.png'
     assert (tmp_path / "images/image1.png").read_bytes() == stream.getvalue()
 
 

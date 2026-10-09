@@ -1,0 +1,221 @@
+{
+  "baseline_commit": "8db21636fee4999b2509c7f2d06c7b1f96b7d40e",
+  "scope": "A1 Markdown/HTML image labels and URI paths; not complete ecosystem or save-options acceptance",
+  "environment": {
+    "os": "macOS 27.0.1 arm64",
+    "python": "3.13.15",
+    "markdown-it-py": "4.2.0",
+    "Pillow": "12.3.0",
+    "python-docx": "1.2.0",
+    "PyMuPDF": "1.28.2",
+    "pypdf": "6.19.0",
+    "Pandoc": "3.8.3",
+    "installed_cwd": "/tmp"
+  },
+  "reproduction": {
+    "tests": "tests/test_markdown_image_links.py",
+    "old_installed": "78 failed, 12 passed, 1 warning in 4.34s",
+    "source_related": "209 passed, 4 warnings in 13.54s",
+    "new_installed_stage": "90 passed in 3.83s",
+    "baseline_module": "/tmp/docweave-image-links-baseline-8db/site-packages/aspose/words_foss/__init__.py",
+    "candidate_module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+  },
+  "contract": {
+    "labels": "Reuse link-label punctuation escaping; CR/LF/TAB represented with character references. Literal label text remains one image, without extra links or raw HTML nodes.",
+    "paths": "Physical filenames and image bytes unchanged. Relative paths use forward slashes; filename and filesystem path characters URI encoded, including literal percent signs.",
+    "alias": "String URL prefix with no raw ASCII controls. Append encoded filename to path, preserving existing escaped percent sequences in prefix and original query/fragment. Literal path #/? in alias must be percent encoded. URL parsing errors fail before creating assets.",
+    "mime": "When image_type supplies no MIME, use existing Pillow header recognition for inline rasters. No image reencoding or source-model mutation. Unsupported unrecognized inline data is omitted with a content-loss diagnostic.",
+    "unsafe": "Markdown and HTML image scheme allowlist; dangerous linked sources omitted with ContentLossWarning. Strict failure rolls back newly published images and retains existing files.",
+    "direct": "Direct writer without output path and with absolute image folder emits file URI. Public external-image in-memory output remains rejected."
+  },
+  "coverage": [
+    "Actual python-docx PNG inputs and original docPr alt; controlled source_full_name metadata for filesystem-name cases",
+    "Body, pipe table and default header/footer; public file/memory and direct writer paths",
+    "Space, hash, question mark, literal percent-encoded-looking and CJK/bracket/parenthesis filenames; Windows uses legal exclamation instead of question mark in filenames",
+    "Alias URL path/query/fragment, HTML attributes, bad aliases before side effects, strict rollback and existing-file preservation",
+    "Image byte equality and literal alt via independent CommonMark parser with table extension and URL filtering disabled for observation",
+    "Public Markdown reader roundtrip of malicious, multiline, entity-looking, backslash and pipe labels, preserving exactly one image and bytes",
+    "Missing NO_IMAGE/UNKNOWN MIME metadata and HTML table fallback; source model preserved",
+    "Existing collision, rollback, independent-process, field-instruction visibility and conversion callers included in related source checks"
+  ],
+  "real_docx_alt_probe": {
+    "before": {
+      "source_sha256": "e6ecea435e58489e984d7e16da66466eff35b0062490d39c049bbd3f0c7e6b7f",
+      "images": 2,
+      "raw_html_nodes": 2,
+      "image_alts": [
+        "Alt ",
+        "label"
+      ],
+      "markdown": "![Alt ](https://evil.invalid) <script>x</script> ![label](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAE0lEQVR4nGNkYPjPAAZMEAqFBQAbXQEF2cdRlAAAAABJRU5ErkJggg==)\n"
+    },
+    "after": {
+      "source_sha256": "e6ecea435e58489e984d7e16da66466eff35b0062490d39c049bbd3f0c7e6b7f",
+      "images": 1,
+      "raw_html_nodes": 0,
+      "image_alts": [
+        "Alt ](https://evil.invalid) <script>x</script> ![label"
+      ],
+      "markdown": "![Alt \\]\\(https\\:\\/\\/evil\\.invalid\\) \\<script\\>x\\<\\/script\\> \\!\\[label](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAE0lEQVR4nGNkYPjPAAZMEAqFBQAbXQEF2cdRlAAAAABJRU5ErkJggg==)\n"
+    },
+    "pandoc_literal_alt_after": "Alt ](https://evil.invalid) <script>x</script> ![label",
+    "input": "Same real DOCX file; no filename/model override in this alt-injection probe"
+  },
+  "common_markdown": {
+    "before": [
+      {
+        "independent_image_semantics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "image_count": 0,
+        "pandoc_html_sha256": "35306e1c702bd6c1d7f2280e66d7d2f830f35bb364005826f8fde68f7ffa57ea",
+        "name": "small",
+        "source_sha256": "e5c217ce9ab6e2de6ecadb6380699947826ceb39463fe7ccc055092f2ac0d703",
+        "markdown_bytes": 44,
+        "markdown_sha256": "390e64a3a33bd9d47b707dbf42478a2a62b84dbb72d08c525d575a38aa9400b1",
+        "independent_html_sha256": "35306e1c702bd6c1d7f2280e66d7d2f830f35bb364005826f8fde68f7ffa57ea",
+        "diagnostic_codes": []
+      },
+      {
+        "independent_image_semantics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "image_count": 0,
+        "pandoc_html_sha256": "cc3607ab1cf359a3fb9c798e0265d02e198b390b0d357a53188f2e114a286829",
+        "name": "hundred_pages",
+        "source_sha256": "4a58a34bdddd09e80f992dbc7c0055ab4a07ceea21146304564bd4e81b922d4c",
+        "markdown_bytes": 244286,
+        "markdown_sha256": "e36e62629bfaad7dd778d5936269dfddc522dbbd13db0a9cc9946d4bc6d68fad",
+        "independent_html_sha256": "b5c7c15c4c222e9ea5d01949883e249a65123a46dd691a138661d13c540a1405",
+        "diagnostic_codes": []
+      },
+      {
+        "independent_image_semantics_sha256": "d87d68584e013992a57604fe1fa264562b843b0a5e159523e6ed4e84ef937e7d",
+        "image_count": 24,
+        "pandoc_html_sha256": "3e72b2d25049a713a501a5b898151305d4cd92f42df49b5ded1c4927bfeaadc7",
+        "name": "image_table",
+        "source_sha256": "a1dae1a70968e0640b959f3fcc09b0a7c363f97556a5b54311be7b068e2bd8c2",
+        "markdown_bytes": 19478,
+        "markdown_sha256": "a9f49bd6762f0a9a301a64c101455cbecd3dca417adcf55d1ccdbb8bfcb67f28",
+        "independent_html_sha256": "3340fa9dd6d67b5ac749f01e83669d405ba9ad74f631ac8cf324b0cced2ab184",
+        "diagnostic_codes": []
+      },
+      {
+        "independent_image_semantics_sha256": "80be26a8da6e3af80403385e19f92953f06b371b871742a99d19c6c84c6b3ebb",
+        "image_count": 40,
+        "pandoc_html_sha256": "b05a1fdcf62f338840ffeadc39a9bccba6bdbeea6b93a90694af0c8e28587312",
+        "name": "repeated_images",
+        "source_sha256": "a19f56933135f9820b43e3e90f3ac091d5e3aed0db48a5a932abc4eedf7df3a2",
+        "markdown_bytes": 23159,
+        "markdown_sha256": "06463be1fce92e9c2a5b20c3d36c0e8a2a73f87f420cc2282cef6847d99b51e7",
+        "independent_html_sha256": "eafebe95ea04e85f32b5140eab111e0d96f21b8b1273c5e1495bd6fba48ba080",
+        "diagnostic_codes": []
+      },
+      {
+        "independent_image_semantics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "image_count": 0,
+        "pandoc_html_sha256": "e993d5e775104c7ad82385d88e7f62fa83655a09052e95c90e689dd82f726ea1",
+        "name": "mixed_styles",
+        "source_sha256": "db06ae569aba30457f3e83782be91d96dca3786684a6d878a767c3e97b48ff26",
+        "markdown_bytes": 16530,
+        "markdown_sha256": "4087e7cff57911ca214f9115d85c4b90b4790bf2091bb2fe7694dbc9bd882ff1",
+        "independent_html_sha256": "67f9e1a72d52094c0c4f504ecac1d80be4ffd9f8aabb8a2aedb08824f5cbb6d6",
+        "diagnostic_codes": []
+      }
+    ],
+    "after": [
+      {
+        "independent_image_semantics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "image_count": 0,
+        "pandoc_html_sha256": "35306e1c702bd6c1d7f2280e66d7d2f830f35bb364005826f8fde68f7ffa57ea",
+        "name": "small",
+        "source_sha256": "e5c217ce9ab6e2de6ecadb6380699947826ceb39463fe7ccc055092f2ac0d703",
+        "markdown_bytes": 44,
+        "markdown_sha256": "390e64a3a33bd9d47b707dbf42478a2a62b84dbb72d08c525d575a38aa9400b1",
+        "independent_html_sha256": "35306e1c702bd6c1d7f2280e66d7d2f830f35bb364005826f8fde68f7ffa57ea",
+        "diagnostic_codes": []
+      },
+      {
+        "independent_image_semantics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "image_count": 0,
+        "pandoc_html_sha256": "cc3607ab1cf359a3fb9c798e0265d02e198b390b0d357a53188f2e114a286829",
+        "name": "hundred_pages",
+        "source_sha256": "4a58a34bdddd09e80f992dbc7c0055ab4a07ceea21146304564bd4e81b922d4c",
+        "markdown_bytes": 244286,
+        "markdown_sha256": "e36e62629bfaad7dd778d5936269dfddc522dbbd13db0a9cc9946d4bc6d68fad",
+        "independent_html_sha256": "b5c7c15c4c222e9ea5d01949883e249a65123a46dd691a138661d13c540a1405",
+        "diagnostic_codes": []
+      },
+      {
+        "independent_image_semantics_sha256": "d87d68584e013992a57604fe1fa264562b843b0a5e159523e6ed4e84ef937e7d",
+        "image_count": 24,
+        "pandoc_html_sha256": "3e72b2d25049a713a501a5b898151305d4cd92f42df49b5ded1c4927bfeaadc7",
+        "name": "image_table",
+        "source_sha256": "a1dae1a70968e0640b959f3fcc09b0a7c363f97556a5b54311be7b068e2bd8c2",
+        "markdown_bytes": 19503,
+        "markdown_sha256": "e53e0e780f341380ba067d66711d1bfb5197188522a73ed4c4c3525a008d22b7",
+        "independent_html_sha256": "bfaf22e1884046ee2dcd8e1d5c69514b77e612c62ded69f2eeaaaff28aaf22f3",
+        "diagnostic_codes": []
+      },
+      {
+        "independent_image_semantics_sha256": "80be26a8da6e3af80403385e19f92953f06b371b871742a99d19c6c84c6b3ebb",
+        "image_count": 40,
+        "pandoc_html_sha256": "b05a1fdcf62f338840ffeadc39a9bccba6bdbeea6b93a90694af0c8e28587312",
+        "name": "repeated_images",
+        "source_sha256": "a19f56933135f9820b43e3e90f3ac091d5e3aed0db48a5a932abc4eedf7df3a2",
+        "markdown_bytes": 23199,
+        "markdown_sha256": "dad4168d928deb7a42490938db42a5849e60f735e9cd4f361af47cdb8c5e4082",
+        "independent_html_sha256": "add09f0ed0bda94c00310d6c8075d2474769875ac9e0097b73235a60e3fcc8e1",
+        "diagnostic_codes": []
+      },
+      {
+        "independent_image_semantics_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "image_count": 0,
+        "pandoc_html_sha256": "e993d5e775104c7ad82385d88e7f62fa83655a09052e95c90e689dd82f726ea1",
+        "name": "mixed_styles",
+        "source_sha256": "db06ae569aba30457f3e83782be91d96dca3786684a6d878a767c3e97b48ff26",
+        "markdown_bytes": 16530,
+        "markdown_sha256": "4087e7cff57911ca214f9115d85c4b90b4790bf2091bb2fe7694dbc9bd882ff1",
+        "independent_html_sha256": "67f9e1a72d52094c0c4f504ecac1d80be4ffd9f8aabb8a2aedb08824f5cbb6d6",
+        "diagnostic_codes": []
+      }
+    ],
+    "result": "Five identical fixed inputs/default configuration: independent image-token semantics, image counts, Pandoc HTML hashes and diagnostic codes equal. Markdown raw bytes differ for two image cases due to escaping, by 25 and 40 bytes respectively.",
+    "corpus_reference": "cell-line-slots.json fixtures and preceding boolean-save-contract.json common_markdown",
+    "probe_source": "import hashlib,json,sys,warnings,subprocess\nfrom io import BytesIO\nfrom pathlib import Path\nfrom docx import Document as NativeDocument\nfrom markdown_it import MarkdownIt\nfrom PIL import Image\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nparser=MarkdownIt('commonmark').enable('table');parser.validateLink=lambda target:True\nroot=Path('/tmp/docweave-current-performance');records=[]\nfor name in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n with warnings.catch_warnings():\n  warnings.simplefilter('ignore');doc=aw.Document(root/(name+'.docx'));raw=doc.to_bytes('md').decode()\n pandoc_html=subprocess.run(['/tmp/docweave-pandoc-arm64/pandoc','--from=commonmark+pipe_tables','--to=html'],input=raw,text=True,capture_output=True,check=True).stdout\n tokens=[child for token in parser.parse(raw) for child in token.children or []]\n semantics=[(t.attrGet('src'),''.join(c.content for c in t.children or [])) for t in tokens if t.type=='image']\n records.append({'independent_image_semantics_sha256':hashlib.sha256(json.dumps(semantics,ensure_ascii=False).encode()).hexdigest(),'image_count':len(semantics),'pandoc_html_sha256':hashlib.sha256(pandoc_html.encode()).hexdigest(),'name':name,'source_sha256':hashlib.sha256((root/(name+'.docx')).read_bytes()).hexdigest(),'markdown_bytes':len(raw.encode()),'markdown_sha256':hashlib.sha256(raw.encode()).hexdigest(),'independent_html_sha256':hashlib.sha256(parser.render(raw).encode()).hexdigest(),'diagnostic_codes':[d.code for d in doc.diagnostics]})\nproof=Path('/tmp/docweave-image-links-proof');proof.mkdir(exist_ok=True)\nsource=proof/'source.docx';alt='Alt ](https://evil.invalid) <script>x</script> ![label'\nif not source.exists():\n pic=BytesIO();Image.new('RGB',(3,3),'blue').save(pic,format='PNG')\n native=NativeDocument();inline=native.add_paragraph().add_run().add_picture(BytesIO(pic.getvalue()))._inline;inline.docPr.set('descr',alt);native.save(source)\nraw=aw.Document(source).to_bytes('md').decode();roots=parser.parse(raw);tokens=roots+[c for t in roots for c in (t.children or [])]\npandoc_alt_html=subprocess.run(['/tmp/docweave-pandoc-arm64/pandoc','--from=commonmark+pipe_tables','--to=html'],input=raw,text=True,capture_output=True,check=True).stdout\nfrom xml.etree import ElementTree as ET\ntry:\n pandoc_alt=ET.fromstring('<root>'+pandoc_alt_html+'</root>').find('.//img').get('alt')\nexcept ET.ParseError:\n pandoc_alt=None\nresult={'pandoc_real_alt':pandoc_alt,'module':aw.__file__,'records':records,'real_docx_alt_probe':{'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'images':sum(t.type=='image' for t in tokens),'raw_html_nodes':sum(t.type in ('html_inline','html_block') for t in tokens),'image_alts':[''.join(c.content for c in t.children) for t in tokens if t.type=='image'],'markdown':raw}}\nPath(sys.argv[1]).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\\n')\nprint(json.dumps(result['real_docx_alt_probe'],ensure_ascii=False))\n"
+  },
+  "independent_renderer_limit": {
+    "observation": "markdown-it-py 4.2.0 parses escaped label punctuation as text_special but renderInlineAsText only includes text/image/softbreak. image1\\.png becomes HTML alt image1png. Raw HTML hashes therefore differ in two default-image cases, despite equal token semantics.",
+    "reproduction": "MarkdownIt(\"commonmark\").render(\"![image1\\.png](image.png)\")",
+    "source": "https://github.com/executablebooks/markdown-it-py/blob/master/markdown_it/renderer.py",
+    "handling": "No renderer patch or assertion normalization. Independent Pandoc commonmark+pipe_tables HTML output and literal alt checked separately; actual reader-specific rendering remains a boundary."
+  },
+  "common_pdf": {
+    "result": "Five fixed inputs, 113 pages: complete bytes/words/pixels/drawings/images records and JSON file bytes equal to preceding boolean wheel",
+    "record_sha256": "470e8cdaff77bbda91c1becbd1c2f56348e4f51bbd67c74512b7e3418b4a6dcc",
+    "baseline_record": "boolean-save-contract.json common_pdf",
+    "probe_source": "import hashlib,json,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-current-performance');results={}\nfor case in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n raw=aw.Document(root/(case+'.docx')).to_bytes(aw.saving.PdfSaveOptions())\n pages=[]\n with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n  for page in pdf:\n   pages.append({key:hashlib.sha256(value).hexdigest() for key,value in {'words':repr(page.get_text('words')).encode(),'pixels':page.get_pixmap().samples,'drawings':repr(page.get_drawings()).encode(),'images':repr(page.get_image_info()).encode()}.items()})\n results[case]={'bytes':len(raw),'pages':pages}\nPath(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\\n');print('five PDF corpora saved')\n"
+  },
+  "installed_regression": {
+    "result": "2372 passed, 187 warnings in 401.63s (0:06:41); no skips or deselection",
+    "command": "PYPANDOC_PANDOC=/tmp/docweave-pandoc-arm64/pandoc python -m pytest /absolute/workspace/tests -q --import-mode=importlib --tb=short; cwd /tmp",
+    "final_test_expansion": "After full run, added eight pipe-label cases and reader-roundtrip assertions. Unchanged candidate production code; final 90 stage cases and 209 related source tests passed separately. The eight added cases were not in the 2372-test full run."
+  },
+  "examples": "31 passed, 13 warnings in 7.51s",
+  "wheel": {
+    "bytes": 26491520,
+    "sha256": "8fb7dea232c46a43f3c7360eedd62ad6a7e1f6d7389bf6819c7bdf64ee1a6ad3",
+    "source_py_files_matched": 125,
+    "check": "scripts/check_wheel.py passes outside checkout using actual site-packages",
+    "dependency": "markdown-it-py>=4.2.0 added only to dev extra; no new runtime dependency"
+  },
+  "baseline_ci": {
+    "run": "https://github.com/shenyankm/DocWeave/actions/runs/37898757681",
+    "head": "8db21636fee4999b2509c7f2d06c7b1f96b7d40e",
+    "result": "completed success; all four installed-wheel and API-example matrix jobs passed",
+    "preceding_failure": "Run 37896109875 Windows: nine backslash-URL failures and one wrong expected POSIX CLI error; corrected in baseline commit without skipping the failing tests"
+  },
+  "limits": [
+    "No browser, PDF reader or fresh native Word/LibreOffice UI rendering in this stage",
+    "No remote resource fetching, full HTML/SVG sanitization, crash-safe multi-file transaction or network-filesystem recovery",
+    "No new speed/RSS or size-reduction claim; wheel grows 511 bytes compared with isolated CI-fix baseline wheel",
+    "Candidate CI must be observed after push; baseline green CI is not candidate verification",
+    "Remaining A1-A4 fixed corpus/option matrix and D01-D03 decisions not closed by this stage"
+  ]
+}

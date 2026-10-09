@@ -1750,3 +1750,15 @@ API 示例 31 passed（6.51 s，13 warnings）。全包 Ruff 致命错误/未使
 新测试完整 Ruff、四份文档 152 个本地链接/围栏/23 个 Python 示例、探针/夹具语法和 diff 检查通过。
 最终 wheel 为 26,486,717 字节，比阶段 62 增加 92 字节；133 个包文件与源码及全量测试安装包
 字节一致。仅 README 元数据更新后重建并校验，没有替换已验收的生产实现。
+
+## Markdown 图片语法与 URI 完整性（2026-10-09）
+
+图片替代文本此前原样插入 Markdown：真实 DOCX 的 `]`、HTML 标签和嵌套图片片段经独立解析形成两张图片和两个 HTML 节点。现复用已有标签转义与目标语法，CR/LF/TAB 用字符引用；同一输入为一张图片、无额外 HTML 节点，原替代文本和图片字节均保持。项目自有 Markdown reader 回读也保留图片与字面标签。
+
+外置图片保留物理文件名，链接以 `/` 和 URI 编码表达空格、`#`、`?`、字面百分号和中文标点。URL 别名只在 path 追加编码文件名，保留 query/fragment；激活别名的非字符串、ASCII 控制字符及 URL 解析错误在副产物前拒绝。普通 Markdown 与 HTML 表格拒绝危险图片 scheme，严格模式回滚新图片并保留原主文件和已有图片。缺失类型元数据的内联栅格图片用现有 Pillow 识别 MIME，不重编码或修改模型。
+
+[记录](benchmarks/markdown-image-links.json)包含真实 DOCX 加受控文件名元数据的四个 story、公共与直接 writer 路径、独立 CommonMark 解析、实际 Pandoc HTML、回读及失败保护。旧安装包 78 failed / 12 passed；源码相关 209 passed（13.54 s），最终安装专项 90 passed（3.83 s）。完整安装回归 2,372 passed（401.63 s，187 warnings，无跳过项），API 示例 31 passed（7.51 s）；完整回归后补充的八个管道标点案例和 reader 断言已单独通过，未重复完整回归。
+
+五份共同 Markdown 样本的诊断、图片数量/语义与 Pandoc HTML 摘要相同；两份含图样本原 Markdown 增加 25/40 字节，其他三份原字节不变。五类 113 页默认 PDF 的文字、图片、绘图、像素、大小及摘要文件字节不变。markdown-it-py 4.2.0 的 HTML alt 渲染忽略转义标点 token，导致两份 HTML 摘要变化；解析 token 与 Pandoc 对照分开记录，未补丁修改独立 renderer。该解析器仅新增为 dev 依赖。wheel 26,491,520 字节，比隔离 CI 修复基线增加 511 字节，不声明缩包或性能收益。
+
+125 个 Python 文件与实际安装验收 wheel 字节一致，资源/许可检查通过。没有浏览器、原生 Office、远程资源访问、完整 HTML/SVG 净化或多文件崩溃恢复验收；全 A1/A4 及待决策项仍未完成。候选的推送与 CI 以实际 Git/GitHub 结果确认，不使用基线绿测代替。

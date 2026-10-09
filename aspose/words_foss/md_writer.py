@@ -11,12 +11,15 @@ import html
 import os
 import re
 from contextlib import ExitStack, contextmanager
+from io import BytesIO
 from pathlib import Path
 from typing import NamedTuple, Optional
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit, urlunsplit
+
+from PIL import Image, UnidentifiedImageError
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._links import INLINE_LINK_RE, decode_link
+from aspose.words_foss._links import INLINE_LINK_RE, _escape_label, decode_link, format_link
 from aspose.words_foss.diagnostics import ContentLossWarning, ConversionWarning, document_nodes, source_story_losses, warn
 from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_children, visible_runs
 from aspose.words_foss._io import atomic_output
@@ -397,9 +400,12 @@ class LdmMarkdownWriter:
     def _render_image(self, shape: ldm.Shape) -> str:
         """Render a Shape with image data as a Markdown inline image tag."""
         source, alt = self._image_source(shape)
-        if not shape.image_data.image_bytes:
-            source = _link_destination(source)
-        return f"![{alt}]({source})"
+        if not self._html_url_allowed(source, image=True):
+            warn("Unsafe Markdown image source omitted", ContentLossWarning,
+                 code="markdown.unsafe_image")
+            return _escape_label(alt)
+        # Blank lines cannot occur inside a Markdown image label.
+        return ("!" + format_link(alt, source)).replace("\r", "&#13;").replace("\n", "&#10;").replace("\t", "&#9;")
 
     def _image_source(self, shape: ldm.Shape) -> tuple[str, str]:
         """Resolve an image once for Markdown or HTML output."""
@@ -408,7 +414,7 @@ class LdmMarkdownWriter:
         if not img.image_bytes:
             # A linked picture has no bytes of its own; its source is the link,
             # and only its alternative text names it.
-            return img.source_full_name, shape.alternative_text
+            return quote(img.source_full_name, safe="/%:@!$&'()*+,;=?#[]-._~"), shape.alternative_text
         alt = shape.alternative_text or img.source_full_name
 
         # If images_folder is set, save to file instead of base64
@@ -418,6 +424,10 @@ class LdmMarkdownWriter:
             # Sanitize filename to prevent path traversal
             filename = Path(img.source_full_name).name if img.source_full_name else ""
             filename = filename or f"image{self._image_counter}{ext}"
+            alias = self.options.images_folder_alias
+            if not isinstance(alias, str) or re.search(r"[\x00-\x1f\x7f]", alias):
+                raise ValueError("images_folder_alias must be a string without raw ASCII control characters")
+            prefix = urlsplit(alias) if alias else None
             folder = Path(self.options.images_folder)
             folder.mkdir(parents=True, exist_ok=True)
             filepath = folder / filename
@@ -454,17 +464,25 @@ class LdmMarkdownWriter:
             filename = filepath.name
 
             # Use alias if set, otherwise compute relative path
-            if self.options.images_folder_alias:
-                url = f"{self.options.images_folder_alias.rstrip('/')}/{filename}"
+            if prefix is not None:
+                path = quote(prefix.path.rstrip('/'), safe="/%:@!$&'()*+,;=-._~") + '/' + quote(filename, safe="")
+                url = urlunsplit(prefix._replace(path=path))
             elif self._output_path is not None:
-                url = os.path.relpath(filepath, self._output_path.parent).replace(os.sep, "/")
+                url = quote(os.path.relpath(filepath, self._output_path.parent).replace(os.sep, '/'), safe='/')
             else:
-                url = str(filepath)
+                url = filepath.as_uri() if filepath.is_absolute() else quote(filepath.as_posix(), safe='/')
             return url, alt
 
         # Default: inline base64 data URI
+        content_type = img.content_type
+        if not content_type:
+            try:
+                with Image.open(BytesIO(img.image_bytes)) as image:
+                    content_type = Image.MIME.get(image.format, "")
+            except UnidentifiedImageError:
+                pass
         b64 = base64.b64encode(img.image_bytes).decode("ascii")
-        return f"data:{img.content_type};base64,{b64}", alt
+        return f"data:{content_type};base64,{b64}", alt
 
     @staticmethod
     def _guess_image_extension(content_type: str, filename: str) -> str:
@@ -1615,6 +1633,8 @@ class LdmMarkdownWriter:
 
     @staticmethod
     def _html_url_allowed(source: str, image: bool = False) -> bool:
+        if image and re.search(r"[\x00-\x1f\x7f]", source):
+            return False
         try:
             scheme = urlsplit(source).scheme.lower()
         except ValueError:

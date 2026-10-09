@@ -510,8 +510,8 @@ python -m pytest tests -q
 python -m pytest ApiExamples -q --rootdir=ApiExamples -c ApiExamples/pytest.ini
 ```
 
-The `[dev]` extra installs pytest, PyMuPDF, pypdf, python-docx, and docx2python for regression, independent
-PDF checks, and DOCX content comparisons. Shaping and docxtpl are optional runtime integrations;
+The `[dev]` extra installs pytest, PyMuPDF, pypdf, python-docx, docx2python, and markdown-it-py for regression,
+independent PDF/Markdown checks, and DOCX content comparisons. Shaping and docxtpl are optional runtime integrations;
 installing them above exercises their tests rather than skipping them. Native LibreOffice tests skip when it is absent.
 
 CI uses **four combinations**: Linux Python **3.10/3.14**, Windows **3.14**, and macOS **3.14**. Each builds
