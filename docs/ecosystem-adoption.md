@@ -29,8 +29,7 @@
 
 - [共同语义样本](benchmarks/ecosystem-corpus.json)、[注释/脚注样本](benchmarks/ecosystem-notes.json)
   用于内容与结构对照，不替代分页和像素检查。
-- [早期性能记录](benchmarks/ecosystem-adoption.json)和 [改动前](benchmarks/ecosystem-before.json)/[改动后](benchmarks/ecosystem-after.json)对照
-  是固定环境的历史测量，不能推广为所有文档或当前提交的速度结论。
+- 早期性能测量移至 Git 历史；需要当前速度结论时，应在固定环境和共同语料上重新测量。
 - 当前字体替换、塑形、外部引擎和内容损失边界见 [转换与安全](enhanced-conversion.md)。
 - 完整布局、复杂共同样本、批量吞吐、标准认证及全部商业 API 的缺口仍保留在
   [全量台账](benchmarks/commercial-26.9-capabilities.json)。
