@@ -9,7 +9,7 @@ from typing import Optional
 from fpdf import FPDF
 from aspose.words_foss.diagnostics import warn
 from aspose.words_foss._io import MAX_TABLE_COLUMNS
-from aspose.words_foss.pdf_writer.baseline import baseline_scope, mixed_size
+from aspose.words_foss.pdf_writer.baseline import baseline_scope, baseline_size
 from aspose.words_foss.pdf_writer.page_bands import register_bookmarks
 from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
 
@@ -33,7 +33,7 @@ from aspose.words_foss.pdf_writer.constants import (
 )
 from aspose.words_foss.pdf_writer.font import apply_run_font, reset_font
 from aspose.words_foss.pdf_writer._context import PDFWriterContext
-from aspose.words_foss.pdf_writer.text import apply_caps, cell_text, extract_link_segments, plain_text, safe_text
+from aspose.words_foss.pdf_writer.text import get_line_font_size, apply_caps, cell_text, extract_link_segments, plain_text, safe_text
 
 # Border slot indices in the LDM `borders` list, matching the canonical
 # BorderType layout shared with the DOCX writer:
@@ -277,7 +277,7 @@ class TableRenderer:
                     rows[0].insert(0, pending_label)
                     pending_label = None
                 for row in rows:
-                    size = max((item[3] for item in row), default=DEFAULT_FONT_SIZE_PT)
+                    size = get_line_font_size([item[0] for item in row])
                     height = w._paragraph_renderer.line_height_mm(size, para.paragraph_format)
                     lines.append(_CellLine(height, segments=row, align=align))
                 segments.clear()
@@ -393,7 +393,7 @@ class TableRenderer:
                                     if title:
                                         w._paragraph_renderer._emit_heading_outline(pdf, title, pf.outline_level + 1)
                             with ExitStack() as structure:
-                                structure.enter_context(baseline_scope(pdf, mixed_size(s[3] for s in line.segments)))
+                                structure.enter_context(baseline_scope(pdf, baseline_size(s[0] for s in line.segments)))
                                 segments = line.segments
                                 if line.list_format:
                                     structure.enter_context(w._list_structure(pdf, line.list_format, line.paragraph_key))
@@ -605,6 +605,7 @@ class TableRenderer:
         prev_family = pdf.font_family
         prev_style = pdf.font_style
         prev_size = pdf.font_size_pt
+        prev_vpos = pdf.char_vpos
         try:
             if font:
                 apply_run_font(pdf, font)
@@ -612,6 +613,7 @@ class TableRenderer:
                 reset_font(pdf)
             return float(pdf.get_string_width(text))
         finally:
+            pdf.char_vpos = prev_vpos
             pdf.set_font(prev_family, prev_style, prev_size)
 
     @staticmethod

@@ -59,6 +59,8 @@ def test_font_state_changes_do_not_reuse_stale_widths(change, monkeypatch):
     elif change == "fallback":
         pdf.set_fallback_fonts(["DocumentSansSC"], exact_match=False)
     values = segments(size=17 if change == "size" else 11, bold=change == "bold")
+    if change == "superscript":
+        values[0][0].font.superscript = True
     cached = RunRenderer.wrap_segments(pdf, values, 45)
     pdf.__dict__.pop("_plain_glyph_widths", None)
     fresh = RunRenderer.wrap_segments(pdf, values, 45)
@@ -67,6 +69,12 @@ def test_font_state_changes_do_not_reuse_stale_widths(change, monkeypatch):
     ]
     if change in ("superscript", "fallback"):
         assert "_plain_glyph_widths" not in pdf.__dict__
+    if change == "superscript":
+        assert pdf.char_vpos == CharVPos.SUP
+        values[0][0].font.superscript = False
+        normal = RunRenderer.wrap_segments(pdf, values, 45)
+        assert sum(part[2] for row in normal for part in row) > sum(part[2] for row in fresh for part in row)
+        assert pdf.char_vpos == CharVPos.SUP
 
 
 def test_glyph_cache_is_bounded_and_lives_on_each_pdf():

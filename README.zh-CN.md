@@ -306,6 +306,11 @@ aw.Document("report.docx").save("checked.pdf")
 使用独立粗体字面与派生倾斜字面；四个 WOFF 资源合计约 **24.6 MiB**。
 不保留源字体家族、等宽字体度量或精确分页。缺字会报警；源字体替换可能改变布局。
 
+源上下标标志已用于正文、表格、页眉页脚、列表正文、标题和引用的富文本绘制，包含塑形路径。
+缩放、基线偏移、装饰线及链接区域采用 fpdf2 度量；自动行高预留上标空间，固定行高保留源值。
+代码块上下标与混合上下标旋转单元格会报告转换损失。度量不承诺与 Word 一致，见
+[上下标验收](docs/benchmarks/vertical-positions.json)。
+
 阿拉伯语等复杂文字可安装塑形支持，并部署适合语言的可信 fallback 字体：
 
 ```bash
@@ -464,9 +469,9 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-已记录的本地验证环境为 macOS/Python 3.13.15：**370 项回归测试、28 项 API 示例通过**，
+最新本地安装包验收环境为 macOS/Python 3.13.15：**1,254 项回归测试、31 项 API 示例通过**，
 并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
-环境和边界见 [当前核验报告](docs/ecosystem-optimization-validation.md)。
+环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
 这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。
 
 ```bash
@@ -487,7 +492,7 @@ wheel 核验应在独立环境安装后，离开源码目录运行 `scripts/chec
 | [DOCX DOM 指南](docs/docx-dom.md) | 文本范围、格式继承、资源、合并与原包保留规则 |
 | [转换与安全说明](docs/enhanced-conversion.md) | 字体、诊断、限制、CLI 与 LibreOffice |
 | [升级说明](docs/upgrade-notes.md) | 结构化输出、API、模板与打包 |
-| [当前核验报告](docs/ecosystem-optimization-validation.md) | 内容/资源重构、370/28 测试结果及基准数据 |
+| [当前核验报告](docs/ecosystem-adoption.md) | 最新阶段验收、安装包检查、基准数据与剩余边界 |
 | [早期优化报告](docs/optimization-report.md) | 历史 post2 核验与性能测量 |
 | [早期核验报告](docs/verification-report.md) | 历史 post1 验证，不代表当前覆盖范围 |
 | [Issues](https://github.com/shenyankm/DocWeave/issues) | 增强分支的问题与需求 |

@@ -313,6 +313,12 @@ Chinese, Latin text, and punctuation. It uses a dedicated bold face and derived 
 WOFF resources total about **24.6 MiB**. Original font families, monospace metrics, and exact pagination
 are not preserved. Missing glyphs warn; source-font substitution may change layout.
 
+Source superscript/subscript flags are rendered in body, table, page-band, list, heading and quote
+formatted runs, including shaped text. Glyph scaling/rise, decorations and links follow fpdf2 metrics;
+automatic line advance reserves superscript ascent, while fixed spacing retains the source value.
+Code-block scripts and mixed-position rotated cells report a conversion loss. These metrics are not
+Word-identical; see the [script validation](docs/benchmarks/vertical-positions.json).
+
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
 ```bash
@@ -478,9 +484,9 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Recorded local verification on macOS/Python 3.13.15: **370 regression tests and 28 API examples passed**;
+Latest installed-wheel verification on macOS/Python 3.13.15: **1,254 regression tests and 31 API examples passed**;
 installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
-See the [current validation report](docs/ecosystem-optimization-validation.md) for environment and boundaries.
+See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
 These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.
 
 ```bash
@@ -501,7 +507,7 @@ The latest small comparison does **not** demonstrate an overall speedup; some me
 | [DOCX DOM guide](docs/docx-dom.md) | Ranges, formatting inheritance, resources, merges, and preservation rules |
 | [Conversion and safety](docs/enhanced-conversion.md) | Fonts, diagnostics, limits, CLI, and LibreOffice |
 | [Upgrade notes](docs/upgrade-notes.md) | Structured output, APIs, templates, and packaging |
-| [Current validation](docs/ecosystem-optimization-validation.md) | Content/resource refactoring, 370/28 test results, and benchmark data |
+| [Current validation](docs/ecosystem-adoption.md) | Latest phase acceptance, installed-wheel checks, benchmark data and remaining boundaries |
 | [Earlier optimization report](docs/optimization-report.md) | Historical post2 checks and performance measurements |
 | [Earlier verification report](docs/verification-report.md) | Historical post1 validation, not current coverage |
 | [Issues](https://github.com/shenyankm/DocWeave/issues) | Fork-specific bugs and requests |

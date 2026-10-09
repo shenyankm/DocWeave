@@ -16,10 +16,9 @@ from fpdf.enums import Align, CharVPos, StrokeCapStyle
 from fpdf.line_break import Fragment, MultiLineBreak, TextLine
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer.baseline import baseline_scope, mixed_size
+from aspose.words_foss.pdf_writer.baseline import baseline_scope, baseline_size
 from aspose.words_foss.pdf_writer.color import parse_color
 from aspose.words_foss.pdf_writer.constants import (
-    DEFAULT_FONT_NAME,
     DEFAULT_FONT_SIZE_PT,
     GAP_MIN_SPACES,
     HIGHLIGHT_HEIGHT_RATIO,
@@ -72,9 +71,7 @@ class RunRenderer:
         pf: Optional[ldm.ParagraphFormat] = None,
     ) -> None:
         """Render runs with inline formatting: bold, italic, underline, colors, sizes."""
-        size = mixed_size(run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT
-                          for run in runs if run.text)
-        with baseline_scope(pdf, size):
+        with baseline_scope(pdf, baseline_size(runs)):
             fs = DEFAULT_FONT_SIZE_PT
 
             # A ``\t`` between runs marks a Word tab stop — TOC entries put
@@ -409,14 +406,15 @@ class RunRenderer:
             raise ValueError("No usable text width")
         if pdf.text_shaping:
             return RunRenderer._wrap_shaped_segments(pdf, segments, width, first_width)
+        saved_vpos = pdf.char_vpos
+        saved_color = pdf.text_color
         saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else "") + ("S" if pdf.strikethrough else ""), pdf.font_size_pt)
         rows, row, used = [], [], 0.0
         available = width if first_width is None else max(0.0, first_width)
         try:
             # ponytail: oversized words use character breaks; typography-specific punctuation rules are deferred.
             for run, text, _, size, link in segments:
-                style = ("B" if run.font.bold else "") + ("I" if run.font.italic else "")
-                pdf.set_font(DEFAULT_FONT_NAME, style=style, size=size)
+                apply_run_font(pdf, run.font, default_size=size)
                 characters = set(text) - {'\n'}
                 if not pdf._fallback_font_ids and pdf.char_vpos == CharVPos.LINE:
                     cache = getattr(pdf, '_plain_glyph_widths', None)
@@ -460,6 +458,8 @@ class RunRenderer:
                         used += char_w
             rows.append(row)
         finally:
+            pdf.char_vpos = saved_vpos
+            pdf.text_color = saved_color
             if saved_font[0]:
                 pdf.set_font(*saved_font)
         return rows
@@ -479,6 +479,8 @@ class RunRenderer:
         contextual = any(left[1] and right[1] and not left[1][-1].isspace()
                          and not right[1][0].isspace()
                          for left, right in zip(segments, segments[1:]))
+        saved_vpos = pdf.char_vpos
+        saved_color = pdf.text_color
         saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else "") + ("S" if pdf.strikethrough else ""), pdf.font_size_pt)
         fragments = []
         try:
@@ -534,6 +536,8 @@ class RunRenderer:
                 rows.append(row)
             return rows or [[]]
         finally:
+            pdf.char_vpos = saved_vpos
+            pdf.text_color = saved_color
             if saved_font[0]:
                 pdf.set_font(*saved_font)
 

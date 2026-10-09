@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._visible_runs import visible_runs
-from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_SIZE_PT
+from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_SIZE_PT, LINE_HEIGHT_FACTOR
 from aspose.words_foss._links import INLINE_LINK_RE, decode_link
 from aspose.words_foss.pdf_writer.color import parse_color
 
@@ -103,7 +103,9 @@ def get_dominant_font_size(runs: list[ldm.Run]) -> float:
 
 def get_line_font_size(runs: list[ldm.Run]) -> float:
     """Line advance must accommodate the largest visible run, not just the first."""
-    return max((run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT for run in runs),
+    # Native SUP (0.7 scale, 0.4 rise) needs 1.1 em above the common baseline.
+    return max(((run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT)
+                * (1.6 / LINE_HEIGHT_FACTOR if run.font.superscript else 1) for run in runs),
                default=DEFAULT_FONT_SIZE_PT)
 
 

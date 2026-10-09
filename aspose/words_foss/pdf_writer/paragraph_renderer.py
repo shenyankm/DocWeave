@@ -10,11 +10,12 @@ from contextlib import contextmanager
 from typing import Optional
 
 from fpdf import FPDF
+from fpdf.enums import CharVPos
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_runs
 from aspose.words_foss.model.wrap_type import WrapType
-from aspose.words_foss.pdf_writer.baseline import baseline_scope, mixed_size
+from aspose.words_foss.pdf_writer.baseline import baseline_scope, baseline_size
 from aspose.words_foss.pdf_writer.constants import (
     CODE_BLOCK_BG_RGB,
     DEFAULT_FONT_NAME,
@@ -456,7 +457,11 @@ class ParagraphRenderer:
                     pdf.set_font(DEFAULT_FONT_NAME, style="B", size=size)
                 if heading_color:
                     pdf.set_text_color(*heading_color)
-                pdf.multi_cell(w=0, h=line_h, text=safe_text(text), align=align)
+                if any(run.font.superscript or run.font.subscript for run in runs):
+                    line_h = self.line_height_mm(get_line_font_size(runs), pf)
+                    w._run_renderer.render_formatted_runs(pdf, runs, align=align, line_h_override=line_h, pf=pf)
+                else:
+                    pdf.multi_cell(w=0, h=line_h, text=safe_text(text), align=align)
             self._apply_space_after(pdf, pf)
             reset_font(pdf)
             return
@@ -489,7 +494,11 @@ class ParagraphRenderer:
             with w._tag(pdf, "/BlockQuote"):
                 pdf.set_font(DEFAULT_FONT_NAME, style="I", size=fs)
                 pdf.set_text_color(*QUOTE_TEXT_RGB)
-                pdf.multi_cell(w=0, h=line_h, text=safe_text(text), align=align)
+                if any(run.font.superscript or run.font.subscript for run in runs):
+                    line_h = self.line_height_mm(get_line_font_size(runs), pf)
+                    w._run_renderer.render_formatted_runs(pdf, runs, align=align, line_h_override=line_h, pf=pf)
+                else:
+                    pdf.multi_cell(w=0, h=line_h, text=safe_text(text), align=align)
             self._apply_space_after(pdf, pf)
             reset_font(pdf)
             return
@@ -507,11 +516,12 @@ class ParagraphRenderer:
             label = list_label.label_string if list_label and list_label.label_string else ""
             if not label:
                 label = self._compute_list_label(list_format)
-            baseline = mixed_size(run.font.size if run.font.size > 0 else fs for run in runs if run.text)
+            baseline = baseline_size(runs)
             with baseline_scope(pdf, baseline), w._list_structure(pdf, list_format):
                 run_size = get_dominant_font_size(runs)
                 effective_fs = run_size if run_size > 0 else fs
                 line_h = self.line_height_mm(get_line_font_size(runs), pf)
+                pdf.char_vpos = CharVPos.LINE
                 pdf.set_font(DEFAULT_FONT_NAME, size=effective_fs)
                 label_text = safe_text(f"{label} ") if label else ""
                 label_width = pdf.get_string_width(label_text) if label_text else 0.0

@@ -2,7 +2,10 @@
 
 from contextlib import contextmanager
 
+from fpdf.enums import CharVPos
 from fpdf.line_break import Fragment, TextLine
+
+from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_SIZE_PT
 
 
 class _BaselineLine(TextLine):
@@ -16,34 +19,52 @@ class _BaselineLine(TextLine):
         return fragments + [Fragment([], state, fragments[-1].k)]
 
 
-def mixed_size(sizes):
-    sizes = set(sizes)
-    return max(sizes) if len(sizes) > 1 else None
+def baseline_size(runs):
+    sizes = set()
+    scripted = False
+    for run in runs:
+        if run.text:
+            sizes.add(run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT)
+            scripted |= run.font.superscript or run.font.subscript
+    return max(sizes) if sizes and (len(sizes) > 1 or scripted) else None
 
 
 @contextmanager
 def baseline_scope(pdf, size):
+    previous_vpos = pdf.char_vpos
     nested = hasattr(pdf, "_text_baseline_size")
     if size is None and not nested:
-        yield
+        try:
+            yield
+        finally:
+            pdf.char_vpos = previous_vpos
         return
     previous = getattr(pdf, "_text_baseline_size", None)
     original = pdf._render_styled_text_line
     overridden = "_render_styled_text_line" in pdf.__dict__
     if not nested:
-        output_metrics = (0, None, None)
+        output_metrics = (0, None, None, None)
         originals = {}
         for name in ("_do_underline", "_do_strikethrough", "link"):
             originals[name] = (getattr(pdf, name), name in pdf.__dict__)
         for name in ("_do_underline", "_do_strikethrough"):
             def decorate(x, y, w, font=None, _draw=originals[name][0]):
-                return _draw(x, y + output_metrics[0], w, font)
+                previous_size = pdf.font_size_pt
+                if output_metrics[3] is not None:
+                    pdf.font_size_pt = output_metrics[3] * pdf.k
+                try:
+                    return _draw(x, y + output_metrics[0], w, font)
+                finally:
+                    pdf.font_size_pt = previous_size
             setattr(pdf, name, decorate)
 
         def link(x, y, w, h, link, alt_text=None, **kwargs):
-            delta, metric_size, glyph_size = output_metrics
+            delta, metric_size, base_size, glyph_size = output_metrics
             if metric_size is not None and abs(h - metric_size) < 1e-8:
-                y += (h - glyph_size) / 2
+                y += (h - base_size) / 2
+                h = base_size
+            if glyph_size is not None:
+                y += 0.8 * (h - glyph_size)
                 h = glyph_size
             return originals["link"][0](x, y + delta, w, h, link, alt_text, **kwargs)
         pdf.link = link
@@ -51,15 +72,23 @@ def baseline_scope(pdf, size):
         def draw_line(line, *args, **kwargs):
             nonlocal output_metrics
             previous_metrics = output_metrics
-            output_metrics = (0, None, None)
+            output_metrics = (0, None, None, None)
             target = pdf._text_baseline_size
             shifted = bool(target and line.fragments and
                            any(f.characters for f in line.fragments) and
                            target > max(f.graphics_state.font_size_pt for f in line.fragments))
+            if line.fragments:
+                last = line.fragments[-1]
+                scripted = any(f.char_vpos != CharVPos.LINE for f in line.fragments if f.characters)
+                if scripted:
+                    kwargs["prevent_font_change"] = True
+                if shifted or scripted:
+                    own_size = max(f.font_size for f in line.fragments)
+                    metric_size = target / pdf.k if shifted else own_size
+                    output_metrics = (0.3 * (metric_size - own_size) - last.lift / pdf.k,
+                                      metric_size if shifted else None,
+                                      last.font_size, last.font_size_pt / pdf.k)
             if shifted:
-                own_size = max(f.font_size for f in line.fragments)
-                output_metrics = (0.3 * (target / pdf.k - own_size),
-                                  target / pdf.k, line.fragments[-1].font_size)
                 line = _BaselineLine(*line)
                 line.baseline_size = target
             try:
@@ -71,9 +100,12 @@ def baseline_scope(pdf, size):
 
         pdf._render_styled_text_line = draw_line
     pdf._text_baseline_size = size
+    if size is None:
+        pdf.char_vpos = CharVPos.LINE
     try:
         yield
     finally:
+        pdf.char_vpos = previous_vpos
         if nested:
             pdf._text_baseline_size = previous
         else:
