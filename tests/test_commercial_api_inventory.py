@@ -22,6 +22,40 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     assert check(root / "docs/benchmarks") in {10, 18, 1296}
 
 
+
+@pytest.mark.parametrize("metric,delta,accepted", [("advance", 0.00001, True), ("advance", 0.05, False),
+                                                   ("origin", 0.00001, True), ("origin", 0.05, False),
+                                                   ("page", 1, False), ("size", 0.05, False)])
+def test_pagination_snapshot_uses_declared_tolerance(monkeypatch, metric, delta, accepted):
+    root = Path(__file__).parents[1]
+    original = runpy.run_path
+    check = original(str(root / "scripts/verify_commercial_baseline.py"))["verify_pagination_rendering"]
+
+    def measured(path, *args, **kwargs):
+        functions = original(path, *args, **kwargs)
+        if Path(path).name == "pagination_rendering.py":
+            snapshot = functions["pdf_snapshot"]
+
+            def perturbed(raw):
+                result = snapshot(raw)
+                line = result["lines"]["ANCHOR"]
+                if metric == "origin":
+                    line[metric][0] += delta
+                else:
+                    line[metric] += delta
+                return result
+
+            functions["pdf_snapshot"] = perturbed
+        return functions
+
+    monkeypatch.setattr(runpy, "run_path", measured)
+    if accepted:
+        assert check(root / "docs/benchmarks") == 10
+    else:
+        with pytest.raises(AssertionError):
+            check(root / "docs/benchmarks")
+
+
 def test_pagination_evidence_rejects_forged_setter_result(tmp_path):
     import json
     import shutil

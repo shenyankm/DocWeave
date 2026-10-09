@@ -178,7 +178,14 @@ def verify_pagination_rendering(root):
                                    ("before_outputs", "before_snapshot", "before_output_sha256")):
             raw = archives[key][row["output"]]
             assert digest(raw) == row[sha]
-            assert probe["pdf_snapshot"](raw) == row[snapshot]
+            actual, frozen = probe["pdf_snapshot"](raw), row[snapshot]
+            assert actual["page_sizes"] == frozen["page_sizes"] and set(actual["lines"]) == set(frozen["lines"])
+            for label, line in frozen["lines"].items():
+                observed = actual["lines"][label]
+                assert observed["page"] == line["page"] and observed["size"] == line["size"]
+                assert max(abs(a - b) for a, b in zip(observed["origin"], line["origin"], strict=True)) <= report["tolerances"]["text_origin_pt"]
+                # MuPDF's x86/ARM advances differ by a float ULP; use the declared geometry tolerance.
+                assert abs(observed["advance"] - line["advance"]) <= report["tolerances"]["text_advance_pt"]
         native, current = row["native_snapshot"], row["current_snapshot"]
         assert native["page_sizes"] == current["page_sizes"]
         assert set(native["lines"]) == set(current["lines"])

@@ -4388,5 +4388,15 @@
       "seconds": 50.8
     },
     "scope": "wheel installed in isolated environment; all pytest commands run outside checkout with importlib mode; no full commercial capability acceptance"
+  },
+  "cross_platform_snapshot_observation": {
+    "reference_platform": "macOS arm64",
+    "comparison_platform": "Linux x86_64",
+    "pymupdf": "1.28.2",
+    "max_origin_delta_pt": 0.0,
+    "max_advance_delta_pt": 7.62939453125e-06,
+    "max_size_delta_pt": 0.0,
+    "max_ink_ratio_delta": 0.0,
+    "verification": "Frozen PDF digests stay exact; measured origins and advances use the existing 0.02pt tolerances. Pages, labels, font size and image-difference records stay strict."
   }
 }
