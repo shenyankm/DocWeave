@@ -1,0 +1,459 @@
+{
+  "baseline_commit": "8eed464577107407b725b5758106ca333bde931c",
+  "environment": "macOS / Python 3.13.15 / fpdf2 2.8.9 / PyMuPDF 1.28.2 / LibreOffice 26.2.6.3; installed wheel outside checkout",
+  "source_sha256": "197d37c0015a3d491d4af9aa5e2e4b19236127ca136ce8aa6f8998c01aaf3507",
+  "small_rows": {
+    "before_trials": [
+      {
+        "seconds": 0.43935245799366385,
+        "peak_rss_bytes": 192692224,
+        "pages": 15,
+        "bytes": 13808,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      },
+      {
+        "seconds": 0.3203194160014391,
+        "peak_rss_bytes": 195231744,
+        "pages": 15,
+        "bytes": 13808,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      },
+      {
+        "seconds": 0.29061266701319255,
+        "peak_rss_bytes": 190070784,
+        "pages": 15,
+        "bytes": 13808,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      },
+      {
+        "seconds": 0.28991687500092667,
+        "peak_rss_bytes": 190857216,
+        "pages": 15,
+        "bytes": 13808,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      },
+      {
+        "seconds": 0.2981749159953324,
+        "peak_rss_bytes": 192266240,
+        "pages": 15,
+        "bytes": 13808,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      }
+    ],
+    "after_trials": [
+      {
+        "seconds": 0.40767775000131223,
+        "peak_rss_bytes": 193167360,
+        "pages": 10,
+        "bytes": 11352,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      },
+      {
+        "seconds": 0.3533929160039406,
+        "peak_rss_bytes": 191299584,
+        "pages": 10,
+        "bytes": 11352,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      },
+      {
+        "seconds": 0.31078287500713486,
+        "peak_rss_bytes": 190185472,
+        "pages": 10,
+        "bytes": 11352,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      },
+      {
+        "seconds": 0.3058957500034012,
+        "peak_rss_bytes": 189513728,
+        "pages": 10,
+        "bytes": 11352,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      },
+      {
+        "seconds": 0.306306875005248,
+        "peak_rss_bytes": 192856064,
+        "pages": 10,
+        "bytes": 11352,
+        "words_sha256": "0f4f6cb7bfd8d0de78df92e5c02820d19ca613649a2d301f4ae62faade4c0122"
+      }
+    ],
+    "before_median_seconds": 0.2981749159953324,
+    "after_median_seconds": 0.31078287500713486,
+    "pdfs": {
+      "before": {
+        "pages": 15,
+        "bytes": 13808,
+        "sha256": "babf5846ed8b0df2c4e0c4dd390c4d2aa302eb344250e4773ddad89a2e1c7b84",
+        "ordered_labels_sha256": "9f1ea0f44c621d4fcddd6da8be803a1dfb4e13575e6829f17225732811e9b5b3",
+        "producer": ""
+      },
+      "after": {
+        "pages": 10,
+        "bytes": 11352,
+        "sha256": "648b06cc87846cc1fe32f279ae40cbadb4774bf021d37615474e3f5a446c5fc5",
+        "ordered_labels_sha256": "9f1ea0f44c621d4fcddd6da8be803a1dfb4e13575e6829f17225732811e9b5b3",
+        "producer": ""
+      },
+      "native": {
+        "pages": 9,
+        "bytes": 106939,
+        "sha256": "4c0ba797a30299ee7fc99d0fa4af659662ce366c9c3889ffa1c7ea76005ccefb",
+        "ordered_labels_sha256": "9f1ea0f44c621d4fcddd6da8be803a1dfb4e13575e6829f17225732811e9b5b3",
+        "producer": "LibreOfficeDev 26.8.0.0.alpha0 (AARCH64)"
+      }
+    },
+    "output_size_reduction_percent": 17.786790266512163
+  },
+  "word_geometry": {
+    "word-proof": {
+      "source_sha256": "625ada10e74dacd361efef829e64771a05da2ff83d4f50520483e2cb9c801e23",
+      "native": {
+        "pages": 5,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE0": 155.0400390625,
+              "TWO0": 54.9599494934082
+            },
+            "horizontal_border_centers_y": [
+              20.400001525878906,
+              30.720001220703125
+            ],
+            "row_height_pt": 10.319999694824219
+          },
+          {
+            "word_x": {
+              "ONE1": 151.919921875,
+              "TWO1": 52.08007049560547
+            },
+            "horizontal_border_centers_y": [
+              20.400001525878906,
+              30.720001220703125
+            ],
+            "row_height_pt": 10.319999694824219
+          },
+          {
+            "word_x": {
+              "ONE2": 155.0400390625,
+              "TWO2": 54.9599494934082
+            },
+            "horizontal_border_centers_y": [
+              20.400001525878906,
+              30.720001220703125
+            ],
+            "row_height_pt": 10.319999694824219
+          },
+          {
+            "word_x": {
+              "ONE3": 140.39988708496094,
+              "TWO3": 40.5600471496582
+            },
+            "horizontal_border_centers_y": [
+              20.400001525878906,
+              30.720001220703125
+            ],
+            "row_height_pt": 10.319999694824219
+          },
+          {
+            "word_x": {
+              "ONE4": 126.0,
+              "TWO4": 25.9199275970459
+            },
+            "horizontal_border_centers_y": [
+              20.400001525878906,
+              30.720001220703125
+            ],
+            "row_height_pt": 10.319999694824219
+          }
+        ]
+      },
+      "before": {
+        "pages": 5,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE0": 156.0,
+              "TWO0": 56.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              35.589996337890625
+            ],
+            "row_height_pt": 15.589996337890625
+          },
+          {
+            "word_x": {
+              "ONE1": 153.0,
+              "TWO1": 53.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              35.589996337890625
+            ],
+            "row_height_pt": 15.589996337890625
+          },
+          {
+            "word_x": {
+              "ONE2": 156.0,
+              "TWO2": 56.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              35.589996337890625
+            ],
+            "row_height_pt": 15.589996337890625
+          },
+          {
+            "word_x": {
+              "ONE3": 141.0,
+              "TWO3": 41.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              35.589996337890625
+            ],
+            "row_height_pt": 15.589996337890625
+          },
+          {
+            "word_x": {
+              "ONE4": 126.0,
+              "TWO4": 26.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              35.589996337890625
+            ],
+            "row_height_pt": 15.589996337890625
+          }
+        ]
+      },
+      "after": {
+        "pages": 5,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE0": 156.0,
+              "TWO0": 56.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              31.199996948242188
+            ],
+            "row_height_pt": 11.199996948242188
+          },
+          {
+            "word_x": {
+              "ONE1": 153.0,
+              "TWO1": 53.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              31.199996948242188
+            ],
+            "row_height_pt": 11.199996948242188
+          },
+          {
+            "word_x": {
+              "ONE2": 156.0,
+              "TWO2": 56.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              31.199996948242188
+            ],
+            "row_height_pt": 11.199996948242188
+          },
+          {
+            "word_x": {
+              "ONE3": 141.0,
+              "TWO3": 41.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              31.199996948242188
+            ],
+            "row_height_pt": 11.199996948242188
+          },
+          {
+            "word_x": {
+              "ONE4": 126.0,
+              "TWO4": 26.0
+            },
+            "horizontal_border_centers_y": [
+              20.0,
+              31.199996948242188
+            ],
+            "row_height_pt": 11.199996948242188
+          }
+        ]
+      }
+    },
+    "word-border-proof": {
+      "source_sha256": "2e0dc7aa557bef769a03e6f8e05b375ee9fa56ea7b1250ac5daa22dfd4e2b413",
+      "native": {
+        "pages": 1,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE": 155.0400390625,
+              "TWO": 54.9599494934082
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          }
+        ]
+      },
+      "before": {
+        "pages": 1,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE": 156.0,
+              "TWO": 56.0
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          }
+        ]
+      },
+      "after": {
+        "pages": 1,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE": 156.0,
+              "TWO": 56.0
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          }
+        ]
+      }
+    },
+    "word-legacy-12": {
+      "source_sha256": "44cb36f38e8218fd9250bdffbd50ad119c980fc05f0273458131e3d27a1246ea",
+      "native": {
+        "pages": 2,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE": 162.0,
+              "TWO": 61.919925689697266
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          },
+          {
+            "word_x": {
+              "ONE": 138.0,
+              "TWO": 37.919925689697266
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          }
+        ]
+      },
+      "before": {
+        "pages": 2,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE": 162.0,
+              "TWO": 62.0
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          },
+          {
+            "word_x": {
+              "ONE": 138.0,
+              "TWO": 38.0
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          }
+        ]
+      },
+      "after": {
+        "pages": 2,
+        "geometry": [
+          {
+            "word_x": {
+              "ONE": 162.0,
+              "TWO": 62.0
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          },
+          {
+            "word_x": {
+              "ONE": 138.0,
+              "TWO": 38.0
+            },
+            "horizontal_border_centers_y": [],
+            "row_height_pt": null
+          }
+        ]
+      }
+    }
+  },
+  "word_row_height_max_error_pt": {
+    "before": 5.269996643066406,
+    "after": 0.8799972534179688
+  },
+  "common_pdf_regression": {
+    "cases": 5,
+    "pages": 113,
+    "all_page_records_and_bytes_unchanged": true,
+    "record_digests": {
+      "small": "5f98a3d5aac5da76b8371b6a173dcb8c32e56ac60083d2f8f0deb62ed5920a71",
+      "hundred_pages": "be4019e4869cd2d19c97d23a139ddca01d3b7fb25fec4c7dd4a125cda68ee54b",
+      "image_table": "4d37e6a0b86275f97bc8331320419422b6065f236ed75281d365274fc214c97f",
+      "repeated_images": "3e1c8fd836c66039a0611a74b844171a61340f07269997bba402d068db0cb9ee",
+      "mixed_styles": "8e3c301b4c8df25e7edec89a3ad44ff66ea731b28ff0ca9267ce7bd864484379"
+    }
+  },
+  "wheel": {
+    "bytes": 26260601,
+    "delta_bytes": 178,
+    "sha256": "fea84aeb267101af5d4d99a580e233d82d09a630d7813879320aa26f648f6de8",
+    "package_files_verified": 133
+  },
+  "fixture_generator": "import importlib.util,sys,types\nfrom pathlib import Path\nfrom io import BytesIO\nfrom docx import Document\nfrom docx.shared import Pt\nrepo=Path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python')\npackage=types.ModuleType('tests');package.__path__=[str(repo/'tests')];sys.modules['tests']=package\nspec=importlib.util.spec_from_file_location('tests.test_table_direction',repo/'tests/test_table_direction.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)\ndoc=Document(BytesIO(module.source_docx(bidi=False)));table=doc.tables[0]\nfor i in range(120):\n row=table.rows[0] if i==0 else table.add_row()\n for j,cell in enumerate(row.cells):\n  cell.text=('A' if j==0 else 'B')+str(i).zfill(3)\n  paragraph=cell.paragraphs[0];paragraph.paragraph_format.line_spacing=1\n  paragraph.paragraph_format.space_before=paragraph.paragraph_format.space_after=Pt(0)\n  paragraph.runs[0].font.size=Pt(8)\nroot=Path(sys.argv[1]);root.mkdir(exist_ok=True);doc.save(root/'small-rows.docx')\nassert len(doc.tables[0].rows)==120\n",
+  "worker": "import hashlib,json,resource,sys,time\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nsource=Path('/tmp/docweave-row-height-units/small-rows.docx')\ndoc=aw.Document(source);start=time.perf_counter();raw=doc.to_bytes(aw.saving.PdfSaveOptions());elapsed=time.perf_counter()-start\nwith pymupdf.open(stream=raw,filetype='pdf') as pdf:\n words=[w[4] for p in pdf for w in p.get_text('words')]\n assert sorted(words)==sorted(prefix+str(i).zfill(3) for prefix in ['A','B'] for i in range(120))\n record={'seconds':elapsed,'peak_rss_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'pages':len(pdf),'bytes':len(raw),'words_sha256':hashlib.sha256(json.dumps(sorted(words)).encode()).hexdigest()}\nPath('/tmp/docweave-row-height-units/small-rows-'+sys.argv[1]+'.pdf').write_bytes(raw)\nprint(json.dumps(record))\n",
+  "word_probe": "import json,sys,hashlib\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-table-direction');result={}\nfor name in ['word-proof','word-border-proof','word-legacy-12']:\n source=root/(name+'.docx');raw=aw.Document(source).to_bytes(aw.saving.PdfSaveOptions());(root/(name+'-row-height.pdf')).write_bytes(raw)\n case={'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest()}\n for label,path in [('native',root/(name+'.pdf')),('before',root/(name+'-final.pdf')),('after',root/(name+'-row-height.pdf'))]:\n  with pymupdf.open(path) as pdf:\n   pages=[]\n   for p in pdf:\n    lines=[d['rect'] for d in p.get_drawings() if d['rect'].width>d['rect'].height]\n    y=sorted(set((r.y0+r.y1)/2 for r in lines))\n    pages.append({'word_x':{w[4]:w[0] for w in p.get_text('words')},'horizontal_border_centers_y':y,'row_height_pt':y[-1]-y[0] if y else None})\n   case[label]={'pages':len(pdf),'geometry':pages}\n result[name]=case\nPath('/tmp/docweave-row-height-word.json').write_text(json.dumps(result,indent=2)+'\\n');print(result['word-proof'])\n",
+  "common_probe": "import hashlib,json,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-current-performance');results={}\nfor case in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n raw=aw.Document(root/(case+'.docx')).to_bytes(aw.saving.PdfSaveOptions())\n pages=[]\n with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n  for page in pdf:\n   pages.append({key:hashlib.sha256(value).hexdigest() for key,value in {'words':repr(page.get_text('words')).encode(),'pixels':page.get_pixmap().samples,'drawings':repr(page.get_drawings()).encode(),'images':repr(page.get_image_info()).encode()}.items()})\n results[case]={'bytes':len(raw),'pages':pages}\nPath(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\\n');print('five PDF corpora saved')\n",
+  "limits": [
+    "Five cold-process timing medians show about 4.2 percent slower rendering on this small-table fixture; no speed or RSS improvement claim.",
+    "Word fixture has 8 pt text and border-centre row-height comparison, not a general layout engine conformance test.",
+    "Natural leading remains 1.4 times font size; Word row-height error remains about 0.88 pt.",
+    "120-row table final output has 10 pages versus LibreOffice 9; content and order match but pagination is not identical.",
+    "Changing small-font and short rotated-cell minimum height can change page and column breaks."
+  ],
+  "fixture_generator_validation": "Regenerated in a separate directory: every uncompressed DOCX part matched, all 10 PDF page word coordinates and pixels matched, and size stayed 11352 bytes. PDF raw bytes differ because creationDate records execution time.",
+  "validation": {
+    "baseline_targeted": {
+      "failed": 11,
+      "passed": 11,
+      "seconds": 9.91
+    },
+    "source_related": {
+      "passed": 137,
+      "warnings": 53,
+      "seconds": 40.78
+    },
+    "installed_full": {
+      "passed": 1563,
+      "warnings": 165,
+      "seconds": 384.05,
+      "skipped": 0
+    },
+    "installed_examples": {
+      "passed": 31,
+      "warnings": 13,
+      "seconds": 7.42
+    },
+    "local_document_links": 142,
+    "python_examples": 23
+  }
+}

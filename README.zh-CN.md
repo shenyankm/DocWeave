@@ -333,6 +333,8 @@ DOCX 表格默认边距包括已支持的样式继承。表格上下边距是单
 `start/end` 边距归一为 left/right 字段，DOCX 输出 left/right。普通 Markdown 报告方向丢失，
 HTML 表格使用 `dir="rtl"`；表格方向不会自动启用文字塑形。
 Word 与 LibreOffice 对照及边界见[方向验收](docs/benchmarks/table-direction.json)。
+小字号及短旋转单元格的最小行高已修正单位；受影响的行会变矮，页/栏断点可能改变，
+见[行高验收](docs/benchmarks/row-height-units.json)。
 
 阿拉伯语等复杂文字可安装塑形支持，并部署适合语言的可信 fallback 字体：
 
@@ -492,7 +494,7 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-最新本地安装包验收环境为 macOS/Python 3.13.15：**1,541 项回归测试、31 项 API 示例通过**，
+最新本地安装包验收环境为 macOS/Python 3.13.15：**1,563 项回归测试、31 项 API 示例通过**，
 并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
 环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
 这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。

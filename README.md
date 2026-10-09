@@ -349,6 +349,8 @@ see [margin validation](docs/benchmarks/cell-margins.json).
 and retains logical content order. `start`/`end` cell margins normalize to left/right fields; DOCX writes left/right.
 Plain Markdown reports direction loss; HTML tables use `dir="rtl"`. Table direction alone does not enable text shaping.
 See [direction validation](docs/benchmarks/table-direction.json) for Word and LibreOffice comparisons and limits.
+Small-font and short rotated-cell row minima now use consistent units; affected rows become shorter and
+page/column breaks may change. See [row-height validation](docs/benchmarks/row-height-units.json).
 
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
@@ -515,7 +517,7 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Latest installed-wheel verification on macOS/Python 3.13.15: **1,541 regression tests and 31 API examples passed**;
+Latest installed-wheel verification on macOS/Python 3.13.15: **1,563 regression tests and 31 API examples passed**;
 installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
 See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
 These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.

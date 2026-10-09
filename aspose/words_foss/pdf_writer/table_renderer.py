@@ -238,7 +238,7 @@ class TableRenderer:
             if cell.tables or any(isinstance(item, ldm.Shape) for para in cell.paragraphs for item in para._children):
                 raise ValueError("Rotated table cells with shapes or nested tables are unsupported")
             text = safe_text(cell_text(cell))
-            height = max(self._measure_text_width(pdf, text, cell), DEFAULT_FONT_SIZE_PT * MIN_ROW_HEIGHT_FACTOR)
+            height = max(self._measure_text_width(pdf, text, cell), DEFAULT_FONT_SIZE_PT * PT_TO_MM * MIN_ROW_HEIGHT_FACTOR)
             return [_CellLine(height, rotated_text=text)]
         for child in cell.children:
             if isinstance(child, ldm.Table):
@@ -366,7 +366,7 @@ class TableRenderer:
         return lines
 
     def _row_height(self, row, layout, table=None):
-        height = DEFAULT_FONT_SIZE_PT * MIN_ROW_HEIGHT_FACTOR
+        height = DEFAULT_FONT_SIZE_PT * PT_TO_MM * MIN_ROW_HEIGHT_FACTOR
         for cell, _, _, _, lines in layout:
             top, _, bottom, _ = self._padding(cell, table)
             height = max(height, sum(line.height for line in lines) + top + bottom)
