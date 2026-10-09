@@ -2613,12 +2613,13 @@
     "installed_import_and_process_checks": 48,
     "installed_examples": 31,
     "evidence_tool_checks": 12,
-    "platform_ci": "pending_for_this_import_change"
+    "platform_ci": "running: https://github.com/shenyankm/DocWeave/actions/runs/37923060688"
   },
   "limits": [
     "16 small-input observations match; 40 combinations remain unsupported.",
     "No full formatting/list/resource/import-options/node-kind/rendering acceptance.",
     "Initial destination-style path and same-document cloning; source-format merge and different-style merge across documents remain unimplemented.",
     "Original descriptions/unknown XML/comments/revision metadata on empty tables are preserved; only known plain empty tables are omitted on modified-part save."
-  ]
+  ],
+  "source_commit": "c50b4a116fb9f6fe00bdebfb44eb9a1949241c07"
 }
