@@ -105,7 +105,7 @@ class TableBuilder:
         if tblW is not None:
             tbl.preferred_width = self._parse_preferred_width(tblW)
         tblInd = tblPr.find(f"{W_NS}tblInd")
-        if tblInd is not None:
+        if tblInd is not None and tblInd.get(f"{W_NS}type", "dxa") == "dxa":
             tbl.left_indent = int(tblInd.get(f"{W_NS}w", "0")) / _TWIPS_PER_PT
         borders: list[ldm.Border] = []
         tblBorders_elem = tblPr.find(f"{W_NS}tblBorders")

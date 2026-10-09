@@ -319,6 +319,10 @@ DOCX 读取并写出 `w:compat/w:doNotExpandShiftReturn`；设为 `True` 后手�
 超宽行会被固定单元格裁剪。负缩进限制在单元格内边界，旋转/文本框混排及 CJK 字符分布仍有限制。
 见[两端对齐验收](docs/benchmarks/justification.json)、[手动换行验收](docs/benchmarks/shift-return.json)
 及[表格对齐验收](docs/benchmarks/cell-justification.json)。
+LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼容模式，缺失/格式无效时按 12。
+旧模式小于 15 时，左对齐流式表格按首单元格边距外移；居中/右对齐忽略表格缩进。
+这会改变此前忽略旧模式的 PDF 横坐标；设为 15 可使用现代位置。该字段不代表完整版本兼容，
+浮动/嵌套定位和边框度量仍有限制，见[表格定位验收](docs/benchmarks/table-compatibility.json)。
 
 阿拉伯语等复杂文字可安装塑形支持，并部署适合语言的可信 fallback 字体：
 
@@ -478,7 +482,7 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-最新本地安装包验收环境为 macOS/Python 3.13.15：**1,383 项回归测试、31 项 API 示例通过**，
+最新本地安装包验收环境为 macOS/Python 3.13.15：**1,448 项回归测试、31 项 API 示例通过**，
 并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
 环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
 这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。

@@ -1,0 +1,586 @@
+{
+  "environment": "macOS / Python 3.13.15; wheel imported outside checkout",
+  "baseline_commit": "627807f1267324c9cde295e1cb11b325f300eeb2",
+  "native_comparison": {
+    "cases": {
+      "m12-a0-i0": {
+        "native": {
+          "cell_x_pt": 20.100000381469727,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 28.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 12,
+          "cell_x_pt": 20.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m12-a0-i24": {
+        "native": {
+          "cell_x_pt": 44.099998474121094,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 52.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 12,
+          "cell_x_pt": 44.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m12-a1-i0": {
+        "native": {
+          "cell_x_pt": 78.0999984741211,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 12,
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m12-a1-i24": {
+        "native": {
+          "cell_x_pt": 78.0999984741211,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 90.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 12,
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m12-a2-i0": {
+        "native": {
+          "cell_x_pt": 128.10000610351562,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 12,
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m12-a2-i24": {
+        "native": {
+          "cell_x_pt": 128.10000610351562,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 12,
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m14-a0-i0": {
+        "native": {
+          "cell_x_pt": 20.100000381469727,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 28.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 14,
+          "cell_x_pt": 20.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m14-a0-i24": {
+        "native": {
+          "cell_x_pt": 44.099998474121094,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 52.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 14,
+          "cell_x_pt": 44.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m14-a1-i0": {
+        "native": {
+          "cell_x_pt": 78.0999984741211,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 14,
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m14-a1-i24": {
+        "native": {
+          "cell_x_pt": 78.0999984741211,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 90.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 14,
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m14-a2-i0": {
+        "native": {
+          "cell_x_pt": 128.10000610351562,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 14,
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m14-a2-i24": {
+        "native": {
+          "cell_x_pt": 128.10000610351562,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 14,
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m15-a0-i0": {
+        "native": {
+          "cell_x_pt": 28.350000381469727,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 28.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 15,
+          "cell_x_pt": 28.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m15-a0-i24": {
+        "native": {
+          "cell_x_pt": 52.349998474121094,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 52.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 15,
+          "cell_x_pt": 52.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m15-a1-i0": {
+        "native": {
+          "cell_x_pt": 78.0999984741211,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 15,
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m15-a1-i24": {
+        "native": {
+          "cell_x_pt": 78.0999984741211,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 90.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 15,
+          "cell_x_pt": 78.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m15-a2-i0": {
+        "native": {
+          "cell_x_pt": 128.10000610351562,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 15,
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      },
+      "m15-a2-i24": {
+        "native": {
+          "cell_x_pt": 128.10000610351562,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "before": {
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        },
+        "after": {
+          "mode": 15,
+          "cell_x_pt": 128.0,
+          "words": [
+            "BODY",
+            "CELL"
+          ],
+          "pages": 1
+        }
+      }
+    },
+    "maximum_origin_error_before_pt": 11.900001525878906,
+    "maximum_origin_error_after_pt": 0.35000038146972656
+  },
+  "prior_justified_cell_after": {
+    "False": {
+      "pages": 1,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN",
+        "ELEVEN",
+        "TWELVE",
+        "SHORT",
+        "LINE",
+        "LAST"
+      ],
+      "line_end_pt": 258.0001525878906
+    },
+    "True": {
+      "pages": 1,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN",
+        "ELEVEN",
+        "TWELVE",
+        "SHORT",
+        "LINE",
+        "LAST"
+      ],
+      "line_end_pt": 124.06401062011719
+    }
+  },
+  "corpus": {
+    "total_cases": 5,
+    "total_pages": 113,
+    "unchanged_cases": [
+      "small",
+      "hundred_pages",
+      "repeated_images",
+      "mixed_styles"
+    ],
+    "image_table": {
+      "moved_words": 264,
+      "unchanged_words": 0,
+      "moved_images": 24,
+      "pages": 3,
+      "bytes": 11337,
+      "shift_pt": -2.834645669291339
+    },
+    "drawings_identical": true,
+    "all_byte_sizes_identical": true
+  },
+  "validation": {
+    "new_source_tests": "65 passed, 57 warnings, 22.80 s",
+    "related_source_tests": "375 passed, 96 warnings, 86.25 s; empty-leading-row regression also verified in final 65 tests",
+    "examples": "31 passed, 13 warnings, 7.26 s",
+    "full_installed": "1448 passed, 112 warnings, 332.63 s; no skips"
+  },
+  "wheel": {
+    "bytes": 26259420,
+    "delta_bytes": 462,
+    "sha256": "d14717fa1c736b03c4f4c9c1aaf60686a262e053d8ab7bc8bf7876e9cea00bb8",
+    "source_files_equal": 133
+  },
+  "fixture_probe": "from pathlib import Path\nfrom docx import Document\nfrom docx.shared import Pt\nfrom docx.enum.table import WD_TABLE_ALIGNMENT\nfrom docx.oxml import OxmlElement\nfrom docx.oxml.ns import qn\nimport aspose.words_foss as aw\nroot=Path('/tmp/docweave-table-position');root.mkdir(exist_ok=True)\nfor mode in (12,14,15):\n for align in (0,1,2):\n  for indent in (0,24):\n   d=Document();s=d.sections[0]\n   s.page_width=s.page_height=Pt(300)\n   s.left_margin=s.right_margin=s.top_margin=s.bottom_margin=Pt(20)\n   d.add_paragraph('BODY').runs[0].font.size=Pt(12)\n   t=d.add_table(rows=1,cols=1);t.autofit=False;t.style='Table Grid'\n   t.columns[0].width=Pt(160);t.cell(0,0).width=Pt(160);t.alignment=WD_TABLE_ALIGNMENT(align)\n   pr=t._tbl.tblPr\n   width=pr.find(qn('w:tblW'));width.set(qn('w:w'),'3200');width.set(qn('w:type'),'dxa')\n   e=OxmlElement('w:tblInd');e.set(qn('w:w'),str(indent*20));e.set(qn('w:type'),'dxa');pr.append(e)\n   c=t.cell(0,0);m=OxmlElement('w:tcMar')\n   for name in ('left','right'):\n    e=OxmlElement('w:'+name);e.set(qn('w:w'),'160');e.set(qn('w:type'),'dxa');m.append(e)\n   c._tc.get_or_add_tcPr().append(m);r=c.paragraphs[0].add_run('CELL');r.font.name='Arial';r.font.size=Pt(12)\n   compat=d.settings.element.find(qn('w:compat'))\n   setting=next(e for e in compat if e.get(qn('w:name'))=='compatibilityMode')\n   setting.set(qn('w:val'),str(mode))\n   source=root/f'm{mode}-a{align}-i{indent}.docx';d.save(source)\n   aw.Document(source).save(root/f'm{mode}-a{align}-i{indent}-before.pdf')\nprint(root)\n",
+  "comparison_probe": "import json,pymupdf\nfrom pathlib import Path\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__, aw.__file__\nroot=Path('/tmp/docweave-table-position')\ndata=json.loads(Path('/tmp/docweave-table-position-before.json').read_text())\nfor source in sorted(root.glob('*.docx')):\n document=aw.Document(source)\n target=source.with_name(source.stem+'-after.pdf');document.save(target)\n with pymupdf.open(target) as pdf:\n  words=pdf[0].get_text('words');cell=next(w for w in words if w[4]=='CELL')\n  data[source.stem]['after']={'mode':document.light_document_model.compatibility_mode,\n   'cell_x_pt':cell[0],'words':[w[4] for w in words],'pages':len(pdf)}\n  assert data[source.stem]['after']['words']==data[source.stem]['native']['words']\n  assert data[source.stem]['after']['pages']==data[source.stem]['native']['pages']==1\n for kind in ('native','after'):\n  if source.stem in ('m14-a0-i24','m15-a0-i0','m14-a1-i24'):\n   path=source.with_suffix('.pdf') if kind=='native' else target\n   with pymupdf.open(path) as pdf:pdf[0].get_pixmap(matrix=pymupdf.Matrix(2,2)).save(root/(source.stem+'-'+kind+'.png'))\nresult={'cases':data,'maximum_origin_error_before_pt':max(abs(v['before']['cell_x_pt']-v['native']['cell_x_pt']) for v in data.values()),\n 'maximum_origin_error_after_pt':max(abs(v['after']['cell_x_pt']-v['native']['cell_x_pt']) for v in data.values())}\nPath('/tmp/docweave-table-position-comparison.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint('maximum origin error pt:',result['maximum_origin_error_before_pt'],result['maximum_origin_error_after_pt'])\n",
+  "corpus_probe": "import json,hashlib,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__, aw.__file__\nraw=aw.Document('/tmp/docweave-current-performance/image_table.docx').to_bytes(aw.saving.PdfSaveOptions())\nresult={'bytes':len(raw),'pages':[]}\nwith pymupdf.open(stream=raw,filetype='pdf') as pdf:\n for page in pdf:\n  images=[]\n  for info in page.get_image_info(hashes=True):\n   images.append({'bbox':list(info['bbox']),'digest':info['digest'].hex()})\n  result['pages'].append({'words':[list(word) for word in page.get_text('words')], 'images':images})\n pdf[0].get_pixmap(matrix=pymupdf.Matrix(2,2)).save('/tmp/docweave-table-corpus-'+sys.argv[1]+'.png')\nPath('/tmp/docweave-table-corpus-'+sys.argv[1]+'.json').write_text(json.dumps(result,indent=2)+'\\n')\nPath('/tmp/docweave-table-corpus-'+sys.argv[1]+'.pdf').write_bytes(raw)\nprint('saved',sys.argv[1])\n",
+  "references": [
+    "https://learn.microsoft.com/en-us/openspecs/office_standards/ms-docx/90138c4d-eb18-4edc-aa6c-dfb799cb1d0d",
+    "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tableindentation?view=openxml-3.0.1"
+  ],
+  "limits": [
+    "Only flow-table placement interprets compatibility mode; not complete Word-mode compatibility.",
+    "Floating/nested positioning, RTL leading margins, row property exceptions, zero-vs-unset margins and table border metrics need further fidelity checks.",
+    "Malformed setting values use mode 12; unknown nonnegative integer modes are retained without full behavior guarantees.",
+    "No new speed or RSS measurement; wheel increased, no size reduction claim.",
+    "LibreOffice comparison proves tested placement, not Microsoft Word equivalence."
+  ]
+}

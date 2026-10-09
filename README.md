@@ -332,6 +332,11 @@ cell edge. Rotated/textbox mixed layout and CJK character distribution remain li
 [justification validation](docs/benchmarks/justification.json),
 [manual-break validation](docs/benchmarks/shift-return.json), and
 [table-cell validation](docs/benchmarks/cell-justification.json).
+LDM `compatibility_mode` defaults to 15. DOCX reads/writes the official-URI setting and uses 12 when
+it is absent or malformed. Modes below 15 outdent left-aligned flow tables by the first cell's padding;
+center/right tables ignore table indents. This changes PDF positions previously ignoring legacy modes;
+set 15 for modern placement. The field does not guarantee full version compatibility. Floating/nested
+placement and border metrics remain limited; see [table-placement validation](docs/benchmarks/table-compatibility.json).
 
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
@@ -498,7 +503,7 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Latest installed-wheel verification on macOS/Python 3.13.15: **1,383 regression tests and 31 API examples passed**;
+Latest installed-wheel verification on macOS/Python 3.13.15: **1,448 regression tests and 31 API examples passed**;
 installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
 See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
 These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.

@@ -277,9 +277,12 @@ def test_public_docx_cell_justification_uses_cell_padding(tmp_path):
     paragraph.add_run(WORDS).font.size = Pt(12)
     source, target = tmp_path / "cell.docx", tmp_path / "cell.pdf"
     document.save(source)
-    aw.Document(source).save(target)
+    loaded = aw.Document(source)
+    assert loaded.light_document_model.compatibility_mode == 14
+    assert loaded.light_document_model.sections[0].body.tables[0].rows[0].cells[0].cell_format.left_padding == 8
+    loaded.save(target)
     with pymupdf.open(target) as pdf:
         rows = lines(pdf[0])
-        assert rows[0]["bbox"][0] == pytest.approx(28, abs=0.05)
-        assert rows[0]["bbox"][2] == pytest.approx(192, abs=0.05)
-        assert rows[-1]["bbox"][2] < 185
+        assert rows[0]["bbox"][0] == pytest.approx(20, abs=0.05)
+        assert rows[0]["bbox"][2] == pytest.approx(184, abs=0.05)
+        assert rows[-1]["bbox"][2] < 177

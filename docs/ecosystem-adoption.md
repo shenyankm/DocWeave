@@ -1389,3 +1389,46 @@ wheel 26,258,958 字节，较第 54 节增加 535 字节，133 个包文件与�
 
 最终全量安装 1,383 passed（325.46 s，55 warnings，无跳过项），
 示例 31 passed（8.04 s，13 warnings）。Ruff 致命错误/未使用导入及 diff whitespace 检查通过。
+
+## 兼容模式表格定位验收（2026-10-09）
+
+将 compatibility_mode 加入 LDM（新建模型及缺字段的旧 JSON 默认 15），DOCX reader 按
+官方 URI 读取 w:compat/w:compatSetting；缺少设置或格式无效时采用规范默认值 12。
+writer 在已有 compat 块中写出该模式，JSON 与 DOCX 往返保留。该字段目前只影响
+已验收的流式表格位置，不表示实现该版本的全部 Word 规则。
+
+旧模式小于 15 的左对齐流式表格按首单元格左边距向左移动，让单元格正文对齐来源边距。
+居中/右对齐不应用 tblInd，也不从可用宽度扣除它，修复旧居中正缩进产生的额外偏移。
+reader 忽略非 dxa 的 pct/auto/nil 表格缩进，避免把无效单位当作点数；忽略类型时不解析
+其 w 值。空首行使用首个实际单元格，避免下标访问错误。
+这改变旧模式 DOCX 的 PDF 横坐标；依赖先前现代位置的调用方可以显式设为 15。
+旧 JSON 不含模式时无法恢复其原 DOCX 设置，需要调用方补上来源模式。
+
+新增 65 项源码专项通过（22.80 s，57 warnings），包括模式 11/12/14/15、左中右对齐、
+0/24 pt 缩进、塑形、实际 DOCX 保存/回读、源模型不变、默认/无效/异 URI/缺 settings、
+LDM JSON、新建模型模式、无效缩进单位及空首行。相关源码回归 375 passed（86.25 s，
+96 warnings）；最终专项另含空首行回归。早期 2 failed / 104 passed 不计为通过：
+修正未加载的空 aw.Document 测试，并将真实模式 14 的单元格验收改为旧版来源位置，
+同时独立断言源模式和 8 pt 边距。未通过修改输入模式来掩盖旧版行为。
+
+18 份原始 DOCX 经真实 LibreOffice 与新旧安装包对照，首单元格文字横坐标最大误差
+从 11.9000 pt 降至 0.3500 pt；内容和单页页数保持一致。六张左/中/现代模式预览已检查。
+第 55 节的两份富文本样本也已复验：默认手动换行末词由 266.0002 移至 258.0002 pt，
+原生为 258.0720 pt；禁用伸展时由 132.0640 移至 124.0640 pt，原生 128.0400 pt。
+后者仍受字体宽度差异影响，不将起点修正宣称为全部坐标一致。
+
+五类既有 DOCX 共 113 页，四类 110 页全部记录不变；图文表格的三页整体左移
+2.8346 pt。独立逐项对照确认 264 个词的内容/纵坐标与宽度、24 个图片的像素摘要和
+尺寸/纵坐标不变，仅横向移动；绘图记录与所有五类 PDF 大小不变，变化样本仍为
+11,337 字节。两张新旧图文首屏及两个更新富文本预览已检查，中文可见，内容未裁丢。
+
+wheel 26,259,420 字节，较第 55 节增加 462 字节，133 个包文件与源码一致，
+导入/typing marker/字体检查通过；无新生产依赖。没有新增性能/RSS 基准，不宣称加速或缩小体积。
+原生表格边框度量、零边距与未设置的区分、浮动/嵌套定位、RTL leading margin、
+行属性例外及完整 Word 排版仍待深化；第 55 节旧模式表格起点差异仅在本节所列范围改善。
+证据和可复验探针见 [兼容模式表格定位记录](benchmarks/table-compatibility.json)。
+规范依据 [compatibilityMode](https://learn.microsoft.com/en-us/openspecs/office_standards/ms-docx/90138c4d-eb18-4edc-aa6c-dfb799cb1d0d)
+及 [tblInd](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tableindentation?view=openxml-3.0.1)。
+
+最终全量安装 1,448 passed（332.63 s，112 warnings，无跳过项），
+示例 31 passed（7.26 s，13 warnings）。Ruff 致命错误/未使用导入和 diff whitespace 检查通过。

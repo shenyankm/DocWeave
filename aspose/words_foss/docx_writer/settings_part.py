@@ -29,9 +29,11 @@ def render_settings_xml(doc: ldm.Document) -> str:
             el("w:defaultTabStop", {"w:val": pt_to_twips(doc.default_tab_stop)})
         )
     compat = settings_compat()
+    tracked = el("w:compatSetting", {"w:name": "compatibilityMode",
+        "w:uri": "http://schemas.microsoft.com/office/word", "w:val": str(doc.compatibility_mode)})
     if doc.do_not_expand_shift_return:
-        compat = (compat or "<w:compat></w:compat>").replace(
-            "</w:compat>", el("w:doNotExpandShiftReturn") + "</w:compat>")
+        tracked += el("w:doNotExpandShiftReturn")
+    compat = (compat or "<w:compat></w:compat>").replace("</w:compat>", tracked + "</w:compat>")
     children.append(compat)
     root = el("w:settings", {"xmlns:w": W_URI}, children)
     return XML_DECL + root

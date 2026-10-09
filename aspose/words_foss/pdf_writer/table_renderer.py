@@ -99,8 +99,13 @@ class TableRenderer:
         num_cols = max(sum(cell.cell_format.grid_span for cell in row.cells) for row in table.rows)
         if not num_cols:
             return
-        usable_w = w._page_width - w._page_margin_left - w._page_margin_right - max(0, table.left_indent * PT_TO_MM)
+        indent = table.left_indent * PT_TO_MM if table.alignment == ParagraphAlignment.LEFT else 0.0
+        usable_w = w._page_width - w._page_margin_left - w._page_margin_right - max(0, indent)
         widths = self._compute_col_widths(table, num_cols, usable_w)
+        legacy_offset = 0.0
+        if w._doc.compatibility_mode < 15 and table.alignment == ParagraphAlignment.LEFT:
+            first_cell = next(cell for row in table.rows for cell in row.cells)
+            legacy_offset = self._padding(first_cell)[3]
         layouts = [self._layout_row(pdf, row, widths) for row in table.rows]
         for row, layout in zip(table.rows, layouts):
             if (row.row_format.height_rule == 1 and row.row_format.height > 0
@@ -123,7 +128,7 @@ class TableRenderer:
         def table_x():
             free = usable_w - sum(widths)
             offset = free / 2 if table.alignment == ParagraphAlignment.CENTER else free if table.alignment == ParagraphAlignment.RIGHT else 0
-            return w._page_margin_left + max(0.0, offset) + table.left_indent * PT_TO_MM
+            return w._page_margin_left + max(0.0, offset) + indent - legacy_offset
 
         def advance(repeat_headers=True):
             pdf._perform_page_break_if_need_be(pdf.h - pdf.get_y() + 1)

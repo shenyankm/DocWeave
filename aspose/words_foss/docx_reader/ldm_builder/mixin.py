@@ -44,9 +44,17 @@ class LdmBuilderMixin:
         doc = ldm.Document()
         doc.page_color = self._get_page_color()
         doc.default_tab_stop = self._get_default_tab_stop()
+        doc.compatibility_mode = 12
         if self._settings_xml is not None:
             doc.do_not_expand_shift_return = parse_onoff(
                 self._settings_xml.find(f"{W_NS}compat/{W_NS}doNotExpandShiftReturn"))
+            for setting in self._settings_xml.findall(f"{W_NS}compat/{W_NS}compatSetting"):
+                if (setting.get(f"{W_NS}name") == "compatibilityMode" and
+                        setting.get(f"{W_NS}uri") == "http://schemas.microsoft.com/office/word"):
+                    value = setting.get(f"{W_NS}val", "")
+                    if value.isascii() and value.isdecimal():
+                        doc.compatibility_mode = int(value)
+                    break
         self._bookmark_id_to_name = {}
 
         self._build_name_to_style_id_map()
