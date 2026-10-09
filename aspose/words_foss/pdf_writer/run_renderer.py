@@ -346,12 +346,9 @@ class RunRenderer:
                 getattr(pdf, "_advance_region", pdf.add_page)()
             offset = first_offset if index == 0 else 0.0
             word_spacing = 0.0
-            if (align == "J" and (index < len(rows) - 1 or row.hard_break) and
-                    (not row.hard_break or not self._writer._doc.do_not_expand_shift_return)):
-                row = self._trim_row_end(pdf, row)
-                spaces = sum(segment[1].count(" ") for segment in row)
-                if spaces:
-                    word_spacing = max(0.0, (text_width - offset - sum(s[2] for s in row)) / spaces)
+            if align == "J":
+                row, word_spacing = self.justify_row(pdf, row, text_width - offset,
+                                                     last=index == len(rows) - 1)
             row_w = sum(seg[2] for seg in row)
             x_start = pdf.l_margin + offset
             if align == "C":
@@ -479,6 +476,16 @@ class RunRenderer:
             if saved_font[0]:
                 pdf.set_font(*saved_font)
         return rows
+
+    def justify_row(self, pdf, row, width, *, last):
+        hard_break = getattr(row, "hard_break", False)
+        if ((last and not hard_break) or
+                (hard_break and self._writer._doc.do_not_expand_shift_return)):
+            return row, 0.0
+        row = self._trim_row_end(pdf, row)
+        spaces = sum(segment[1].count(" ") for segment in row)
+        spacing = max(0.0, (width - sum(segment[2] for segment in row)) / spaces) if spaces else 0.0
+        return row, spacing
 
     @staticmethod
     def _trim_row_end(pdf, row):

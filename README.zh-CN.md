@@ -314,8 +314,11 @@ aw.Document("report.docx").save("checked.pdf")
 富文本正文和代码块的两端对齐会伸展自动换行行中的空格，链接与装饰同步伸展；
 段末保持自然宽度。手动换行按文档级 `do_not_expand_shift_return`（默认 `False`）处理：
 DOCX 读取并写出 `w:compat/w:doNotExpandShiftReturn`；设为 `True` 后手动换行不伸展。
-表格内两端对齐和 CJK 字符分布仍未完成，见[两端对齐验收](docs/benchmarks/justification.json)
-及[手动换行验收](docs/benchmarks/shift-return.json)。
+普通及嵌套表格单元格复用相同两端对齐规则，列表编号保持自然宽度；
+普通单元格段落应用左右及首行缩进，图片按可用宽度缩放。禁用自动换行仍保留显式换行，
+超宽行会被固定单元格裁剪。负缩进限制在单元格内边界，旋转/文本框混排及 CJK 字符分布仍有限制。
+见[两端对齐验收](docs/benchmarks/justification.json)、[手动换行验收](docs/benchmarks/shift-return.json)
+及[表格对齐验收](docs/benchmarks/cell-justification.json)。
 
 阿拉伯语等复杂文字可安装塑形支持，并部署适合语言的可信 fallback 字体：
 
@@ -475,7 +478,7 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-最新本地安装包验收环境为 macOS/Python 3.13.15：**1,341 项回归测试、31 项 API 示例通过**，
+最新本地安装包验收环境为 macOS/Python 3.13.15：**1,383 项回归测试、31 项 API 示例通过**，
 并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
 环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
 这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。

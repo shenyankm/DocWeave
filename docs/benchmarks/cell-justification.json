@@ -1,0 +1,1322 @@
+{
+  "environment": "macOS / Python 3.13.15; installed wheel imported outside checkout",
+  "baseline_commit": "62e20e77a51e883449ccd6c5bba4fa993a0a6915",
+  "scope": "ordinary table cells, nested cells, lists, mixed runs, manual breaks, paragraph indents",
+  "before": {
+    "plain-False": {
+      "bytes": 4665,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          186.3040313720703,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "mixed-False": {
+      "bytes": 7987,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          185.91798400878906,
+          43.20000076293945
+        ],
+        [
+          28.0,
+          46.400001525878906,
+          178.89401245117188,
+          65.5999984741211
+        ],
+        [
+          28.0,
+          68.80000305175781,
+          93.65200805664062,
+          88.0
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "merged-False": {
+      "bytes": 4665,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          186.3040313720703,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "list-False": {
+      "bytes": 4798,
+      "pages": 1,
+      "bounds": [
+        [
+          40.0,
+          24.0,
+          184.1880340576172,
+          38.400001525878906
+        ],
+        [
+          52.68000030517578,
+          40.80000305175781,
+          176.72402954101562,
+          55.20000457763672
+        ],
+        [
+          52.68000030517578,
+          57.599998474121094,
+          106.23601531982422,
+          72.0
+        ]
+      ],
+      "words": [
+        "1.",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "first-False": {
+      "bytes": 4665,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          186.3040313720703,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "hanging-False": {
+      "bytes": 4665,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          186.3040313720703,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "manual-False": {
+      "bytes": 4242,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          96.06401062011719,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          56.152000427246094,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "manual-disabled-False": {
+      "bytes": 4242,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          96.06401062011719,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          56.152000427246094,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "nowrap-manual-False": {
+      "bytes": 4233,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          124.21601104736328,
+          38.400001525878906
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINELAST"
+      ]
+    },
+    "plain-True": {
+      "bytes": 4689,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          183.3419952392578,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "mixed-True": {
+      "bytes": 8013,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          182.95599365234375,
+          43.20000076293945
+        ],
+        [
+          28.0,
+          46.400001525878906,
+          176.2060089111328,
+          65.5999984741211
+        ],
+        [
+          28.0,
+          68.80000305175781,
+          93.65200805664062,
+          88.0
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "merged-True": {
+      "bytes": 4689,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          183.3419952392578,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "list-True": {
+      "bytes": 4818,
+      "pages": 1,
+      "bounds": [
+        [
+          40.0,
+          24.0,
+          181.22601318359375,
+          38.400001525878906
+        ],
+        [
+          52.68000030517578,
+          40.80000305175781,
+          174.03602600097656,
+          55.20000457763672
+        ],
+        [
+          52.68000030517578,
+          57.599998474121094,
+          106.23601531982422,
+          72.0
+        ]
+      ],
+      "words": [
+        "1.",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "first-True": {
+      "bytes": 4689,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          183.3419952392578,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "hanging-True": {
+      "bytes": 4689,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          183.3419952392578,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "manual-True": {
+      "bytes": 4266,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          95.85200500488281,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          55.847999572753906,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "manual-disabled-True": {
+      "bytes": 4266,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          95.85200500488281,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          55.847999572753906,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "nowrap-manual-True": {
+      "bytes": 4257,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          123.69800567626953,
+          38.400001525878906
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINELAST"
+      ]
+    }
+  },
+  "after": {
+    "plain-False": {
+      "bytes": 4685,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          192.00010681152344,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "mixed-False": {
+      "bytes": 8035,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          192.0,
+          43.20000076293945
+        ],
+        [
+          28.0,
+          46.400001525878906,
+          191.9960174560547,
+          65.5999984741211
+        ],
+        [
+          28.0,
+          68.80000305175781,
+          93.65200805664062,
+          88.0
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "merged-False": {
+      "bytes": 4685,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          192.00010681152344,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "list-False": {
+      "bytes": 4825,
+      "pages": 1,
+      "bounds": [
+        [
+          40.0,
+          24.0,
+          185.99609375,
+          38.400001525878906
+        ],
+        [
+          52.68000030517578,
+          40.80000305175781,
+          185.9961395263672,
+          55.20000457763672
+        ],
+        [
+          52.68000030517578,
+          57.599998474121094,
+          106.23601531982422,
+          72.0
+        ]
+      ],
+      "words": [
+        "1.",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "first-False": {
+      "bytes": 4703,
+      "pages": 1,
+      "bounds": [
+        [
+          64.0,
+          24.0,
+          88.64800262451172,
+          38.400001525878906
+        ],
+        [
+          102.48204803466797,
+          24.0,
+          131.79806518554688,
+          38.400001525878906
+        ],
+        [
+          145.63211059570312,
+          24.0,
+          186.00009155273438,
+          38.400001525878906
+        ],
+        [
+          52.0,
+          40.80000305175781,
+          186.00009155273438,
+          55.20000457763672
+        ],
+        [
+          52.0,
+          57.599998474121094,
+          143.02001953125,
+          72.0
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "hanging-False": {
+      "bytes": 4698,
+      "pages": 1,
+      "bounds": [
+        [
+          40.0,
+          24.0,
+          186.00009155273438,
+          38.400001525878906
+        ],
+        [
+          52.0,
+          40.80000305175781,
+          186.00013732910156,
+          55.20000457763672
+        ],
+        [
+          52.0,
+          57.599998474121094,
+          105.55601501464844,
+          72.0
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "manual-False": {
+      "bytes": 4258,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          67.60000610351562,
+          38.400001525878906
+        ],
+        [
+          163.53610229492188,
+          24.0,
+          192.00010681152344,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          56.152000427246094,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "manual-disabled-False": {
+      "bytes": 4242,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          96.06401062011719,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          56.152000427246094,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "nowrap-manual-False": {
+      "bytes": 4258,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          67.60000610351562,
+          38.400001525878906
+        ],
+        [
+          163.53610229492188,
+          24.0,
+          192.00010681152344,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          56.152000427246094,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "plain-True": {
+      "bytes": 4713,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          191.9980010986328,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "mixed-True": {
+      "bytes": 8042,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          191.99600219726562,
+          43.20000076293945
+        ],
+        [
+          28.0,
+          46.400001525878906,
+          191.9960174560547,
+          65.5999984741211
+        ],
+        [
+          28.0,
+          68.80000305175781,
+          93.65200805664062,
+          88.0
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "merged-True": {
+      "bytes": 4713,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          191.9980010986328,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          178.80401611328125,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "list-True": {
+      "bytes": 4857,
+      "pages": 1,
+      "bounds": [
+        [
+          40.0,
+          24.0,
+          185.99600219726562,
+          38.400001525878906
+        ],
+        [
+          52.68000030517578,
+          40.80000305175781,
+          185.9960174560547,
+          55.20000457763672
+        ],
+        [
+          52.68000030517578,
+          57.599998474121094,
+          106.23601531982422,
+          72.0
+        ]
+      ],
+      "words": [
+        "1.",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "first-True": {
+      "bytes": 4727,
+      "pages": 1,
+      "bounds": [
+        [
+          64.0,
+          24.0,
+          91.33600616455078,
+          38.400001525878906
+        ],
+        [
+          105.22000122070312,
+          24.0,
+          134.4320068359375,
+          38.400001525878906
+        ],
+        [
+          148.32000732421875,
+          24.0,
+          186.0,
+          38.400001525878906
+        ],
+        [
+          52.0,
+          40.80000305175781,
+          186.00396728515625,
+          55.20000457763672
+        ],
+        [
+          52.0,
+          57.599998474121094,
+          143.02001953125,
+          72.0
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "hanging-True": {
+      "bytes": 4738,
+      "pages": 1,
+      "bounds": [
+        [
+          40.0,
+          24.0,
+          185.99600219726562,
+          38.400001525878906
+        ],
+        [
+          52.0,
+          40.80000305175781,
+          185.9960174560547,
+          55.20000457763672
+        ],
+        [
+          52.0,
+          57.599998474121094,
+          105.55601501464844,
+          72.0
+        ]
+      ],
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "manual-True": {
+      "bytes": 4272,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          70.07600402832031,
+          38.400001525878906
+        ],
+        [
+          166.22000122070312,
+          24.0,
+          191.99600219726562,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          55.847999572753906,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "manual-disabled-True": {
+      "bytes": 4266,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          95.85200500488281,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          55.847999572753906,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    },
+    "nowrap-manual-True": {
+      "bytes": 4272,
+      "pages": 1,
+      "bounds": [
+        [
+          28.0,
+          24.0,
+          70.07600402832031,
+          38.400001525878906
+        ],
+        [
+          166.22000122070312,
+          24.0,
+          191.99600219726562,
+          38.400001525878906
+        ],
+        [
+          28.0,
+          40.80000305175781,
+          55.847999572753906,
+          55.20000457763672
+        ]
+      ],
+      "words": [
+        "SHORT",
+        "LINE",
+        "LAST"
+      ]
+    }
+  },
+  "max_soft_row_error_pt": 0.003997802734375,
+  "native_comparison": {
+    "False": {
+      "native": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX",
+          "SEVEN",
+          "EIGHT",
+          "NINE",
+          "TEN",
+          "ELEVEN",
+          "TWELVE",
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "line_end_pt": 258.0719909667969,
+        "row_bounds": [
+          [
+            56.099998474121094,
+            257.9520568847656
+          ],
+          [
+            44.099998474121094,
+            257.7600402832031
+          ],
+          [
+            44.099998474121094,
+            93.3599853515625
+          ],
+          [
+            56.099998474121094,
+            258.0719909667969
+          ],
+          [
+            44.099998474121094,
+            74.052001953125
+          ]
+        ]
+      },
+      "library": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX",
+          "SEVEN",
+          "EIGHT",
+          "NINE",
+          "TEN",
+          "ELEVEN",
+          "TWELVE",
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "line_end_pt": 266.0001525878906,
+        "row_bounds": [
+          [
+            64.0,
+            266.0001220703125
+          ],
+          [
+            52.0,
+            266.0001525878906
+          ],
+          [
+            52.0,
+            97.2760009765625
+          ],
+          [
+            64.0,
+            266.0001525878906
+          ],
+          [
+            52.0,
+            80.1520004272461
+          ]
+        ]
+      }
+    },
+    "True": {
+      "native": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX",
+          "SEVEN",
+          "EIGHT",
+          "NINE",
+          "TEN",
+          "ELEVEN",
+          "TWELVE",
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "line_end_pt": 128.0399932861328,
+        "row_bounds": [
+          [
+            56.099998474121094,
+            257.9520568847656
+          ],
+          [
+            44.099998474121094,
+            257.7600402832031
+          ],
+          [
+            44.099998474121094,
+            93.3599853515625
+          ],
+          [
+            56.099998474121094,
+            128.0399932861328
+          ],
+          [
+            44.099998474121094,
+            74.052001953125
+          ]
+        ]
+      },
+      "library": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO",
+          "THREE",
+          "FOUR",
+          "FIVE",
+          "SIX",
+          "SEVEN",
+          "EIGHT",
+          "NINE",
+          "TEN",
+          "ELEVEN",
+          "TWELVE",
+          "SHORT",
+          "LINE",
+          "LAST"
+        ],
+        "line_end_pt": 132.0640106201172,
+        "row_bounds": [
+          [
+            64.0,
+            266.0001220703125
+          ],
+          [
+            52.0,
+            266.0001525878906
+          ],
+          [
+            52.0,
+            97.2760009765625
+          ],
+          [
+            64.0,
+            132.0640106201172
+          ],
+          [
+            52.0,
+            80.1520004272461
+          ]
+        ]
+      }
+    }
+  },
+  "common_corpus": {
+    "cases": 5,
+    "pages": 113,
+    "identical_to_previous": true,
+    "checked": "text, coordinates, page pixels, drawings, images, byte sizes"
+  },
+  "wheel": {
+    "bytes": 26258958,
+    "delta_bytes": 535,
+    "sha256": "882332cf541021c113ab930fa707afd569d4d5e2f24fbd5c3545a21b696a81f2",
+    "source_files_equal": 133
+  },
+  "validation": {
+    "new_source_tests": "42 passed, 1 warning, 9.66 s",
+    "related_source_tests": "138 passed, 38 warnings, 43.84 s; preceded six additional nested/alignment tests",
+    "examples": "31 passed, 13 warnings, 8.04 s",
+    "full_installed": "1383 passed, 55 warnings, 325.46 s; no skips"
+  },
+  "probe_source": "import json, sys, runpy\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__, aw.__file__\nroot = Path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python')\nns = runpy.run_path(str(root / 'tests/test_pdf_justification.py'))\nsource = (root / 'tests/test_pdf_cell_justification.py').read_text().split('@pytest.mark.parametrize', 1)[0]\nexec(source.replace('from .test_pdf_justification import WORDS, lines', ''), ns)\nresult = {}\nfor shaping in (False, True):\n for kind in ('plain','mixed','merged','list','first','hanging','manual','manual-disabled','nowrap-manual'):\n  model, paragraph = ns['cell_model'](mixed=kind=='mixed', merged=kind=='merged', listed=kind=='list',\n    text='SHORT LINE\\nLAST' if 'manual' in kind else ns['WORDS'], disabled=kind=='manual-disabled', wrap=kind!='nowrap-manual')\n  if kind in ('first','hanging'):\n   paragraph.paragraph_format.left_indent=24\n   paragraph.paragraph_format.right_indent=6\n   paragraph.paragraph_format.first_line_indent=12 if kind=='first' else -12\n  raw=ns['render'](model, shaping)\n  key=f'{kind}-{shaping}'\n  with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n   rows=ns['lines'](pdf[0])\n   result[key]={'bytes':len(raw),'pages':len(pdf),'bounds':[list(row['bbox']) for row in rows],\n    'words':[word[4] for page in pdf for word in page.get_text('words')]}\n   if kind=='mixed' and not shaping:\n    pdf[0].get_pixmap(matrix=pymupdf.Matrix(3,3)).save('/tmp/docweave-cell-justification-'+sys.argv[1]+'.png')\n   Path('/tmp/docweave-cell-'+key+'-'+sys.argv[1]+'.pdf').write_bytes(raw)\nPath('/tmp/docweave-cell-justification-'+sys.argv[1]+'.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint({key: {'rows':len(value['bounds']), 'bounds':value['bounds'][:2]} for key,value in result.items()})\n",
+  "native_probe_source": "from pathlib import Path\nfrom docx import Document\nfrom docx.enum.text import WD_ALIGN_PARAGRAPH\nfrom docx.shared import Pt\nfrom docx.oxml import OxmlElement\nfrom docx.oxml.ns import qn\nimport aspose.words_foss as aw\nfrom aspose.words_foss.saving import PdfSaveOptions\nroot=Path('/tmp/docweave-cell-native'); root.mkdir(exist_ok=True)\nfor disabled in (False,True):\n d=Document(); s=d.sections[0]\n s.page_width=Pt(300); s.page_height=Pt(300)\n s.left_margin=s.right_margin=s.top_margin=s.bottom_margin=Pt(20)\n t=d.add_table(rows=1,cols=1);t.autofit=False;t.columns[0].width=Pt(260)\n t.style='Table Grid'\n c=t.cell(0,0);m=OxmlElement('w:tcMar')\n for n in ('left','right'):\n  e=OxmlElement('w:'+n);e.set(qn('w:w'),'160');e.set(qn('w:type'),'dxa');m.append(e)\n c._tc.get_or_add_tcPr().append(m)\n for text in ('ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE TEN ELEVEN TWELVE','SHORT LINE\\nLAST'):\n  p=c.paragraphs[0] if not c.paragraphs[0].text else c.add_paragraph()\n  p.alignment=WD_ALIGN_PARAGRAPH.JUSTIFY\n  p.paragraph_format.left_indent=Pt(24);p.paragraph_format.right_indent=Pt(6);p.paragraph_format.first_line_indent=Pt(12)\n  r=p.add_run(text);r.font.name='Arial';r.font.size=Pt(12)\n if disabled:\n  compat=d.settings.element.find(qn('w:compat'))\n  if compat is None: compat=OxmlElement('w:compat');d.settings.element.append(compat)\n  compat.append(OxmlElement('w:doNotExpandShiftReturn'))\n source=root/f'cell-{disabled}.docx';d.save(source)\n aw.Document(source).save(root/f'cell-{disabled}-library.pdf',PdfSaveOptions())\nprint(root)\n",
+  "limitations": [
+    "No speed or RSS improvement claimed; no new performance benchmark.",
+    "CJK character distribution and rotated rich-cell justification remain unsupported.",
+    "Negative paragraph outdents are clipped to the inner cell; textbox/complex inline layout remains limited.",
+    "LibreOffice table start differs by 7.9 pt, plus font/line-height differences; not full Word parity.",
+    "NoWrap preserves content in the PDF stream but the fixed cell clips overwide visible text.",
+    "No complete PDF/UA or PDF/A compliance claim."
+  ]
+}

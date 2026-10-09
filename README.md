@@ -324,9 +324,14 @@ a conversion loss. These metrics are not Word-identical; see the
 Justified rich-text and Code paragraphs stretch spaces on soft-wrapped rows, including links and
 decorations. Final rows remain natural. Manual-break rows follow the document-wide
 `do_not_expand_shift_return` flag (default `False`): DOCX reads/writes `w:doNotExpandShiftReturn`
-inside `w:compat`. Set it to `True` to retain natural manual-break rows. Table-cell justification
-and CJK character distribution remain incomplete; see [justification validation](docs/benchmarks/justification.json)
-and [manual-break validation](docs/benchmarks/shift-return.json).
+inside `w:compat`. Set it to `True` to retain natural manual-break rows. Ordinary and nested table
+cells use the same justification rules; list labels retain natural widths. Ordinary cell paragraphs
+apply left/right and first-line indents, including image sizing. Disabling automatic wrapping retains
+explicit breaks; fixed cells clip overwide visual lines. Negative outdents are bounded by the inner
+cell edge. Rotated/textbox mixed layout and CJK character distribution remain limited; see
+[justification validation](docs/benchmarks/justification.json),
+[manual-break validation](docs/benchmarks/shift-return.json), and
+[table-cell validation](docs/benchmarks/cell-justification.json).
 
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
@@ -493,7 +498,7 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Latest installed-wheel verification on macOS/Python 3.13.15: **1,341 regression tests and 31 API examples passed**;
+Latest installed-wheel verification on macOS/Python 3.13.15: **1,383 regression tests and 31 API examples passed**;
 installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
 See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
 These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.

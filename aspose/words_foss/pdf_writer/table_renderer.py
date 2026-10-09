@@ -72,6 +72,8 @@ class _CellLine:
     indent: float = 0.0
     marker_indent: float = 0.0
     right_indent: float = 0.0
+    word_spacing: float = 0.0
+    baseline: Optional[float] = None
 
 
 class TableRenderer:
@@ -264,22 +266,46 @@ class TableRenderer:
                     pending_label = (label_run, label_run.text, label_width, size, None)
                     indent = max(indent, marker_indent + label_width)
             text_width = width - indent - right_indent
-            if text_width <= 0:
-                raise ValueError("No usable text width after cell list indents")
+            first_indent = 0.0
+            if not is_list:
+                pf = para.paragraph_format
+                indent = max(0.0, pf.left_indent * PT_TO_MM)
+                right_indent = max(0.0, pf.right_indent * PT_TO_MM)
+                first_indent = max(-indent, pf.first_line_indent * PT_TO_MM)
+                text_width = width - indent - right_indent
+            if text_width <= 1e-7 or text_width - first_indent <= 1e-7:
+                kind = "list" if is_list else "paragraph"
+                raise ValueError(f"No usable text width after cell {kind} indents")
+            pending_first_line = True
 
-            def flush(segments=segments, para=para, align=align):
-                nonlocal pending_label
+            def flush(*, final=False, segments=segments, para=para, align=align):
+                nonlocal pending_label, pending_first_line
                 if not segments and pending_label is None:
                     return
-                rows = (w._run_renderer.wrap_segments(pdf, segments, text_width)
-                        if segments and cell.cell_format.wrap_text else [list(segments)])
-                if pending_label is not None:
-                    rows[0].insert(0, pending_label)
-                    pending_label = None
-                for row in rows:
-                    size = get_line_font_size([item[0] for item in row])
+                rows = (w._run_renderer.wrap_segments(
+                    pdf, segments, text_width if cell.cell_format.wrap_text else float("inf"),
+                    first_width=text_width - first_indent if pending_first_line and cell.cell_format.wrap_text else None)
+                    if segments else [list(segments)])
+                for index, row in enumerate(rows):
+                    line_indent = indent + (first_indent if pending_first_line else 0.0)
+                    fonts = [item[0] for item in row]
+                    if pending_label is not None:
+                        fonts.append(pending_label[0])
+                    size = get_line_font_size(fonts)
                     height = w._paragraph_renderer.line_height_mm(size, para.paragraph_format)
-                    lines.append(_CellLine(height, segments=row, align=align))
+                    baseline = baseline_size(fonts) if align == "J" else None
+                    spacing = 0.0
+                    if align == "J":
+                        row, spacing = w._run_renderer.justify_row(
+                            pdf, row, width - line_indent - right_indent,
+                            last=final and index == len(rows) - 1)
+                    if pending_label is not None:
+                        row.insert(0, pending_label)
+                        pending_label = None
+                    lines.append(_CellLine(height, segments=row, align=align,
+                                           word_spacing=spacing, baseline=baseline,
+                                           indent=line_indent, right_indent=right_indent))
+                    pending_first_line = False
                 segments.clear()
 
             if para.paragraph_format.space_before:
@@ -300,12 +326,15 @@ class TableRenderer:
                         image_h = (item.height or DEFAULT_SHAPE_DIM_PT) * PT_TO_MM
                         if image_w <= 0 or image_h <= 0:
                             raise ValueError("Table image dimensions must be positive")
-                        scale = min(1.0, text_width / image_w)
-                        lines.append(_CellLine(image_h * scale, image=item, width=image_w * scale, align=align))
+                        line_indent = indent + (first_indent if pending_first_line else 0.0)
+                        scale = min(1.0, (width - line_indent - right_indent) / image_w)
+                        lines.append(_CellLine(image_h * scale, image=item, width=image_w * scale,
+                                               align=align, indent=line_indent, right_indent=right_indent))
+                        pending_first_line = False
                     if item.text_box:
                         nested_cell = ldm.Cell(paragraphs=item.text_box.get("paragraphs", []))
                         lines.extend(self._cell_lines(pdf, nested_cell, width))
-            flush()
+            flush(final=True)
             if not para._children:
                 lines.append(_CellLine(DEFAULT_FONT_SIZE_PT * PT_TO_MM * LINE_HEIGHT_FACTOR))
             if para.paragraph_format.space_after:
@@ -393,7 +422,8 @@ class TableRenderer:
                                     if title:
                                         w._paragraph_renderer._emit_heading_outline(pdf, title, pf.outline_level + 1)
                             with ExitStack() as structure:
-                                structure.enter_context(baseline_scope(pdf, baseline_size(s[0] for s in line.segments)))
+                                structure.enter_context(baseline_scope(pdf, line.baseline if line.baseline is not None
+                                    else baseline_size(s[0] for s in line.segments)))
                                 segments = line.segments
                                 if line.list_format:
                                     structure.enter_context(w._list_structure(pdf, line.list_format, line.paragraph_key))
@@ -430,7 +460,8 @@ class TableRenderer:
                                 elif segments:
                                     with w._structure(pdf, '/P', line.paragraph_key or line):
                                         with w._tag(pdf, '/Span'):
-                                            w._run_renderer._render_segment_row(pdf, segments, line.height, DEFAULT_FONT_SIZE_PT, at_x=at_x)
+                                            w._run_renderer._render_segment_row(pdf, segments, line.height, DEFAULT_FONT_SIZE_PT,
+                                                                               at_x=at_x, word_spacing=line.word_spacing)
                             at_y += line.height
                 x += width
         finally:
