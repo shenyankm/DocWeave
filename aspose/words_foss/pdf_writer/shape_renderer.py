@@ -8,6 +8,8 @@ from fpdf import FPDF
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._visible_runs import is_horizontal_rule_shape, visible_children
+from aspose.words_foss.diagnostics import warn
+from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
 from aspose.words_foss.model.wrap_type import WrapType
 from aspose.words_foss.model.enums import CellVerticalAlignment
 from aspose.words_foss.pdf_writer.color import parse_color
@@ -55,14 +57,24 @@ class ShapeRenderer:
         except Exception:
             return image_bytes
 
-        if compression == PdfImageCompression.JPEG or (
-            compression == PdfImageCompression.AUTO and quality < 100
-        ):
-            if pil_img.mode in ("RGBA", "P", "LA"):
-                pil_img = pil_img.convert("RGB")
-            buf = BytesIO()
-            pil_img.save(buf, format="JPEG", quality=max(1, min(quality, 100)))
-            return buf.getvalue()
+        with pil_img:
+            transparent = ("A" in pil_img.getbands() or "transparency" in pil_img.info) and (
+                pil_img.convert("RGBA").getchannel("A").getextrema()[0] < 255)
+            if compression == PdfImageCompression.AUTO and transparent:
+                return image_bytes
+            if compression == PdfImageCompression.JPEG or (
+                compression == PdfImageCompression.AUTO and quality < 100
+            ):
+                if transparent:
+                    warn("PDF JPEG compression flattens image transparency against white",
+                         PdfContentLossWarning, code="pdf.image_transparency_lost")
+                    pil_img = _PILImage.alpha_composite(
+                        _PILImage.new("RGBA", pil_img.size, "white"), pil_img.convert("RGBA")).convert("RGB")
+                elif pil_img.mode in ("RGBA", "P", "LA"):
+                    pil_img = pil_img.convert("RGB")
+                buf = BytesIO()
+                pil_img.save(buf, format="JPEG", quality=quality)
+                return buf.getvalue()
 
         return image_bytes
 

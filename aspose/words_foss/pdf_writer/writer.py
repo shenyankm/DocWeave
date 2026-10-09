@@ -168,6 +168,9 @@ class LdmPdfWriter:
         if self._measurement_pdf is not None:
             close_fonts(self._measurement_pdf)
         try:
+            quality = self.options.jpeg_quality
+            if isinstance(quality, bool) or not isinstance(quality, int) or not 0 <= quality <= 100:
+                raise ValueError("jpeg_quality must be an integer from 0 to 100")
             if not isinstance(expanded_levels, int) or not 0 <= expanded_levels <= 9:
                 raise ValueError("expanded_outline_levels must be an integer from 0 to 9")
             with ExitStack() as cleanup:

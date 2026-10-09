@@ -11,8 +11,8 @@
 |---|---|---|
 | `compliance` | 只设置 PDF 版本；PDF/A、PDF/UA 请求警告，非标准认证 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
 | `export_document_structure` | 结构输出开关；完整辅助技术/标准验收仍待决策 D02 | [test_pdf_structure_pages.py](../tests/test_pdf_structure_pages.py) |
-| `image_compression` | AUTO/JPEG 图片转换路径；实际损失与透明图像需按样本验收 | [ApiExamples/working_with_pdf_save_options.py](../ApiExamples/working_with_pdf_save_options.py) |
-| `jpeg_quality` | JPEG 质量参数；全部边界值尚未系统验收 | [ApiExamples/working_with_pdf_save_options.py](../ApiExamples/working_with_pdf_save_options.py) |
+| `image_compression` | AUTO 保留有意义的透明像素；显式 JPEG 合成白底并诊断透明度损失，严格模式可拒绝 | [test_pdf_image_compression_contract.py](../tests/test_pdf_image_compression_contract.py) |
+| `jpeg_quality` | 0..100 整数，布尔/非整数/越界拒绝；作用于 JPEG 编码，AUTO 的透明图片保留原字节 | [test_pdf_image_compression_contract.py](../tests/test_pdf_image_compression_contract.py)、[复验](benchmarks/pdf-image-compression-contract.json) |
 | `text_compression` | NONE/FLATE 页面内容流，字体/图片流独立 | [test_pdf_stream_options.py](../tests/test_pdf_stream_options.py) |
 | `embed_full_fonts` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
 | `use_core_fonts` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |

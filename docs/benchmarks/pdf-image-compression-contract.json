@@ -1,0 +1,59 @@
+{
+  "baseline_commit": "59b84a12953d9ee55605c73d75dcc52c699f168a",
+  "scope": "A1 PDF image AUTO/JPEG transparency behavior and jpeg_quality scalar contract; not the full save-options matrix",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "installed_cwd": "/tmp"
+  },
+  "reproduction": {
+    "test": "tests/test_pdf_image_compression_contract.py",
+    "old_installed": "55 failed, 6 passed, 10 warnings in 10.74s",
+    "source": "61 passed in 7.72s"
+  },
+  "contract": {
+    "quality": "Integer 0..100, bool/wrong type/non-finite/out-of-range values rejected by write_to_bytes before rendering; memory/path/direct writer covered",
+    "AUTO": "Meaningful alpha or transparent-color pixels retain original image bytes even below quality 100; fully opaque alpha images remain JPEG eligible",
+    "JPEG": "Explicit JPEG composites transparent pixels against white, emits pdf.image_transparency_lost ContentLossWarning; strict policy rejects and retains the original file"
+  },
+  "coverage": [
+    "Actual python-docx image input packages for RGBA, grayscale alpha and palette transparency",
+    "Body/table/header/footer/anchored output paths; independent PyMuPDF pixel equality with default quality 100 and soft-mask presence",
+    "Explicit JPEG decoded image corner is white, masks absent, diagnostics collected; strict file failure clean",
+    "Valid quality 0/1/80/100 produces DCTDecode image streams; opaque alpha images preserve JPEG behavior without false loss diagnostics"
+  ],
+  "visual": {
+    "result": "Manually inspected two real-DOCX PDF crops: wrong red transparent region disappears and blue semitransparent region becomes light blue",
+    "input_sha256": "8cbcae2a5e1bb4588ae3761c76b07c79206630dcaf8225a87be79a6e58f7a241",
+    "old_pdf_bytes": 4388,
+    "new_pdf_bytes": 3970,
+    "interpretation": "This small flat-color sample gets smaller; no general size or speed improvement claim",
+    "crop_hashes": {
+      "before": "f51b9e4a60aa9820ae650fd456534c215c7e1847d7e317a49c059027672e2f76",
+      "after": "81484c0b6c4121abf3083d705dabbe64caa6fca0caa0e76ea05686add3735267"
+    },
+    "probe_source": "import importlib.util, sys\nfrom pathlib import Path\nfrom io import BytesIO\nfrom docx import Document as NativeDocument\nfrom docx.shared import Inches\nimport pymupdf\nimport aspose.words_foss as aw\nspec=importlib.util.spec_from_file_location('image_tests','/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_pdf_image_compression_contract.py')\nm=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)\nroot=Path('/tmp/docweave-image-compression-visual'); root.mkdir(exist_ok=True)\nsource=root/'source.docx'\nif not source.exists():\n native=NativeDocument(); native.add_picture(BytesIO(m.picture('RGBA')),width=Inches(2)); native.save(source)\noptions=aw.saving.PdfSaveOptions(); options.jpeg_quality=80\nraw=aw.Document(source).to_bytes(options)\n(root/(sys.argv[1]+'.pdf')).write_bytes(raw)\nwith pymupdf.open(stream=raw,filetype='pdf') as pdf:\n pdf[0].get_pixmap(matrix=pymupdf.Matrix(2,2),clip=pymupdf.Rect(55,55,235,235)).save(root/(sys.argv[1]+'.png'))\n print('images',pdf[0].get_images())\n"
+  },
+  "common_pdf": {
+    "result": "Five fixed inputs, 113 pages: complete size/words/pixels/drawings/image records equal",
+    "record_sha256": "470e8cdaff77bbda91c1becbd1c2f56348e4f51bbd67c74512b7e3418b4a6dcc"
+  },
+  "examples": "31 passed, 13 warnings in 6.55s",
+  "wheel": {
+    "bytes": 26489718,
+    "sha256": "7263f526661a7b73dbe04844d08d2602ae95ab92a5a08049cb796465259f5d72",
+    "source_py_files_matched": 125,
+    "check": "scripts/check_wheel.py passes from /tmp using site-packages"
+  },
+  "limits": [
+    "Explicit JPEG loses transparency and is only flattened against white; no colored-background fidelity promise",
+    "No new full Word/LibreOffice layout comparison or complete PDF standards/accessibility acceptance",
+    "Other scalar options and the remaining A1/A4 matrix are not accepted by this result"
+  ],
+  "installed_integration": {
+    "result": "1183 passed, 760 deselected, 22 warnings in 277.68s (0:04:37)",
+    "selection": "pdf or image or conversion_api or bounded_conversion",
+    "command": "PYPANDOC_PANDOC=/tmp/docweave-pandoc-arm64/pandoc /tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests -q --import-mode=importlib -k 'pdf or image or conversion_api or bounded_conversion' --tb=short",
+    "boundary": "All selected installed PDF/image/conversion-safety tests pass; not a fresh full suite"
+  }
+}

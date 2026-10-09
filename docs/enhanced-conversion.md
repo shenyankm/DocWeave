@@ -66,6 +66,14 @@ Markdown 的正文、表格和默认页眉页脚图片，以及 PDF 的内联、
 见[进程复验](benchmarks/markdown-image-processes.json)。被终止进程的残留保留，后续导出避开
 占用名称；已有占用标记不会被自动删除。自动恢复、断电及网络文件系统行为仍未验收。
 
+## PDF 图片压缩
+
+`jpeg_quality` 接受 0..100 整数，在 PDF 输出前拒绝布尔、非整数及越界值。
+AUTO 即使请求较低 JPEG 质量，也保留含透明像素图片的原字节，避免把透明区域错误变为实色；
+完全不透明的 alpha 图片仍可使用 JPEG。显式 JPEG 请求会将透明图片合成到白底并发出
+`pdf.image_transparency_lost` 内容损失诊断，严格模式保留原输出并拒绝转换。
+白底合成不承诺在其他背景上保持外观，见[复验记录](benchmarks/pdf-image-compression-contract.json)。
+
 ## 中文排版和字体
 
 - 高亮文本、混合字体运行的居中/右对齐段落按实际字形宽度换行，保留显式换行与链接。
