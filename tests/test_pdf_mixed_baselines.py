@@ -69,6 +69,7 @@ def test_toc_title_and_numeric_runs_share_last_line_baseline(shaping):
         assert max(origins) - min(origins) <= 0.03
         assert "".join(c["c"] for c, _ in glyphs(pdf[0])) == "TITLE12.30"
         assert len(pdf[0].get_drawings()) == 1
+        assert pdf[0].get_drawings()[0]["rect"].y0 == pytest.approx(origins[0] - 0.06 * 16, abs=0.05)
 
 
 def test_plain_default_tab_preserves_mixed_run_baseline_and_grid():
@@ -157,3 +158,98 @@ def test_page_band_heading_does_not_inherit_body_baseline(location, columns, sha
         headers = [next(w for w in page.get_text("words") if w[4] == "HEADER") for page in pdf]
         assert all(h[1:4] == pytest.approx(headers[0][1:4], abs=0.03) for h in headers)
         assert all(s == pytest.approx({"Q": 12, "Z": 18, "K": 14}[c["c"]], abs=0.05) for c, s in body)
+
+
+@pytest.mark.parametrize("shaping", [False, True])
+@pytest.mark.parametrize("location", ["body", "table"])
+@pytest.mark.parametrize("align", [0, 1, 2])
+def test_mixed_decorations_follow_glyph_baseline_and_links(align, location, shaping):
+    model = baseline_model(align, location)
+    paragraph = (model.sections[0].body.children[0] if location == "body" else
+                 model.sections[0].body.children[0].rows[0].cells[0].children[0])
+    paragraph.paragraph_format.widow_control = False
+    for run, text in zip(paragraph.runs, ["Q", "Z", "K"]):
+        run.text = f"[{text}](https://example.test/{text})"
+        run.font.strike_through = True
+        run.font.underline = True
+        run.font.highlight_color = "FFFF00"
+    options = PdfSaveOptions()
+    options.text_shaping = shaping
+    with pymupdf.open(stream=LdmPdfWriter(options).write_to_bytes(model), filetype="pdf") as pdf:
+        page = pdf[0]
+        chars = glyphs(page)
+        assert [c["c"] for c, _ in chars] == list("QZK")
+        assert len(page.get_links()) == 3
+        rectangles = [d["rect"] for d in page.get_drawings()]
+        assert len(rectangles) == 9  # One highlight, underline and strike per run.
+        for c, size in chars:
+            x, baseline = c["origin"]
+            decorations = [r for r in rectangles if r.x0 - 0.05 <= x <= r.x1 + 0.05]
+            assert any(baseline - size * 0.5 < r.y0 < baseline - size * 0.1 for r in decorations)
+            link = next(l for l in page.get_links() if l["uri"].endswith(c["c"]))
+            assert link["from"].y0 == pytest.approx(baseline - 0.8 * size, abs=0.05)
+            assert link["from"].height == pytest.approx(size, abs=0.05)
+
+
+def test_native_decorations_share_shifted_baseline_and_restore_methods():
+    pdf = FPDF(unit="pt", format=(200, 100))
+    pdf.set_margins(10, 10, 10)
+    pdf.add_page()
+    pdf.set_font("Helvetica", style="US", size=12)
+    strike_position = pdf.current_font.sp / 1000
+    underline_position = pdf.current_font.up / 1000
+    with baseline_scope(pdf, 18):
+        for size, text in [(12, "Q"), (18, "Z"), (14, "K")]:
+            pdf.set_font("Helvetica", style="US", size=size)
+            pdf.cell(w=30, h=25, text=text, link=f"https://example.test/{text}")
+    for name in ("_do_underline", "_do_strikethrough", "link", "_render_styled_text_line"):
+        assert name not in pdf.__dict__
+    with pymupdf.open(stream=bytes(pdf.output()), filetype="pdf") as rendered:
+        page = rendered[0]
+        for (char, _), size in zip(glyphs(page), [12, 18, 14]):
+            x, baseline = char["origin"]
+            rectangles = [d["rect"] for d in page.get_drawings()
+                          if abs(d["rect"].x0 - x) < 0.05]
+            assert sorted(r.y0 for r in rectangles) == pytest.approx(
+                sorted([baseline - strike_position * size, baseline - underline_position * size]), abs=0.05)
+
+
+@pytest.mark.parametrize("highlight", [False, True])
+def test_wrapped_plain_strike_draws_every_line_without_spanning_pages(highlight):
+    model = baseline_model(long=True)
+    paragraph = model.sections[0].body.children[0]
+    paragraph.paragraph_format.widow_control = False
+    paragraph._children = [ldm.Run(text="MARK " * 100, font=ldm.Font(
+        size=12, strike_through=True, highlight_color="FFFF00" if highlight else ""))]
+    with pymupdf.open(stream=LdmPdfWriter().write_to_bytes(model), filetype="pdf") as pdf:
+        assert len(pdf) > 1
+        assert sum(len(page.get_text("words")) for page in pdf) == 100
+        for page in pdf:
+            words = page.get_text("words")
+            strikes = [d["rect"] for d in page.get_drawings() if d["rect"].height < 2]
+            for word in words:
+                assert any(r.x0 <= word[0] + 0.05 and r.x1 >= word[2] - 0.05
+                           and word[1] < r.y0 < word[3] for r in strikes)
+
+
+@pytest.mark.parametrize("location", ["body", "table"])
+def test_mixed_fallback_and_bidi_fonts_share_baseline(location):
+    from tests.test_pdf_shaping import arabic_font
+
+    model = baseline_model(location=location)
+    paragraph = (model.sections[0].body.children[0] if location == "body" else
+                 model.sections[0].body.children[0].rows[0].cells[0].children[0])
+    paragraph._children = [ldm.Run(text="Q ", font=ldm.Font(size=12)),
+                           ldm.Run(text="سلام ", font=ldm.Font(size=18)),
+                           ldm.Run(text="中K", font=ldm.Font(size=14))]
+    options = PdfSaveOptions()
+    options.text_shaping = True
+    options.fallback_fonts = [str(arabic_font())]
+    with pymupdf.open(stream=LdmPdfWriter(options).write_to_bytes(model), filetype="pdf") as pdf:
+        chars = [(c, size) for c, size in glyphs(pdf[0]) if c["c"].strip()]
+        assert {c["c"] for c, _ in chars} >= {"Q", "K", "中"}
+        assert {round(size) for _, size in chars} == {12, 18, 14}
+        assert max(c["origin"][1] for c, _ in chars) - min(c["origin"][1] for c, _ in chars) < 0.05
+        spans = [span for b in pdf[0].get_text("dict")["blocks"]
+                 for line in b.get("lines", []) for span in line["spans"]]
+        assert len({span["font"] for span in spans}) >= 2

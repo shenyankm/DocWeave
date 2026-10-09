@@ -159,7 +159,11 @@ def test_shaping_preserves_distinct_styles_and_link_targets():
         assert right['size'] == pytest.approx(18) and right['flags'] & 2
         drawings = [item for drawing in pdf[0].get_drawings() for item in drawing['items']]
         assert any(item[0] == 're' for item in drawings)
-        assert any(item[0] == 'l' for item in drawings)
+        strikes = [drawing['rect'] for drawing in pdf[0].get_drawings()
+                   if drawing['rect'].height < 2]
+        assert any(left['bbox'][1] < rect.y0 < left['origin'][1]
+                   and rect.x0 == pytest.approx(left['bbox'][0], abs=0.05)
+                   and rect.x1 == pytest.approx(left['bbox'][2], abs=0.05) for rect in strikes)
 
 
 def test_shaped_rtl_punctuation_matches_native_glyph_positions():

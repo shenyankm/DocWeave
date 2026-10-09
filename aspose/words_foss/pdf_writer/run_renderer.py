@@ -27,7 +27,6 @@ from aspose.words_foss.pdf_writer.constants import (
     HYPERLINK_TEXT_RGB,
     LINE_HEIGHT_FACTOR,
     PT_TO_MM,
-    STRIKETHROUGH_Y_RATIO,
 )
 from aspose.words_foss.pdf_writer.font import apply_run_font
 from aspose.words_foss.pdf_writer.shaping_context import ContextualFont, ContextualFragment, SourceCharacter
@@ -135,13 +134,6 @@ class RunRenderer:
                             # and text are always perfectly aligned — even
                             # when the run wraps across lines.
                             self._write_with_highlight(pdf, safe, line_h, highlight, run=run, link=link_target)
-                        elif font.strike_through:
-                            x_before = pdf.get_x()
-                            y_before = pdf.get_y()
-                            pdf.write(h=line_h, text=safe, link=link_target)
-                            x_after = pdf.get_x()
-                            strike_y = y_before + size * PT_TO_MM * STRIKETHROUGH_Y_RATIO
-                            pdf.line(x_before, strike_y, x_after, strike_y)
                         else:
                             pdf.write(h=line_h, text=safe, link=link_target)
 
@@ -400,7 +392,9 @@ class RunRenderer:
         x2 -= width * size / 2
         if x2 <= x1:
             return
-        y = pdf.y + line_h / 2 + (0.3 + shift) * size
+        metric = getattr(pdf, "_text_baseline_size", None)
+        baseline = metric * PT_TO_MM if metric else size
+        y = pdf.y + line_h / 2 + 0.3 * baseline + shift * size
         # Vector decoration keeps leader characters out of text extraction.
         with self._writer._artifact(pdf), pdf.local_context(
                 line_width=width * size, draw_color=parse_color(run.font.color) or (0, 0, 0),
@@ -415,7 +409,7 @@ class RunRenderer:
             raise ValueError("No usable text width")
         if pdf.text_shaping:
             return RunRenderer._wrap_shaped_segments(pdf, segments, width, first_width)
-        saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else ""), pdf.font_size_pt)
+        saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else "") + ("S" if pdf.strikethrough else ""), pdf.font_size_pt)
         rows, row, used = [], [], 0.0
         available = width if first_width is None else max(0.0, first_width)
         try:
@@ -485,7 +479,7 @@ class RunRenderer:
         contextual = any(left[1] and right[1] and not left[1][-1].isspace()
                          and not right[1][0].isspace()
                          for left, right in zip(segments, segments[1:]))
-        saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else ""), pdf.font_size_pt)
+        saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else "") + ("S" if pdf.strikethrough else ""), pdf.font_size_pt)
         fragments = []
         try:
             paragraph = BidiParagraph(
@@ -566,9 +560,6 @@ class RunRenderer:
             if link is not None:
                 pdf.set_text_color(*HYPERLINK_TEXT_RGB)
             link_target = self._writer._link_target_for(pdf, link)
-            if run.font.strike_through:
-                x_before = pdf.get_x()
-                y_before = pdf.get_y()
             if isinstance(segment, _ShapedSegment):
                 fragment = segment.fragment
                 fragment.link = None  # Source indices are not PDF link IDs.
@@ -577,10 +568,6 @@ class RunRenderer:
                     TextLine((fragment,), 0, 0, Align.L, line_h, seg_w), line_h, link=link_target)
             else:
                 pdf.cell(w=seg_w, h=line_h, text=safe, link=link_target)
-            if run.font.strike_through:
-                x_after = pdf.get_x()
-                strike_y = y_before + size * PT_TO_MM * STRIKETHROUGH_Y_RATIO
-                pdf.line(x_before, strike_y, x_after, strike_y)
             # shortcut: fpdf2 fallback cells cache fonts inside q/Q; recheck on upgrades.
             if self._writer.options.fallback_fonts:
                 pdf.current_font_is_set_on_page = False

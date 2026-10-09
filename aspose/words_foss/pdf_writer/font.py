@@ -68,6 +68,8 @@ def apply_run_font(pdf: FPDF, font: ldm.Font, default_size: float = DEFAULT_FONT
         style += "I"
     if font.underline:
         style += "U"
+    if font.strike_through:
+        style += "S"
 
     size = font.size if font.size > 0 else default_size
     # ponytail: one Unicode family replaces source fonts; add font matching for layout fidelity.
