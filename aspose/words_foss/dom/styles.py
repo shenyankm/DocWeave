@@ -9,6 +9,28 @@ def _child(node, name):
     return _find(node, name) if node is not None else None
 
 
+def _style_toggle(styles, name):
+    value = None
+    for style in styles:
+        element = _child(_child(style, "rPr"), name)
+        if element is not None:
+            value = _onoff(element)
+    return value
+
+
+def _effective_toggle(default, paragraph_styles, character_styles, direct, name):
+    # 26.9 getters combine style categories, rather than toggling every basedOn ancestor.
+    paragraph = _style_toggle(paragraph_styles, name)
+    character = _style_toggle(character_styles, name)
+    value = _onoff(_child(default, name))
+    if paragraph is not None and character is not None:
+        value = value or (paragraph ^ character)
+    elif paragraph is not None or character is not None:
+        value = paragraph if paragraph is not None else character
+    element = _child(direct, name)
+    return _onoff(element) if element is not None else value
+
+
 @dataclass(frozen=True)
 class EffectiveFont:
     """Resolved w:b/w:i/w:sz (not complex-script selection or rendered glyph metrics)."""
@@ -117,29 +139,19 @@ class StyleResolver:
         paragraph_styles, _ = self._paragraph_layers(paragraph)
         direct = _child(run._element, "rPr")
         reference = _child(direct, "rStyle")
-        style_id = reference.getAttributeNS(W, "val") if reference is not None else self._default("character")
+        style_id = reference.getAttributeNS(W, "val") if reference is not None else None
         character_styles = self._chain(style_id, "character")
-        bold, italic, size = False, False, None
         default = self._defaults("rPr")
-        bold = _onoff(_child(default, "b"))
-        italic = _onoff(_child(default, "i"))
         size = _read_size(_child(default, "sz"))
         for style in paragraph_styles + character_styles:
             properties = _child(style, "rPr")
             if _child(properties, "rStyle") is not None:
                 raise NotImplementedError("Nested run-style references in style definitions are unsupported")
-            # Style-level toggles invert the inherited value; false leaves it unchanged.
-            bold ^= _onoff(_child(properties, "b"))
-            italic ^= _onoff(_child(properties, "i"))
             element = _child(properties, "sz")
             if element is not None:
                 size = _read_size(element)
-        element = _child(direct, "b")
-        if element is not None:
-            bold = _onoff(element)
-        element = _child(direct, "i")
-        if element is not None:
-            italic = _onoff(element)
+        bold = _effective_toggle(default, paragraph_styles, character_styles, direct, "b")
+        italic = _effective_toggle(default, paragraph_styles, character_styles, direct, "i")
         element = _child(direct, "sz")
         if element is not None:
             size = _read_size(element)

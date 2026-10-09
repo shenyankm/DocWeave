@@ -1,16 +1,35 @@
 """Supported effective properties follow defaults, basedOn chains and OOXML toggles."""
 
+import hashlib
+import json
 from dataclasses import FrozenInstanceError
 from io import BytesIO
+from pathlib import Path
+from zipfile import ZipFile
 
 import pytest
-from .test_docx_dom import package, payloads
 
 import aspose.words_foss as aw
 from aspose.words_foss.dom.nodes import W
 
+from .test_docx_dom import package, payloads
+
 REL = "http://schemas.openxmlformats.org/package/2006/relationships"
 STYLES_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles"
+BENCHMARKS = Path(__file__).parents[1] / "docs" / "benchmarks"
+TOGGLE_BASELINE = json.loads((BENCHMARKS / "style-toggles-26.9.json").read_text())
+
+
+@pytest.mark.parametrize("record", TOGGLE_BASELINE["records"], ids=lambda record: record["input"])
+def test_style_toggle_getters_match_recorded_commercial_inputs(record):
+    with ZipFile(BENCHMARKS / "corpus" / "style-toggles-26.9.zip") as archive:
+        data = archive.read(record["input"])
+    assert hashlib.sha256(data).hexdigest() == record["sha256"]
+    doc = aw.DocxDocument(BytesIO(data))
+    run = doc.body.paragraphs[0].runs[0]
+    font = run.effective_font
+    assert (font.bold, font.italic) == (record["bold"], record["italic"])
+    assert payloads(doc.to_bytes()) == payloads(data)
 
 
 def style_doc(tmp_path, styles="", ppr="", rpr="", body=None, target="styles.xml", extras=None):
@@ -26,7 +45,7 @@ def style_doc(tmp_path, styles="", ppr="", rpr="", body=None, target="styles.xml
     return aw.DocxDocument(path)
 
 
-def test_defaults_and_paragraph_character_chains_toggle_instead_of_overwrite(tmp_path):
+def test_nearest_style_values_combine_between_paragraph_and_character_levels(tmp_path):
     styles = (
         '<w:docDefaults><w:rPrDefault><w:rPr><w:sz w:val="22"/></w:rPr></w:rPrDefault>'
         '<w:pPrDefault><w:pPr><w:jc w:val="right"/></w:pPr></w:pPrDefault></w:docDefaults>'
@@ -41,7 +60,7 @@ def test_defaults_and_paragraph_character_chains_toggle_instead_of_overwrite(tmp
     original = payloads(doc.to_bytes())
     assert run.font.bold is None and run.font.size is None
     effective = run.effective_font
-    assert effective.bold is True and effective.italic is False and effective.size == 14.5
+    assert effective.bold is False and effective.italic is True and effective.size == 14.5
     assert p.effective_paragraph_format.alignment == "center"
     assert p.paragraph_format.alignment is None
     assert payloads(doc.to_bytes()) == original  # Read-only resolution never materializes direct formatting.
@@ -63,11 +82,11 @@ def test_default_styles_docdefaults_and_paragraph_mark_not_applied_to_run(tmp_pa
     styles = (
         '<w:docDefaults><w:rPrDefault><w:rPr><w:b/><w:sz w:val="24"/></w:rPr></w:rPrDefault></w:docDefaults>'
         '<w:style w:type="paragraph" w:styleId="DefaultP" w:default="true"><w:rPr><w:b/><w:i/></w:rPr></w:style>'
-        '<w:style w:type="character" w:styleId="DefaultC" w:default="on"><w:rPr><w:i/></w:rPr></w:style>'
+        '<w:style w:type="character" w:styleId="DefaultC" w:default="on"><w:rPr><w:i/><w:sz w:val="70"/></w:rPr></w:style>'
     )
     doc = style_doc(tmp_path, styles, '<w:rPr><w:b/><w:i/><w:sz w:val="90"/></w:rPr>')
     run = doc.body.paragraphs[0].runs[0]
-    assert run.effective_font.bold is False and run.effective_font.italic is False
+    assert run.effective_font.bold is True and run.effective_font.italic is True
     assert run.effective_font.size == 12
     assert doc.body.paragraphs[0].effective_paragraph_format.alignment is None
 

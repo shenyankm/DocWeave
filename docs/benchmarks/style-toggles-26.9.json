@@ -1,0 +1,4482 @@
+{
+  "module": "aspose.words",
+  "version": "26.9.0",
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "corpus_sha256": "ddb40cd1a53f0f18fd60aa4125e06f37009491c135f160c4438c15a7c2f9bfc8",
+  "records": [
+    {
+      "input": "chain-0-0-0-0-0-0.docx",
+      "sha256": "21acb06426a30e2d1d73200ff459f63d52cb5476a72a65ceac9af485f918f127",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-0-0-1.docx",
+      "sha256": "9ae91190dbff85a341b29c3d65ae7ecb379758b6601c3dc6aa60d16a3f6f6ca8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-0-0-n.docx",
+      "sha256": "af6da67b0427ecde6cb463d7318fedabeda0b6eb5d62b5dfbef43d67b4a70427",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-0-1-0.docx",
+      "sha256": "f193bf12b06d0c33d1982c87c2fff86576b1e3c9e1844996fffb153e82697ef5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-0-1-1.docx",
+      "sha256": "49703e6e35b4efb087e7dd2cee3567637cf7d367c8d18b31780708550d464932",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-0-1-n.docx",
+      "sha256": "a857ea1223ab059885a7c4b8621446078e89c02c12dfd0f1696bff0d55f3db36",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-0-n-0.docx",
+      "sha256": "13b85a767f52813bab9bf31583149b00f5611f226c42ec8c0b5c259d31a1bfe9",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-0-n-1.docx",
+      "sha256": "5f499c067cff4f65383558717bc40615ee679d14a821e8be2c63fec72dc4a72e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-0-n-n.docx",
+      "sha256": "d9764d94f70a7b9fb15c10e3e6ceccc81b623caeee69823e1f56ed21f3cd3cb6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-1-0-0.docx",
+      "sha256": "0055c285b50698686c0fc7bc49b4807238a0635d7082c6aea23e23adb7701e17",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-1-0-1.docx",
+      "sha256": "666fc1e8348f2c45a9b4f8f95f20b966b7b4dcf0c54a750e30e28e887e83d43f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-1-0-n.docx",
+      "sha256": "d7f5d29893051be86eeb5a30f97fc8b5c5425e2df727af1df80a3dc68fac1f21",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-1-1-0.docx",
+      "sha256": "12ed95f7bb78b8a1753110fd2e87572193e8e6211f4477c79f8d2cfee4136e22",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-1-1-1.docx",
+      "sha256": "480359f99008808813cb133575a9cdbe18bbf7ff3e45281fb4b1344fef5337bd",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-1-1-n.docx",
+      "sha256": "b9d495b9eac02c156fa5f7b492cf5b554bee0d124729448d945390fbc27f191b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-1-n-0.docx",
+      "sha256": "43e013b23c10419e92fcda8e23a1947bf8983ff5fb0e9a903a4f0421d1c39922",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-1-n-1.docx",
+      "sha256": "5ccb614ac13bacb493de9bcf91af6c9ec3a12afd449ddaadaa546a97b89e7622",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-1-n-n.docx",
+      "sha256": "483c48640fcbccef521d32b837db21e90853602da47ec579b68113ef0b3db282",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-n-0-0.docx",
+      "sha256": "b8764b91b89c8c9c414f5e90a2469ff456869c88e10811513bdcbbc9a6b0dba1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-n-0-1.docx",
+      "sha256": "7478a2642fb1f65054422a7876ce1c59cf81f87fa7fed5e3905587add223b759",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-n-0-n.docx",
+      "sha256": "9154781d68fb05cda1d362356b14ec200b81802a01f53ccdfcb588aef3ed205c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-n-1-0.docx",
+      "sha256": "813f424e7028433489b8efaa1f99e4f835cb52d3fb33ff2d3bfbf80b469c85e6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-n-1-1.docx",
+      "sha256": "d5580888fad4d54b9ff42561a9486dc889a5fbdbfe0d25b4e19f173277091c10",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-n-1-n.docx",
+      "sha256": "ae96d564bf592ecad46d141ee1b070108f6701bacbee0e6df03ab528b5406aaa",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-n-n-0.docx",
+      "sha256": "9a472c772019a3db790f8d891a5b238c2c9f222501f4eabcf594733eb2b2ca25",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-0-n-n-1.docx",
+      "sha256": "1be3c0dab322dfc96a3fac18210190d1bd0c310a72403b9def844f61643f1d3e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-0-n-n-n.docx",
+      "sha256": "aa18217a5d7e2cc3c35231a18a10ec413c0bc3f69c750bb7f6bfce9339689382",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-0-0-0.docx",
+      "sha256": "fd4492ba6bba98929fcfa1e24c8d812a035f2a2ef0f2b98c1f4ce774c8004218",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-0-0-1.docx",
+      "sha256": "fb4cc1902d8caa2d08c4bef32509aa03e2ec580f55748a17faa69bf01f006594",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-0-0-n.docx",
+      "sha256": "92ee924e579cdf9cee76b1d3555ca781ff833e954607dd390dbcc4ab663a82ef",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-0-1-0.docx",
+      "sha256": "19ccf1566fb2551455af904ce9607ff05cf6068a8e76fd41897e88c56801a9f3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-0-1-1.docx",
+      "sha256": "b95df8eda8a0b6951e8d26f331ec205082f74a01bfd370cf59ea2f311c1afed6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-0-1-n.docx",
+      "sha256": "cc88e07c764db81aba832c8bd0aed76131a9f028a5aa3e15b4f6dc02d62cfec9",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-0-n-0.docx",
+      "sha256": "59f80c34b549908bb851c15e2f4ae6d1427d05be83ab0a1df8171d13c8b75a86",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-0-n-1.docx",
+      "sha256": "c4155d0bd947fe1db1ba091df56272032a96ec30cc0200a50fea651a7e14ab85",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-0-n-n.docx",
+      "sha256": "461e5f13b699163b1af3ed199e4b23120f8525921cf6eae64168323a3666745d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-1-0-0.docx",
+      "sha256": "577bc8270a45f49743a3d2535a2a3fd51c67a1abc7455102faa853fd3fc378a6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-1-0-1.docx",
+      "sha256": "cc989642c047454a1aba57ef9978521fd8d1c7db426fef153ea6fe26091775ae",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-1-0-n.docx",
+      "sha256": "bbaa573b477271ee64a00c4dd63eb882fd90d59e1fc1d3660c54d2056f38f075",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-1-1-0.docx",
+      "sha256": "ed697aaf7abd9fbac2e0f068e60f7a40519ccd1635f98ab5c48ad8e52bf192cd",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-1-1-1.docx",
+      "sha256": "a447a3e5d05e7771ea82086bca9d6f2e1e33330f1f25b53d6b8c23314b0f1e98",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-1-1-n.docx",
+      "sha256": "ebb0742d95e3516dfe450ce002ffff3ba3b2c28dafb85ed39af679a69bc2a519",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-1-n-0.docx",
+      "sha256": "407b4d1478f5175b5e2ea485a8db1ecdcfe12fe1f5b741610dc6b7f18ba9b8bb",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-1-n-1.docx",
+      "sha256": "9e12f54e94f8b52c752969d9d622825435912e08938825757334682e8949625d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-1-n-n.docx",
+      "sha256": "9607be00b61bc3e158892797cf0b886e97ae70206487511b54915f93794c5376",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-n-0-0.docx",
+      "sha256": "7a74ad9a235a61d2111d8cf9d081fffe3953233fe41ff82dc5a706ec83aaf860",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-n-0-1.docx",
+      "sha256": "389b055aeaa32b74ff7ed9653234f6ffafc5d9ad5eab67a39d6122987d1938ad",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-n-0-n.docx",
+      "sha256": "e73d73b36bc0403de77026658246c2b76903ace42ec5747115a850f5efcbddef",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-n-1-0.docx",
+      "sha256": "9eabfd03731b45a208e3ff4ff75957939d3587288e75bfbc788118ca54b98ce8",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-n-1-1.docx",
+      "sha256": "c0792bbb03c2481e0546afd6b7d03c53c9a3d5c28f803b06a127bc6cef15c71c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-n-1-n.docx",
+      "sha256": "555ab5ff679b729aa3a7ff7445bbc41070038bf18171872d353d771010285d76",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-n-n-0.docx",
+      "sha256": "bf4c6fa406eab99c0ff80bafbc423a08c8e2457b51425c6a1eed99a049427dde",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-1-n-n-1.docx",
+      "sha256": "db963eeec78e6638d4309a29a2b7ae5010c91c48bf6557cfdf7389683b6bb922",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-1-n-n-n.docx",
+      "sha256": "767cb23b54f3f7badb8d41ec5b7425e0c103ad578187361c032c043588ebd7d6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-0-0-0.docx",
+      "sha256": "99cc29c60aac4ed062b7c12ddd082e27dc430eca22d50ced4d56d5eb02d75884",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-0-0-1.docx",
+      "sha256": "3d24ac2f175a88c670cf6cbae6f98f95d8e84f89832fddcc4fefe8ab361ae2d5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-0-0-n.docx",
+      "sha256": "13f03aa1066d4e760b31ef4c7ee544474a1b3884ab1dfe15f6300c63269775e5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-0-1-0.docx",
+      "sha256": "6dc98f0edf7d8b55f8fc5881211e37d57e9de990714ea500737b7e5687980c84",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-0-1-1.docx",
+      "sha256": "1a157b37f300c9fd2cc8218b6b7e3446b31e9e80937b1851693d39b7ed619385",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-0-1-n.docx",
+      "sha256": "b3e013ae6451a33463b99992eb13ad241b2fb63aeb9c8c6b757490cff659a3ab",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-0-n-0.docx",
+      "sha256": "4750b9dfdd711a7c91afdc4255b2467813bbae50293242e5da420d881d2e3da1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-0-n-1.docx",
+      "sha256": "fd9a9a3185d22be77c31a1a67e0fe5c5e2b2bea281b0d90287f24b6e15b46248",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-0-n-n.docx",
+      "sha256": "0d9d059359d4a7570eb96ecc806300a19e58178057fecf288b3ccd18f4c0df5b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-1-0-0.docx",
+      "sha256": "7a8f93d6515807398b6258ca00f4a2d89ba92913e5ed19753ff32311cb703252",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-1-0-1.docx",
+      "sha256": "1c61987379765a7eecfb04c5f6460ec86218e52c59be4211d4eca1d3049ebe7f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-1-0-n.docx",
+      "sha256": "560580570ddf0f18b58431f8fa6bfefe249620cb9609f6f96768342f21f56bb5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-1-1-0.docx",
+      "sha256": "694e7dd50c9028cffaa6aac3276c2d2c6f74de3705e1ed002185343d92654519",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-1-1-1.docx",
+      "sha256": "f899b85ab13a961ec4c4cc7de223a7827b57063b661995e43b5ef562ef1e2196",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-1-1-n.docx",
+      "sha256": "8a2bd61872a5b3316dc8bc7d457ad937e44098764a479fd7bc90d47a94d9d8db",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-1-n-0.docx",
+      "sha256": "b67593618d41e2a287e7779db39e9738d8f9f20d6ed307fd29efbc415affc1d4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-1-n-1.docx",
+      "sha256": "d3b5a9be61f2790c87066167e28b8965d63495f12fb1caab6d3f91bf96e86367",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-1-n-n.docx",
+      "sha256": "fb5509468b5b0eefc33eecf5486c58c990a085e6416e26008774f4c5df9b1fdb",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-n-0-0.docx",
+      "sha256": "01e25c4a2bbafadded9da5170839ed7eea902c335a8509f0474fda00e8528e6d",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-n-0-1.docx",
+      "sha256": "a9485532d144716bb7ffb2e3b93fafd31f19807cb1c9d56e4afd94f2ec70274d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-n-0-n.docx",
+      "sha256": "c836b9ea1543c4deb6294e19293b7bc224ecb87ac777fda2037b970bdabee82c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-n-1-0.docx",
+      "sha256": "bec59f6c807e26224cb2bae66ae046ab798704cb66d50c0287b52abb0b182203",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-n-1-1.docx",
+      "sha256": "ea0dfc11a94244da52ddd9ab1d2e60258148b51ba0a7ff5e6dfb02e742427b0e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-n-1-n.docx",
+      "sha256": "00398172fe858d3d7e9cdb54192853e4a94ce482a0ee45d4aa651cf2865add9d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-n-n-0.docx",
+      "sha256": "d3349e6ef372004726beb78c0565f41da9514b9ff5c666d983cf3390e276ae90",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-0-n-n-n-1.docx",
+      "sha256": "bd7fc7959dae2d4ef16b43408fad7aa817489fa401f509b42e89f85eca3fcdc8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-0-n-n-n-n.docx",
+      "sha256": "7716140e96eb9c5e47486b8c68b8d038c4090f9f02bbc5b34a14d1e2d69b863e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-0-0-0.docx",
+      "sha256": "bf67764a44339380e42e0c25fe38b01d7c3f28ff0db1082266f699c3a424da36",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-0-0-1.docx",
+      "sha256": "859e1dd6070342ad758cb9594a0e0ca8ce2cda2a6cf596b40301f4053393820b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-0-0-n.docx",
+      "sha256": "fa0dcf8b9d2ebff6efb84f3147e8b61b040152d1ae9cd6000ab39f77cb47063f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-0-1-0.docx",
+      "sha256": "7b14b489d862888d9cd6990a94ac5a1ed852db557a066659213b00f114cd2556",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-0-1-1.docx",
+      "sha256": "904e8f420924585f47ae5695cfdbe7e6fc62dc45a96422dd04a035dd958f90e8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-0-1-n.docx",
+      "sha256": "936bbdfd6e82a0b94720a45977a2926a69a495abf5cbc77541987587349070eb",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-0-n-0.docx",
+      "sha256": "42673d104a285dd32f2d1fa907397759aad8ca0b4790480855bd5f1965e35db4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-0-n-1.docx",
+      "sha256": "92f8204ceea904de06b39ffd16a171caa76043726cb7879aa8df502fee0faa77",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-0-n-n.docx",
+      "sha256": "b16a3b10612845f989d112492d64f5124185ad35a1667df3702e1d1685af911c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-1-0-0.docx",
+      "sha256": "a3edce52b645b9cdb4f3d531bd482b52604640ec4e09a302be94e25798ea2b59",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-1-0-1.docx",
+      "sha256": "5c292b3b3ec48018c4d9031416cf2382cbbb5d0c08fa33b50e699f0cf46eb4df",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-1-0-n.docx",
+      "sha256": "15fa493d6f3513d22b74bee67382ee53adbb49005022aa699afbc764746f6f24",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-1-1-0.docx",
+      "sha256": "ea02dc39dddd08c9ac0e4f460d4b61382890285792e77140038045eb9764ac73",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-1-1-1.docx",
+      "sha256": "c9c63cc69dbc64766d5c3b06521c68f8cb1d97ca23e013e7e04c80d1e2a8ef6a",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-1-1-n.docx",
+      "sha256": "38ff40f0f346a3999b4ef611b4dfda2648d26ef1795d930b47fa8598b67c8ba1",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-1-n-0.docx",
+      "sha256": "94c23b94a8f3bbfe695baa05f2ca5d5d796b1d1081bff7388458d4cde7989063",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-1-n-1.docx",
+      "sha256": "73ad181309dc05d74bbde02b3e19eb03aca860bc86d379a6004025bc211c7dc8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-1-n-n.docx",
+      "sha256": "0dcdb0b7be4ac4c8756ed8f1f034e6f6cfde6e3d591f469bf607a9a06ace039d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-n-0-0.docx",
+      "sha256": "a298d435f6a06f30c55859177c83ea07b27730229cf1e5f2da8a9e282c18d2c5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-n-0-1.docx",
+      "sha256": "89852402e727125b1c7165be7591898670ed40775559249f1f742fd211cbe9a3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-n-0-n.docx",
+      "sha256": "c45e6eab04a09e3a839efaa96476bfa27b87d9550b6009f95e7414a87aa2ebca",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-n-1-0.docx",
+      "sha256": "e68b57bd6419811fec16df2a2ab1509e5193e17fac93abf02c6a9833fe32366c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-n-1-1.docx",
+      "sha256": "5e9835ed6d0370f361b172d90b375b1ca5e9094fac1044a8207ce20af13b664a",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-n-1-n.docx",
+      "sha256": "b2354b3032bd3b1e23c2f6a77538ec0584f8088b7e3e124f6714d099a89a1e0e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-n-n-0.docx",
+      "sha256": "e442ef925a692fa00f702df585ea49b33527a8045cdeb01569e93725f2f01aac",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-0-n-n-1.docx",
+      "sha256": "ceb0ccc1bc769179fbeb14390428d1d185c2f9139148931a09d00b4c0fdeb311",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-0-n-n-n.docx",
+      "sha256": "422e76819b466a4494ce6d2ae09482ca5f624169b0d71c8482115a45414b41f8",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-0-0-0.docx",
+      "sha256": "e377877bff642046667d11b04a5b027fd8d238a3fbd207d91bedf0e9478bfec9",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-0-0-1.docx",
+      "sha256": "d72146561b16559760c1164400e5fb65d3f45f17e3dcd2f7618cccc2029c162b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-0-0-n.docx",
+      "sha256": "1059d96f4dfda7db21ce57d45c99cdfe81a79793d07967a1426bf99a0bc580c3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-0-1-0.docx",
+      "sha256": "f1cf4a6f2baca4b8667863574d4fb3a460f5bf39c37bb2ecd3e8faefd80a3ad6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-0-1-1.docx",
+      "sha256": "aa6344c2509202aa3d214321a6c613971d40ff832060ce4ec502ab5faa98fea3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-0-1-n.docx",
+      "sha256": "a66996a39152c2a438ea9ec83faab965e77f33ddc8c01a97ee538c0a9cfbec89",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-0-n-0.docx",
+      "sha256": "1eec6f37ce4f8fc6952cd48fc08c2d3ab8c1fec5fc28ee4ecf3b2318a3a1083a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-0-n-1.docx",
+      "sha256": "a1ba81e29ff89e3fa61b73bfc9e1e5be959e5da5994d5833c2758b6cb4b61f06",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-0-n-n.docx",
+      "sha256": "8eb8764fa12f42f4e64e1b8022a189c89d8df3278379dcd39cc8a1697a89197d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-1-0-0.docx",
+      "sha256": "723416eb5e80f76d13a7fcd7b656c684488853066c0f1b2668d74487df740c32",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-1-0-1.docx",
+      "sha256": "fc0ad292b51ea5a451d5c9aee1c6f5daad18bc3c133e4cbdd43defdcc30dc1b8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-1-0-n.docx",
+      "sha256": "f516a732957f900ca7f063ec69606ebe935106423189190af3abfb7a178f0bee",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-1-1-0.docx",
+      "sha256": "9346115ad2dab9d3e1166e55a0c3098a4d50b37aae6648ca1b2fb705ee1f0d3a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-1-1-1.docx",
+      "sha256": "a2cff569f593bad5b4b43ae93d36a72f3aec42323f1637cdf22f7d23f4f83195",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-1-1-n.docx",
+      "sha256": "4eb2aed8cdd620cc17e32bba0611b9c60e9a369dee6a04c0ea9cf97b631678bc",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-1-n-0.docx",
+      "sha256": "c8b3c72e4986cff585426f3786c6e2541b1e45d8f8871226ca3521bece2a56bd",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-1-n-1.docx",
+      "sha256": "a4923af92cea766fc17fe25bd35799f8ce22b1650c3f6e65cda0289503a7c8c5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-1-n-n.docx",
+      "sha256": "165859daf62d8535a5c5c4e46848c6aeb8a2134e4886980675d4b30f288ab76e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-n-0-0.docx",
+      "sha256": "f1ad6f58431fb0663bf0300ca06492708e7896b5c082c69614e58d5d514f1c94",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-n-0-1.docx",
+      "sha256": "8cf14872ec8b95183f7d1046492e1a4aaf61124696d5b954f05e6c1d4c14ee4c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-n-0-n.docx",
+      "sha256": "bf1ebbd43d0f2b06bb54843a59aa0998752690103f7b741fa2c15d099a262d4d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-n-1-0.docx",
+      "sha256": "9f286ed1e4bf49f2f1873a4d9da778efe3899b6c81eefb73f211f694a3f027db",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-n-1-1.docx",
+      "sha256": "44ed064d07f22ed65d3622c012a477519f0f34b8a6e4d56b879af4c14bc2a2e6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-n-1-n.docx",
+      "sha256": "1be3d4d555cad19d40cb04b5e76bdbcca0547a03bd9553f6a5b9bf01842601d3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-n-n-0.docx",
+      "sha256": "4d685d1f8a9c913ca2000f18b865c260b0107b0323de2708ec6bf2636c391269",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-1-n-n-1.docx",
+      "sha256": "e90179508dd87c3e37c15f958b49ff6455060df39523cdafc0af978bbeee4dbd",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-1-n-n-n.docx",
+      "sha256": "9f381cfe823a97833116a56dec1a99dc68331ab8864603be097faadab8737940",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-0-0-0.docx",
+      "sha256": "6161d79a3d69edb707e298c4edc39c41a67619487948c1656b749df8b94cc16f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-0-0-1.docx",
+      "sha256": "9a8e7bb5a114a5845d9e565e4bc7688c5b878c2cb522ba95c52ccc379e23392e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-0-0-n.docx",
+      "sha256": "229cb0432029167d192e233cea472c6a0ec7c8ecf25f7747bda588ff36d028ce",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-0-1-0.docx",
+      "sha256": "228c2ed2f71eb01ae4d02d3dc4470465a2ff6786e78ac88b45b15cadec239c81",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-0-1-1.docx",
+      "sha256": "c2b7161db173a0b674d196de903bef00736814626e7bdfe70ac7c41c9911f1c3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-0-1-n.docx",
+      "sha256": "b4034f4b05c9fb7eb100fa6efefde4fd58efae37257ca1b9154a8b95ab03b6be",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-0-n-0.docx",
+      "sha256": "f5aab364d3cbbaf787aa27fded9e5d9056ae556f14093df0945a8a093d65ed1b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-0-n-1.docx",
+      "sha256": "707809feb9f8372796d26c910c877f8068f8cb2db5f471799948a8de9dc1c61f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-0-n-n.docx",
+      "sha256": "16104e1ed895489af7e38b4e6f77ba16245494928b7111a99d2bc12034de00b5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-1-0-0.docx",
+      "sha256": "445db046178a66dd646daad7443a24c0f89417bbff8e58e6d8cade191683de76",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-1-0-1.docx",
+      "sha256": "2e5b5769465adba2965825f08ecd5c29366fad1abf4b27c01ce9f9237b6544f7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-1-0-n.docx",
+      "sha256": "c5e187a7ebb7e5896ce7b91a282d71a08b1f430ac96e0ad0c295ffab472c966e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-1-1-0.docx",
+      "sha256": "555131d6e26c8decf0e4b4cd4b40d2ac1a415576386569130818e2119c75728b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-1-1-1.docx",
+      "sha256": "b28c8b18bba623d06ef81a4abde1b79895c80e93ea39f929a46299f5304b58c3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-1-1-n.docx",
+      "sha256": "3aa82a0599c228e5d64f3bae6f7f26d2d0c6884333d187f5bfe1fbe16dd79a0c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-1-n-0.docx",
+      "sha256": "b8fe15be56377b4cd18d4ab37ef2a67c3e56fbb913e39c18750e31ce2971ab4b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-1-n-1.docx",
+      "sha256": "29de85ada3d485c7a8cb932b9d68718505773f58cca9680d6c597c27fff22cb3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-1-n-n.docx",
+      "sha256": "6d0e91a79c8add7289dbe805a4496f0dd500728c9fd6e4cc3fd85f84150c606f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-n-0-0.docx",
+      "sha256": "6de368748e32ceb1153201f98f4f728a441a413d8ca34403add085bd94b2b82f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-n-0-1.docx",
+      "sha256": "d7cb12b5c43cbf9eaeffa8d99aaf9d3f6f779bf1fb9af461a0742c2aec2c05f3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-n-0-n.docx",
+      "sha256": "cb76ada87ce1ac7f10458994f2ac6fea70af936ff897a72cb46cb84b709e8a05",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-n-1-0.docx",
+      "sha256": "781548390be421fa6c243027f6dd8e894c18c546058f943166d3279556963f8e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-n-1-1.docx",
+      "sha256": "aee1e352f4e65a579efbff359c1e9e1d122b726900c601c36f6d02e596c65fe7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-n-1-n.docx",
+      "sha256": "a84b0d2ca13a3ea01b914831d21357884236b82ddd45f66295ea2ed9bc4a3e22",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-n-n-0.docx",
+      "sha256": "140a72b1c0d8e8a2bf810fb87bcdf7c853668bd034839f36b887745739e756e0",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-1-n-n-n-1.docx",
+      "sha256": "78d8fa1441caa29c313ab96e19f1819729d39400a34b0a143bdaff8a7c6baeb3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-1-n-n-n-n.docx",
+      "sha256": "e7d4158a9eef271b4f4cda72875f1fd3b554cdd361b7271bb5f89d9852b46b4f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-0-0-0.docx",
+      "sha256": "3aa470383c54205d3a9cd2f2ac98c2fba0925867667f435e713a5f4462275f12",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-0-0-1.docx",
+      "sha256": "0bba705d3eccfec63093f897d6d82e976f5f380a1a5bde80b1ee1c4dab3b7e09",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-0-0-n.docx",
+      "sha256": "54ee967b1e06e22769170344b2d53da1c19933d2b21152e86f96b41da71c184e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-0-1-0.docx",
+      "sha256": "529e408b0b7d3191fbedc91aa8bb70d45f8c88d0c725a3b826fd244b68cdb6ac",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-0-1-1.docx",
+      "sha256": "080ad948cf66249ecece875f5ebaeb63f40adc74c187f1073c8576ed9d02b2f5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-0-1-n.docx",
+      "sha256": "4be3a8d461f801a2abed54e194b66bbd165f0926d9f0677768424717631d4f79",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-0-n-0.docx",
+      "sha256": "4238693a18b111190c541750ad0b41cd8ec191d61d298fd93ddf03499ed0cc87",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-0-n-1.docx",
+      "sha256": "8b5aa168650ed51ea2c23b5e54a5c1e3fba2bd952880619864052ceadcfb1d43",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-0-n-n.docx",
+      "sha256": "69506d2adaeaa1e59268452d8c2e0695d0064d016cc4fe086d0bfdb98bb8430f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-1-0-0.docx",
+      "sha256": "b309fa9149196f614e9b011c8b7e93b6beb1d777e63a29dc985b2d2f291b6ad1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-1-0-1.docx",
+      "sha256": "cdb81071a71cbebef6234d61688d9a067ce51435c4a8179463fff3b1b8c1bdcb",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-1-0-n.docx",
+      "sha256": "89de5109f26e3c693015c5d1a34ff74ee8cf20fbd9b4478895c9a8f646997ff5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-1-1-0.docx",
+      "sha256": "4137a5f765279b33942ada44f6cec9174c170b235c29d327a27f32f30d679503",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-1-1-1.docx",
+      "sha256": "7f50528a1e54697e42495aa2a3537d5998275c3bd168fd302b15b429bac5fed3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-1-1-n.docx",
+      "sha256": "dc5c7e9a5c065c37c0b3b5ddbbb3babd8d4f953fbafaa1f97931134f898ae515",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-1-n-0.docx",
+      "sha256": "0eb010f1681d9679ac2da25e7ec224cc54cf09d52bdcc7ba1c2ea91210e09f09",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-1-n-1.docx",
+      "sha256": "5634b25d0c6ab6f4e9a26108e51f0caf05951713800e5c3b22313964b4b820ed",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-1-n-n.docx",
+      "sha256": "4d45b98d51fcf9726a4d7fa4a10bdf14ab9cc960f9b7798507e582051846a825",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-n-0-0.docx",
+      "sha256": "de939cd5e0fd89425af819a9558ccc823ddff47365b379f776b25ac54033eac4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-n-0-1.docx",
+      "sha256": "861d50af4a05329ce1ce0581da35a4ebdf7c0e3490077ec4c518606da20e0479",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-n-0-n.docx",
+      "sha256": "e1cf7c3736180ace25973c15adf796f5eec26b79b90b8b919fedaaf1d72a66d6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-n-1-0.docx",
+      "sha256": "2c301f2d17e42b19691c8335045e4526b7e1cfe3284cffeb5cdf50951d8a6466",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-n-1-1.docx",
+      "sha256": "bbcc42d8ee1b308e8b0744fde083a60160839618a07058fb297430405d259d72",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-n-1-n.docx",
+      "sha256": "f76a64fd391d3f4fac65920d7955f8c744df5588f01af93e9279407b549138df",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-n-n-0.docx",
+      "sha256": "a18c8d767faec173cb5053269c63bc196c094e9f54e361535dd148e1f1037976",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-0-n-n-1.docx",
+      "sha256": "bde165cdcabc910a3eb2521e78e9d62b6864d7b19a4d7618c594363f5b884424",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-0-n-n-n.docx",
+      "sha256": "8b8863af1b16050c49173f237cf6d1cf7fbba0b9b8dfed66dd49943ac00e7229",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-0-0-0.docx",
+      "sha256": "e5bcc5b0f438448ceec12c60082548446a7c48130dc80ae21363f9dc12466a69",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-0-0-1.docx",
+      "sha256": "1497401833bd29944237dad0e9041f312afe635a0ebd4a34371dea53f0770f2a",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-0-0-n.docx",
+      "sha256": "af801d27a023728d185e562b5ff706ad6280cece2e6c27daf40905c3e505b599",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-0-1-0.docx",
+      "sha256": "0aebcb7ca4641de59db69cb49560f5159e3a5b1455ab231c1e5c659fe0c2f57f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-0-1-1.docx",
+      "sha256": "f0a26e4e663e9494fc9416da38bdcf10368696c96d0020327979d7d0639f0ded",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-0-1-n.docx",
+      "sha256": "544b2f1dc351c9f3b4462ec255e34efd71fd53044eb0d9cee7f3857289319a9a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-0-n-0.docx",
+      "sha256": "287cc22712ac9c4ef418be01232db2ca29035d1ec661a1e88cd73da3e8f63afc",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-0-n-1.docx",
+      "sha256": "b17ce6b2d4eae3d6cd67716595f2bf207489287924a3b6249c7c2ca9a175cc12",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-0-n-n.docx",
+      "sha256": "7cfeea70a49c3b18e4790cd1fcc6c8366c99c051e3dcd3e3d2b8003a82ba727f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-1-0-0.docx",
+      "sha256": "d084ac02a0dea4e804ab795db385c1f66970a8b07f17b13ac8b011ec040e3862",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-1-0-1.docx",
+      "sha256": "345cbcb188896bd94066c7bc50c5cdfac71f215e1167c06bbfff3513cccaa891",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-1-0-n.docx",
+      "sha256": "7a6cdd898563ccde800433e5f06b958ae111d1deb331574ed2016a55be23e3d2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-1-1-0.docx",
+      "sha256": "cbe09b075897779cc166bc9f7b96ad8fa492a548cf47a89c77b000f93d65cfc1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-1-1-1.docx",
+      "sha256": "928c6c69666f9ac57efdf9ce7c710ffb1e4e9882421ca9699cb47882c58b8dc4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-1-1-n.docx",
+      "sha256": "3419fb2945565c22640e8f5800cb5da4647b5c86d728237c3ece951f19df3831",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-1-n-0.docx",
+      "sha256": "35540fda1e333c2d5904ffa1cf89b0f65730242d0db657115ed7eebe058277ef",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-1-n-1.docx",
+      "sha256": "d1fd14fb024173adc45c2966a439aaf17d49b55050049aca480bf32186924f85",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-1-n-n.docx",
+      "sha256": "e7ebb67990b1356757de028ccd2856bc0f125b49aaae346e999b246b40656dfa",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-n-0-0.docx",
+      "sha256": "27e8d5f0b0686288ce85fe761e5afc6e08afaf37f2ea8d684e7ef9431564c311",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-n-0-1.docx",
+      "sha256": "64644b5de72fc5738e17d9bbef20a14b5c5b3713f2e527e2636a0884341276a7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-n-0-n.docx",
+      "sha256": "506f14c916243aeea3e65bb8a7f4d8ab52327df649d3cb7fc0ffe2859a6654f4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-n-1-0.docx",
+      "sha256": "95db80d0c1f015daa090a413c2051bf91ab85fb884fa1a1db3ca9ea6c0ab79e3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-n-1-1.docx",
+      "sha256": "43a4f6ca67b66df76ecdb1ef9dcef64f33944eb9da2ed256fb58d106c72f193b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-n-1-n.docx",
+      "sha256": "c86167b8af0734e234d915c0215041b901621175b24767df81dce140255a6dbf",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-n-n-0.docx",
+      "sha256": "43aa1193215967ea96346d876474aea9a4d79e0830d4f91bd807305c1f9754b9",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-1-n-n-1.docx",
+      "sha256": "5a2f19af1a946ecc2b568b8d67f90239a914fd54b4838cb2a56ebfecc253fec2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-1-n-n-n.docx",
+      "sha256": "20daf7a1093d0f59986479bfa1e3cdad2480455b5ce67da61f487ac4643188bb",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-0-0-0.docx",
+      "sha256": "9b06548728544f4e8ba8ebfb16036e6d6566c3e40a5a4bb661721281524f8497",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-0-0-1.docx",
+      "sha256": "9c810ed81c7f80a890657e91872cf6ff9a8e57221b0e875c801d326cb8651e55",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-0-0-n.docx",
+      "sha256": "c9492c8f6708138ca5e55d1b16c6531e2331b8b991401f9edc2ed1ac6eb3fbf4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-0-1-0.docx",
+      "sha256": "cd8cef379abc89ee258b72412102f391d7aa63918ea3d7f00ebcd81e5b55625f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-0-1-1.docx",
+      "sha256": "6e0f5453308834ff134472229bed660c88a1fe10cfd106c37e4c34554704e545",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-0-1-n.docx",
+      "sha256": "6f04e1dc66555cde6d1f271f82b237376b225a2f663db19a4bbd4c3b0046f60c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-0-n-0.docx",
+      "sha256": "54a934eae00afd1ed5916c110ce29f72a8c6ca700089d77cee062e5de4e6f0e0",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-0-n-1.docx",
+      "sha256": "a93a452a310260817b3c9b9dcd4c56fbfd0b0cc4a8dc35e4ac0f714939899d48",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-0-n-n.docx",
+      "sha256": "7c4e61d84d166086988162f4bc52e0545457ee52150d3df0941cf265cdf5d5af",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-1-0-0.docx",
+      "sha256": "883cd40321039948e5e43c95adfb7677d3b4409312e4ecca299ecef6f005b410",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-1-0-1.docx",
+      "sha256": "ec5cb91fb0a07ef3f2c8c95c9b126a2e5dd5015720f0eae6df58468fe9ea37a2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-1-0-n.docx",
+      "sha256": "ff9fba1af0b894132a9377ac282de8deec83465026e9a4d1cfb72e19cc470b22",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-1-1-0.docx",
+      "sha256": "830c4248a4f6d3d2bb326bc8f11ca9d868316f19f9efe13331655aff7594ee39",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-1-1-1.docx",
+      "sha256": "7a58ffb65b041bb260e0750c47473b3960145b566aa183bcd36af27e153b6259",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-1-1-n.docx",
+      "sha256": "fa6db18043642c71a1719ebfec57aa1981c3c2ad134c14a5b062dcae6856d438",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-1-n-0.docx",
+      "sha256": "8c52d619fca31a95e142ced3ad0052a0723033a463b6653ab9a59fa32d4b7473",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-1-n-1.docx",
+      "sha256": "c3e4960cfccc9ec0d7eb2e59893b28b9603a444fb72e7c19f214baf085f2e029",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-1-n-n.docx",
+      "sha256": "cf982d3c8908bd154267ad07dc8f7c9785c2e26b94b6044c78c27a726259e65b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-n-0-0.docx",
+      "sha256": "9f8d01b3c63670e84412bed656e609049b4efab1234e16affb2abb72b7591cf3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-n-0-1.docx",
+      "sha256": "17e6a84c8e6975fefbe743cdd74374aa26b3eb4d26222176fd468fc9ee308fac",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-n-0-n.docx",
+      "sha256": "5ee2cb4ad62784a9766a2952f43f5d340a896b1f91927195470b8439ca6e4f5e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-n-1-0.docx",
+      "sha256": "b23d3691864c0d5b7ebf95c2938e6df50fcd12282efb26561355ff4b1e75e843",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-n-1-1.docx",
+      "sha256": "1f2904174a2ed2ff6b41556e431cd4823535f7059479f4e489e6d883cbde38ec",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-n-1-n.docx",
+      "sha256": "89c6903921f41e366f13ac0c2e8c62cbe51ba715d8f78f32bc61f7348c02158c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-n-n-0.docx",
+      "sha256": "332883daa6b44daa7f5b9edaede1b4193455c25e4c8e1c7e17a7b564ad3e8b7a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-0-n-n-n-n-1.docx",
+      "sha256": "c98f73be2014182fc4b6d8d16b5f6645af55ffdae6b5f9c03f7d23fb2d2d85fa",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-0-n-n-n-n-n.docx",
+      "sha256": "495a0d8b454b8f7c9332e7acadfbfca6157b127bb5ab47bbb7d8af941f701621",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-0-0-0.docx",
+      "sha256": "92454a7478983bec2aca596f54ebf001c4273819a89ca7ebf1e9e4dcae5aed75",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-0-0-1.docx",
+      "sha256": "02eb4bd743611966a68deb09bb71ed57a41dcc208c2c3ece5f1d4fcdef48c7fd",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-0-0-n.docx",
+      "sha256": "1a699466ce5d21f5867b6153c330a52253f0d4b8436e4e97a5314f971b5de40e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-0-1-0.docx",
+      "sha256": "ebc92509cbc8b969182e541bd60a4ed346123bd6912a738ea32cfbdfb1b9b11a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-0-1-1.docx",
+      "sha256": "f38255ad8a2e43bc17c0a4ca7a393d7c97bf6dd2b263a3d6b6333557a0001120",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-0-1-n.docx",
+      "sha256": "35b48a505b7e377024d4253b1a19e38d976da945a92512121c27ead217eeffc3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-0-n-0.docx",
+      "sha256": "89ae9af0570e02328bb10eeba1715165b6990cb8b87d0a98ed5a1d81c2813858",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-0-n-1.docx",
+      "sha256": "f772196f159cd5e5b3c0d230e413594102d507b6ac0312dece66c80179d8eb59",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-0-n-n.docx",
+      "sha256": "21e16e707816ce4bc45074555f3598651e80e590c61f1643028312dfa9c70945",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-1-0-0.docx",
+      "sha256": "d72363e50fa76db50adc0970543ca1b054b74c402e36c5e36a03a6782bdcf5a1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-1-0-1.docx",
+      "sha256": "ad562be0541d9ff0db583cc78d89751097645913991b45838ab65a96a5036360",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-1-0-n.docx",
+      "sha256": "53c5e6a3c8ed6ce763020d814af033c21959327e9c04c3c61c0b1430bbbe8dba",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-1-1-0.docx",
+      "sha256": "46edc4de945d5da19cbadecc5e8ee12e4578a885303a14901d633a540d6c8b9a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-1-1-1.docx",
+      "sha256": "1bb6045d7387d366f9b77567221b978b2842b48b63aad2374f03815284b9c96d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-1-1-n.docx",
+      "sha256": "f0b1da54a79e611643cc5e8a1f07d3031a39ee54620f069ad76a52ab12faa54e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-1-n-0.docx",
+      "sha256": "1d00526e5c422785d87222d321b4756ed3a7d077b8bee3c9958a2dff205dc8df",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-1-n-1.docx",
+      "sha256": "a1b997f441b3e8db230d44d46858d98dd75bec34f8b2d15344d0a0956736b194",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-1-n-n.docx",
+      "sha256": "f5955648627b9ec9de7a2b80a7bc888cf546ee198e6b3abf8375d5d33f089d2f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-n-0-0.docx",
+      "sha256": "95eb3d278485b10491204cf2e0ad5cd30939efab7384c0cc691880cab3fdf47f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-n-0-1.docx",
+      "sha256": "26c241177a1111cf9cbe094d3d6a78d9d5ef7e0fe41771b5512a03edb77b6ac3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-n-0-n.docx",
+      "sha256": "28dc15e736e8192c137148ecd0f352227e7531602279995530a66f8bd39b4899",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-n-1-0.docx",
+      "sha256": "dc49693a1d960d5cedeadab96c3e7a2bf6e70007ebd42cbbb65a41d6d76b57a1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-n-1-1.docx",
+      "sha256": "9eb2fc4527b77a97d23230872cdc80ed2793f2217cc0824fe9574b4576a3dd56",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-n-1-n.docx",
+      "sha256": "a71819a7191e757d2984cfc29cdfed50fb9a973166a38b074bcc8048503b9e77",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-n-n-0.docx",
+      "sha256": "46b9f64ca2dc158a452bb442f3a81830604f14f9c822c8da6fe8362b89d08471",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-0-n-n-1.docx",
+      "sha256": "713f3b6efc441520bed2a6ddfbdc0d0fed05d3b87620fce68a42f0f171c2d16e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-0-n-n-n.docx",
+      "sha256": "1851bd5dd8f6017404d5d6bd76f1ed1ee66c6dbf165f62a8f61714a52f90b69f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-0-0-0.docx",
+      "sha256": "d2ba7a914521a6a52354087db3402e7cc5b012c0001246362a78c8f5cbbcc018",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-0-0-1.docx",
+      "sha256": "1bbc80a565b5383c745d5cd038969442e6881129a3a5d6eb942d749dec3f7790",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-0-0-n.docx",
+      "sha256": "e3d503a5a995410f19bee69dbd309af9fc0d0c82f3a2ab15571c427ddfd0b387",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-0-1-0.docx",
+      "sha256": "283c4120f3652966a32ce4ccd3f4b779231156ee89bc2e698218f996a283e52a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-0-1-1.docx",
+      "sha256": "14c7a38c3f1620485ac682b5e63c45c3b4152c467ffd9fae2b2f1d6e84a2f7b0",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-0-1-n.docx",
+      "sha256": "3c7ddbd5a4de1cefdc2888bf3653bf982b52aea7dd0e1c853f076d6d740d1df3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-0-n-0.docx",
+      "sha256": "da595047b0871f9d49b75b531e89ef792b6f160e3450e7b6aa6eeebf87db4bf3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-0-n-1.docx",
+      "sha256": "87a8e6c272bfdf4cdac62eecc46c03f4f36f375d2a2521dc1a2093af2232fd91",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-0-n-n.docx",
+      "sha256": "11912dcce2def163fd7a152cc09ca4f40664f526521a183a05906c8470271e93",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-1-0-0.docx",
+      "sha256": "9ca795bc7c73fc9385ae2f4e9fd72403252934bb3683d577bfbd4a9152e0f337",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-1-0-1.docx",
+      "sha256": "e9939d822dfd11125b6ec806a76932132ed48e11b9242617f61d3fc2b28396ca",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-1-0-n.docx",
+      "sha256": "a1409716eb85f9e951b4669e359b95e71446e82100beada0e7c7af3d4cb16386",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-1-1-0.docx",
+      "sha256": "193ed15e40789cad97d58875856d0883303a8f857f1796be1f513ac040e25ad6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-1-1-1.docx",
+      "sha256": "e8489de1795eae0c3db52dc6e4fc523e11c39d7a3527445b6c552594c5293bb4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-1-1-n.docx",
+      "sha256": "77a3bf706e4e74955757465700ed513925493d7b94115554ffb7a7aeb24a4b49",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-1-n-0.docx",
+      "sha256": "8f725f81388092939fce65535212a51bee51b76618b9cba002a2150690b2186f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-1-n-1.docx",
+      "sha256": "98eda6c1756067803665532c7b599f8dbc6d6628a1e7febe1c262a5765571d84",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-1-n-n.docx",
+      "sha256": "818757bed2febb716a6114ab4b512d8b03267f5fc6b788a6c67c25991f238e98",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-n-0-0.docx",
+      "sha256": "55757e5bbd8c852ab86531fb014c8ca1750c5011434d609c8ce2b2d8b8d5a371",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-n-0-1.docx",
+      "sha256": "91a5c1ca7ca713b0aa0c6b58828ef4003cf60e8d92ca24dcdabdabb4ccbe74a6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-n-0-n.docx",
+      "sha256": "bed966659342e2f50327838de4e25034e5c1ad7a81f4ecbe52f45e48d8750f90",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-n-1-0.docx",
+      "sha256": "5d413f96dead2098ec010916321a1a31cce87aec1ef7312505808779970a1b12",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-n-1-1.docx",
+      "sha256": "1bae5968ea7cb596873d47f49d284dd3413dc9cde505f24901fb0d87b042633e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-n-1-n.docx",
+      "sha256": "fc01c87e58c2b5de8f88aaf49994be28344b3b94d42d43ec5ea474c40080dfb7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-n-n-0.docx",
+      "sha256": "3fb4bb5299315c509b338e9f80a9681895e0877b0d1453b3ec480f0a2e39e941",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-1-n-n-1.docx",
+      "sha256": "7a265209d557d1827fa3a877ba1079f922b547733ebe00556cb1decc2d3baa9d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-1-n-n-n.docx",
+      "sha256": "8a68e4503e136241fe2d8abee48d3c6b0cd27513141833b4ee429d0c44e8f0be",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-0-0-0.docx",
+      "sha256": "21e17640ef773da6c68297e101bed3ba84f72ea445fe44eafcd90ca5d122e9fe",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-0-0-1.docx",
+      "sha256": "777f0bd9cd926b28f2a78b0886a4386d93671c91f190811fbc9837c577b929ff",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-0-0-n.docx",
+      "sha256": "fe0aea17600d46f6a7426d6fee879e8bbe7b2a0ec152dacce4c4dfd355fe643e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-0-1-0.docx",
+      "sha256": "2a99e69a9fe4587914ec46ecaefc5af52b90c6c7851e48b470516fbf21faaf42",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-0-1-1.docx",
+      "sha256": "70b5aa12273bd939b75aa50b61fcde2550c993b84266a08dcd2557c8ed8d26a6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-0-1-n.docx",
+      "sha256": "e158c3409160ba421d6ed06cdaba746b9789c8faf5abcd52c14cf65f6feb4186",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-0-n-0.docx",
+      "sha256": "f07e312ea4492c30f25124df93855bd79650ad3dd8bcdd00eda1eb34e1680596",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-0-n-1.docx",
+      "sha256": "7ce5455ebe5915429010b438b1a92277c6446dd154691bc1c5677bc1d2d4fac7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-0-n-n.docx",
+      "sha256": "d6b874f1000874a6507b0f85b15dd2bb9d95748625a182f3c5a4685454502cf7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-1-0-0.docx",
+      "sha256": "047b2f7b397ed7a341b8ba59949e6c709462ab85e0196a84831679d19a84bfc1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-1-0-1.docx",
+      "sha256": "6bc396379e7cf99e35db03e228a604fb388fb5de2d6ba480779fefaf9c1fc0b4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-1-0-n.docx",
+      "sha256": "9778fcc4941ec6d50cfde4d60d1056342f4f8ee2facbf07b0b8b59ab3349002f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-1-1-0.docx",
+      "sha256": "d7c4ea628849f11f53bc0998d58bea2c82f8d446a64449378fd0c59e113a09f3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-1-1-1.docx",
+      "sha256": "7f16aff542987947ec53ef3f6ee27964008bae4a9e203ed11139927ae75da1c6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-1-1-n.docx",
+      "sha256": "d1ecf77d5f27e132d61c23eaf06debd94a9c11dc76108c0aa2807f829ff54ae8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-1-n-0.docx",
+      "sha256": "f76b944c93069712ff9c0b8fde3d868749cce3f5a8f205b7bc903c8061314b7e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-1-n-1.docx",
+      "sha256": "94a2a028519a095de35034e2367d3da5d96bd6c927ce97ef782adba4a9dd4d4d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-1-n-n.docx",
+      "sha256": "5fa5693817e8a6eb10d3901c8ab29f1e2819e0a9b54d0bb4175cda933641507d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-n-0-0.docx",
+      "sha256": "c21826de12eaef2a22267557334efc9edb4b16a701f2a8811e46a153815626cc",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-n-0-1.docx",
+      "sha256": "bec1721656f3e4d9f84dae9acc201ae27295ca7c0675804abcbc495271f8c047",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-n-0-n.docx",
+      "sha256": "cb5aaff74e2848ce8c507b1a76516f4bd0559f822450415e271b10a37cea89c6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-n-1-0.docx",
+      "sha256": "7af908f313d46804bbf5b4925c59865c296df1662e30d5b21258cd878bed2091",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-n-1-1.docx",
+      "sha256": "198288c7c040a3d9b41f7e5bf8798e6e7056544d589cca99c29bf4d4403623e4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-n-1-n.docx",
+      "sha256": "5fac3551f079eb572c08cc8065cec74c9a30421236249b5e3dd6caaf17de13c2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-n-n-0.docx",
+      "sha256": "09c23c8c4c3bf69051712a484333eca2dbe0809f1483a987291406d49034a3bf",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-0-n-n-n-1.docx",
+      "sha256": "c2db547d05f914bdb8605b5d63c711374a33d822e9410e5b7576860c9005a2f4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-0-n-n-n-n.docx",
+      "sha256": "3f1a34b55b9c68d0c53ae06a7050292a594b27ea324178f41841f1d0e13806f6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-0-0-0.docx",
+      "sha256": "50c3959ec8b6010769f51842abe86e00b5b4ec9fa40c1bd359246224d4fa1737",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-0-0-1.docx",
+      "sha256": "4b7de212697fa62df519bb29c78ccc169eddaa302baf842d5e631efd02b62d53",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-0-0-n.docx",
+      "sha256": "f3083fdbab61a8ec5108962a76fe55d3e3c547d20b8c76b4d0dbbdd4951ae153",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-0-1-0.docx",
+      "sha256": "2fa5e5c27271ffbebfda5b8a7321f58975004e721c330405ab261fd99816c9a2",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-0-1-1.docx",
+      "sha256": "422e27996699724a2a2f53a623854c130b5f7e460173bdf337137c7430cd1714",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-0-1-n.docx",
+      "sha256": "29588751cafe82babdb5c25f82c071b5d06bb533403d179f22169c6155b45090",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-0-n-0.docx",
+      "sha256": "a9646c6906598857438872f107a062195dcb50e8c072eaf9bf168a5b9b84ea77",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-0-n-1.docx",
+      "sha256": "93835717f45a5f399ba25888c25d81c23c962fe380a67d444d0c3207580f8350",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-0-n-n.docx",
+      "sha256": "47f1e08621d3b591a9a0c4ed11eb217774d37ed7fb66bcc40adb540403e46dd9",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-1-0-0.docx",
+      "sha256": "fbd06a3238cf91726b4157452f598414de68675baa51e23d157e22805cb2b0b9",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-1-0-1.docx",
+      "sha256": "97371da63c66f7d0dd1ff80d33cb08732bae4b72eb4334da575f97facbae970b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-1-0-n.docx",
+      "sha256": "13e795d80280792e4585dc7a66f9668ba6132933703c990928b042221802a12c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-1-1-0.docx",
+      "sha256": "e599a3ae89ac95af285e5dc69512abc908c980048a857aca1b0083e254f8489a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-1-1-1.docx",
+      "sha256": "51cad48f96352d983f4b10471fc68277c87c37b4e50ce24bc4ca269585edacd7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-1-1-n.docx",
+      "sha256": "4398532aebdf904b1202b6c95ec4285af4b7ddc1c87369ecbe726457e05e77f8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-1-n-0.docx",
+      "sha256": "1499a3fce217b189acb6553297e063681623c0f0396cc1cceb56a5fdb847e165",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-1-n-1.docx",
+      "sha256": "4e286146d3c775317b7a1e70d66bbd03b84b94165866fad2253039a35ae06158",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-1-n-n.docx",
+      "sha256": "16530d68622f5beee5051dcb8f650855646971b462d1acaa5964f316ae6924b1",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-n-0-0.docx",
+      "sha256": "2c5430a219b3cba6e67af9338b9a0d119e7a936660b0902e4a7d9e1f48d96a06",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-n-0-1.docx",
+      "sha256": "e1a4596468c7bf0255385a5224fbecbeabbde789311edef510fca999d1b5697c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-n-0-n.docx",
+      "sha256": "e1b5bda2863887ac684ce0a6b2416e80d3640b9ded086655d5daf7cbe587dc29",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-n-1-0.docx",
+      "sha256": "ed0b5bc88f7acd9eee640d1c7d1460e7fb0e5ffaddfb611702bee6786c679f74",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-n-1-1.docx",
+      "sha256": "5457698827b73703149dfd05982e52e8c525937c46605577e139dad45ad3c93b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-n-1-n.docx",
+      "sha256": "838eb1a04f65dafc357665203b4244661da3634822f54eba49cda7abc04a9688",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-n-n-0.docx",
+      "sha256": "16312ddd64bc263c7fd9a1c269fc921a764f4485f9feb7c2e00af5c32a9085dc",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-0-n-n-1.docx",
+      "sha256": "08d4c232f93801e631b5c643d521627d40981f8377af3d910205d21810658197",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-0-n-n-n.docx",
+      "sha256": "ec00f097df5d5e8e70ee556cbb0d4153b4fd194391f2397b265473569d4e2b3c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-0-0-0.docx",
+      "sha256": "876f8966080249fa7a9918a00924397d33a97b81af08c4bcde2423615234a81f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-0-0-1.docx",
+      "sha256": "7326f4f90755d3bd2d66f5a289ef847c85ecbe81c2727606cf146a11ccafa601",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-0-0-n.docx",
+      "sha256": "201c5c8a01522967680bc9bafb05abf7faefa8870bb683f8e1b768e8e6910075",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-0-1-0.docx",
+      "sha256": "9aaa721e8443248f1836ed19f983ae245ecf6c5a4162c8ee357acf92b1421780",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-0-1-1.docx",
+      "sha256": "817f65da6a9bb8ba485330cc6b8e511909524f0bc739ff3cd62f49ec5bc8206c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-0-1-n.docx",
+      "sha256": "eda48e1624f47d0a062d59f1d38767ff50d1ab10620d3224266786612c676407",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-0-n-0.docx",
+      "sha256": "c2e39ba7392a428c1b0f62a31377e80e6f2ea908296e2ef2704fe394f92e25c7",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-0-n-1.docx",
+      "sha256": "199037b6605d81f51b8b28758aaac371060059310193c5035aadd1ab319fa2b4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-0-n-n.docx",
+      "sha256": "ffa3bb0babc6b9f4b29fcb3845a399ca55b2529f996e14b1205b5307684ead36",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-1-0-0.docx",
+      "sha256": "f8c16dcb93e0d58ff9f25cdbbf412bdc4ebf9b22d99a61473ad4b2cbe95fa2e0",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-1-0-1.docx",
+      "sha256": "4a0df0c2b0bb026bfd90f0184fa0a242bf1dc31cf22022cc6673cbed4220ca92",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-1-0-n.docx",
+      "sha256": "cbfdbaa1f7d09b7d382f495b8881a3bd3469d8085c3a5dccd7dd6118372daf6d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-1-1-0.docx",
+      "sha256": "f8b704b3544fc3d8c357579cb0247c3d3b3f0cb9cca9b719ce17272df2e26064",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-1-1-1.docx",
+      "sha256": "8708f39d9f2965aefcaef6e57e97b6059d2182644616cbd70ac64b141a2ff5ad",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-1-1-n.docx",
+      "sha256": "59b94ae15c489900ee00b854fb885184917a0e5beaa0bdd19dd2c742a4db8301",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-1-n-0.docx",
+      "sha256": "c7ab4880a2533e2bcafe45761846ed0307b7f7b325639d2b9cc27c8ea73d7e2e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-1-n-1.docx",
+      "sha256": "8e5d3451c1930676bd3b188f0bbb1754ef60a3744ce931f8503c29ed923b7e86",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-1-n-n.docx",
+      "sha256": "78c6bbb3bbcdc01288af3ee44d52795917631d38840d7dea3ea0ae98b5b72257",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-n-0-0.docx",
+      "sha256": "dce012009564f193a8035dc539508b298685153b09d2f7f15061218cb8db2201",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-n-0-1.docx",
+      "sha256": "6fe28ef9bda1961b1f9354af909d0d2974767e64c74ff2c58615ffbe79684a03",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-n-0-n.docx",
+      "sha256": "eab05139000eb1332113582b7cec798999b776f98626ff0db9be0024d96c932d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-n-1-0.docx",
+      "sha256": "5fb7a8587b1befe502d1f78038f524f3115f8aafd21b433f27e06f3922f91451",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-n-1-1.docx",
+      "sha256": "3fe962110228f88a03bb9f6c12383c61f1b1a5a43352c30b7c1bdefb6cc591ff",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-n-1-n.docx",
+      "sha256": "054b2c291f1df35b15fc333681246b093c2aaf6d6878451542bfbe29bc9e3719",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-n-n-0.docx",
+      "sha256": "3cdd98c471aa14f675befc75f3384cc0569f0ecc51f199ae2103c37eafffc6e2",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-1-n-n-1.docx",
+      "sha256": "09580f3dfd707795ed6c6a60f192efc67e75fd80c8e3351f44dd57624c6a7109",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-1-n-n-n.docx",
+      "sha256": "b99d8696ff17055ebe19b4dac858b6b1e28fb722aac1e54574a51e3aedf15e7d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-0-0-0.docx",
+      "sha256": "bf814395d0f4a80056a0ad1bd0df52e0e23999f2f5965fbf7d7cd68f59470656",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-0-0-1.docx",
+      "sha256": "a1e8cae6cdc7721b3c811aeb590118d3991acafa17edabd763f04cf7a9798e63",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-0-0-n.docx",
+      "sha256": "64400b19838a84ae6e06f5b3dbd3b8515f70ceb46fb889d6b064525b49243240",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-0-1-0.docx",
+      "sha256": "55b48245b47c5532354dfb8f971c5af8d1b501246b877d56ed12ee6498d42b72",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-0-1-1.docx",
+      "sha256": "db943a89e48ec392c02df6d8c7ed3a632d619be281e7fc50624e201f6501d311",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-0-1-n.docx",
+      "sha256": "e7d1ca0a5e04fa9003e49fa7e19d79d1560b6b64e0dda83183ed675feb91bdaa",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-0-n-0.docx",
+      "sha256": "9f0d041d3a524900949970fb06ad45158785dc7d491470e56226f7a2efaf87ae",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-0-n-1.docx",
+      "sha256": "2db19cf8ecb7f6640953d27d80c5f3f6b56abd6326d602ecbc302530c22b5eb0",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-0-n-n.docx",
+      "sha256": "989e6eebf9b24a98cbc67491c240508cc60bd39925d371ea9b657e44897b05bf",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-1-0-0.docx",
+      "sha256": "942905560745d0c3f1928c2fd3c1624e3634a029ab11597bda034f81f579f068",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-1-0-1.docx",
+      "sha256": "564e026b1c12cf7cd676d5a4d9a12e16e8f04f4555b4e551cc22e486205b523d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-1-0-n.docx",
+      "sha256": "94edbb431c175785dfd436d851ee5a8901a225b841be3db9de39687e37cc4c94",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-1-1-0.docx",
+      "sha256": "7e698c897bf54dabd91e9ec1e480a32e6d079bb49b75d59f16694c377f632d11",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-1-1-1.docx",
+      "sha256": "bbc0eafc9635273bfa16818cb1505a09116348ab61318eb738be642ad7cafa35",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-1-1-n.docx",
+      "sha256": "8fe54a2816be47885c34d153d663dece58aae814aed2a5c88f88000e9f4366f0",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-1-n-0.docx",
+      "sha256": "b532528d1aadc4eacbd9107bf3918afb0955b9d7acb2c0ba52ab4933befbd6b1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-1-n-1.docx",
+      "sha256": "a42dac2a9474f4541320b0151d3fb0df3ced82e01f2cca12d0563bb1cbc1375f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-1-n-n.docx",
+      "sha256": "58ab43a8f2f9b255484273ca09abbf5edfa3514f263ff7a07e9f8aaf28541f9c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-n-0-0.docx",
+      "sha256": "7c2a8313ff425398a65e1114489a8e7eb84b4c38082cbd3682aee9fed47c5654",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-n-0-1.docx",
+      "sha256": "1bc448b90132b14ba3daa435867af39c154ba6a619a1560b464353c0a2cf3ffa",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-n-0-n.docx",
+      "sha256": "dca460c3fccd9544fc33e954bd5f9593d3373c0f842ad4b0aaeb9a5ddd0a2f4f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-n-1-0.docx",
+      "sha256": "2b4d53e03d010812c078b55ac5834c934f993afef351a1cccae0bf224188f632",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-n-1-1.docx",
+      "sha256": "81dcafadb048c55df992af1b1ddf22e02ba2b3747c00ebb1077a0c06b60f1a01",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-n-1-n.docx",
+      "sha256": "093f952579b2edd1746166faa1519e496455eee8b30748d84ab0bd08e31ac9b6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-n-n-0.docx",
+      "sha256": "2a4aea2ff9390d11fa14bb2612aa61a77cc360389f4d207e3e156646adb94838",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-1-n-n-n-1.docx",
+      "sha256": "b0969fdaf2b2e5f8489dec23f9777f17650e4cea836b66b4a7550e2e574319d7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-1-n-n-n-n.docx",
+      "sha256": "30100f3569697d1570b238724a7972f4489b04711b1690d9d36cc7db3380e51e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-0-0-0.docx",
+      "sha256": "ed14d6c93ff856b856498c3c4911edd6f26325ad0068b0ea2f644b3621de7fe7",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-0-0-1.docx",
+      "sha256": "966a29c4ca2521a2b72047176a5cf3b93bfd92668f3328974fbc3a7de5b4a67c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-0-0-n.docx",
+      "sha256": "99a02e70b3edb78490aed0da553decf44d48d6da416b8c97cf47c7eaf49b254d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-0-1-0.docx",
+      "sha256": "a9c328c34b7f0c803eab1ae08693a6e27da65cb033132b5cf8e59de26a66b09a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-0-1-1.docx",
+      "sha256": "5ad897fc580e555956c3b5fb376b6d76a6e484c6928bcbd714f55a11b5cf35e3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-0-1-n.docx",
+      "sha256": "c6c021ca21453f83befec5db1445dc8b266ee141c6f51a1d236370eac1550878",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-0-n-0.docx",
+      "sha256": "f4990ab7733717a56d98ac54ebe0c6b2b1632c08e22eb9a0007482b264af5579",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-0-n-1.docx",
+      "sha256": "dbc456be82bd6bef9b47844583d80df0ff832e47699f6556387b90f0b1a30b91",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-0-n-n.docx",
+      "sha256": "c000cea7d403bfe5375e182122543656624f1232e72b8460e8559c8ff4f214f4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-1-0-0.docx",
+      "sha256": "15d8e8facb61a28d2028dd007157606ac5b5e0ba5ef6c6d12bda48b03d19c6b7",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-1-0-1.docx",
+      "sha256": "955d6d2176e59da0e53e320c02f58ea7e250e5b85aaae87aad409e3d9618f66d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-1-0-n.docx",
+      "sha256": "0743f85b76db979c63757f41c63e007396cf33f413d3244dba4e23456c41d3bb",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-1-1-0.docx",
+      "sha256": "66e17c430868a647250f4329ef26c2efec9777ec33e00b0d70ca6105c22ef0cc",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-1-1-1.docx",
+      "sha256": "0563b947fecf5897d92fe309e1437858841e0478b5d9159219b2e3e9e93189c5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-1-1-n.docx",
+      "sha256": "0fbbbbb6d77789450b560be5744710cfdf36fd70186395cad5ccb04833dbb71e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-1-n-0.docx",
+      "sha256": "9aabfbf5fc5ddd3e7fe841fa3a9aec7beab3adce198014172e5423fe56ae03b2",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-1-n-1.docx",
+      "sha256": "50d50c6f496c90551c71a7d81fc30dbd317f1b8e62010a6a1a4327a0efeb84dd",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-1-n-n.docx",
+      "sha256": "f463eaeb1aa3379d20938080b063d4fab3497b698aa4211d4cb6da47e1bf7830",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-n-0-0.docx",
+      "sha256": "befd1e7ec880ee997f242a8a4658d3804c16c1e3e44bcd93d774c443314c3be8",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-n-0-1.docx",
+      "sha256": "18d1952769a4b1fd8869335a51dc449677438a96d1e652294e9b8ca996488b6e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-n-0-n.docx",
+      "sha256": "4c4546ba2b5ee2dcbb7292d22c982bb16bdc9e30234771cf6ba1533102fb37b1",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-n-1-0.docx",
+      "sha256": "5a7c65605a0482d5a0f248bc7a52fea7b1a1753a59d1ee5f0459c8e86f4020f5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-n-1-1.docx",
+      "sha256": "9425878fd2d50c1b6d14139dd13db25c11af752729377da166ffbba07958bfaf",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-n-1-n.docx",
+      "sha256": "35e4058d1370a0e64859b48bf3659d082f6fd833623b2475bd9bd1f7a65c92bd",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-n-n-0.docx",
+      "sha256": "8d34142cc0de766225077469b30319b81e09008abd6f1a8fa408abd385d58829",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-0-n-n-1.docx",
+      "sha256": "739d1955472c01fbf3ba7d9421b531d911d739d4624bb54911daaf46fc3867aa",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-0-n-n-n.docx",
+      "sha256": "a4c7a66ff7ca0265d8370bb29845aaeeb7d0cfbf911cadd41a4eab09ca9b68c7",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-0-0-0.docx",
+      "sha256": "0a918665e7a65b97fc891fc1c736087154be25c70052f99fa2ecf35dae47ad2e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-0-0-1.docx",
+      "sha256": "26f41d1f2ddc429744517339c0d9f5d488140567f5227ceae7065fac582c8fb3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-0-0-n.docx",
+      "sha256": "db335941f029869d18ac8400856f23e3d9df0b92e203bdec5ec60cc72ba4264c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-0-1-0.docx",
+      "sha256": "de06139c94f689221d4dc562e620c36dde38e005858ba7590fe92bbc8cfcbf3d",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-0-1-1.docx",
+      "sha256": "ac8e087323f709c20c94b753cb064767ddb3333dadd1652b82a68bda5dd58ad2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-0-1-n.docx",
+      "sha256": "652ff43e355016be19940a94e8a9892da3d709d2798c460085dc5e5ffc37c9e5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-0-n-0.docx",
+      "sha256": "9cc65419ae8982b069cdd08051a6e3de5a1cfadc5ba34c8e353638e410ef1eb4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-0-n-1.docx",
+      "sha256": "e2a63a1eb6d8fc77a29bf962039212199e5f6821b3241628f79ded80d5f1cc5e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-0-n-n.docx",
+      "sha256": "9b813874354be67a6af6719f1bda2f2e453274e288bfdacf72c24a5e2baa6d0f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-1-0-0.docx",
+      "sha256": "7a2a1c3cff2f312bd652f018b58694dff635813b3ed63c9a02cb5158608bd468",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-1-0-1.docx",
+      "sha256": "06ff9326a91b8dd36a208cf6a44aab7000bffce8590f60345127565b24c921f3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-1-0-n.docx",
+      "sha256": "dde1cecfe49a60ad36c31f1b2c6d187c04bb7637b8d27fc391b5d2be889b4abd",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-1-1-0.docx",
+      "sha256": "f88dd26e1cba055f5ff9843324cc3cc8c47e277a72f850451ff215eaec4984eb",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-1-1-1.docx",
+      "sha256": "6a9b8c6177b52d7a4af67d0cd8f58fa7185aa4192df6495ee67c96bcba436915",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-1-1-n.docx",
+      "sha256": "c93a5ac1a70af025c10b4774d6e499d22afb985ee1e73097038790c84be7f303",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-1-n-0.docx",
+      "sha256": "06d0e31c7090a96a86e0d78883940cce04cdab606776322956a136dbb43413a2",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-1-n-1.docx",
+      "sha256": "ccbee4849c5eda06a1a296364d41e73de935095b9fdda43db6e61b9a3d5ddb55",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-1-n-n.docx",
+      "sha256": "9f2744a74dec611515d0dfb0469284c875728d7ad44bec8003d08d7b55aa4702",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-n-0-0.docx",
+      "sha256": "12462b5277ee03b01dbef6e342454c7c83a29a17cd4b751c7446f6316a1a9cd5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-n-0-1.docx",
+      "sha256": "445303d1853f3cd4932d4f9d0b850e8736697a7b8e97cb146bd03ccd76aba159",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-n-0-n.docx",
+      "sha256": "8d93c97fa11621d25df6b14b101c9fdd3f3029bcc10e6a51d99c0397595951ff",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-n-1-0.docx",
+      "sha256": "70dcf8ade0061b4a5542f8811fd0d128f29c18e5999756d797ecfbbc72ab9d57",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-n-1-1.docx",
+      "sha256": "045aa0bfd7fe771e7c866f18270f03839e4cea8a5e8357b314a9aeaed766c7ee",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-n-1-n.docx",
+      "sha256": "00005c0882470fd421d6102ba4ba85307d060e5fc261d0f261ed087226bcff60",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-n-n-0.docx",
+      "sha256": "3cc33de5aa82287969fbe8f6fdc4dfe19793e7d5d446e3f21404038554b5cfac",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-1-n-n-1.docx",
+      "sha256": "5bfbb38806bc3f4ddd8587fbf595e95ac4b1ef92c7bd2eb3d5e6219ae9884de2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-1-n-n-n.docx",
+      "sha256": "cd9dcda8608ece1432881971a25c568ae360b47731de08fb0c925eb5717c1640",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-0-0-0.docx",
+      "sha256": "d5e5439878774fea98784882cd11865ab4cdae2152a9e8a2ffc054518c415db9",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-0-0-1.docx",
+      "sha256": "7def7b64c41f4cb8c16343b82cab86f097094acd89a3adb7e8cbb147c4f08b1c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-0-0-n.docx",
+      "sha256": "4c48c185c929300dc73784fb2030542b7127cf3fe19af7530538264818338b98",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-0-1-0.docx",
+      "sha256": "e5c8b2ddc4a6fc4d345b89b0138abf7b41a7ae1499160e622ed1d37b9f02d2f0",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-0-1-1.docx",
+      "sha256": "21943464cc6cdb4cfd8063f7f4ad54c142a82d3854255c316195c1ae94b5c5b0",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-0-1-n.docx",
+      "sha256": "5c9336c9f3873158addf48c055d8649eacd837e0c0cecfcfc64ac049c789c3bd",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-0-n-0.docx",
+      "sha256": "0dad0c03ee931056dc5486ab38332cf44e5aa626f6d7b11c9ec6920998585df4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-0-n-1.docx",
+      "sha256": "52eb9b1f7719529228fd3647b661a9f123e30a8af9d04df1dd04f0496f40f52c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-0-n-n.docx",
+      "sha256": "6d50d13eacd2ff3d58569b3c78e65ed682ff3329ec41d8a5cf8e176602ad9989",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-1-0-0.docx",
+      "sha256": "c04da5518ed675b018a8a82703678dc6ffd40b7f449d8353def34426fd262f13",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-1-0-1.docx",
+      "sha256": "933e4ba2706a011533b516f0801a1c6f38c22535970804d3e927765986cdfe16",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-1-0-n.docx",
+      "sha256": "f94f9dd4954b9dc630a716814f534a86604377cc8e530301409bda92b50f143e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-1-1-0.docx",
+      "sha256": "4d87cd136603e55183edc0692573c28eaa2bf4bd567d1d3ee2ae2c3e6c809a34",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-1-1-1.docx",
+      "sha256": "fdbe1160d43923e189fd08bab70c7f3db4932e46323a788cec8659330eb83cdb",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-1-1-n.docx",
+      "sha256": "db88e8819fba1293a60aeec3e3c8a4b2ce51cd7d061bf55fdf6195d0b8eab376",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-1-n-0.docx",
+      "sha256": "fa32ee41e9b9690fc49b27c479376484e79f9686ffe3f50128ff09cef96979ca",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-1-n-1.docx",
+      "sha256": "f7ceb04f8a06ea1f9efcecc38f96cda13aae1a301df11897bccdabe69460cfac",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-1-n-n.docx",
+      "sha256": "4db045b05f481c7a0a1fc7ff04deef21ff533637bb3a211834d6c0abc20728f8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-n-0-0.docx",
+      "sha256": "557889fa1bd4e14a0aad87dd3937c921ae34db432fd90651444a26bea17adbb3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-n-0-1.docx",
+      "sha256": "56b916805bbadc7794287396aab7d8f89d828786f404ecfc6afdac28c7605aa2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-n-0-n.docx",
+      "sha256": "360f003833cc7230edbcd13582d0332f1cc452cc22c42577e6858ceac7b366d2",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-n-1-0.docx",
+      "sha256": "0212f0ba173278e21b1feccb9850a94647c22f138082ca4abe2c3d7ead0e64ec",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-n-1-1.docx",
+      "sha256": "04b98139f67334a5a79d9b1e359dc1d46811f5626792feff55484a18305274fa",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-n-1-n.docx",
+      "sha256": "b6c20cd456c827307fdbe62288e096ddf6764888acf3b10b0f90894d9a13ff4a",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-n-n-0.docx",
+      "sha256": "ef2815c00cdef203227ded7aeee60cfd5cc6bcc0d36dfb8c1fc1f0025d0d55be",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-1-n-n-n-n-1.docx",
+      "sha256": "294d9ee4b11323314c2b26a762c60147fab695175c094d0c69c6271d032048dc",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-1-n-n-n-n-n.docx",
+      "sha256": "f1034c923fe82d52efd54a45fedfd8305acd7c25f48fb42b2c0ee0b0d6f0b987",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-0-0-0.docx",
+      "sha256": "1ff7e43b7f27379991e6d329a631e98b5d842870e4fa4fccacc0a4ee4e0c9f74",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-0-0-1.docx",
+      "sha256": "7257bc68ca915007a72424f235ec705e3e92fe95da50f31e9f7388e7c9f38a53",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-0-0-n.docx",
+      "sha256": "fc558edef4c6358a992d05a5befe7f533dec3632ba5156655d359992706069df",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-0-1-0.docx",
+      "sha256": "05d8d5ad096e5bcd4bdeb46fd93951ace329337bd1a3e526b7e2187f73376e65",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-0-1-1.docx",
+      "sha256": "be13d57bd7f537126865f1f24061733caadd1e059d66e2e532032071949bd738",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-0-1-n.docx",
+      "sha256": "5e594aecbd0a00b177e2130c23c02dbd07dfdec4c849d7d55e7fd7a5dfbc0a7d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-0-n-0.docx",
+      "sha256": "4a7d7508e8972180bb25d2aee9ccfdb9ef39b45bb85de2f91ba55db29bef53c5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-0-n-1.docx",
+      "sha256": "f82098fca6465cbee81c9477bd5a9778b7d1a59519a54ae1ee5bcf845e1b642d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-0-n-n.docx",
+      "sha256": "31136440d472e2b300cb280c18c50c82d282049bd7a60e1e5860aa4e948b0034",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-1-0-0.docx",
+      "sha256": "f643fed1f56a85f154f759fa33f884fdef57936351c5b9f56ddd837a356c5506",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-1-0-1.docx",
+      "sha256": "d9cb3b48f451a96944b694c3638459090df25ff0302539102f25310d6da23768",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-1-0-n.docx",
+      "sha256": "b14534890ab9c8429291ca52e5bdfce20157390cc99f633951ef21328122df73",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-1-1-0.docx",
+      "sha256": "573eb0cda55690e40550e51f29fdf08656222b4d6c5a3254529af799db50567c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-1-1-1.docx",
+      "sha256": "b8ec55ef56644408ea48b3fe011b7019a7fd6bcb48beb6801a4a79a53a1e253c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-1-1-n.docx",
+      "sha256": "b871ac5acadccf601f836770dfd9a255b68ff75309b4f6477591e6e772bca54e",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-1-n-0.docx",
+      "sha256": "fac9da02c1aa6b261e2a9a6890f9e65b7fb73b113c168bcb1d5dd141785ddaaa",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-1-n-1.docx",
+      "sha256": "3e8585ad9c9f469e25edc58dbc1d7936e2eaf00d92a0f7a05a11ec129e242d5f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-1-n-n.docx",
+      "sha256": "fe72afa0038b8cec57fcda504f91ed09281a5758d4c3143ab1bb7eaf483423bf",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-n-0-0.docx",
+      "sha256": "1e05a262baf14c860bd5ea259d6153d5f2c368ed78cbc6a88b6bb82e7f1d80a9",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-n-0-1.docx",
+      "sha256": "b146a40c6f3bcf8be63b2e9bdf6c93f07af1ada4759278e0ee54b95151275837",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-n-0-n.docx",
+      "sha256": "a17be0dbb7d8313cda5f1226d9b86a2110f4cd27ff89e41c8c7fe45e43cbaac2",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-n-1-0.docx",
+      "sha256": "f3f1dca408b393dc647c5fc5786ce370bd3fd13a5cbb249c2ec688c62130337f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-n-1-1.docx",
+      "sha256": "3bc1fc38d192474b6af7fceb8c5b91974a5b38a03bfd951d40b5c762263f802c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-n-1-n.docx",
+      "sha256": "b591f122ef772e74feb4cffb50d5dfe09da97ecd6a004c1086d6388a96bbf164",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-n-n-0.docx",
+      "sha256": "ecb75cb49524e3e27770fe85c34c7be97f5e7bbfae8b91926fa292ab47fc00aa",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-0-n-n-1.docx",
+      "sha256": "8750b6f5e2186f9f1aa7ef6b74e7ec0ac302edf6850d979205e3179562b72e71",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-0-n-n-n.docx",
+      "sha256": "aeeebdcbaac3778f178a208f3393f37c5b4198e5b789432c396e82cdc8f1290c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-0-0-0.docx",
+      "sha256": "ed068ad3129c9f14b6d6bd8d6313ee7909ae57dc70de9bab530ac7600019cf64",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-0-0-1.docx",
+      "sha256": "4d21c890f678b1711671d83079b6763dbfd265be040e16b78601a77f7b5b5dbe",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-0-0-n.docx",
+      "sha256": "ec88df2da1106d6886195236e0f54630db7d2e04d9c85e3418064863da2e558d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-0-1-0.docx",
+      "sha256": "68fb58d4585d27086e99e90a409dad32ed9e2ff511bb5cf438907ce7e4f7a8d1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-0-1-1.docx",
+      "sha256": "e42801416ea3ee44ae735e4232a863952d111a052dfc033e4a3cac59384982be",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-0-1-n.docx",
+      "sha256": "b96980577f6cf8d178527edd088b95e47ffdaaae997a5120e4bd304c203ef2e4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-0-n-0.docx",
+      "sha256": "14ecf4bc3e0835a34649e7d384e47cb048d49be4b491d4edea0767cc1b84c9e4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-0-n-1.docx",
+      "sha256": "8782c01e30123bfd9460fe2cc1086fb4a8b2740493d12a3117e409a73648b336",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-0-n-n.docx",
+      "sha256": "82238e31f472ad754b3a98aafc075d07648716e037c63c62406e96c7bc9edbce",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-1-0-0.docx",
+      "sha256": "619cd097fb6c104798921038dd95949ee1f40a68d57a3e558fd18b345fafc8ba",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-1-0-1.docx",
+      "sha256": "4f3885f3290b8ed6cef421c78465944b1f2e2ef04acee2baaab3b6641284550b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-1-0-n.docx",
+      "sha256": "200744ebb86d8c5bdab91e3026596ce78c240a6d5d98ad034e197ab06f227ac3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-1-1-0.docx",
+      "sha256": "b23810a12e080c14693cf4ad54ca7f4b0a842dba3cc4b761285424eb198ffb0a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-1-1-1.docx",
+      "sha256": "5b8a70ec647f4ad28e9989d08d8b5cfdb4831d4e1b249b0bf71f363c926bc63f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-1-1-n.docx",
+      "sha256": "ab3d203256f11fe409c638fd2302337353202dd39642471eeb7ec735a372ce0a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-1-n-0.docx",
+      "sha256": "c5c7e48b8d6bb9854b26fc02745b5e59f15fe940e4f2fe5a529d808284ecc995",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-1-n-1.docx",
+      "sha256": "0d1d077233f5024ab486a098af118300c4ed763546f072ce2c573a4140f99b35",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-1-n-n.docx",
+      "sha256": "96d11fc456045baa4a98877adcc40ffc5ac36eebed6b0aa14e38a5883122d5ef",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-n-0-0.docx",
+      "sha256": "9579a21f17500e3d6b7c01f8f34d84fa74a2148bfcf1ef07252b6f63fbe46a5a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-n-0-1.docx",
+      "sha256": "5e4dceafe9ecb171855375d5f223c696ed24caf1a7b60f7a9e35386337258817",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-n-0-n.docx",
+      "sha256": "73388ad9652eabfbeeea144ed0242851e289e45a671623750f30f817067765fa",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-n-1-0.docx",
+      "sha256": "6f6f51f47cf65dfebfe37e2aa303cb04e5fdce1021e7c6174497ff0d7c682727",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-n-1-1.docx",
+      "sha256": "7e4d7238f8b83834caa267d5ecff53593414ac9bcff85413957bc528b592ce82",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-n-1-n.docx",
+      "sha256": "ae5b27ddb01e3a4dda30082ab40a3fdfd6c43e77e643586b50f055243eb0fb6e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-n-n-0.docx",
+      "sha256": "3319d4d409232933ee1df7cea4b34bc461363ceb348109f6f16fe97d2ddc0ac2",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-1-n-n-1.docx",
+      "sha256": "ec07998f085f22b51da5607f8cadbb15ad1865aa3dee946caa5ae1003ca2cec4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-1-n-n-n.docx",
+      "sha256": "00b11e7a7e8178d99edc04dd6eb78142d97e468fb2143e337b286e8cc485bb31",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-0-0-0.docx",
+      "sha256": "fd16d996ab0c6930735c6103b75001b8bfbb012016b9a13cc3761356d1440e90",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-0-0-1.docx",
+      "sha256": "89a45e745f739dbd22d9605868edb6a770871951c2a508faa35d7dfe888cecb1",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-0-0-n.docx",
+      "sha256": "cd9dfc1dda281f201336baab02093aeaa2a127ef016c4ab33d2d17a496cc140f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-0-1-0.docx",
+      "sha256": "3f27f09d7bfd9c43c48426785d8c5f81f6906cb1793b2a095cf78941197e2a88",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-0-1-1.docx",
+      "sha256": "150773fe320994b46771c0f755156e1b6e8668e0eda837da60d34df21597e6e7",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-0-1-n.docx",
+      "sha256": "90869d9aa9d2ece4664f457bd72741c8c9005cb9a2cd8f5a561f5410bb52d365",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-0-n-0.docx",
+      "sha256": "63c213fdaf9a5e1288cd48ab2115ccdf65706e32c6ab05e296b5d9657d03995a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-0-n-1.docx",
+      "sha256": "5ff2c7fff60c2e6d3719e806a0440195ef97b43247760eb106f84984281bbd20",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-0-n-n.docx",
+      "sha256": "a01e2f62cd8b49ba1a53a56a8d08c1d08440b5cca9c30e1081035f48b6eb3ea3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-1-0-0.docx",
+      "sha256": "e4303615dd51c3a653d380d163e2172cf4711cfd60481c9b8f202d75ec7c99f8",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-1-0-1.docx",
+      "sha256": "1c52183191c62f341bdce9d43b64d2d6b9d0e6f4eaebef61115cd6453de6dd49",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-1-0-n.docx",
+      "sha256": "38e2a5767d56ec973beae2418860e5a5604c696ce43d53f22d134debb87248ec",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-1-1-0.docx",
+      "sha256": "aa11fa7dfe0ee333d417577e2c75737bbefdc33bd256a08d81160ebaee14b791",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-1-1-1.docx",
+      "sha256": "5d6e428acf0f5f48d3fc3f9319738247cfc3ed2a0c9da67233eb43fdab58f53f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-1-1-n.docx",
+      "sha256": "f2e3369f61cf123d2c87df5d0332729a2adaecc6f9445548eb3b065ac8ce0af9",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-1-n-0.docx",
+      "sha256": "28e303dc86d934d34f40431bb01f67ed2dc0cacabd06cb43dc9cd7190314cfaf",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-1-n-1.docx",
+      "sha256": "47f671c905b77e0b3e9013052ef9eed08fa709db01383708f0972d2383cc2592",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-1-n-n.docx",
+      "sha256": "b8945e5d42a66bb2cea102e28786b5d840f58591c7f0eab8fbd306145e597532",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-n-0-0.docx",
+      "sha256": "103934e04634690f5da68bcf570bd249a64b07bf8cd438fbfc188f760d47c503",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-n-0-1.docx",
+      "sha256": "ff4b60ec5a843a71f6852e422a08f67916028bebbd119225f27f63de2d60e96f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-n-0-n.docx",
+      "sha256": "90c188bc4802ed39bf35d9137f21a034796d8be9bb0cd3d379ec85b25f52ce09",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-n-1-0.docx",
+      "sha256": "7a40c604e273f0533e1259162c08badae5dcb58b25e8c9982e543505ec98bd68",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-n-1-1.docx",
+      "sha256": "36cafa48ac00241ee892175d1e6cdbc8c5ba5c68e5a846d68a3600c425d5d5c9",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-n-1-n.docx",
+      "sha256": "b23da9a9f412b05c17e218caf4c69f52ef136009ada4e44405cb3c31ebd05115",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-n-n-0.docx",
+      "sha256": "6169cf8886af40a1585720499dbff1b029c4a55bb0f86c89a5adf059cbe9b595",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-0-n-n-n-1.docx",
+      "sha256": "68ff1feb68bbfc6336fed5dac47d062b13149d02dda722e1b9442099ab6c95a0",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-0-n-n-n-n.docx",
+      "sha256": "2a34053c89d9ff74c41bd5f838c63b6f7c326dd1efb0e88af508d78d3a45c7c5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-0-0-0.docx",
+      "sha256": "a3e1faab62c81b76c7380cfb4e7e649714d203745a93348827d0b972eb5a04fc",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-0-0-1.docx",
+      "sha256": "94aa2b7ee19617fd0f994a8b1ea440693dab0a8915981ad80b03ac5ae66a741d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-0-0-n.docx",
+      "sha256": "98a75645c0d119a5f3b143883025a3f66a7cea3492c3f6ea22c7005496079068",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-0-1-0.docx",
+      "sha256": "a05d5ba02f8e35e3c55eacccfadacb960278b5b582922cebee608138ab088c13",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-0-1-1.docx",
+      "sha256": "1fb866d055055b987d531bd779bbffb1e8a5e7aa2187fe878748a5c9aa64a8cc",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-0-1-n.docx",
+      "sha256": "c307a77c7a0bfbf9ccc3035b41ddc9215b93a18032ae68336132053019f57e03",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-0-n-0.docx",
+      "sha256": "f4f87e2035573f3a2c84bc31ee16fda66ea4c006f87005ceb3836ff1679513c7",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-0-n-1.docx",
+      "sha256": "5634c9677e8d78f4f4564d3e6c54166cd1cc711e8ff68abf717b261ae9183f5b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-0-n-n.docx",
+      "sha256": "d58a98bdf2a4340292e319645c1f9ca794e8cc53067e878285ff4e4f2a815189",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-1-0-0.docx",
+      "sha256": "eb078227cceb50cb2fd9dfdd598bd431a977dad4f9283f11a5fbed0ec0c57159",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-1-0-1.docx",
+      "sha256": "478c5c45741d53b74394b0a6eb97664bedc6d774c2e38f3ac103eb5accb08cb9",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-1-0-n.docx",
+      "sha256": "23d71c3198f80086e47af0527bc81572076bb60c1ec947855cb48a059790fcea",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-1-1-0.docx",
+      "sha256": "8eb83116f255c882065046e1b1c99e5cc26e93110a709a26d6e77c18f2efb77d",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-1-1-1.docx",
+      "sha256": "f53f27cfdbcf4d161c9a8724a8a38a908ecaefc2d6a5944a29df773c0558227d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-1-1-n.docx",
+      "sha256": "3fac9f32c9a20175d349f9ad270d15fff352ccd15aac7fa506530edf8f67c916",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-1-n-0.docx",
+      "sha256": "8f89b4b28b32f635344f2da23eee4181c9cca9f7180d46cc775aa6ddd682face",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-1-n-1.docx",
+      "sha256": "afc03b91a37f3444426ce58f8cdf5a87dc8abfa7b211379c55abdc41d4d0a9d5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-1-n-n.docx",
+      "sha256": "7ad87ede0296887a683892c674906d233224abf749c8ff6d92bf38fe7269fed4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-n-0-0.docx",
+      "sha256": "63b2e0a9aac8eeb5f04c74ae101c0602f2ee6972338950c965e9a3d0626b5b5b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-n-0-1.docx",
+      "sha256": "d62c0ff0f5cfc3f2b2d7706c61afd0441d2b77729a63891495e67174f490994b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-n-0-n.docx",
+      "sha256": "c3aa74b8dbf76c0611e66f0823a0c4b9a2ccd9a8d9555e36a977e49fcd952c8b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-n-1-0.docx",
+      "sha256": "a8d169966ed2d5621a5a09e00d7e6eb27e12b23e9b87689e9008c8bbf046ed92",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-n-1-1.docx",
+      "sha256": "6db37a456c76399b0dc17354d1bc36780e51f33ad96f829ff744725bc4521089",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-n-1-n.docx",
+      "sha256": "7f161e19aff21a9e7d883e4139d1d4933bc0c550f0736a601a91b9b9beabcdef",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-n-n-0.docx",
+      "sha256": "040e57e8441e45e46b9427ec01028bff85517c13feeb09338407c9e2ef06d63c",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-0-n-n-1.docx",
+      "sha256": "71b6af2beee1809766946b56db830f440c7c1331baa6a392bdcbf2288d84e5f1",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-0-n-n-n.docx",
+      "sha256": "37ce9a24212128975dca70b8ad2abbe27724d799bed3a6486dc6d3ac253f25ee",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-0-0-0.docx",
+      "sha256": "0beb5031b734610428524e07fd7ad1c9b56c61f0eee054bb6a876eb7e3bda1e6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-0-0-1.docx",
+      "sha256": "1db0fc951da5403716e941484187fa9e1940093fd4a270bf5724faec0dbc4e04",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-0-0-n.docx",
+      "sha256": "e252e8f77f28539eb659675e8b2e25daa691acd4b82fe2b2616ecd457b8be58c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-0-1-0.docx",
+      "sha256": "19f4588db1574cef2f2108b0eb3820b1a6b2b5776e6736566ba244b3d12d4071",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-0-1-1.docx",
+      "sha256": "aa1bc0b0ef47b159e75e7bb7d1659908f570e809185cf90df9507a98ea83ef10",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-0-1-n.docx",
+      "sha256": "287a329f5882462dd8c5ef2d2127231d019f9ce584c3b07801c87c5748134d18",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-0-n-0.docx",
+      "sha256": "ccef7539d3903a65f82c6092c125fe91323957f2b5d6f66038acf3a6ad162c86",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-0-n-1.docx",
+      "sha256": "e6d1136a557217791a6d52fa357c975fb053d8bd02b16577d416f6c262755a51",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-0-n-n.docx",
+      "sha256": "bb151279f6b4ef7dc4cc5860546661021712283ae1e9cb32f9e3e418e5f48bb6",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-1-0-0.docx",
+      "sha256": "a095dd080a8390758549aef8d92271233c78ce707fd315f0c61564a9d067cfb8",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-1-0-1.docx",
+      "sha256": "16fc54b61374954c6eebd9baa29f44f3c3090c055a94993e735b81a09709f16f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-1-0-n.docx",
+      "sha256": "ffb46cc15643e6e9a2fd86dc6606e7cbd51fb1d93d083fdf510ce84fc68efda9",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-1-1-0.docx",
+      "sha256": "432c86e033be56ec60f25729c0b3cbf3d423231b5dc8889e842b365c3538d97b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-1-1-1.docx",
+      "sha256": "2019e3342878f3cf4a4274e7ff713c199c10eec0e39acca3ebabf3f5e9f5c6e2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-1-1-n.docx",
+      "sha256": "cc12ddac87697e882cda5a8de80edac237a1fc0eabc5483a504e374b4507d035",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-1-n-0.docx",
+      "sha256": "61b49b7749b2bd6a166b039d29199b769b4bbcd87d283675167a622c9699aef9",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-1-n-1.docx",
+      "sha256": "9305d7360e91ed26f8ff96259ac52df4728e36bce7695749af0e9e6f17931ab4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-1-n-n.docx",
+      "sha256": "8f17d2b0573c410a030d08708b6ea96663b62d862beeb76878156f5608efce67",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-n-0-0.docx",
+      "sha256": "25c2329647d6af05640c448ba66933087dd97291ce021f63e4882ab04a40a40a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-n-0-1.docx",
+      "sha256": "c31dbf336912d73562f05acb2cccfd72c69750f9de436b01f5881d2c30b16893",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-n-0-n.docx",
+      "sha256": "dd7408bea8439c3e0fa69a267ae5bc1a6e13e961b65ee5005ca0861e0ae26f97",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-n-1-0.docx",
+      "sha256": "ed56650029815006139e227fa5bd4c0169c9bcee713fdc5230c87342095533a0",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-n-1-1.docx",
+      "sha256": "ca25e701a7b30b377d713d3a57fb7b687a61ca98d04db02915218fb7b56ee281",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-n-1-n.docx",
+      "sha256": "408d0a3c35c0fdc4282fed1de20bc30aa87b1981260d166766d39d69e0475e62",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-n-n-0.docx",
+      "sha256": "c2dda0f565d6a383f680fde8da6a28d9f34e158003896023910f32966547baa7",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-1-n-n-1.docx",
+      "sha256": "eebee58d23bebf5e0c8dc13e67ddb987b5a01ad3175576b941aee9ee1594ae87",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-1-n-n-n.docx",
+      "sha256": "064ba8bf569579017e383994efc575bbf021a158c8b644141689e3d8a95f931f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-0-0-0.docx",
+      "sha256": "d2e202dc52d439122ca038a37f4d73f60737ffe9ea7c4aa5b09e6f2b15b9f0a5",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-0-0-1.docx",
+      "sha256": "7acb171db0f6fcc09546debe115ab906fa024f95e4afe18765bfbf87a6776890",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-0-0-n.docx",
+      "sha256": "9e7f892fcd52b3c1ebb2ea37749d6307dce47c05677bf4c915650076b1cad433",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-0-1-0.docx",
+      "sha256": "203098858e0b6d76cea894ead42b0ec063395e7a13a766c4bcf9f416f9c6d438",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-0-1-1.docx",
+      "sha256": "b4f8830e99786ffe19ea6cdb5e80ac88f0e8aede327b2a904cf8f46760b2c18f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-0-1-n.docx",
+      "sha256": "498f4ab46ff4d9a13d9813daaecd4b15a756d895931febcafcd3090c139ddc1e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-0-n-0.docx",
+      "sha256": "ee3c2cb01a870a4309843ca5b2e6e4513253c46e0e322c50e4f7ee6b28102f73",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-0-n-1.docx",
+      "sha256": "b1040ebb441671cb0c1ac2eb36d8dd6e9ff21f17bb3b4dfabf7d47698f5e1e82",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-0-n-n.docx",
+      "sha256": "f586fe3913eee669ac782cccb79d70ccdf438f4a6db98565a48bd5707ba11ef5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-1-0-0.docx",
+      "sha256": "54f45c8255b75469ffc3d2c6c53cf3cc236d074750a3cf12a1287ace31b803dd",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-1-0-1.docx",
+      "sha256": "379785c6e0f8b23a04911d31daa8e75456e55ce00ae6adfd2775b3e82319ad3c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-1-0-n.docx",
+      "sha256": "0e08c8198e682709da03f9c0872599050eb7a783a3c9ddf13a0afd5752823ee3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-1-1-0.docx",
+      "sha256": "0eef82149d636dbfb18b05cfbd1f5c9622b0089de6593e78c38080c499ceafe0",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-1-1-1.docx",
+      "sha256": "23df968ff87fc50688b1b3bfd691d52c1a5cf4fc782846535f94dab4b506d148",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-1-1-n.docx",
+      "sha256": "3e937e0126f5d5d863111e8ef31bb777535e176f926487f92ae8b0a308f4e355",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-1-n-0.docx",
+      "sha256": "1bb603f91affb3e6d04ed231ba4c66316ef8d668a9715826b51dc877d14e5b85",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-1-n-1.docx",
+      "sha256": "d4288a18e5f4e588f1f6df02153f72347210c8d2d694fa867bb6bac838489701",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-1-n-n.docx",
+      "sha256": "48baa27e242a6d3ddb71563b636c10c63e75bbf20be8ec5b824ad59a98d34f69",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-n-0-0.docx",
+      "sha256": "f1f1efe5787439825ac17a092b242260f9a8fc7b1a695b7e26fa704eac9c7ecd",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-n-0-1.docx",
+      "sha256": "450b4d740741171a99c1942c55a176eeb2d84fd036d01c0a21571a6c8cfc94e9",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-n-0-n.docx",
+      "sha256": "6d81367542ee73212a9e94b8a7d624aac7acec189d6c311c781f1b2da08f0292",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-n-1-0.docx",
+      "sha256": "711e1e52d0b781189ee394b5d8b54e14cce34db98739ba60525d8630a51239ad",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-n-1-1.docx",
+      "sha256": "da3fdb7826220971c4170305337326a5c0f679094988a179d9f9aeabc0bf5e90",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-n-1-n.docx",
+      "sha256": "3709a777a1452a0ef5afa655aaad7b5e5d84d620bc0d59e355354bf4cb7db48f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-n-n-0.docx",
+      "sha256": "5496768566bca8b7e8c7e98760a77f4a2d2cfdff418bf8af0e708aab49dfda3d",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-1-n-n-n-1.docx",
+      "sha256": "282124bdad8d0659f5942f1a1d0e78152676bfd592b3b8faa6f3375ecf0b9271",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-1-n-n-n-n.docx",
+      "sha256": "98be37d1e051229b5497e3bcd87720ff36c5c1058bb10ddd5dadb455efb0f631",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-0-0-0.docx",
+      "sha256": "67513df9911bfadeb180ebdbb7039e1c9d88bdaa1f4c29d91ac1ee9ee4f59394",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-0-0-1.docx",
+      "sha256": "1997d066a8d782d4c445cb4005b279914a8e1d252f8aadd00e14a2cdeb0ce16a",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-0-0-n.docx",
+      "sha256": "f515b65ee61b77879e8947342dc1dc6f047e108a499bc0d81c0255eab50c7f4e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-0-1-0.docx",
+      "sha256": "3722208f2ff0d26b45d919cd0a436afd6ddc67c1e67af6c8ba647b158e8bf08a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-0-1-1.docx",
+      "sha256": "fc5908a0eb1677d43e3a5f1ed33ee071284cf760ca928d65329573b2a075897a",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-0-1-n.docx",
+      "sha256": "0bbe72d7388993b4de6f787a62da8f6ce29ac024578ca00fca835d5cf0f0f61c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-0-n-0.docx",
+      "sha256": "3bbc3a0f1ee6d2bb0dd5ef7a3ed531d05dc10c4037915a869a3aa782d18f633a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-0-n-1.docx",
+      "sha256": "8075ce1becbf65682c96d127e984f5060cf721ca761a5a08fabd02c9778ea89d",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-0-n-n.docx",
+      "sha256": "563952e39829e18d69e13ca75d91b58ab61307741cc755dbfe8861082abc64a0",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-1-0-0.docx",
+      "sha256": "d995745a25972b67ff3bd30fd8435fdcc1f1a4164d237da79ad13de069e6d76e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-1-0-1.docx",
+      "sha256": "1ac41e73f67fa68ff9f588f54fd5d8d5f176afa11c8e47cce05e912445fe3357",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-1-0-n.docx",
+      "sha256": "8cee6fe0bbb91f8bd156b137018014f1dd8461648ee9a65ceb4b78c8722eecea",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-1-1-0.docx",
+      "sha256": "977fd1e07f5db5123d93e2c7f2b6b31391649d44275fddf781557688ceaa915f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-1-1-1.docx",
+      "sha256": "fcfd0fd8f2ab08e2a9da031c925271e75a190579cfb18c180e932340cccae75c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-1-1-n.docx",
+      "sha256": "f353cea6f88aee7f31b06ca25a1146b261ae20856e7584637c74e94562e0b6c1",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-1-n-0.docx",
+      "sha256": "7c33fb532d5a31a337d5f5b70cd593de4d145b3a728352f34a57326fb2b15c55",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-1-n-1.docx",
+      "sha256": "2b15da90201348e6572d840549967c4f2f0d5dcda9ef74190fb12366fd2d50fc",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-1-n-n.docx",
+      "sha256": "c8ff5403b711435b3d44c089c2ed831742cbe9562558838cadbbffb8f1433643",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-n-0-0.docx",
+      "sha256": "c2d3ea7c77c6e697c0ccdd08c8dded49fa4f5761d0d72038132c5b712d9fb633",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-n-0-1.docx",
+      "sha256": "7ed86564479a04aba0eccf0b31b40e36709fae36711fa10f7ae2056d4645a38f",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-n-0-n.docx",
+      "sha256": "81b6cc29382676ca2aa93785dda7a667150ce958954a5987d01a82771ad3d4e1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-n-1-0.docx",
+      "sha256": "d43778d87f6bc59da3dd02fa906193168a45623cac862f45e9a36ae2100d07b1",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-n-1-1.docx",
+      "sha256": "3ef02089b91b6ad40ad605b58c21e7cb55509f7107a47f55adbffdeb781da6a3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-n-1-n.docx",
+      "sha256": "d94dcd7e9dfd30c232babb049e491742590faf44e7066330085bfa819d6b5ffa",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-n-n-0.docx",
+      "sha256": "e609bc06a195200853660d910a8017e88625ceddd40cba74a14f8e69d646ec48",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-0-n-n-1.docx",
+      "sha256": "45d6fc60a747720e18bb4929bbc52390a023868dbdabe9ce4fdff0997e9d8740",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-0-n-n-n.docx",
+      "sha256": "f678c6474c28b9154cdc257306c5be433e03989e612a4b0d1fe7e7188003f427",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-0-0-0.docx",
+      "sha256": "861b02e79e2204b9da4ebc78df211edaa9f6fed6da31d2ffe29e27f3ba531245",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-0-0-1.docx",
+      "sha256": "0c0c8eaaa12f694697500d42d87bc69ebb104ded13456b60cc6216f132ab51ac",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-0-0-n.docx",
+      "sha256": "8fab0858145bf2134b24af2ba4ab3ab13f5cfa1fe8b45f10982a06a9df8489a0",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-0-1-0.docx",
+      "sha256": "11f5c8579a0d96479c69ad8c87d3608258eca566d725444579208e6264f8b88f",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-0-1-1.docx",
+      "sha256": "f7bf54f0dc27b38ac55523d00ccd01c1b1aa3efe631346af23e4d16d87cdb294",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-0-1-n.docx",
+      "sha256": "7f38096f849a22fd48106c9aa91e684829ce67d3b0f1ada0b90c37c95db7ea0d",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-0-n-0.docx",
+      "sha256": "25f6f06894ee754a3501cf66aff9580c1c7f4155e05d02bbf1a1fed78a097a4a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-0-n-1.docx",
+      "sha256": "1f6e943cddc592e80b727af7afcc472a2c0fca686fbf1345e09ea9e3abff6ea9",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-0-n-n.docx",
+      "sha256": "616461d35539ac7201704945b9d0879ef34a5a67f3dacb9b10f2b77469d0df14",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-1-0-0.docx",
+      "sha256": "cffcfe1deff03bf92a72e299271605a4cab394aba70b4842f607e92a965346b6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-1-0-1.docx",
+      "sha256": "a3d0697f3b1a686aff108394baa8bd80de808afa2f17eae7250978d88142b1b2",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-1-0-n.docx",
+      "sha256": "b8e73f40e7a28d7662fd725045e8487d79a8ae53e8fe0f8e66cc185d8a210852",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-1-1-0.docx",
+      "sha256": "e9714b14a1e1c64cf6023d5a0e473c613860ef7abc264454693086268987365a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-1-1-1.docx",
+      "sha256": "88f896da78ee9362d5316ace1fe38bd848828eb6a7f75787652525b6fee17bcf",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-1-1-n.docx",
+      "sha256": "95d099b8cfdaadea544c0d946490e6429b9820ef2b0206d97cb869ca7acd5f79",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-1-n-0.docx",
+      "sha256": "81e3427b0b2feb7d732d6e9bbc71bf811cb358ab365c61a57742aa2222db0ff3",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-1-n-1.docx",
+      "sha256": "f38295d928c5bf93966f6a898c6c386b23d264da02734732410067f29c0fc5a3",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-1-n-n.docx",
+      "sha256": "c133e0a183ee10b22144a461279004dc012693766c6c84ad5f2f5bedcfb5fb45",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-n-0-0.docx",
+      "sha256": "d6a79ac6d6d8f888cfd37542983a940c67da93851a5084f6b3df4bcad2a1bd7a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-n-0-1.docx",
+      "sha256": "65939cf163988a419303dad32acfbc7b39c0652b6b065af039f6c68e84b64719",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-n-0-n.docx",
+      "sha256": "b3de61abdf5beaa04d0703f3c61074b493fc87e32f473bb70e13cb26cfdef1e4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-n-1-0.docx",
+      "sha256": "8cd5dc8e45c8802276bc8eaa49b70a45ab4851a1be0b9244835dd15976c79c7b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-n-1-1.docx",
+      "sha256": "c4f4795d9a283e63369face575fa0e3c7c4fecbdf5e6d0ebd94fa53458d90117",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-n-1-n.docx",
+      "sha256": "d50b02ea01fe70bd965c32811994842449659e8bd4321f8670058e5a744460ca",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-n-n-0.docx",
+      "sha256": "9117e3d89cd2f5b4f79890d358f9ead4576d030da12c44566f3ade5641be498a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-1-n-n-1.docx",
+      "sha256": "c832238edfef1d227b4ddcd0cc80a0236f97cf0f7ed964d506a2d00485db9ce0",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-1-n-n-n.docx",
+      "sha256": "857e5b5f69de4220eb29a214dda7872dd6f2191475f44b37384f04640021d356",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-0-0-0.docx",
+      "sha256": "89c1c3bd78ec230b168555510790818c921acc38ff25c9c65fd36088370239d6",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-0-0-1.docx",
+      "sha256": "32dbc9d2b2f79e772515ad1422ce0f2f00fce91dbcc79dea855352261baadb49",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-0-0-n.docx",
+      "sha256": "471e724c024b17f529dbf9054d4555f2b9bb106e049bd8647f21202a2858e0ff",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-0-1-0.docx",
+      "sha256": "f9a36fe99c3b148fa8d37df35a97b2cf20fa2759b7d4e9f59d300f641913c8ae",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-0-1-1.docx",
+      "sha256": "66a545f624fe0900bb9e42d8397d9c9f827a3f45cbd09a1ecfe0644c2e1f7445",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-0-1-n.docx",
+      "sha256": "d825702b4978e7c46c4a6464f50866a9ca5323bc93521ffdc1797163230065c8",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-0-n-0.docx",
+      "sha256": "048c7b54e1dc6e6ad075f64095015020823fdb54d52d9b0efec15e9b184f3409",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-0-n-1.docx",
+      "sha256": "340703fc111998761f667c3ce1d385297d1b0ee55476efe465748874b54257f5",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-0-n-n.docx",
+      "sha256": "94fc2bfbac9c93d9c43ef4fa45249e0369e236ff42abeba41ea83e70611c3169",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-1-0-0.docx",
+      "sha256": "4e9f587aa27f385f88bfc37f763f15511fb6fe73623b71f41a06066c0fbd797b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-1-0-1.docx",
+      "sha256": "eb01d0269238ee1a6a7e361d925e987919f06006592004789f750a08c3396be4",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-1-0-n.docx",
+      "sha256": "daf34492213e1fadebf6665b0b5c6cfaa81ca779b0181ae7d17086c7adf2aa3e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-1-1-0.docx",
+      "sha256": "58905383dae69901414a2d0ff2e1f8ed0c4bb5d286986cfbc5e51800da54bc7a",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-1-1-1.docx",
+      "sha256": "c5e02cd823a27d491edc4bdf31241e720251b4d645459b438c0bed7e772fb762",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-1-1-n.docx",
+      "sha256": "4633b934e1a05ce589eeb1ed4d22833a19c85f8c41ff74890245a738f22e4805",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-1-n-0.docx",
+      "sha256": "f212d292c0124e10c52efd37bc7d6e089883aa42a9d21a1ec17e03aaeb32acb4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-1-n-1.docx",
+      "sha256": "b430de97bd9ebfa76cf76fefa1e56fafde413d1d167c54248fa48ac3e22f0277",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-1-n-n.docx",
+      "sha256": "6246405364d3c6e803ff0d6a04079289aa76232d9bc332c9fad021c502bb8efc",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-n-0-0.docx",
+      "sha256": "6ff986294d70d9e9854915384c99339f736e5f136f3c6649bc37b465e715c0d8",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-n-0-1.docx",
+      "sha256": "1582b1354296037894e6ff06483d84aedc09b15bc6638ea24b154bbdb51e9744",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-n-0-n.docx",
+      "sha256": "f4ed725afe89cde4fdfab459bba27c7a9ed6f5a81fca4d6e08a4ff0b47462b6d",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-n-1-0.docx",
+      "sha256": "559961ee64b6fcd0174f3c7a94014aaf1c677edc547b33e37476efce6adc34b7",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-n-1-1.docx",
+      "sha256": "053c3e89bbce099652b50920e9b0903c479d8b6e7ef03437c65b3e99c8bc931c",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-n-1-n.docx",
+      "sha256": "4ff36b4591ec1bb2c403216448dc24ad7970b65cd1e2262396375c3d01c6e5c9",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-n-n-0.docx",
+      "sha256": "fcd42c2cf19639604abfeee2508d5980e253bb2ac653769bebb5592d9dd8ad07",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "chain-n-n-n-n-n-1.docx",
+      "sha256": "7229467cccc079408e69f9b900d48796bccdf0469885afe014976e45bb529910",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "chain-n-n-n-n-n-n.docx",
+      "sha256": "8cc8d63dbf4c9baf6ed51dcbfa329618089c84c4909dd9dda80f84cabd3e322b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "default-0-0-0-0.docx",
+      "sha256": "5e1fb0ba0e1cc9901c5fc033cec841818a5a82a0e1a4cb733032f5433520e730",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "default-0-0-0-1.docx",
+      "sha256": "69e8794fba4e2fcc4dd6b47d32683ae5f4c66f6b01fe18c472c1b9a2db9be8ea",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "default-0-0-1-0.docx",
+      "sha256": "e4cddc48da5f2dbb41db8168f9d33ad6be2f13bcc55e402031af9b37413fee35",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "default-0-0-1-1.docx",
+      "sha256": "86e8a15eee5d67fc06c817b0d666d06840a106081951f3b955bf227825d99912",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-0-1-0-0.docx",
+      "sha256": "abcc900810fa337fb2e1dabbe9177aac41fd4175969c3ca0b010033434a51967",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-0-1-0-1.docx",
+      "sha256": "93d97e2feb968880972434a294c40d5a35448a210a5487e3172cf1e6588f5d17",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-0-1-1-0.docx",
+      "sha256": "c234812ee6a10e03aa154bca9eb73d5eb17c37a86b14d447f91fdb22c0b01c14",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-0-1-1-1.docx",
+      "sha256": "f4698769d2dbb74337835d0687613774b473fd32c2b40277eaa8d254c3694b6b",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "default-1-0-0-0.docx",
+      "sha256": "267170a418ad253c2def2e94ef8798a2c048ddd9a0693abd0d0437c21e8fab1e",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "default-1-0-0-1.docx",
+      "sha256": "06326f2efdca256fb4b8a2aa2185b1cd4e4351d4b6a9e8b3f9baf7b4e8b56f22",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-1-0-1-0.docx",
+      "sha256": "00111e15aa90d0628de840a9126bbb2db46b0663c54c90a920f97c4818b268f4",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "input": "default-1-0-1-1.docx",
+      "sha256": "9d69ed3961385dd31fb85165f70b16155d9068724796bfee1eb8b022e7d0accd",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-1-1-0-0.docx",
+      "sha256": "df72f484ab36c8fecc988481307bb5a1e55a6db772e58663a9206c40856bae3b",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-1-1-0-1.docx",
+      "sha256": "c69d2b4925f674ade30f1f14192dfb1c846a20dee73f77d30b814611dae653fb",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-1-1-1-0.docx",
+      "sha256": "d77cf17d9cd8f84ffe40cea0f43483142b0dafd83a6e5c3bcef9a70924302e35",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "input": "default-1-1-1-1.docx",
+      "sha256": "7f45e9f4c1a4a5b4c68671216ff96ff423d017cfdd434b6d7029918cbf38e9fd",
+      "bold": true,
+      "italic": true
+    }
+  ],
+  "scope": "b/i getters on owned six-level and default-character-style inputs; no saved output or render acceptance",
+  "licensed": false,
+  "full_format_acceptance": false
+}

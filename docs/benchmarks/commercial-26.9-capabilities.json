@@ -16040,7 +16040,14 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "behavior_evidence": {
+        "file": "style-toggles-26.9.json",
+        "capability": "aspose.words.Font.bold",
+        "scope": "745 plain-DOCX b/i getter observations; saved/rendered formatting and full Font API unverified",
+        "current_alternative_entrypoint": "DocxDocument Run.effective_font.bold"
+      },
+      "baseline_behavior": "partially_observed; canonical Font getter alignment remains incomplete"
     },
     {
       "id": "aspose.words.Font.bold_bi",
@@ -16190,7 +16197,14 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "behavior_evidence": {
+        "file": "style-toggles-26.9.json",
+        "capability": "aspose.words.Font.italic",
+        "scope": "745 plain-DOCX b/i getter observations; saved/rendered formatting and full Font API unverified",
+        "current_alternative_entrypoint": "DocxDocument Run.effective_font.italic"
+      },
+      "baseline_behavior": "partially_observed; canonical Font getter alignment remains incomplete"
     },
     {
       "id": "aspose.words.Font.italic_bi",

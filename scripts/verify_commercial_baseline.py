@@ -72,6 +72,37 @@ def verify_import_outputs(root):
     return checked
 
 
+def verify_style_toggles(root):
+    report = json.loads((root / "style-toggles-26.9.json").read_text())
+    raw = (root / "corpus" / "style-toggles-26.9.zip").read_bytes()
+    assert report["version"] == "26.9.0" and report["module"] == "aspose.words"
+    assert report["full_format_acceptance"] is False and report["licensed"] is False
+    assert digest(raw) == report["corpus_sha256"], "style corpus digest mismatch"
+    generated = runpy.run_path(str(Path(__file__).parents[1] / "docs" / "probes" / "style_toggles.py"))["inputs"]
+    expected = {name + ".docx" for name, _ in generated()}
+    assert len(expected) == len(report["records"]) == 745
+    with ZipFile(BytesIO(raw)) as archive:
+        assert set(archive.namelist()) == expected == {row["input"] for row in report["records"]}
+        for row in report["records"]:
+            assert digest(archive.read(row["input"])) == row["sha256"]
+            assert isinstance(row["bold"], bool) and isinstance(row["italic"], bool)
+    current = json.loads((root / "style-toggles-current.json").read_text())
+    native = {row["input"]: row for row in report["records"]}
+    mismatches = {}
+    for phase in ("before", "candidate"):
+        observed = current["reports"][phase]
+        assert observed["corpus_sha256"] == report["corpus_sha256"]
+        rows = {row["input"]: row for row in observed["records"]}
+        assert len(rows) == len(observed["records"]) == 745 and set(rows) == expected
+        assert all(row["sha256"] == native[name]["sha256"] for name, row in rows.items())
+        assert all(isinstance(row["bold"], bool) and isinstance(row["italic"], bool) for row in rows.values())
+        mismatches[phase] = sorted(name for name, row in rows.items() if row != native[name])
+    assert mismatches["before"] == sorted(current["before_mismatches"])
+    assert mismatches["candidate"] == current["candidate_mismatches"] == []
+    assert current["validation"]["full_format_acceptance"] is False
+    return len(report["records"])
+
+
 def verify(root):
     def read(name):
         return json.loads((root / name).read_text())
@@ -111,8 +142,10 @@ def verify(root):
                 assert digest(data) == row["output_sha256"]
                 assert data.decode().replace("\r\n", "\n") == row["markdown"]
     imports = verify_import_outputs(root)
+    toggles = verify_style_toggles(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
+            "checked_style_inputs": toggles,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

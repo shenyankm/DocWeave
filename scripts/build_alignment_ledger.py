@@ -82,6 +82,14 @@ def build(declarations, baseline, current, observations=None, formats=None):
             records[-1]["behavior_evidence"] = {"file": "commercial-26.9-dom-structure.json", "capability": evidence_key,
                                                 "scope": "partial plain-DOCX cases; not all node kinds or overloads"}
             records[-1]["baseline_behavior"] = "partially_observed; see bounded behavior evidence"
+        if name in {"aspose.words.Font.bold", "aspose.words.Font.italic"}:
+            property_name = name.rsplit(".", 1)[1]
+            records[-1]["behavior_evidence"] = {
+                "file": "style-toggles-26.9.json", "capability": name,
+                "scope": "745 plain-DOCX b/i getter observations; saved/rendered formatting and full Font API unverified",
+                "current_alternative_entrypoint": "DocxDocument Run.effective_font." + property_name,
+            }
+            records[-1]["baseline_behavior"] = "partially_observed; canonical Font getter alignment remains incomplete"
     assert len({item["id"] for item in records}) == len(records)
     return {"schema": 1, "baseline_version": declarations["version"], "current_runtime_version": current["runtime_version"],
             "record_defaults": declarations["capability_defaults"],
