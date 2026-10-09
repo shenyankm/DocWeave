@@ -383,6 +383,7 @@ def _tblPr(
         if attrs:
             children.append(el("w:tblpPr", {f"w:{k}": v for k, v in attrs.items()}))
     # Always emit <w:tblW/>; "Auto" round-trips as w:type="auto".
+    children.append(el("w:bidiVisual", {"w:val": "1" if table.bidi else "0"}))
     children.append(_render_tblW(table.preferred_width))
     if table.alignment:
         val = ALIGNMENT_VAL.get(table.alignment)

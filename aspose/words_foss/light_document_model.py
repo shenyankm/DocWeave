@@ -924,6 +924,7 @@ class Table(BaseModel, NodeCastMixin):
     alignment: int = 0
     preferred_width: PreferredWidth = Field(default_factory=PreferredWidth)
     left_indent: float = 0.0
+    bidi: bool = False
     left_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
     right_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
     top_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
@@ -933,7 +934,7 @@ class Table(BaseModel, NodeCastMixin):
     title: str = ""
     description: str = ""
     rows: list[Row] = Field(default_factory=list)
-    # REMOVED: style_identifier, bidi, allow_auto_fit,
+    # REMOVED: style_identifier, allow_auto_fit,
     #          allow_cell_spacing, cell_spacing
 
     _tblp_pr_attrs: dict[str, str] = PrivateAttr(default_factory=dict)
@@ -1090,6 +1091,7 @@ class TableStyleFormat(BaseModel):
     """Table-level properties stored on table styles (``w:tblPr`` inside ``w:style``)."""
 
     borders: list[Border] = Field(default_factory=list)
+    bidi: Optional[bool] = None
     left_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
     right_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
     top_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)

@@ -24,7 +24,7 @@ from aspose.words_foss.docx_reader.constants import (
     _TWIPS_PER_PT,
 )
 from aspose.words_foss.docx_reader.field_mappings import LIST_TRAILING_CHARACTER_MAP
-from aspose.words_foss.docx_reader.utils import _canonicalize_style_name
+from aspose.words_foss.docx_reader.utils import _canonicalize_style_name, parse_onoff
 from aspose.words_foss.model.style_identifiers import resolve_style_identifier
 
 from ._context import ReaderContext
@@ -222,6 +222,9 @@ class StyleBuilder:
         if tblPr is None:
             return
         tsf = ldm.TableStyleFormat()
+        direction = tblPr.find(f"{W_NS}bidiVisual")
+        if direction is not None:
+            tsf.bidi = parse_onoff(direction)
         tblBorders = tblPr.find(f"{W_NS}tblBorders")
         if tblBorders is not None:
             tsf.borders = build_borders(tblBorders)
@@ -233,7 +236,7 @@ class StyleBuilder:
         )
         has_padding = any(value is not None for value in
             (tsf.left_padding, tsf.right_padding, tsf.top_padding, tsf.bottom_padding))
-        if not (has_borders or has_padding):
+        if not (has_borders or has_padding or tsf.bidi is not None):
             return
         if not has_borders:
             tsf.borders = []

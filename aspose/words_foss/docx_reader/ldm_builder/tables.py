@@ -17,7 +17,7 @@ from aspose.words_foss.docx_reader.constants import (
     _PCT_DIVISOR,
     _TWIPS_PER_PT,
 )
-from aspose.words_foss.docx_reader.utils import _empty_borders
+from aspose.words_foss.docx_reader.utils import _empty_borders, parse_onoff
 from aspose.words_foss.model.enums import CellVerticalAlignment as _CVA
 
 from ._helpers import apply_padding_sides, build_borders, build_shading
@@ -90,9 +90,15 @@ class TableBuilder:
         raw_id = tblStyle.get(f"{W_NS}val", "") if tblStyle is not None else self._default_style_id
         for sid in StyleChainResolver(self._ctx).chain(raw_id):
             style = self._ctx._style_elem_cache.get(sid)
+            direction = style.find(f"{W_NS}tblPr/{W_NS}bidiVisual") if style is not None else None
+            if direction is not None:
+                tbl.bidi = parse_onoff(direction)
             margins = style.find(f"{W_NS}tblPr/{W_NS}tblCellMar") if style is not None else None
             if margins is not None:
                 apply_padding_sides(tbl, margins)
+        direction = tblPr.find(f"{W_NS}bidiVisual")
+        if direction is not None:
+            tbl.bidi = parse_onoff(direction)
         if tblStyle is not None:
             # Resolve the styleId to the style's display name (same as
             # ``<w:pStyle>`` handling) so the LDM holds a stable

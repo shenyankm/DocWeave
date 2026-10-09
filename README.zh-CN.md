@@ -328,7 +328,11 @@ LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼�
 DOCX 读写保留零值，PDF 测量与绘制采用单元格覆盖、表格默认、渲染器回退的相同顺序；
 DOCX 表格默认边距包括已支持的样式继承。表格上下边距是单元格内部间距，不再额外增加表外空白。
 旧 LDM JSON 若用 `0` 表示默认间距，应改为 `null`；显式零值现在会改变布局。
-逻辑 `start/end`、条件表格样式及行级边距例外仍未实现，见[边距验收](docs/benchmarks/cell-margins.json)。
+条件表格样式及行级边距例外仍未实现，见[边距验收](docs/benchmarks/cell-margins.json)。
+`Table.bidi` 保留已支持的 DOCX RTL 表格方向，镜像视觉列、对齐及边框，同时保留逻辑内容顺序。
+`start/end` 边距归一为 left/right 字段，DOCX 输出 left/right。普通 Markdown 报告方向丢失，
+HTML 表格使用 `dir="rtl"`；表格方向不会自动启用文字塑形。
+Word 与 LibreOffice 对照及边界见[方向验收](docs/benchmarks/table-direction.json)。
 
 阿拉伯语等复杂文字可安装塑形支持，并部署适合语言的可信 fallback 字体：
 
@@ -488,7 +492,7 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-最新本地安装包验收环境为 macOS/Python 3.13.15：**1,484 项回归测试、31 项 API 示例通过**，
+最新本地安装包验收环境为 macOS/Python 3.13.15：**1,541 项回归测试、31 项 API 示例通过**，
 并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
 环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
 这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。

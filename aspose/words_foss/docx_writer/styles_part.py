@@ -429,6 +429,8 @@ def _docDefaults(
 def _render_style_tblPr(tsf: ldm.TableStyleFormat) -> str:
     """Render ``<w:tblPr>`` for a table style definition."""
     children: list[str] = []
+    if tsf.bidi is not None:
+        children.append(el("w:bidiVisual", {"w:val": "1" if tsf.bidi else "0"}))
     if tsf.borders:
         tbl_borders = _table_borders(tsf.borders)
         if tbl_borders:

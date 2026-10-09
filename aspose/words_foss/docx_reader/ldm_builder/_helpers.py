@@ -110,6 +110,8 @@ def is_truthy_onoff(raw: str) -> bool:
 _PADDING_SIDES: tuple[tuple[str, str], ...] = (
     ("left", "left_padding"),
     ("right", "right_padding"),
+    ("start", "left_padding"),
+    ("end", "right_padding"),
     ("top", "top_padding"),
     ("bottom", "bottom_padding"),
 )

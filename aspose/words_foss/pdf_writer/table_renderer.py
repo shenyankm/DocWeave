@@ -102,6 +102,7 @@ class TableRenderer:
         indent = table.left_indent * PT_TO_MM if table.alignment == ParagraphAlignment.LEFT else 0.0
         usable_w = w._page_width - w._page_margin_left - w._page_margin_right - max(0, indent)
         widths = self._compute_col_widths(table, num_cols, usable_w)
+        alignment = 2 - table.alignment if table.bidi and table.alignment in (0, 2) else table.alignment
         legacy_offset = 0.0
         if w._doc.compatibility_mode < 15 and table.alignment == ParagraphAlignment.LEFT:
             first_cell = next(cell for row in table.rows for cell in row.cells)
@@ -126,8 +127,9 @@ class TableRenderer:
 
         def table_x():
             free = usable_w - sum(widths)
-            offset = free / 2 if table.alignment == ParagraphAlignment.CENTER else free if table.alignment == ParagraphAlignment.RIGHT else 0
-            return w._page_margin_left + max(0.0, offset) + indent - legacy_offset
+            offset = free / 2 if alignment == ParagraphAlignment.CENTER else free if alignment == ParagraphAlignment.RIGHT else 0
+            return (w._page_margin_left + max(0.0, offset) +
+                    (legacy_offset if table.bidi else indent - legacy_offset))
 
         def advance(repeat_headers=True):
             pdf._perform_page_break_if_need_be(pdf.h - pdf.get_y() + 1)
@@ -391,8 +393,12 @@ class TableRenderer:
         previous_cell_margin = pdf.c_margin
         pdf.set_auto_page_break(False)
         pdf.c_margin = 0
+        if table.bidi:
+            x += sum(item[3] for item in layout)
         try:
             for cell, col, span, width, lines in layout:
+                if table.bidi:
+                    x -= width
                 top, right, bottom, left = self._padding(cell, table)
                 cf = cell.cell_format
                 bg_color = parse_color(cf.shading.background_pattern_color)
@@ -406,7 +412,7 @@ class TableRenderer:
                 self._draw_cell_borders(pdf, cell, table_borders, style_borders,
                     row_index, col, len(table.rows), num_cols, x, y, width, height,
                     last_col=col + span - 1, suppress_top=cf.vertical_merge == 2,
-                    suppress_bottom=next_merged and cf.vertical_merge in (1, 2))
+                    suppress_bottom=next_merged and cf.vertical_merge in (1, 2), bidi=table.bidi)
                 content_height = sum(line.height for line in lines)
                 free = max(0, height - top - bottom - content_height)
                 at_y = y + top + (free / 2 if cf.vertical_alignment == 1 else free if cf.vertical_alignment == 2 else 0)
@@ -471,7 +477,8 @@ class TableRenderer:
                                             w._run_renderer._render_segment_row(pdf, segments, line.height, DEFAULT_FONT_SIZE_PT,
                                                                                at_x=at_x, word_spacing=line.word_spacing)
                             at_y += line.height
-                x += width
+                if not table.bidi:
+                    x += width
         finally:
             pdf.set_auto_page_break(previous_auto, previous_margin)
             pdf.c_margin = previous_cell_margin
@@ -733,6 +740,7 @@ class TableRenderer:
         last_col: Optional[int] = None,
         suppress_top: bool = False,
         suppress_bottom: bool = False,
+        bidi: bool = False,
     ) -> None:
         """Draw cell sides using cell → table-level → style cascade."""
         cell_borders = cell.cell_format.borders or []
@@ -756,6 +764,8 @@ class TableRenderer:
             cell_borders, table_level_borders, style_borders,
             _B_RIGHT, _B_INSIDE_V, (last_col if last_col is not None else col_idx) == num_cols - 1,
         )
+        if bidi:
+            left, right = right, left
 
         if suppress_top:
             top = None

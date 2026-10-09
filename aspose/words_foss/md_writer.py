@@ -1379,6 +1379,9 @@ class LdmMarkdownWriter:
         # export_as_html: render table as raw HTML
         if self.options.export_as_html == MarkdownExportAsHtml.TABLES:
             return self._convert_table_as_html(table)
+        if table.bidi:
+            warn("Markdown tables retain logical cell order but cannot represent right-to-left table direction",
+                 ContentLossWarning, code="markdown.table_direction")
 
         # Determine number of columns
         num_cols = max((sum(span for _, _, span in ldm.iter_grid_cells(row))
@@ -1488,7 +1491,7 @@ class LdmMarkdownWriter:
 
     def _convert_table_as_html(self, table: ldm.Table) -> str:
         """Render a table as raw HTML."""
-        lines: list[str] = ["<table>"]
+        lines: list[str] = ['<table dir="rtl">' if table.bidi else "<table>"]
         for i, row in enumerate(table.rows):
             lines.append("<tr>")
             tag = "th" if i == 0 else "td"

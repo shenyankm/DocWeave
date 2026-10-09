@@ -1,0 +1,1637 @@
+{
+  "environment": "macOS / Python 3.13.15 / fpdf2 2.8.9 / PyMuPDF 1.28.2 / LibreOffice 26.2.6.3 / Word 16.113.4",
+  "baseline_commit": "11c66cdcdfaaf752373bca29c81164449c69a034",
+  "cases": {
+    "before": {
+      "m12-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 20.0,
+          "TWO": 70.0
+        },
+        "bytes": 3890,
+        "source_sha256": "e0c6c01936606acae3ed6245b7a5aac57cd87cf0d55fd70b42907bd9b36fa05a"
+      },
+      "m12-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 44.0,
+          "TWO": 94.0
+        },
+        "bytes": 3890,
+        "source_sha256": "47d9cc7dfd157beefc40f87808e704f4f95dc690b7d56561594899d65ab8e041"
+      },
+      "m12-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "da626c54b2a6659cf29d54b7662cfda509f1177db702934cff4fcd85464e7fd2"
+      },
+      "m12-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "5e82f2fdd35e043f51673e5bafd8c1f60ef1b2498fe302676000ed8465977ae0"
+      },
+      "m12-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "5b22bb7dcb123bbf0582fc47127a4c9f319dff4456e4465ea99a18a04aa11ecf"
+      },
+      "m12-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "64984d86ee3e0634c8a0698e42405a7914893c0dea3ed6f946a05ef5f963d752"
+      },
+      "m12-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 20.0,
+          "TWO": 70.0
+        },
+        "bytes": 3890,
+        "source_sha256": "a361acb8455b2e6f6bd914528cfb0a1776a084c4caa050c08252e466aa8f292c"
+      },
+      "m12-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 44.0,
+          "TWO": 94.0
+        },
+        "bytes": 3890,
+        "source_sha256": "afa5bd9e390c86b7dbdceef9c9e39ba04b5ef2206f5ad625d664b145fcdee597"
+      },
+      "m12-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "6c4b550acc489a4b8562c266778f625a603c9267e9d55628b55722add25b8c9c"
+      },
+      "m12-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "5aad9b25d432edb18fb30e253bb591eb1e44d7b8bdffab8be9cbe79ffe706878"
+      },
+      "m12-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "c3898ffd3e0954e7f8723876f28e30e809947e8c89d2a3b0dd131710a7588679"
+      },
+      "m12-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "de074c8ff889e4711c79d5dd23495b1dab8b04e4465ed040303cf70c280b8f46"
+      },
+      "m14-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 20.0,
+          "TWO": 70.0
+        },
+        "bytes": 3890,
+        "source_sha256": "768530cf3e55d5bbc98126ffaba98f0e6199af2514ec8a1a74520018d8360234"
+      },
+      "m14-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 44.0,
+          "TWO": 94.0
+        },
+        "bytes": 3890,
+        "source_sha256": "e29b6e570b91034a9efe3cd447b99cf1a1ad2d0a405bebc3ef55ae6a858c25e6"
+      },
+      "m14-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "de975273284657623cf1888408e558121e7460e6a779cb8ba8dae13ea27f4f68"
+      },
+      "m14-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "6f4287ef06d48ad6f7b7207fc71ff991b2e4cd044263cc8d87258e190473e3c7"
+      },
+      "m14-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "0639c9096c94fa8b02c5ab136fd7cbac6ea3464420fee189c5166d8b682a0ef6"
+      },
+      "m14-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "fb08656ea42bfaaf732fe9f51be712fbcfb655863eb9d11317e88008d8ab04f2"
+      },
+      "m14-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 20.0,
+          "TWO": 70.0
+        },
+        "bytes": 3890,
+        "source_sha256": "df36c3655c302f46efb3d21cf010f14b0556988182447cc355882dace268610c"
+      },
+      "m14-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 44.0,
+          "TWO": 94.0
+        },
+        "bytes": 3890,
+        "source_sha256": "c5a9ec19010ef75e93f995306a09cabbc4c4835569789d4494be96a408529f89"
+      },
+      "m14-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "f865b3334c158ca350897dc46ba026363a72a374c24406e35e39f295ce606854"
+      },
+      "m14-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "fa566fd5a3ae5650f8c49f728ec8f2534f3d0109559e7909d4fe878da3388e10"
+      },
+      "m14-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "4a55690957f5c92243ecb0a6790dcdcf8282baf0ee93ac992dabebefaa96f0dc"
+      },
+      "m14-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "29c57f0314e8024f13ded162d771c2e2a5d308f0515345994a366e17f151df41"
+      },
+      "m15-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 23.0,
+          "TWO": 73.0
+        },
+        "bytes": 3890,
+        "source_sha256": "9d512f43615d9470237a3baaff6168f7b9682899fc74012cf4420e44cd1e8fa4"
+      },
+      "m15-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 47.0,
+          "TWO": 97.0
+        },
+        "bytes": 3890,
+        "source_sha256": "c770bb16e2bc76cff5a476ab07496c1ba5bf7922eb264a1171330dc554c43b08"
+      },
+      "m15-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "17101ab82de400dbd1c36580943cda6eeab4478b07ab22af3930e606f78deb2d"
+      },
+      "m15-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "86ca67e9d4bbc12043535f73f6437043b805a3d9e284d100d3ff0e3010e96100"
+      },
+      "m15-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "a695126ae80fd812009d58db061efde0db4fd148d1804a6f23d847ed5867adc7"
+      },
+      "m15-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "10686c6fe3412ba2f7412c6e67af61d801eca38d6edf825f44c581f3cebb8fd2"
+      },
+      "m15-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 23.0,
+          "TWO": 73.0
+        },
+        "bytes": 3890,
+        "source_sha256": "cea166c03abc53b47dba16398f8ac0f23ffbe17ee8e507cfb563953ed713387d"
+      },
+      "m15-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 47.0,
+          "TWO": 97.0
+        },
+        "bytes": 3890,
+        "source_sha256": "3a23e10ed8668e89109aa1b0343a7b85231ccdecfe71b52b031568d8c49c0a11"
+      },
+      "m15-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "dd33de1fe42ef6054d752970e2889162815c724dab63ce1c947aaddfeb31ab06"
+      },
+      "m15-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 38.0,
+          "TWO": 88.0
+        },
+        "bytes": 3887,
+        "source_sha256": "4b72eceaeaca9b1fb49348ba6a6c6b3f6acb9321121e90d6b325a85a2c259711"
+      },
+      "m15-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "55918899b8c8fb0ec21275de3143938b42d827ac0f10fe6a1900136bf8c4c0f5"
+      },
+      "m15-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 53.0,
+          "TWO": 103.0
+        },
+        "bytes": 3892,
+        "source_sha256": "df21c89389cfdee1bbfb8552abfe995153736f198d6bd6e38f24dd960889e63d"
+      }
+    },
+    "final": {
+      "m12-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 20.0,
+          "TWO": 70.0
+        },
+        "bytes": 3889,
+        "source_sha256": "e0c6c01936606acae3ed6245b7a5aac57cd87cf0d55fd70b42907bd9b36fa05a"
+      },
+      "m12-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 44.0,
+          "TWO": 94.0
+        },
+        "bytes": 3889,
+        "source_sha256": "47d9cc7dfd157beefc40f87808e704f4f95dc690b7d56561594899d65ab8e041"
+      },
+      "m12-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.0,
+          "TWO": 91.0
+        },
+        "bytes": 3889,
+        "source_sha256": "da626c54b2a6659cf29d54b7662cfda509f1177db702934cff4fcd85464e7fd2"
+      },
+      "m12-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.0,
+          "TWO": 91.0
+        },
+        "bytes": 3889,
+        "source_sha256": "5e82f2fdd35e043f51673e5bafd8c1f60ef1b2498fe302676000ed8465977ae0"
+      },
+      "m12-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.0,
+          "TWO": 106.0
+        },
+        "bytes": 3891,
+        "source_sha256": "5b22bb7dcb123bbf0582fc47127a4c9f319dff4456e4465ea99a18a04aa11ecf"
+      },
+      "m12-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.0,
+          "TWO": 106.0
+        },
+        "bytes": 3891,
+        "source_sha256": "64984d86ee3e0634c8a0698e42405a7914893c0dea3ed6f946a05ef5f963d752"
+      },
+      "m12-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 162.0,
+          "TWO": 62.0
+        },
+        "bytes": 3887,
+        "source_sha256": "a361acb8455b2e6f6bd914528cfb0a1776a084c4caa050c08252e466aa8f292c"
+      },
+      "m12-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 138.0,
+          "TWO": 38.0
+        },
+        "bytes": 3888,
+        "source_sha256": "afa5bd9e390c86b7dbdceef9c9e39ba04b5ef2206f5ad625d664b145fcdee597"
+      },
+      "m12-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.0,
+          "TWO": 41.0
+        },
+        "bytes": 3887,
+        "source_sha256": "6c4b550acc489a4b8562c266778f625a603c9267e9d55628b55722add25b8c9c"
+      },
+      "m12-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.0,
+          "TWO": 41.0
+        },
+        "bytes": 3887,
+        "source_sha256": "5aad9b25d432edb18fb30e253bb591eb1e44d7b8bdffab8be9cbe79ffe706878"
+      },
+      "m12-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.0,
+          "TWO": 26.0
+        },
+        "bytes": 3888,
+        "source_sha256": "c3898ffd3e0954e7f8723876f28e30e809947e8c89d2a3b0dd131710a7588679"
+      },
+      "m12-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.0,
+          "TWO": 26.0
+        },
+        "bytes": 3888,
+        "source_sha256": "de074c8ff889e4711c79d5dd23495b1dab8b04e4465ed040303cf70c280b8f46"
+      },
+      "m14-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 20.0,
+          "TWO": 70.0
+        },
+        "bytes": 3889,
+        "source_sha256": "768530cf3e55d5bbc98126ffaba98f0e6199af2514ec8a1a74520018d8360234"
+      },
+      "m14-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 44.0,
+          "TWO": 94.0
+        },
+        "bytes": 3889,
+        "source_sha256": "e29b6e570b91034a9efe3cd447b99cf1a1ad2d0a405bebc3ef55ae6a858c25e6"
+      },
+      "m14-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.0,
+          "TWO": 91.0
+        },
+        "bytes": 3889,
+        "source_sha256": "de975273284657623cf1888408e558121e7460e6a779cb8ba8dae13ea27f4f68"
+      },
+      "m14-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.0,
+          "TWO": 91.0
+        },
+        "bytes": 3889,
+        "source_sha256": "6f4287ef06d48ad6f7b7207fc71ff991b2e4cd044263cc8d87258e190473e3c7"
+      },
+      "m14-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.0,
+          "TWO": 106.0
+        },
+        "bytes": 3891,
+        "source_sha256": "0639c9096c94fa8b02c5ab136fd7cbac6ea3464420fee189c5166d8b682a0ef6"
+      },
+      "m14-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.0,
+          "TWO": 106.0
+        },
+        "bytes": 3891,
+        "source_sha256": "fb08656ea42bfaaf732fe9f51be712fbcfb655863eb9d11317e88008d8ab04f2"
+      },
+      "m14-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 162.0,
+          "TWO": 62.0
+        },
+        "bytes": 3887,
+        "source_sha256": "df36c3655c302f46efb3d21cf010f14b0556988182447cc355882dace268610c"
+      },
+      "m14-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 138.0,
+          "TWO": 38.0
+        },
+        "bytes": 3888,
+        "source_sha256": "c5a9ec19010ef75e93f995306a09cabbc4c4835569789d4494be96a408529f89"
+      },
+      "m14-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.0,
+          "TWO": 41.0
+        },
+        "bytes": 3887,
+        "source_sha256": "f865b3334c158ca350897dc46ba026363a72a374c24406e35e39f295ce606854"
+      },
+      "m14-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.0,
+          "TWO": 41.0
+        },
+        "bytes": 3887,
+        "source_sha256": "fa566fd5a3ae5650f8c49f728ec8f2534f3d0109559e7909d4fe878da3388e10"
+      },
+      "m14-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.0,
+          "TWO": 26.0
+        },
+        "bytes": 3888,
+        "source_sha256": "4a55690957f5c92243ecb0a6790dcdcf8282baf0ee93ac992dabebefaa96f0dc"
+      },
+      "m14-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.0,
+          "TWO": 26.0
+        },
+        "bytes": 3888,
+        "source_sha256": "29c57f0314e8024f13ded162d771c2e2a5d308f0515345994a366e17f151df41"
+      },
+      "m15-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 26.0,
+          "TWO": 76.0
+        },
+        "bytes": 3889,
+        "source_sha256": "9d512f43615d9470237a3baaff6168f7b9682899fc74012cf4420e44cd1e8fa4"
+      },
+      "m15-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 50.0,
+          "TWO": 100.0
+        },
+        "bytes": 3891,
+        "source_sha256": "c770bb16e2bc76cff5a476ab07496c1ba5bf7922eb264a1171330dc554c43b08"
+      },
+      "m15-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.0,
+          "TWO": 91.0
+        },
+        "bytes": 3889,
+        "source_sha256": "17101ab82de400dbd1c36580943cda6eeab4478b07ab22af3930e606f78deb2d"
+      },
+      "m15-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.0,
+          "TWO": 91.0
+        },
+        "bytes": 3889,
+        "source_sha256": "86ca67e9d4bbc12043535f73f6437043b805a3d9e284d100d3ff0e3010e96100"
+      },
+      "m15-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.0,
+          "TWO": 106.0
+        },
+        "bytes": 3891,
+        "source_sha256": "a695126ae80fd812009d58db061efde0db4fd148d1804a6f23d847ed5867adc7"
+      },
+      "m15-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.0,
+          "TWO": 106.0
+        },
+        "bytes": 3891,
+        "source_sha256": "10686c6fe3412ba2f7412c6e67af61d801eca38d6edf825f44c581f3cebb8fd2"
+      },
+      "m15-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 156.0,
+          "TWO": 56.0
+        },
+        "bytes": 3888,
+        "source_sha256": "cea166c03abc53b47dba16398f8ac0f23ffbe17ee8e507cfb563953ed713387d"
+      },
+      "m15-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 132.0,
+          "TWO": 32.0
+        },
+        "bytes": 3886,
+        "source_sha256": "3a23e10ed8668e89109aa1b0343a7b85231ccdecfe71b52b031568d8c49c0a11"
+      },
+      "m15-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.0,
+          "TWO": 41.0
+        },
+        "bytes": 3887,
+        "source_sha256": "dd33de1fe42ef6054d752970e2889162815c724dab63ce1c947aaddfeb31ab06"
+      },
+      "m15-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.0,
+          "TWO": 41.0
+        },
+        "bytes": 3887,
+        "source_sha256": "4b72eceaeaca9b1fb49348ba6a6c6b3f6acb9321121e90d6b325a85a2c259711"
+      },
+      "m15-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.0,
+          "TWO": 26.0
+        },
+        "bytes": 3888,
+        "source_sha256": "55918899b8c8fb0ec21275de3143938b42d827ac0f10fe6a1900136bf8c4c0f5"
+      },
+      "m15-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.0,
+          "TWO": 26.0
+        },
+        "bytes": 3888,
+        "source_sha256": "df21c89389cfdee1bbfb8552abfe995153736f198d6bd6e38f24dd960889e63d"
+      }
+    },
+    "libreoffice": {
+      "m12-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 26.100000381469727,
+          "TWO": 76.05000305175781
+        }
+      },
+      "m12-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 44.099998474121094,
+          "TWO": 94.05000305175781
+        }
+      },
+      "m12-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.099998474121094,
+          "TWO": 91.05000305175781
+        }
+      },
+      "m12-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.099998474121094,
+          "TWO": 91.05000305175781
+        }
+      },
+      "m12-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.099998474121094,
+          "TWO": 106.05000305175781
+        }
+      },
+      "m12-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.099998474121094,
+          "TWO": 106.05000305175781
+        }
+      },
+      "m12-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.1500015258789,
+          "TWO": 26.100000381469727
+        }
+      },
+      "m12-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 144.14999389648438,
+          "TWO": 44.099998474121094
+        }
+      },
+      "m12-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.14999389648438,
+          "TWO": 41.099998474121094
+        }
+      },
+      "m12-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.14999389648438,
+          "TWO": 41.099998474121094
+        }
+      },
+      "m12-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 156.14999389648438,
+          "TWO": 56.099998474121094
+        }
+      },
+      "m12-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 156.14999389648438,
+          "TWO": 56.099998474121094
+        }
+      },
+      "m14-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 26.100000381469727,
+          "TWO": 76.05000305175781
+        }
+      },
+      "m14-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 44.099998474121094,
+          "TWO": 94.05000305175781
+        }
+      },
+      "m14-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.099998474121094,
+          "TWO": 91.05000305175781
+        }
+      },
+      "m14-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.099998474121094,
+          "TWO": 91.05000305175781
+        }
+      },
+      "m14-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.099998474121094,
+          "TWO": 106.05000305175781
+        }
+      },
+      "m14-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.099998474121094,
+          "TWO": 106.05000305175781
+        }
+      },
+      "m14-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.1500015258789,
+          "TWO": 26.100000381469727
+        }
+      },
+      "m14-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 144.14999389648438,
+          "TWO": 44.099998474121094
+        }
+      },
+      "m14-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.14999389648438,
+          "TWO": 41.099998474121094
+        }
+      },
+      "m14-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.14999389648438,
+          "TWO": 41.099998474121094
+        }
+      },
+      "m14-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 156.14999389648438,
+          "TWO": 56.099998474121094
+        }
+      },
+      "m14-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 156.14999389648438,
+          "TWO": 56.099998474121094
+        }
+      },
+      "m15-r0-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 26.100000381469727,
+          "TWO": 76.05000305175781
+        }
+      },
+      "m15-r0-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 50.099998474121094,
+          "TWO": 100.05000305175781
+        }
+      },
+      "m15-r0-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.099998474121094,
+          "TWO": 91.05000305175781
+        }
+      },
+      "m15-r0-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 41.099998474121094,
+          "TWO": 91.05000305175781
+        }
+      },
+      "m15-r0-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.099998474121094,
+          "TWO": 106.05000305175781
+        }
+      },
+      "m15-r0-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 56.099998474121094,
+          "TWO": 106.05000305175781
+        }
+      },
+      "m15-r1-a0-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 126.1500015258789,
+          "TWO": 26.100000381469727
+        }
+      },
+      "m15-r1-a0-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 150.14999389648438,
+          "TWO": 50.099998474121094
+        }
+      },
+      "m15-r1-a1-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.14999389648438,
+          "TWO": 41.099998474121094
+        }
+      },
+      "m15-r1-a1-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 141.14999389648438,
+          "TWO": 41.099998474121094
+        }
+      },
+      "m15-r1-a2-i0": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 156.14999389648438,
+          "TWO": 56.099998474121094
+        }
+      },
+      "m15-r1-a2-i24": {
+        "pages": 1,
+        "words": [
+          "ONE",
+          "TWO"
+        ],
+        "x": {
+          "ONE": 156.14999389648438,
+          "TWO": 56.099998474121094
+        }
+      }
+    }
+  },
+  "word_native": {
+    "word-proof": {
+      "source_sha256": "625ada10e74dacd361efef829e64771a05da2ff83d4f50520483e2cb9c801e23",
+      "native": {
+        "pages": 5,
+        "sha256": "08d8a965315da77cca5e0ce51c039b3beb5934f0d96520069fadb8555d143fa0",
+        "x": [
+          {
+            "ONE0": 155.0400390625,
+            "TWO0": 54.9599494934082
+          },
+          {
+            "ONE1": 151.919921875,
+            "TWO1": 52.08007049560547
+          },
+          {
+            "ONE2": 155.0400390625,
+            "TWO2": 54.9599494934082
+          },
+          {
+            "ONE3": 140.39988708496094,
+            "TWO3": 40.5600471496582
+          },
+          {
+            "ONE4": 126.0,
+            "TWO4": 25.9199275970459
+          }
+        ]
+      },
+      "final": {
+        "pages": 5,
+        "sha256": "3f5d78a62be95c0e6ada920dbe681c06619f03afe7be83606cce8197659f5281",
+        "x": [
+          {
+            "ONE0": 156.0,
+            "TWO0": 56.0
+          },
+          {
+            "ONE1": 153.0,
+            "TWO1": 53.0
+          },
+          {
+            "ONE2": 156.0,
+            "TWO2": 56.0
+          },
+          {
+            "ONE3": 141.0,
+            "TWO3": 41.0
+          },
+          {
+            "ONE4": 126.0,
+            "TWO4": 26.0
+          }
+        ],
+        "max_word_x_error_pt": 1.080078125
+      },
+      "before": {
+        "pages": 5,
+        "sha256": "ae86eadcf0c8e5ac79ef9edd44984526e1e53efaba5152c26adc6edf3d22684a",
+        "x": [
+          {
+            "ONE0": 23.0,
+            "TWO0": 73.0
+          },
+          {
+            "ONE1": 23.0,
+            "TWO1": 73.0
+          },
+          {
+            "ONE2": 25.399999618530273,
+            "TWO2": 75.4000015258789
+          },
+          {
+            "ONE3": 38.0,
+            "TWO3": 88.0
+          },
+          {
+            "ONE4": 53.0,
+            "TWO4": 103.0
+          }
+        ],
+        "max_word_x_error_pt": 132.0400390625
+      }
+    },
+    "word-border-proof": {
+      "source_sha256": "2e0dc7aa557bef769a03e6f8e05b375ee9fa56ea7b1250ac5daa22dfd4e2b413",
+      "native": {
+        "pages": 1,
+        "sha256": "a2e2fd9ab07806433d4b4664e23add51502438dbaa17afa570b63a19bb6a66fa",
+        "x": [
+          {
+            "ONE": 155.0400390625,
+            "TWO": 54.9599494934082
+          }
+        ]
+      },
+      "final": {
+        "pages": 1,
+        "sha256": "6b51ae35b604c063fed0e2d3a6b33bf6eff5618c9834169fcd07c4606e1d0ee2",
+        "x": [
+          {
+            "ONE": 156.0,
+            "TWO": 56.0
+          }
+        ],
+        "max_word_x_error_pt": 1.0400505065917969
+      },
+      "before": {
+        "pages": 1,
+        "sha256": "20b8a38aab67144ee827d5eef54ff5e4871273d12c3fff7e63e0fd53fc172081",
+        "x": [
+          {
+            "ONE": 23.0,
+            "TWO": 73.0
+          }
+        ],
+        "max_word_x_error_pt": 132.0400390625
+      }
+    },
+    "word-legacy-12": {
+      "source_sha256": "44cb36f38e8218fd9250bdffbd50ad119c980fc05f0273458131e3d27a1246ea",
+      "native": {
+        "pages": 2,
+        "sha256": "f08bb4d46442a5f5546093fc994312f74de471458f379376cc4e61b3b56e7528",
+        "x": [
+          {
+            "ONE": 162.0,
+            "TWO": 61.919925689697266
+          },
+          {
+            "ONE": 138.0,
+            "TWO": 37.919925689697266
+          }
+        ]
+      },
+      "final": {
+        "pages": 2,
+        "sha256": "f92fdaa4252948b11cb0d0536de2d10b28933ee9b2b6da5a9f33fc3400e23ad6",
+        "x": [
+          {
+            "ONE": 162.0,
+            "TWO": 62.0
+          },
+          {
+            "ONE": 138.0,
+            "TWO": 38.0
+          }
+        ],
+        "max_word_x_error_pt": 0.08007431030273438
+      },
+      "before": {
+        "pages": 2,
+        "sha256": "e2fcd6d5cc45217d020c58f75124daeee0cb0908f10e4966d6a958b496066d46",
+        "x": [
+          {
+            "ONE": 20.0,
+            "TWO": 70.0
+          },
+          {
+            "ONE": 44.0,
+            "TWO": 94.0
+          }
+        ],
+        "max_word_x_error_pt": 142.0
+      }
+    },
+    "word_version": "16.113.4"
+  },
+  "word_max_x_error_pt": {
+    "before": 142.0,
+    "final": 1.080078125
+  },
+  "common_pdf_regression": {
+    "cases": 5,
+    "pages": 113,
+    "all_page_records_and_bytes_unchanged": true,
+    "record_digests": {
+      "small": "5f98a3d5aac5da76b8371b6a173dcb8c32e56ac60083d2f8f0deb62ed5920a71",
+      "hundred_pages": "be4019e4869cd2d19c97d23a139ddca01d3b7fb25fec4c7dd4a125cda68ee54b",
+      "image_table": "4d37e6a0b86275f97bc8331320419422b6065f236ed75281d365274fc214c97f",
+      "repeated_images": "3e1c8fd836c66039a0611a74b844171a61340f07269997bba402d068db0cb9ee",
+      "mixed_styles": "8e3c301b4c8df25e7edec89a3ad44ff66ea731b28ff0ca9267ce7bd864484379"
+    },
+    "digest_definition": "SHA256 of each corpus JSON page records and bytes, sorted keys, compact separators; raw records regenerated by common_probe"
+  },
+  "wheel": {
+    "bytes": 26260423,
+    "delta_bytes": 598,
+    "sha256": "b52c90049a9883937d03a234658f2f3d3e115af03c5ac34ca1684de79765bb90",
+    "package_files_verified": 133
+  },
+  "probe": "import hashlib,json,sys,types,importlib.util\nfrom pathlib import Path\nfrom io import BytesIO\nimport pymupdf\nimport aspose.words_foss as aw\nfrom aspose.words_foss.saving import PdfSaveOptions\nfrom docx import Document\nfrom docx.oxml.ns import qn\nassert 'site-packages' in aw.__file__,aw.__file__\nrepo=Path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python')\npackage=types.ModuleType('tests');package.__path__=[str(repo/'tests')];sys.modules['tests']=package\nspec=importlib.util.spec_from_file_location('tests.test_table_direction',repo/'tests/test_table_direction.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)\nroot=Path('/tmp/docweave-table-direction');root.mkdir(exist_ok=True);result={}\nfor mode in (12,14,15):\n for bidi in (False,True):\n  for alignment in (0,1,2):\n   for indent in (0,24):\n    name=f'm{mode}-r{int(bidi)}-a{alignment}-i{indent}';source=root/(name+'.docx')\n    if not source.exists():\n     doc=Document(BytesIO(module.source_docx(bidi=bidi,alignment=alignment,indent=indent)))\n     compat=doc.settings.element.find(qn('w:compat'));next(e for e in compat if e.get(qn('w:name'))=='compatibilityMode').set(qn('w:val'),str(mode));doc.save(source)\n    document=aw.Document(source)\n    options=PdfSaveOptions();raw=document.to_bytes(options)\n    with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n     words=pdf[0].get_text('words');result[name]={'pages':len(pdf),'words':[w[4] for w in words],'x':{w[4]:w[0] for w in words},'bytes':len(raw),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest()}\n     (root/(name+'-'+sys.argv[1]+'.pdf')).write_bytes(raw)\n     if mode==15 and indent==0 and alignment==0:pdf[0].get_pixmap(matrix=pymupdf.Matrix(2,2)).save(root/(name+'-'+sys.argv[1]+'.png'))\nPath('/tmp/docweave-table-direction-'+sys.argv[1]+'.json').write_text(json.dumps(result,indent=2)+'\\n');print('saved',len(result),'cases')\n",
+  "word_probe": "import hashlib,json,sys,plistlib\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__ or 'docweave-table-direction-baseline' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-table-direction');result={}\nfor name in ('word-proof','word-border-proof','word-legacy-12'):\n source=root/(name+'.docx');raw=aw.Document(source).to_bytes(aw.saving.PdfSaveOptions())\n (root/(name+'-'+sys.argv[1]+'.pdf')).write_bytes(raw)\n case={'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest()}\n for label,path in [('native',root/(name+'.pdf')),(sys.argv[1],root/(name+'-'+sys.argv[1]+'.pdf'))]:\n  with pymupdf.open(path) as pdf:\n   case[label]={'pages':len(pdf),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'x':[{w[4]:w[0] for w in p.get_text('words')} for p in pdf]}\n result[name]=case\nresult['word_version']=plistlib.load(open('/Applications/Microsoft Word.app/Contents/Info.plist','rb'))['CFBundleShortVersionString']\nPath('/tmp/docweave-table-direction-word-'+sys.argv[1]+'.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint('saved eight native Word pages,',sys.argv[1])\n",
+  "common_probe": "import hashlib,json,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-current-performance');results={}\nfor case in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n raw=aw.Document(root/(case+'.docx')).to_bytes(aw.saving.PdfSaveOptions())\n pages=[]\n with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n  for page in pdf:\n   pages.append({key:hashlib.sha256(value).hexdigest() for key,value in {'words':repr(page.get_text('words')).encode(),'pixels':page.get_pixmap().samples,'drawings':repr(page.get_drawings()).encode(),'images':repr(page.get_image_info()).encode()}.items()})\n results[case]={'bytes':len(raw),'pages':pages}\nPath(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\\n');print('five PDF corpora saved')\n",
+  "word_export": "Microsoft Word UI, Save As PDF, Best for printing (local); no Microsoft online export",
+  "limits": [
+    "Native Word covers compatibility 15 margins/alignment/borders and compatibility 12 with 0/24 pt indent; mode 14 is regression-tested but not separately exported through Word.",
+    "Word border geometry differs by about 1 pt; source Arial is substituted. No claim of Word-identical layout.",
+    "LibreOffice interprets some RTL alignment/indent combinations differently; its 36-case results are retained rather than treated as normative Word parity.",
+    "No new speed/RSS benchmark; wheel size increased. Conditional table styles, row property exceptions and border conflict resolution remain incomplete.",
+    "Five-page small-font visual comparison also shows row-height differences; horizontal coordinate improvements do not establish vertical layout parity."
+  ],
+  "intermediate_padding_candidate": {
+    "case_count": 36,
+    "record_sha256": "570a73cbe036ae763ad2d165f20c7b18137db12f7777901d1e606daa13f135e8",
+    "outcome": "Rejected after Word native output proved cell padding must not be mirrored"
+  },
+  "word_fixture_generator": "import copy,sys,types,importlib.util\nfrom pathlib import Path\nfrom io import BytesIO\nfrom docx import Document\nfrom docx.oxml import OxmlElement\nfrom docx.oxml.ns import qn\nfrom docx.shared import Pt\nrepo=Path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python')\npackage=types.ModuleType('tests');package.__path__=[str(repo/'tests')];sys.modules['tests']=package\nspec=importlib.util.spec_from_file_location('tests.test_table_direction',repo/'tests/test_table_direction.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)\nroot=Path(sys.argv[1]);root.mkdir(exist_ok=True)\ndef border(pr,colors):\n b=OxmlElement('w:tblBorders' if pr.tag==qn('w:tblPr') else 'w:tcBorders')\n for side,color in colors:\n  edge=OxmlElement('w:'+side)\n  for k,v in [('val','single'),('sz','8'),('color',color)]:edge.set(qn('w:'+k),v)\n  b.append(edge)\n pr.append(b)\nproof=Document(BytesIO(m.source_docx()))\nproof.tables[0]._tbl.getparent().remove(proof.tables[0]._tbl)\nfor i,alignment in enumerate([0,0,0,1,2]):\n d=Document(BytesIO(m.source_docx(alignment=alignment)));t=d.tables[0]\n margins=t._tbl.tblPr.find(qn('w:tblCellMar'))\n if i in (1,2):\n  for tag in (('start','end') if i==1 else ('left','right')):margins.remove(margins.find(qn('w:'+tag)))\n for j,c in enumerate(t.rows[0].cells):\n  c.paragraphs[0].runs[0].text=('ONE' if j==0 else 'TWO')+str(i)\n  c.paragraphs[0].runs[0].font.size=Pt(8)\n border(t._tbl.tblPr,[(s,'FF0000') for s in ['top','left','bottom','right','insideH','insideV']])\n if i:proof.add_page_break()\n proof._element.body.insert(len(proof._element.body)-1,copy.deepcopy(t._tbl))\nproof.save(root/'word-proof.docx')\nd=Document(BytesIO(m.source_docx()))\nfor c in d.tables[0].rows[0].cells:border(c._tc.get_or_add_tcPr(),[('left','FF0000'),('right','0000FF')])\nd.save(root/'word-border-proof.docx')\nd=Document(BytesIO(m.source_docx()));compat=d.settings.element.find(qn('w:compat'));next(e for e in compat if e.get(qn('w:name'))=='compatibilityMode').set(qn('w:val'),'12')\nd.add_page_break();other=Document(BytesIO(m.source_docx(indent=24)));d._element.body.insert(len(d._element.body)-1,copy.deepcopy(other.tables[0]._tbl));d.save(root/'word-legacy-12.docx')\nassert len(Document(root/'word-proof.docx').tables)==5\nassert len(Document(root/'word-border-proof.docx').tables)==1\nassert len(Document(root/'word-legacy-12.docx').tables)==2\nprint('three Word fixture documents generated')\n",
+  "word_fixture_generator_validation": "Regenerated all three DOCX inputs in a separate directory; final PDF page count and every label x matched recorded final outputs exactly. ZIP timestamps may change source hashes.",
+  "word_border_geometry": {
+    "native": [
+      {
+        "x_pt": 48.959999084472656,
+        "rgb": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "x_pt": 149.04000091552734,
+        "rgb": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "x_pt": 198.95999908447266,
+        "rgb": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "final": [
+      {
+        "x_pt": 150.0,
+        "rgb": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "x_pt": 200.0,
+        "rgb": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "x_pt": 50.0,
+        "rgb": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "x_pt": 150.0,
+        "rgb": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "note": "Library retains overlapping blue/red strokes at shared x=150; last red stroke wins visually. Full border conflict resolution remains outside this phase."
+  },
+  "validation": {
+    "source_targeted": {
+      "passed": 57,
+      "warnings": 38,
+      "seconds": 18.61
+    },
+    "installed_full": {
+      "passed": 1541,
+      "warnings": 165,
+      "seconds": 435.49,
+      "skipped": 0
+    },
+    "installed_examples": {
+      "passed": 31,
+      "warnings": 13,
+      "seconds": 9.7
+    },
+    "document_local_links": 138,
+    "document_python_examples": 23,
+    "ruff_and_diff_check": "passed"
+  }
+}

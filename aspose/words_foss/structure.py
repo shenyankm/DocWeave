@@ -50,6 +50,7 @@ def _block(node, location: str) -> dict:
                 })
             rows.append({"heading": row.row_format.heading_format, "cells": cells})
         return {"type": "table", "location": location, "title": node.title, "rows": rows,
+                "bidi": node.bidi,
                 "provenance": node.source_location.model_dump() if node.source_location else None}
     return {"type": "unsupported", "location": location, "node_type": node.type}
 
