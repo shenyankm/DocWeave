@@ -1281,14 +1281,16 @@
       ],
       "baseline_behavior": "copies with destination ownership and no parent, original remains attached and unchanged",
       "current_implementation": "DocxDocument.import_node absent",
-      "gap": "cross-document/part style/list/resource import absent",
+      "gap": "import entry point and mode enum absent; style/default/inheritance/list/resource translation unimplemented; all node kinds/options/errors/rendering remain incomplete",
       "dependencies": [
         "OPC relationships",
         "style/list mapping",
         "ownership"
       ],
       "approach": "implement node/resource import with collision mapping and atomic failure",
-      "exit_criteria": "all overloads, depths, format modes and resources verified through save and render"
+      "exit_criteria": "all overloads, depths, format modes and resources verified through save and render",
+      "supplementary_evidence": "import-node-26.9.json",
+      "delivery": "56 baseline/current paired observations; implementation_not_started"
     },
     "aspose.words.CompositeNode.append_child": {
       "samples": [
