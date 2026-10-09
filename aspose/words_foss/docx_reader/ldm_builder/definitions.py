@@ -28,7 +28,7 @@ from aspose.words_foss.docx_reader.utils import _canonicalize_style_name, parse_
 from aspose.words_foss.model.style_identifiers import resolve_style_identifier
 
 from ._context import ReaderContext
-from ._helpers import apply_padding_sides, build_borders, build_shading, find_val, parse_int, is_truthy_onoff
+from ._helpers import apply_padding_sides, build_borders, build_shading, find_val, parse_int, is_truthy_onoff, read_twip
 from .cascading import (
     FontBuilder,
     FontResolver,
@@ -347,16 +347,20 @@ class ListBuilder:
         if ind is None:
             return
         ParagraphFormatBuilder.apply_character_indents(ind, ll)
-        left = ind.get(f"{W_NS}left", "")
-        hanging = ind.get(f"{W_NS}hanging", "")
-        first_line = ind.get(f"{W_NS}firstLine", "")
-        if left:
-            ll.number_position = int(left) / _TWIPS_PER_PT
-        if left and hanging:
-            ll.text_position = int(left) / _TWIPS_PER_PT
-            ll.number_position = (int(left) - int(hanging)) / _TWIPS_PER_PT
-        elif first_line:
-            ll.text_position = int(left) / _TWIPS_PER_PT if left else 0.0
+        left = read_twip(ind, "left")
+        hanging = read_twip(ind, "hanging")
+        first_line = read_twip(ind, "firstLine")
+        if left is not None:
+            ll.number_position = left
+        if left is not None and hanging is not None:
+            ll.text_position = left
+            # Subtract integer twips before scaling to avoid point-rounding drift.
+            try:
+                ll.number_position = (int(ind.get(f"{W_NS}left")) - int(ind.get(f"{W_NS}hanging"))) / _TWIPS_PER_PT
+            except OverflowError:
+                raise ValueError("OOXML numbering dimensions exceed numeric range") from None
+        elif first_line is not None:
+            ll.text_position = left if left is not None else 0.0
 
     def _apply_level_misc(self, lvl: ET.Element, ll: ldm.ListLevel) -> None:
         lvl_rPr = lvl.find(f"{W_NS}rPr")

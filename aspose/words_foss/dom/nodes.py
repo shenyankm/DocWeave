@@ -751,20 +751,26 @@ def _read_dimension(element, prop):
     relative = ("firstLineChars", "hangingChars") if prop == "first_line_indent" else (attribute + "Chars",) + ((alias + "Chars",) if alias else ())
     if any(element.hasAttributeNS(W, attr) for attr in relative):
         raise NotImplementedError("Character-based paragraph indents require font-aware resolution")
+    candidates = [attribute]
     if alias:
         # Native conflict resolution follows XML attribute order within each layer.
         candidates = [element.attributes.item(index).localName for index in range(element.attributes.length)
                       if element.attributes.item(index).namespaceURI == W and
                       element.attributes.item(index).localName in {attribute, alias}]
-        if candidates:
-            attribute = candidates[-1]
-    if not element.hasAttributeNS(W, attribute):
-        return None
-    try:
-        value = int(element.getAttributeNS(W, attribute)) / 20
-    except ValueError as exc:
-        raise ValueError("Paragraph dimensions require integer twips") from exc
-    return -value if attribute == "hanging" else value
+    value = None
+    for attribute in candidates:
+        if not element.hasAttributeNS(W, attribute):
+            continue
+        try:
+            raw = element.getAttributeNS(W, attribute)
+            if re.fullmatch(r"[+-]?[0-9]+", raw.strip(" \t\r\n")) is None:
+                raise ValueError
+            value = int(raw) / 20
+        except (ValueError, OverflowError):
+            raise ValueError("Paragraph dimensions require integer twips") from None
+        if attribute == "hanging":
+            value = -value
+    return value
 
 
 class ParagraphFormat(_Format):

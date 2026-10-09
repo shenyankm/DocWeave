@@ -144,6 +144,8 @@ for style in editable.styles:
   有限值乘以 20 后若发生浮点溢出，按官方观察得到 -2147483648 twip。
   值按 1/20pt 四舍六入五成双量化，如 12.375→12.4。负首行缩进写为 hanging，
   与 firstLine 同层出现时取 XML 中后出现的属性；编辑保留 ind/spacing 中未涉及的属性。
+  点值读取拒绝空值、非 XML 整数和数值溢出，同一属性的损坏别名也拒绝；
+  错误及默认异常链不显示原始值。转换模型沿用这一拒绝规则，不静默替换成零或继承值。
   [360 次官方编辑及 270 次错误观察](benchmarks/paragraph-dimensions-26.9.json)覆盖 45 个普通输入；
   本项目直接值接受 `None` 清除，与官方已解析值接口不同。字符缩进的字号上下文与加载/保存状态不同，见[原生生命周期观察](benchmarks/paragraph-character-indents-26.9.json)；当前 DOM 有效格式明确拒绝；
   逻辑字符缩进、相对行间距、编号/条件表格上下文和完整 ParagraphFormat API 仍未对齐。

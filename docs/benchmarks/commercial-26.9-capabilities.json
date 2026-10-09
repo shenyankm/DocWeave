@@ -16497,6 +16497,13 @@
         "implementation": "rPrDefault present: 10pt; absent: 11pt; declared sz overrides; direct getters remain unset",
         "tests": "tests/test_implicit_font_sizes.py",
         "delivery": "implemented in alternate DOM; full canonical API and formatting acceptance remain incomplete"
+      },
+      "malformed_font_size_gap": {
+        "current": "DOM half-point read validates values; conversion FontBuilder._apply_size catches invalid integer text and leaves the previous/default value",
+        "implementation": "aspose/words_foss/docx_reader/ldm_builder/cascading.py:FontBuilder._apply_size",
+        "native_recovery": "not_measured",
+        "status": "open",
+        "impact": "malformed font-size conversion may silently inherit/default; requires native behavior measurement and explicit loss/rejection policy"
       }
     },
     {
@@ -30532,6 +30539,14 @@
         "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
       }
     },
     {
@@ -30758,6 +30773,14 @@
         "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
       }
     },
     {
@@ -30994,6 +31017,14 @@
         "limits": "Native baseline only; SDK native setters, font changes, lists, conditional tables, layout update and rendering remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
       }
     },
     {
@@ -31057,6 +31088,14 @@
         "implementation": "finite 0..1584pt before quantization; RuntimeError outside range, mutation-free; paragraph and style edits and save/reopen",
         "tests": "tests/test_paragraph_dimensions.py",
         "full_acceptance": false
+      },
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
       }
     },
     {
@@ -31109,6 +31148,14 @@
         "file": "paragraph-spacing-limits-26.9.json",
         "implementation": "finite 0..1584pt before quantization; RuntimeError outside range, mutation-free; paragraph and style edits and save/reopen",
         "tests": "tests/test_paragraph_dimensions.py",
+        "full_acceptance": false
+      },
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
         "full_acceptance": false
       }
     },
@@ -237923,7 +237970,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.lists.ListLevel.number_style",
@@ -237983,7 +238038,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.lists.ListLevel.trailing_character",
@@ -296029,7 +296092,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.tables.CellFormat.clear_formatting",
@@ -296089,7 +296160,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.tables.CellFormat.orientation",
@@ -296119,7 +296198,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.tables.CellFormat.set_paddings",
@@ -296149,7 +296236,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "malformed_twip_input_evidence": {
+        "implementation": "aspose/words_foss/dom/nodes.py:_read_dimension; aspose/words_foss/docx_reader/ldm_builder/_helpers.py:twip_to_pt/read_twip; aspose/words_foss/docx_reader/ldm_builder/definitions.py:ListBuilder._apply_level_indent",
+        "tests": "tests/test_twip_input_validation.py",
+        "scope": "consumed paragraph indentation/spacing, list definitions/inline overrides and dxa table/cell margins reject malformed or unrepresentable integer twips without exposing values or silently defaulting; raw package and existing CLI output retained",
+        "native_invalid_input_recovery": "not_measured",
+        "policy": "explicit invalid-input rejection; not an assertion of native recovery/error compatibility",
+        "full_acceptance": false
+      }
     },
     {
       "id": "aspose.words.tables.CellFormat.vertical_alignment",

@@ -1,5 +1,6 @@
 """DRY helpers and atomic single-element builders for OOXML→LDM."""
 
+import re
 from typing import Optional
 from xml.etree import ElementTree as ET
 
@@ -30,18 +31,19 @@ def find_val(parent: ET.Element, tag: str, default: str = "") -> str:
     return elem.get(f"{W_NS}val", default) if elem is not None else default
 
 
-def twip_to_pt(value: str) -> Optional[float]:
-    """Twips string → points; ``None`` on empty/invalid."""
-    if not value:
-        return None
+def twip_to_pt(value: str) -> float:
+    """Parse explicit integer twips; errors do not disclose source values."""
     try:
+        if re.fullmatch(r"[+-]?[0-9]+", value.strip(" \t\r\n")) is None:
+            raise ValueError
         return int(value) / _TWIPS_PER_PT
-    except ValueError:
-        return None
+    except (ValueError, OverflowError):
+        raise ValueError("OOXML dimensions require integer twips") from None
 
 
 def read_twip(elem: ET.Element, attr: str) -> Optional[float]:
-    return twip_to_pt(elem.get(f"{W_NS}{attr}", ""))
+    value = elem.get(f"{W_NS}{attr}")
+    return None if value is None else twip_to_pt(value)
 
 
 def parse_int(value: str, default: int = 0) -> int:

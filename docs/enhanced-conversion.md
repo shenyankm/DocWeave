@@ -255,6 +255,13 @@ run 字体读取时先应用字符样式继承，再应用直接格式；写出�
 DOCX 禁止重复/加密 ZIP 条目、不安全条目路径和 XML 实体扩展。SVG 不允许外部图片引用，
 只接受内部引用及内嵌光栅图片。超限会抛出错误；大文件业务需先评估资源需求再调整源码中的上限。
 
+DOCX/Flat OPC 中被读取的段落缩进、段间距/行间距、编号缩进和 dxa 表格/单元格边距
+必须是可表示的 XML 整数 twip。缺失属性保持未设置；显式空值、小数、下划线数字、
+非 ASCII 数字、指数形式及数值溢出抛出 `ValueError`，不会静默改成零或继承值。
+错误消息及默认异常链隐藏原始属性值；同一缩进的后续有效别名不能掩盖损坏数值。
+原包 DOM 保存仍可保留原始文件；转换失败保留已有输出。
+这属于本项目的损坏输入拒绝规则，官方对同类文件的恢复行为尚未测量。
+
 DOCX/Flat OPC 的字符单位缩进保留到模型，但尚未换算为排版点值。加载时汇总 `leftChars/rightChars`、
 `startChars/endChars`、`firstLineChars/hangingChars`，发出 `load.character_indents_ignored`
 损失诊断；扫描正文、样式、编号和附属 story，包含显式零值，诊断不含正文或属性值。
@@ -265,7 +272,8 @@ DOCX/Flat OPC 的字符单位缩进保留到模型，但尚未换算为排版点
 及模型 JSON 保留已支持路径中的这些值（脚注/尾注等输出限制仍适用），输出归一为 `leftChars/rightChars/firstLineChars` 或 `hangingChars`。
 直接修改转换模型后保存 OOXML 会写入整数百分之一字符；非有限值、错误类型及超出有符号
 32 位百分之一字符范围的值在输出前拒绝。整数换算不依赖调用方的 Decimal 精度；
-损坏的字符属性错误不在异常链中暴露原始值。原包 DOM 的字符 getter/setter 与基准点值联动仍未实现。
+损坏的字符属性错误不在异常链中暴露原始值。原包 DOM 已支持字符直接值和样式继承值的只读 getter；
+字符 setter、与基准点值联动和渲染仍未实现或未验收。
 PDF writer 对模型中的字符值另发 `pdf.character_indents_ignored`；错误过滤可拒绝并保留原输出。
 见[检测与拒绝](../tests/test_character_indent_diagnostics.py)及[模型往返](../tests/test_character_indent_roundtrip.py)。
 这些是单位值保留和损失检测，不能视为字符缩进排版验收。
