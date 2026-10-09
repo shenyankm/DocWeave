@@ -351,6 +351,8 @@ Plain Markdown reports direction loss; HTML tables use `dir="rtl"`. Table direct
 See [direction validation](docs/benchmarks/table-direction.json) for Word and LibreOffice comparisons and limits.
 Small-font and short rotated-cell row minima now use consistent units; affected rows become shorter and
 page/column breaks may change. See [row-height validation](docs/benchmarks/row-height-units.json).
+Bundled fonts store glyph names to reduce initialization work while preserving all glyphs and metrics.
+This increases wheel size about 0.86%; measured benefits vary by document. See [font benchmark](docs/benchmarks/font-glyph-names.json).
 
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
@@ -517,7 +519,7 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Latest installed-wheel verification on macOS/Python 3.13.15: **1,563 regression tests and 31 API examples passed**;
+Latest installed-wheel verification on macOS/Python 3.13.15: **1,567 regression tests and 31 API examples passed**;
 installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
 See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
 These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.

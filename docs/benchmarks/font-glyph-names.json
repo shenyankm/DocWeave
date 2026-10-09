@@ -1,0 +1,893 @@
+{
+  "baseline_commit": "2b9739f6bb180b1328920ff68210c3088d954a04",
+  "environment": "macOS / Python 3.13.15 / fpdf2 2.8.9 / fontTools installed by fpdf2; Zopfli 0.4.3 used only by offline font encoder",
+  "font_candidates": {
+    "Regular": {
+      "before_bytes": 6220064,
+      "after_bytes": 6330324,
+      "delta_bytes": 110260,
+      "changed_tables": [
+        "head",
+        "post"
+      ],
+      "glyphs": 31036,
+      "sha256": "1ce49f638ec660b48be82801605a939aa6fb313eda6bb2cbb29b5306851be7cc"
+    },
+    "Bold": {
+      "before_bytes": 6300588,
+      "after_bytes": 6410848,
+      "delta_bytes": 110260,
+      "changed_tables": [
+        "head",
+        "post"
+      ],
+      "glyphs": 31036,
+      "sha256": "a8de7bbba100d902aa4c98c1e9c85db8354c43fd377acc2a58141eaf922e187e"
+    },
+    "Oblique": {
+      "before_bytes": 6613376,
+      "after_bytes": 6723640,
+      "delta_bytes": 110264,
+      "changed_tables": [
+        "head",
+        "post"
+      ],
+      "glyphs": 31036,
+      "sha256": "4ccde707bb8f5469bc593aee86740dd9047a317a3b9ecb2c887536d6e3484ae4"
+    },
+    "BoldOblique": {
+      "before_bytes": 6704916,
+      "after_bytes": 6815180,
+      "delta_bytes": 110264,
+      "changed_tables": [
+        "head",
+        "post"
+      ],
+      "glyphs": 31036,
+      "sha256": "59289f9e249a603765980576ae9b92dee360608e62fcf7237ca6690e7da40617"
+    }
+  },
+  "font_digests": {
+    "Regular": {
+      "decoded_tables": "33e96821f7cf58d750f5d0f5eebe368261d04bcd5e27d20ed45d76910ed99bb3",
+      "semantic_tables": "740891cfa7ec1eea262de44c8afc8969d0c686cc1eff69ddd0779d3901cc3985"
+    },
+    "Bold": {
+      "decoded_tables": "785bdc701b3fd1423b60e90297b61a9f133adf1070ce2c7618625ec1413b561b",
+      "semantic_tables": "804e11eb6c22934bb3b9ce3520e0456f4ff3519687edde5e92314cd797323638"
+    },
+    "Oblique": {
+      "decoded_tables": "d2719c789a0ccba5e81fb03eebb413e29c747c26c2f9372787a0e682006a51ef",
+      "semantic_tables": "8a232959068a25e1a0dd810ccef8a03f985dfab46d63430766c05ecc793b33b5"
+    },
+    "BoldOblique": {
+      "decoded_tables": "5f1e3eec70ee385b0234e3873cea0c7844fe955831eb92d6857e0b460b7b826e",
+      "semantic_tables": "e3208e5d0485d889a7237f1c442cea41e0b4834353078d2703f83600e642a0a7"
+    }
+  },
+  "first_naive_regular_probe": {
+    "/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/aspose/words_foss/pdf_writer/fonts/DocumentSansSC-Regular.woff": {
+      "bytes": 6220064,
+      "seconds": [
+        0.10451287499745376,
+        0.10959849999926519,
+        0.1257647499878658,
+        0.1023471249936847,
+        0.10157891700509936
+      ]
+    },
+    "/tmp/docweave-post-fonts/DocumentSansSC-Regular.woff": {
+      "bytes": 6441424,
+      "seconds": [
+        0.08517958300944883,
+        0.11829779199615587,
+        0.08108966700092424,
+        0.0831201660039369,
+        0.08226645899412688
+      ]
+    }
+  },
+  "benchmark": {
+    "small_rows": {
+      "trials": {
+        "baseline": [
+          {
+            "import_ms": 447.92695899377577,
+            "parse_ms": 73.1918749952456,
+            "render_ms": 176.6078750079032,
+            "total_ms": 697.7267089969246,
+            "peak_rss_bytes": 180453376,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          },
+          {
+            "import_ms": 206.72249999188352,
+            "parse_ms": 71.04808300209697,
+            "render_ms": 167.4312500108499,
+            "total_ms": 445.2018330048304,
+            "peak_rss_bytes": 174276608,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          },
+          {
+            "import_ms": 209.32487500249408,
+            "parse_ms": 70.9950840100646,
+            "render_ms": 163.72612499981187,
+            "total_ms": 444.04608401237056,
+            "peak_rss_bytes": 176340992,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          },
+          {
+            "import_ms": 208.46395900298376,
+            "parse_ms": 69.62808298703749,
+            "render_ms": 164.6424580103485,
+            "total_ms": 442.73450000036974,
+            "peak_rss_bytes": 183042048,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          },
+          {
+            "import_ms": 209.33037500071805,
+            "parse_ms": 69.6299159899354,
+            "render_ms": 172.46695900394116,
+            "total_ms": 451.4272499945946,
+            "peak_rss_bytes": 182583296,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          }
+        ],
+        "candidate": [
+          {
+            "import_ms": 209.53491699765436,
+            "parse_ms": 69.63645800715312,
+            "render_ms": 152.78283299994655,
+            "total_ms": 431.95420800475404,
+            "peak_rss_bytes": 175587328,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          },
+          {
+            "import_ms": 207.53975000116043,
+            "parse_ms": 73.37083399761468,
+            "render_ms": 152.38945800228976,
+            "total_ms": 433.30004200106487,
+            "peak_rss_bytes": 173801472,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          },
+          {
+            "import_ms": 213.44916700036265,
+            "parse_ms": 70.23954100441188,
+            "render_ms": 145.25804200093262,
+            "total_ms": 428.94675000570714,
+            "peak_rss_bytes": 177815552,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          },
+          {
+            "import_ms": 234.09641601028852,
+            "parse_ms": 76.0149999987334,
+            "render_ms": 148.2957499974873,
+            "total_ms": 458.4071660065092,
+            "peak_rss_bytes": 177750016,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          },
+          {
+            "import_ms": 204.36129200970754,
+            "parse_ms": 70.65879099536687,
+            "render_ms": 151.22637500462588,
+            "total_ms": 426.2464580097003,
+            "peak_rss_bytes": 177176576,
+            "bytes": 11352,
+            "pages": 10,
+            "records_sha256": "de8e554b48b747c056168e983266e81e42c09484055ae11e67c8cbd68b15f2cb"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "import_ms": 209.32487500249408,
+          "parse_ms": 70.9950840100646,
+          "render_ms": 167.4312500108499,
+          "total_ms": 445.2018330048304,
+          "peak_rss_bytes": 180453376
+        },
+        "candidate": {
+          "import_ms": 209.53491699765436,
+          "parse_ms": 70.65879099536687,
+          "render_ms": 151.22637500462588,
+          "total_ms": 431.95420800475404,
+          "peak_rss_bytes": 177176576
+        }
+      }
+    },
+    "small": {
+      "trials": {
+        "baseline": [
+          {
+            "import_ms": 204.67449999705423,
+            "parse_ms": 9.888417000183836,
+            "render_ms": 121.7307500046445,
+            "total_ms": 336.29366700188257,
+            "peak_rss_bytes": 168820736,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          },
+          {
+            "import_ms": 209.38704199215863,
+            "parse_ms": 8.240750001277775,
+            "render_ms": 118.00724999920931,
+            "total_ms": 335.6350419926457,
+            "peak_rss_bytes": 173686784,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          },
+          {
+            "import_ms": 215.52004200930241,
+            "parse_ms": 8.319332991959527,
+            "render_ms": 117.88733401044738,
+            "total_ms": 341.7267090117093,
+            "peak_rss_bytes": 169574400,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          },
+          {
+            "import_ms": 236.176999998861,
+            "parse_ms": 9.093207991099916,
+            "render_ms": 121.70895900635514,
+            "total_ms": 366.97916699631605,
+            "peak_rss_bytes": 168099840,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          },
+          {
+            "import_ms": 206.28533299895935,
+            "parse_ms": 8.91458299884107,
+            "render_ms": 122.20108399924356,
+            "total_ms": 337.400999997044,
+            "peak_rss_bytes": 172130304,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          }
+        ],
+        "candidate": [
+          {
+            "import_ms": 208.73716700589284,
+            "parse_ms": 8.203874996979721,
+            "render_ms": 103.75945799751207,
+            "total_ms": 320.70050000038464,
+            "peak_rss_bytes": 169689088,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          },
+          {
+            "import_ms": 207.30145800916944,
+            "parse_ms": 9.104083001147956,
+            "render_ms": 99.94424998876639,
+            "total_ms": 316.3497909990838,
+            "peak_rss_bytes": 173998080,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          },
+          {
+            "import_ms": 212.70537500095088,
+            "parse_ms": 8.248124999227002,
+            "render_ms": 99.47170900704805,
+            "total_ms": 320.42520900722593,
+            "peak_rss_bytes": 169345024,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          },
+          {
+            "import_ms": 212.39674999378622,
+            "parse_ms": 8.727541993721388,
+            "render_ms": 102.4253750074422,
+            "total_ms": 323.5496669949498,
+            "peak_rss_bytes": 165314560,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          },
+          {
+            "import_ms": 206.09491699724458,
+            "parse_ms": 8.592083002440631,
+            "render_ms": 101.64416700717993,
+            "total_ms": 316.33116700686514,
+            "peak_rss_bytes": 176832512,
+            "bytes": 6138,
+            "pages": 1,
+            "records_sha256": "52d9701b93617561f97a13b759c41c3dcbd986bd2c506ce15d4a744da5c1f889"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "import_ms": 209.38704199215863,
+          "parse_ms": 8.91458299884107,
+          "render_ms": 121.70895900635514,
+          "total_ms": 337.400999997044,
+          "peak_rss_bytes": 169574400
+        },
+        "candidate": {
+          "import_ms": 208.73716700589284,
+          "parse_ms": 8.592083002440631,
+          "render_ms": 101.64416700717993,
+          "total_ms": 320.42520900722593,
+          "peak_rss_bytes": 169689088
+        }
+      }
+    },
+    "hundred_pages": {
+      "trials": {
+        "baseline": [
+          {
+            "import_ms": 206.2398749985732,
+            "parse_ms": 99.52958300709724,
+            "render_ms": 364.3917919980595,
+            "total_ms": 670.16125000373,
+            "peak_rss_bytes": 186482688,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          },
+          {
+            "import_ms": 209.60841700434685,
+            "parse_ms": 99.95354199782014,
+            "render_ms": 385.0367080012802,
+            "total_ms": 694.5986670034472,
+            "peak_rss_bytes": 189415424,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          },
+          {
+            "import_ms": 221.83279199816752,
+            "parse_ms": 100.41683301096782,
+            "render_ms": 362.7595829893835,
+            "total_ms": 685.0092079985188,
+            "peak_rss_bytes": 188284928,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          },
+          {
+            "import_ms": 222.92012500111014,
+            "parse_ms": 102.6579579920508,
+            "render_ms": 369.11708299885504,
+            "total_ms": 694.695165992016,
+            "peak_rss_bytes": 187154432,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          },
+          {
+            "import_ms": 223.25412499776576,
+            "parse_ms": 118.50370900356211,
+            "render_ms": 372.4846249970142,
+            "total_ms": 714.242458998342,
+            "peak_rss_bytes": 185679872,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          }
+        ],
+        "candidate": [
+          {
+            "import_ms": 211.94400000968017,
+            "parse_ms": 102.09766699699685,
+            "render_ms": 345.7237919938052,
+            "total_ms": 659.7654590004822,
+            "peak_rss_bytes": 185188352,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          },
+          {
+            "import_ms": 216.89133399922866,
+            "parse_ms": 100.1398749940563,
+            "render_ms": 342.61591600079555,
+            "total_ms": 659.6471249940805,
+            "peak_rss_bytes": 186302464,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          },
+          {
+            "import_ms": 211.07433400175069,
+            "parse_ms": 99.91329099284485,
+            "render_ms": 366.9259169982979,
+            "total_ms": 677.9135419928934,
+            "peak_rss_bytes": 182337536,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          },
+          {
+            "import_ms": 208.5540830012178,
+            "parse_ms": 102.92745799233671,
+            "render_ms": 386.1928340047598,
+            "total_ms": 697.6743749983143,
+            "peak_rss_bytes": 181092352,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          },
+          {
+            "import_ms": 276.55204200709704,
+            "parse_ms": 110.64499999338295,
+            "render_ms": 376.6755000106059,
+            "total_ms": 763.8725420110859,
+            "peak_rss_bytes": 188547072,
+            "bytes": 75129,
+            "pages": 100,
+            "records_sha256": "878c68f89218fab1c48e6df1e4620bfeed61d417c475072a107cb3c09adce7e9"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "import_ms": 221.83279199816752,
+          "parse_ms": 100.41683301096782,
+          "render_ms": 369.11708299885504,
+          "total_ms": 694.5986670034472,
+          "peak_rss_bytes": 187154432
+        },
+        "candidate": {
+          "import_ms": 211.94400000968017,
+          "parse_ms": 102.09766699699685,
+          "render_ms": 366.9259169982979,
+          "total_ms": 677.9135419928934,
+          "peak_rss_bytes": 185188352
+        }
+      }
+    },
+    "image_table": {
+      "trials": {
+        "baseline": [
+          {
+            "import_ms": 218.19641700130887,
+            "parse_ms": 22.410499994293787,
+            "render_ms": 274.5837499969639,
+            "total_ms": 515.1906669925665,
+            "peak_rss_bytes": 205897728,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          },
+          {
+            "import_ms": 323.9049999974668,
+            "parse_ms": 39.709959004539996,
+            "render_ms": 368.7027499981923,
+            "total_ms": 732.3177090001991,
+            "peak_rss_bytes": 214073344,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          },
+          {
+            "import_ms": 255.59820799389854,
+            "parse_ms": 21.30733300873544,
+            "render_ms": 285.9986669936916,
+            "total_ms": 562.9042079963256,
+            "peak_rss_bytes": 201687040,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          },
+          {
+            "import_ms": 248.579167004209,
+            "parse_ms": 23.080750004737638,
+            "render_ms": 285.67616699729115,
+            "total_ms": 557.3360840062378,
+            "peak_rss_bytes": 201834496,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          },
+          {
+            "import_ms": 216.83974999177735,
+            "parse_ms": 20.32383299956564,
+            "render_ms": 278.35329200024717,
+            "total_ms": 515.5168749915902,
+            "peak_rss_bytes": 199016448,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          }
+        ],
+        "candidate": [
+          {
+            "import_ms": 222.13320899754763,
+            "parse_ms": 20.33720799954608,
+            "render_ms": 235.51150001003407,
+            "total_ms": 477.9819170071278,
+            "peak_rss_bytes": 196083712,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          },
+          {
+            "import_ms": 224.9835420079762,
+            "parse_ms": 20.595124995452352,
+            "render_ms": 225.14137500547804,
+            "total_ms": 470.7200420089066,
+            "peak_rss_bytes": 201998336,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          },
+          {
+            "import_ms": 230.2809169923421,
+            "parse_ms": 20.45725000789389,
+            "render_ms": 242.06133300322108,
+            "total_ms": 492.79950000345707,
+            "peak_rss_bytes": 191774720,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          },
+          {
+            "import_ms": 386.41016600013245,
+            "parse_ms": 25.43929200328421,
+            "render_ms": 250.39491699135397,
+            "total_ms": 662.2443749947706,
+            "peak_rss_bytes": 199458816,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          },
+          {
+            "import_ms": 226.98633398977108,
+            "parse_ms": 22.076125009334646,
+            "render_ms": 231.31645799730904,
+            "total_ms": 480.3789169964148,
+            "peak_rss_bytes": 203096064,
+            "bytes": 11337,
+            "pages": 3,
+            "records_sha256": "422eb02a0e62839839fbb04de27fac94df939ba5633639c3d837303beabc9e19"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "import_ms": 248.579167004209,
+          "parse_ms": 22.410499994293787,
+          "render_ms": 285.67616699729115,
+          "total_ms": 557.3360840062378,
+          "peak_rss_bytes": 201834496
+        },
+        "candidate": {
+          "import_ms": 226.98633398977108,
+          "parse_ms": 20.595124995452352,
+          "render_ms": 235.51150001003407,
+          "total_ms": 480.3789169964148,
+          "peak_rss_bytes": 199458816
+        }
+      }
+    },
+    "repeated_images": {
+      "trials": {
+        "baseline": [
+          {
+            "import_ms": 242.8479160007555,
+            "parse_ms": 18.449833994964138,
+            "render_ms": 123.97100000816863,
+            "total_ms": 385.2687500038883,
+            "peak_rss_bytes": 175554560,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          },
+          {
+            "import_ms": 216.83329199731816,
+            "parse_ms": 17.37275000778027,
+            "render_ms": 123.16962500335649,
+            "total_ms": 357.3756670084549,
+            "peak_rss_bytes": 169263104,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          },
+          {
+            "import_ms": 219.2759159952402,
+            "parse_ms": 17.516584004624747,
+            "render_ms": 124.497083001188,
+            "total_ms": 361.28958300105296,
+            "peak_rss_bytes": 170164224,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          },
+          {
+            "import_ms": 218.07104100298602,
+            "parse_ms": 16.57320899539627,
+            "render_ms": 122.91908300539944,
+            "total_ms": 357.56333300378174,
+            "peak_rss_bytes": 164151296,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          },
+          {
+            "import_ms": 219.54695899330545,
+            "parse_ms": 16.801750010927208,
+            "render_ms": 122.18249999568798,
+            "total_ms": 358.53120899992064,
+            "peak_rss_bytes": 170180608,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          }
+        ],
+        "candidate": [
+          {
+            "import_ms": 257.19145900802687,
+            "parse_ms": 21.167415994568728,
+            "render_ms": 126.09691699617542,
+            "total_ms": 404.455791998771,
+            "peak_rss_bytes": 174391296,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          },
+          {
+            "import_ms": 223.68570900289342,
+            "parse_ms": 17.802707996452227,
+            "render_ms": 104.77679199539125,
+            "total_ms": 346.2652089947369,
+            "peak_rss_bytes": 167247872,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          },
+          {
+            "import_ms": 233.91537500720005,
+            "parse_ms": 17.670124987489544,
+            "render_ms": 108.15104200446513,
+            "total_ms": 359.7365419991547,
+            "peak_rss_bytes": 168525824,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          },
+          {
+            "import_ms": 218.78999999898952,
+            "parse_ms": 16.41504099825397,
+            "render_ms": 104.85124999831896,
+            "total_ms": 340.05629099556245,
+            "peak_rss_bytes": 175308800,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          },
+          {
+            "import_ms": 216.37266699690372,
+            "parse_ms": 16.924875002587214,
+            "render_ms": 102.8878750075819,
+            "total_ms": 336.18541700707283,
+            "peak_rss_bytes": 174637056,
+            "bytes": 5545,
+            "pages": 4,
+            "records_sha256": "92729cc3e9729beb3390b37d6357bb1a3831a334af6fe036b8e954e8f7d90e51"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "import_ms": 219.2759159952402,
+          "parse_ms": 17.37275000778027,
+          "render_ms": 123.16962500335649,
+          "total_ms": 358.53120899992064,
+          "peak_rss_bytes": 170164224
+        },
+        "candidate": {
+          "import_ms": 223.68570900289342,
+          "parse_ms": 17.670124987489544,
+          "render_ms": 104.85124999831896,
+          "total_ms": 346.2652089947369,
+          "peak_rss_bytes": 174391296
+        }
+      }
+    },
+    "mixed_styles": {
+      "trials": {
+        "baseline": [
+          {
+            "import_ms": 221.70466699753888,
+            "parse_ms": 21.75695799815003,
+            "render_ms": 504.0678340010345,
+            "total_ms": 747.5294589967234,
+            "peak_rss_bytes": 284966912,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          },
+          {
+            "import_ms": 219.42145899811294,
+            "parse_ms": 21.273625010508113,
+            "render_ms": 500.93979098892305,
+            "total_ms": 741.6348749975441,
+            "peak_rss_bytes": 285917184,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          },
+          {
+            "import_ms": 219.06958300678525,
+            "parse_ms": 20.63508400169667,
+            "render_ms": 494.8716249928111,
+            "total_ms": 734.576292001293,
+            "peak_rss_bytes": 270401536,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          },
+          {
+            "import_ms": 216.63266699761152,
+            "parse_ms": 20.206500004860573,
+            "render_ms": 522.8557499940507,
+            "total_ms": 759.6949169965228,
+            "peak_rss_bytes": 276987904,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          },
+          {
+            "import_ms": 218.38445799949113,
+            "parse_ms": 20.921666990034282,
+            "render_ms": 507.21891700231936,
+            "total_ms": 746.5250419918448,
+            "peak_rss_bytes": 277282816,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          }
+        ],
+        "candidate": [
+          {
+            "import_ms": 220.32162500545382,
+            "parse_ms": 23.271832993486896,
+            "render_ms": 453.89879200956784,
+            "total_ms": 697.4922500085086,
+            "peak_rss_bytes": 281952256,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          },
+          {
+            "import_ms": 213.34741699683946,
+            "parse_ms": 20.820833000470884,
+            "render_ms": 426.9058330100961,
+            "total_ms": 661.0740830074064,
+            "peak_rss_bytes": 282476544,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          },
+          {
+            "import_ms": 215.31625000352506,
+            "parse_ms": 21.122958001797087,
+            "render_ms": 430.40304200258106,
+            "total_ms": 666.8422500079032,
+            "peak_rss_bytes": 285229056,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          },
+          {
+            "import_ms": 210.36729200568516,
+            "parse_ms": 20.477499987464398,
+            "render_ms": 430.9096670040162,
+            "total_ms": 661.7544589971658,
+            "peak_rss_bytes": 275939328,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          },
+          {
+            "import_ms": 218.14370799984317,
+            "parse_ms": 20.72704200691078,
+            "render_ms": 429.75724999269005,
+            "total_ms": 668.627999999444,
+            "peak_rss_bytes": 276299776,
+            "bytes": 19607,
+            "pages": 5,
+            "records_sha256": "792e349bbf49dac6b38e69d41d1c545359c117fc2ead5dde6767fa1de44d6c37"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "import_ms": 219.06958300678525,
+          "parse_ms": 20.921666990034282,
+          "render_ms": 504.0678340010345,
+          "total_ms": 746.5250419918448,
+          "peak_rss_bytes": 277282816
+        },
+        "candidate": {
+          "import_ms": 215.31625000352506,
+          "parse_ms": 20.820833000470884,
+          "render_ms": 430.40304200258106,
+          "total_ms": 666.8422500079032,
+          "peak_rss_bytes": 281952256
+        }
+      }
+    }
+  },
+  "common_installed_regression": {
+    "cases": 5,
+    "pages": 113,
+    "all_page_records_and_bytes_unchanged": true,
+    "record_digests": {
+      "small": "5f98a3d5aac5da76b8371b6a173dcb8c32e56ac60083d2f8f0deb62ed5920a71",
+      "hundred_pages": "be4019e4869cd2d19c97d23a139ddca01d3b7fb25fec4c7dd4a125cda68ee54b",
+      "image_table": "4d37e6a0b86275f97bc8331320419422b6065f236ed75281d365274fc214c97f",
+      "repeated_images": "3e1c8fd836c66039a0611a74b844171a61340f07269997bba402d068db0cb9ee",
+      "mixed_styles": "8e3c301b4c8df25e7edec89a3ad44ff66ea731b28ff0ca9267ce7bd864484379"
+    }
+  },
+  "wheel": {
+    "bytes": 26486503,
+    "delta_bytes": 225902,
+    "sha256": "b0e8d39709c65860f119783adbbafcdde04b9a5bcbe4e2047b1d86b7a34ace8a",
+    "package_files_verified": 133
+  },
+  "encoder": "import hashlib,json\nfrom pathlib import Path\nfrom io import BytesIO\nfrom fontTools.ttLib import TTFont,sfnt\nfrom fontTools.ttLib.sfnt import SFNTReader,SFNTWriter\nimport zopfli.zlib\nroot=Path('/tmp/docweave-font-glyph-names-baseline/aspose/words_foss/pdf_writer/fonts');out=Path('/tmp/docweave-post-fonts');out.mkdir(exist_ok=True);result={}\nfor face in ['Regular','Bold','Oblique','BoldOblique']:\n source=root/('DocumentSansSC-'+face+'.woff');target=out/source.name\n font=TTFont(source,recalcTimestamp=False);order=font.getGlyphOrder();post=font['post'];post.formatType=2.0;post.extraNames=[];post.mapping={};newpost=post.compile(font);font.close()\n with source.open('rb') as handle:\n  reader=SFNTReader(handle);cache={}\n  for tag,entry in reader.tables.items():\n   data=reader[tag]\n   if entry.length<entry.origLength:\n    handle.seek(entry.offset);cache[data]=handle.read(entry.length)\n  def compress(data,level=6):\n   return cache[data] if data in cache else zopfli.zlib.compress(data,numiterations=1)\n  sfnt.compress=compress\n  buffer=BytesIO();writer=SFNTWriter(buffer,len(reader.tables),reader.sfntVersion,flavor='woff',flavorData=reader.flavorData)\n  for tag in sorted(reader.keys(),key=lambda t:reader.tables[t].offset):writer[tag]=newpost if str(tag)=='post' else reader[tag]\n  writer.close();target.write_bytes(buffer.getvalue())\n with source.open('rb') as a,target.open('rb') as b:\n  old,new=SFNTReader(a),SFNTReader(b);changed=[str(t) for t in old.keys() if old[t]!=new[t]];assert changed==['head','post'],changed\n  assert old['head'][:8]+old['head'][12:]==new['head'][:8]+new['head'][12:]\n with TTFont(source) as a,TTFont(target) as b:\n  assert a.getGlyphOrder()==b.getGlyphOrder()==order\n  assert a.getBestCmap()==b.getBestCmap()\n  assert a['hmtx'].metrics==b['hmtx'].metrics\n result[face]={'before_bytes':source.stat().st_size,'after_bytes':target.stat().st_size,'delta_bytes':target.stat().st_size-source.stat().st_size,'changed_tables':changed,'glyphs':len(order),'sha256':hashlib.sha256(target.read_bytes()).hexdigest()}\n print(face,result[face],flush=True)\nPath('/tmp/docweave-post-font-candidates.json').write_text(json.dumps(result,indent=2)+'\\n')\n",
+  "worker": "import time\nstart=time.perf_counter()\nimport sys,json,hashlib,resource\nfrom pathlib import Path\nfrom fpdf import FPDF\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nphase,case=sys.argv[1:3]\nif phase in ('baseline','candidate'):\n original=FPDF.add_font\n def add_font(pdf,family=None,style='',fname=None,**kwargs):\n  if fname and Path(fname).name.startswith('DocumentSansSC-'):\n   root=Path('/tmp/docweave-post-fonts') if phase=='candidate' else Path('/tmp/docweave-font-glyph-names-baseline/aspose/words_foss/pdf_writer/fonts')\n   fname=root/Path(fname).name\n  return original(pdf,family,style,fname,**kwargs)\n FPDF.add_font=add_font\nloaded=time.perf_counter()\nsource=Path('/tmp/docweave-row-height-units/small-rows.docx') if case=='small_rows' else Path('/tmp/docweave-current-performance')/(case+'.docx')\ndoc=aw.Document(source);parsed=time.perf_counter();raw=doc.to_bytes(aw.saving.PdfSaveOptions());finished=time.perf_counter()\nimport pymupdf\nwith pymupdf.open(stream=raw,filetype='pdf') as pdf:\n records=[{'words':hashlib.sha256(repr(p.get_text('words')).encode()).hexdigest(),'pixels':hashlib.sha256(p.get_pixmap().samples).hexdigest(),'drawings':hashlib.sha256(repr(p.get_drawings()).encode()).hexdigest(),'images':hashlib.sha256(repr(p.get_image_info()).encode()).hexdigest()} for p in pdf]\nrecord={'import_ms':1000*(loaded-start),'parse_ms':1000*(parsed-loaded),'render_ms':1000*(finished-parsed),'total_ms':1000*(finished-start),'peak_rss_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'bytes':len(raw),'pages':len(records),'records_sha256':hashlib.sha256(json.dumps(records,sort_keys=True,separators=(',',':')).encode()).hexdigest()}\nprint(json.dumps(record))\n",
+  "benchmark_runner": "import json,subprocess,statistics\nfrom pathlib import Path\nresult={}\nfor case in ['small_rows','small','hundred_pages','image_table','repeated_images','mixed_styles']:\n samples={'baseline':[],'candidate':[]}\n for i in range(5):\n  for phase in (['baseline','candidate'] if i%2==0 else ['candidate','baseline']):\n   p=subprocess.run(['/tmp/docweave-wheel-test/bin/python','/tmp/docweave-post-font-worker.py',phase,case],capture_output=True,text=True,check=True)\n   sample=json.loads(p.stdout);samples[phase].append(sample)\n base=samples['baseline'][0]\n assert all(all(v[k]==base[k] for k in ['bytes','pages','records_sha256']) for group in samples.values() for v in group),case\n result[case]={'trials':samples,'medians':{phase:{k:statistics.median(v[k] for v in group) for k in ['import_ms','parse_ms','render_ms','total_ms','peak_rss_bytes']} for phase,group in samples.items()}}\n print(case,result[case]['medians'],flush=True)\nPath('/tmp/docweave-post-font-benchmark.json').write_text(json.dumps(result,indent=2)+'\\n')\n",
+  "limits": [
+    "Four WOFF assets grow 441048 bytes; this trades installation size for initialization speed and is not a shrink claim.",
+    "All 31036 glyphs per face, glyph order, Unicode cmap and widths retained; only post and head checksum adjustment change.",
+    "fpdf is imported symmetrically before parsing in both cold-process workers; total includes this import, parsing and rendering but excludes PDF validation.",
+    "Five paired cold-process trials per case; no universal speed or RSS claim. Hundred-page render medians are nearly unchanged.",
+    "Source copies in /tmp are temporary; re-encoding requires the baseline font assets from the specified commit or wheel.",
+    "Six-case performance workers use default non-shaping, untagged built-in PDF options; shaping/tagged/native-backend speed was not benchmarked."
+  ],
+  "baseline_setup": "Install the phase-59 wheel with pip --no-deps --target /tmp/docweave-font-glyph-names-baseline; use its font files for baseline and encoding. The original benchmark ran before replacing workspace assets.",
+  "baseline_font_sha256": {
+    "Regular": "f4fd9abb8b9dfd9e5fdea75eae20c74537851cf798508aa642a79127714abbba",
+    "Bold": "c844514d8d3181a40f090270634cea0d2efe188f9576f472ca2de9c7f4865641",
+    "Oblique": "478f0b94e3d5460f6afb1a1121ad5c568c0758b7bb59dc9a96383adc9fdbc3e5",
+    "BoldOblique": "fbc4d6b4dca1498380555bd5a0f30a03f2e2e2c422ff5f34a87820db0f700fbb"
+  },
+  "probe_reproduction": "Explicit baseline-font and candidate-font workers reproduced mixed_styles PDF bytes length, page count and all page records digest.",
+  "validation": {
+    "source_related": {
+      "passed": 44,
+      "warnings": 4,
+      "seconds": 32.12
+    },
+    "installed_full": {
+      "passed": 1567,
+      "warnings": 165,
+      "seconds": 362.46,
+      "skipped": 0
+    },
+    "installed_examples": {
+      "passed": 31,
+      "warnings": 13,
+      "seconds": 6.62
+    },
+    "document_local_links": 146,
+    "python_examples": 23
+  }
+}
