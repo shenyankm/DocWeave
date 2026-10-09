@@ -344,7 +344,7 @@ class OoxmlSaveOptions:
     def __init__(self, save_format: "int | str | None" = None):
         from aspose.words_foss.document import SaveFormat, _coerce_save_format
 
-        # Currently unused. Will be added in a future release.
+        # Only DOCX is accepted; other requested formats fail before output.
         self.save_format = (
             SaveFormat.DOCX if save_format is None
             else (_coerce_save_format(save_format) or save_format)
@@ -393,7 +393,7 @@ class MarkdownSaveOptions:
         self.empty_paragraph_export_mode = MarkdownEmptyParagraphExportMode.EMPTY_LINE
         # Currently unused. Will be added in a future release.
         self.image_resolution: int = 96
-        # Currently unused. Will be added in a future release.
+        # Only MARKDOWN is accepted; other requested formats fail before output.
         from aspose.words_foss.document import SaveFormat
 
         self.save_format = SaveFormat.MARKDOWN

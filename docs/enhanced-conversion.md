@@ -5,6 +5,15 @@
 此前测试及性能结果见 [优化核验报告](optimization-report.md)；本次资源/内容完整性重构见
 [生态借鉴优化验证](ecosystem-optimization-validation.md)。
 
+## 保存选项与实际格式
+
+`OoxmlSaveOptions.save_format` 只接受 DOCX，`MarkdownSaveOptions.save_format` 只接受 Markdown。
+可使用 `SaveFormat`、对应整数或已有字符串别名（大小写不敏感，如 `docx`、`markdown`、`md`）。
+不匹配或未知值在渲染前抛出 `ValueError`，文件输出保留原文件，内存输出不返回错误格式的字节。
+`OoxmlSaveOptions(None)` 仍使用默认 DOCX；创建后显式改为 `None` 属于无效值。
+扩展名不覆盖显式选项。此规则也适用于直接使用 `LdmDocxWriter`，以及创建 writer 后修改选项。
+这是行为修正：此前不匹配的 `save_format` 被静默忽略；切换格式应传入对应的 `SaveFormat` 或选项类。
+
 ## 中文排版和字体
 
 - 高亮文本、混合字体运行的居中/右对齐段落按实际字形宽度换行，保留显式换行与链接。

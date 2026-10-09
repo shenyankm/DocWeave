@@ -479,6 +479,8 @@ class Document:
         """Shared Markdown rendering for path and memory output."""
         from aspose.words_foss.md_writer import LdmMarkdownWriter
 
+        if options is not None and _coerce_save_format(options.save_format) != SaveFormat.MARKDOWN:
+            raise ValueError("MarkdownSaveOptions.save_format must be MARKDOWN")
         conversion_opts = ConversionOptions()
         encoding = "utf-8"
         if options is not None:

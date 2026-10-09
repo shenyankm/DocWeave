@@ -143,6 +143,10 @@ class LdmDocxWriter:
 
     def _render_parts(self, doc: ldm.Document) -> "_RenderedParts":
         """Render every XML part the package needs and return them bundled."""
+        from aspose.words_foss.document import SaveFormat, _coerce_save_format
+
+        if _coerce_save_format(getattr(self.options, "save_format", SaveFormat.DOCX)) != SaveFormat.DOCX:
+            raise ValueError("OoxmlSaveOptions.save_format must be DOCX")
         _warn_about_unsupported_constructs(doc)
         # The hyperlink table and image state are mutated by :mod:`runs`
         # / :mod:`paragraphs` while rendering the document body; gather
