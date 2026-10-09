@@ -16092,7 +16092,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16183,7 +16183,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16263,7 +16263,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16303,7 +16303,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16457,7 +16457,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16587,7 +16587,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16627,7 +16627,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16687,7 +16687,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16802,7 +16802,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16852,7 +16852,7 @@
         "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; hidden_roundtrip_checks_passed; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
