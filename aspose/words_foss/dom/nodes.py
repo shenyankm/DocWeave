@@ -1,5 +1,6 @@
 """Typed views over the authoritative OOXML tree, not a second document model."""
 
+import re
 from math import isfinite
 from xml.dom import Node as XmlNode
 
@@ -715,6 +716,33 @@ DIMENSION_PROPERTIES = {"left_indent": ("ind", "left"), "right_indent": ("ind", 
 INDENT_ALIASES = {"left": "start", "right": "end", "firstLine": "hanging"}
 
 
+CHARACTER_INDENT_ATTRIBUTES = {"character_unit_left_indent": ("leftChars", "startChars"),
+                               "character_unit_right_indent": ("rightChars", "endChars"),
+                               "character_unit_first_line_indent": ("firstLineChars", "hangingChars")}
+
+
+def _read_character_indent(element, prop):
+    if element is None:
+        return None
+    parent = element.parentNode
+    if len([node for node in _elements(parent) if _is(node, "ind")]) > 1 or len([
+            node for node in _elements(parent.parentNode) if _is(node, "pPr")]) > 1:
+        raise ValueError("Duplicate paragraph character indent properties")
+    value = None
+    for index in range(element.attributes.length):
+        attr = element.attributes.item(index)
+        if attr.namespaceURI == W and attr.localName in CHARACTER_INDENT_ATTRIBUTES[prop]:
+            try:
+                if re.fullmatch(r"[+-]?[0-9]+", attr.value.strip(" \t\r\n")) is None:
+                    raise ValueError
+                value = int(attr.value) / 100
+            except (ValueError, OverflowError):
+                raise ValueError("Character indents require integer hundredths") from None
+            if attr.localName == "hangingChars":
+                value = -value
+    return value
+
+
 def _read_dimension(element, prop):
     if element is None:
         return None
@@ -750,6 +778,22 @@ class ParagraphFormat(_Format):
 
     def _dimension(self, prop):
         return _read_dimension(self._get(DIMENSION_PROPERTIES[prop][0]), prop)
+
+    def _character_indent(self, prop):
+        return _read_character_indent(self._get("ind"), prop)
+
+    @property
+    def character_unit_left_indent(self) -> float | None:
+        """Read character units; None denotes an unset direct value. Editing is pending."""
+        return self._character_indent("character_unit_left_indent")
+
+    @property
+    def character_unit_right_indent(self) -> float | None:
+        return self._character_indent("character_unit_right_indent")
+
+    @property
+    def character_unit_first_line_indent(self) -> float | None:
+        return self._character_indent("character_unit_first_line_indent")
 
     def _set_dimension(self, prop, value):
         tag, attribute = DIMENSION_PROPERTIES[prop]

@@ -15,6 +15,7 @@ from aspose.words_foss.dom.nodes import (
     _find,
     _is,
     _onoff,
+    _read_character_indent,
     _read_dimension,
     _read_size,
 )
@@ -195,6 +196,18 @@ class StyleParagraphFormat(ParagraphFormat):
                   resolver._chain(self._node.style_id, "paragraph")]
         for layer in reversed(layers):
             value = _read_dimension(_child(layer, DIMENSION_PROPERTIES[prop][0]), prop)
+            if value is not None:
+                return value
+        return 0.0
+
+    def _character_indent(self, prop):
+        if not self._resolved:
+            return super()._character_indent(prop)
+        resolver = StyleResolver(self._node.owner_document)
+        layers = [resolver._defaults("pPr")] + [_child(style, "pPr") for style in
+                  resolver._chain(self._node.style_id, "paragraph")]
+        for layer in reversed(layers):
+            value = _read_character_indent(_child(layer, "ind"), prop)
             if value is not None:
                 return value
         return 0.0

@@ -142,6 +142,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [逻辑缩进](benchmarks/paragraph-logical-indents-26.9.json) | 42 个逻辑/首行缩进别名与继承输入、168 次样式/段落编辑和重开；bidi getter 对照不等于双向排版验收 |
 | [字符缩进生命周期](benchmarks/paragraph-character-indents-26.9.json) | 8 种字号上下文分别执行直接保存和排版后保存，另有 45 次字符 setter、27 次类型错误；原生 DOCX 独立读取，字符 API 与渲染仍未实现 |
 | [字符 setter 字体与样式上下文](benchmarks/paragraph-character-setters-26.9.json) | 8 种字号 × 段落/样式 × 3 个属性 × 零/正/负值，144 次编辑及 144 次 TypeError；保留加载、编辑、保存后的活动对象和冷回读，独立 XML 核对点值及字符值。样式 setter 的点值在保存时才更新；DOM setter 和渲染仍未验收 |
+| [字符缩进继承读取](benchmarks/paragraph-character-reads-26.9.json) | 24 组 docDefaults/basedOn/直接值输入，包含显式零；原包 DOM 支持直接字符 getter、样式继承 getter，205 个官方保存输出可读取。setter、点值联动、编号/条件表格继承及渲染未验收 |
 | [字符单位模型往返](benchmarks/paragraph-character-indents-current.json) | 已安装 wheel 经模型 JSON 写出 61 组 DOCX/Flat OPC，122 个输出按原生字符值独立读取；样式、编号及显式零保留，点值联动与渲染仍未验收 |
 | [首段分页未决差异](benchmarks/first-paragraph-page-break-26.9.json) | 4 次编辑输出及 [18 个试用对照](benchmarks/first-paragraph-trial-26.9.json)；首段变化伴随提示插入，持许可证对照仍缺失 |
 | [保存状态观察](benchmarks/style-save-state-26.9.json) | 商业试用包的内存/重开状态，区分水印内容 |

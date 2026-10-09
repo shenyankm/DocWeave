@@ -5,6 +5,7 @@ Resolution order: docDefaults → table style chain → para/char style chain �
 
 from typing import Optional
 from functools import lru_cache
+import re
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
@@ -324,6 +325,8 @@ class ParagraphFormatBuilder:
         for attribute, raw in ind.attrib.items():
             if attribute in characters:
                 try:
+                    if re.fullmatch(r"[+-]?[0-9]+", raw.strip(" \t\r\n")) is None:
+                        raise ValueError
                     value = int(raw) / 100
                 except (ValueError, OverflowError):
                     raise ValueError("Character indents require integer hundredths") from None

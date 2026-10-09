@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_character_indent_roundtrips"])
+@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_paragraph_character_reads", "verify_character_indent_roundtrips"])
 def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, name):
     from zipfile import ZipInfo
 
@@ -19,7 +19,7 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     monkeypatch.setattr(ZipInfo, "__init__", windows_info)
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))[name]
-    assert check(root / "docs/benchmarks") in {10, 18, 61, 122, 144, 360, 1296}
+    assert check(root / "docs/benchmarks") in {10, 18, 24, 61, 122, 144, 360, 1296}
 
 
 
@@ -315,6 +315,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
               "corpus/character-style-defaults-26.9.zip"]
     names += ["paragraph-character-indents-current.json", "corpus/paragraph-character-indents-current.zip"]
     names += ["paragraph-character-setters-26.9.json", "corpus/paragraph-character-setters-26.9.zip"]
+    names += ["paragraph-character-reads-26.9.json", "corpus/paragraph-character-reads-26.9.zip"]
     names += ["paragraph-character-indents-26.9.json", "corpus/paragraph-character-indents-26.9.zip",
               "corpus/paragraph-character-indents-26.9-outputs.zip"]
     names += ["paragraph-logical-indents-26.9.json", "corpus/paragraph-logical-indents-26.9.zip",
@@ -365,6 +366,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_paragraph_logical_indents"] == 168
     assert result["checked_paragraph_character_indents"] == 61
     assert result["checked_paragraph_character_setters"] == 144
+    assert result["checked_paragraph_character_reads"] == 24
     assert result["checked_character_indent_roundtrips"] == 122
     assert result["checked_paragraph_dimension_rendering_pairs"] == 10
     assert result["checked_font_default_inputs"] == 5
@@ -712,6 +714,30 @@ def test_character_indent_evidence_checks_xml_after_digests_are_updated(tmp_path
             archive.writestr(name, data)
     report["outputs_sha256"] = sha256(archive_path.read_bytes()).hexdigest()
     (tmp_path / "paragraph-character-indents-26.9.json").write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+@pytest.mark.parametrize("tamper", ["value", "coverage", "digest", "acceptance"])
+def test_character_read_evidence_rejects_forged_inheritance(tmp_path, tamper):
+    import json
+    import shutil
+
+    root = Path(__file__).parents[1]
+    source = root / "docs/benchmarks"
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_paragraph_character_reads"]
+    report = json.loads((source / "paragraph-character-reads-26.9.json").read_text())
+    (tmp_path / "corpus").mkdir()
+    shutil.copyfile(source / report["corpus"], tmp_path / report["corpus"])
+    if tamper == "coverage":
+        report["records"][-1] = report["records"][-2]
+    elif tamper == "digest":
+        report["corpus_sha256"] = "forged"
+    elif tamper == "acceptance":
+        report["sdk_acceptance"] = True
+    else:
+        report["records"][0]["values"]["derived"]["character_unit_left_indent"] = 1
+    (tmp_path / "paragraph-character-reads-26.9.json").write_text(json.dumps(report))
     with pytest.raises(AssertionError):
         check(tmp_path)
 

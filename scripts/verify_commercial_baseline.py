@@ -271,6 +271,34 @@ def verify_paragraph_character_indents(root):
     return len(rows)
 
 
+def verify_paragraph_character_reads(root):
+    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_character_reads.py"))
+    report = json.loads((root / "paragraph-character-reads-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["python"].startswith("3.13.") and report["platform"].startswith("macOS-")
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is report["sdk_acceptance"] is False
+    generated = dict(probe["inputs"]())
+    rows = report["records"]
+    raw = (root / report["corpus"]).read_bytes()
+    assert digest(raw) == report["corpus_sha256"]
+    assert len(rows) == len(generated) == 24 and {row["input"] for row in rows} == set(generated)
+    with ZipFile(BytesIO(raw)) as corpus:
+        assert len(corpus.namelist()) == 24 and set(corpus.namelist()) == set(generated)
+        for row in rows:
+            data = corpus.read(row["input"])
+            assert digest(data) == row["input_sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[row["input"]])) as original:
+                assert {name: actual.read(name) for name in actual.namelist()} == {name: original.read(name) for name in original.namelist()}
+            prop = row["input"].split("/")[0]
+            layers = probe["LAYERS"][int(Path(row["input"]).stem)]
+            assert set(row["values"]) == {"base", "derived", "paragraph"}
+            for target, end in (("base", 2), ("derived", 3), ("paragraph", 4)):
+                expected = dict.fromkeys(probe["PROPERTIES"], 0.0)
+                expected[prop] = next((value / 100 for value in reversed(layers[:end]) if value is not None), 0.0)
+                assert row["values"][target] == expected
+    return len(rows)
+
+
 def verify_paragraph_character_setters(root):
     from docx import Document
     from docx.oxml.ns import qn
@@ -1122,6 +1150,7 @@ def verify(root):
     logical_indents = verify_paragraph_dimensions(root, "paragraph-logical-indents-26.9.json")
     character_indents = verify_paragraph_character_indents(root)
     character_setters = verify_paragraph_character_setters(root)
+    character_reads = verify_paragraph_character_reads(root)
     character_roundtrips = verify_character_indent_roundtrips(root)
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
@@ -1147,6 +1176,7 @@ def verify(root):
             "checked_paragraph_logical_indents": logical_indents,
             "checked_paragraph_character_indents": character_indents,
             "checked_paragraph_character_setters": character_setters,
+            "checked_paragraph_character_reads": character_reads,
             "checked_character_indent_roundtrips": character_roundtrips,
             "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}

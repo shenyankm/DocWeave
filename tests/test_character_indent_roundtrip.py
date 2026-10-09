@@ -177,7 +177,7 @@ def test_character_hundredths_signed_boundaries_roundtrip(field, value):
     assert getattr(actual, field) == value
 
 
-@pytest.mark.parametrize("value", ["1.13", "nan", "PRIVATE VALUE"])
+@pytest.mark.parametrize("value", ["1.13", "nan", "PRIVATE VALUE", "1_13", "١١٣", "1e2"])
 def test_malformed_character_hundredths_fail_without_exposing_value(value):
     import traceback
 

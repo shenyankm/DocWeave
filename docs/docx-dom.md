@@ -152,7 +152,17 @@ for style in editable.styles:
   同时清除对应逻辑别名及字符别名，保留另一侧缩进和其他属性。
   [168 次缩进别名编辑](benchmarks/paragraph-logical-indents-26.9.json)覆盖 42 个继承/别名输入，
   包含 bidi 开/关 getter、保存重开及排版模型映射；不是双向段落排版验收。
-  `startChars/endChars` 和其他字符缩进仍需字体解析，有效格式读取明确拒绝，不以 0 冒充。
+  三个 `character_unit_*_indent` 属性现可只读访问字符值：段落直接值及
+  `style.direct_paragraph_format` 未设置时返回 `None`，显式零返回 `0.0`；
+  `style.paragraph_format` 按 docDefaults/basedOn 链逐属性继承，没有任何设置时返回 `0.0`。
+  支持 `leftChars/startChars`、`rightChars/endChars`、`firstLineChars/hangingChars`，
+  同层后出现的别名生效，悬挂字符值为负。重复属性组和损坏数值会报错，异常隐藏原始值。
+  数值语法使用 [XML Schema 的整数形式](https://www.w3.org/TR/xmlschema-2/#integer)，
+  拒绝 Python 专用的下划线数字、非 ASCII 数字和指数形式；转换模型采用相同检查。
+  [24 组官方继承读取](benchmarks/paragraph-character-reads-26.9.json)及 205 个官方保存输出
+  已用于读取验证；这是原包 DOM 的读取阶段，setter 尚未提供。
+  字符值到点值仍需字体解析，段落有效格式读取明确拒绝，不以 0 冒充；
+  编号/条件表格继承、复杂文字和渲染仍未验收。
   `to_light_document()` 及 `Document` 的 DOCX/Flat OPC 加载会汇总为
   `load.character_indents_ignored` 损失诊断；将 `ContentLossWarning` 升级为错误可拒绝快照转换。
   原包保存不触发转换诊断，也不移除原属性。

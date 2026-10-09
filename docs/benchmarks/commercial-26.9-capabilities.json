@@ -30200,7 +30200,7 @@
       "declaration": "aspose.words.ParagraphFormat.character_unit_first_line_indent",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "partial_model_unit_preservation_native_dom_and_layout_not_aligned",
+      "implementation": "partial_dom_readonly_characters_and_model_unit_preservation_native_setters_and_layout_not_aligned",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
@@ -30236,6 +30236,21 @@
         "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "character_indent_dom_read_evidence": {
+        "report": "docs/benchmarks/paragraph-character-reads-26.9.json",
+        "probe": "docs/probes/paragraph_character_reads.py",
+        "implementation": "aspose/words_foss/dom/nodes.py:ParagraphFormat; aspose/words_foss/dom/styles.py:StyleParagraphFormat",
+        "tests": "tests/test_character_indent_dom.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_reads",
+        "scope": "read-only direct paragraph/style character getters and inherited style character getters; 24 native inheritance inputs and 205 native saved outputs",
+        "limits": "point resolution, native setters, paragraph effective point snapshots, numbering/table contexts, complex scripts and rendering remain incomplete",
+        "full_acceptance": false,
+        "input_validation": {
+          "reference": "https://www.w3.org/TR/xmlschema-2/#integer",
+          "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
+          "native_malformed_input_recovery": "not_measured"
+        }
       }
     },
     {
@@ -30243,7 +30258,7 @@
       "declaration": "aspose.words.ParagraphFormat.character_unit_left_indent",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "partial_model_unit_preservation_native_dom_and_layout_not_aligned",
+      "implementation": "partial_dom_readonly_characters_and_model_unit_preservation_native_setters_and_layout_not_aligned",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
@@ -30279,6 +30294,21 @@
         "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "character_indent_dom_read_evidence": {
+        "report": "docs/benchmarks/paragraph-character-reads-26.9.json",
+        "probe": "docs/probes/paragraph_character_reads.py",
+        "implementation": "aspose/words_foss/dom/nodes.py:ParagraphFormat; aspose/words_foss/dom/styles.py:StyleParagraphFormat",
+        "tests": "tests/test_character_indent_dom.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_reads",
+        "scope": "read-only direct paragraph/style character getters and inherited style character getters; 24 native inheritance inputs and 205 native saved outputs",
+        "limits": "point resolution, native setters, paragraph effective point snapshots, numbering/table contexts, complex scripts and rendering remain incomplete",
+        "full_acceptance": false,
+        "input_validation": {
+          "reference": "https://www.w3.org/TR/xmlschema-2/#integer",
+          "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
+          "native_malformed_input_recovery": "not_measured"
+        }
       }
     },
     {
@@ -30286,7 +30316,7 @@
       "declaration": "aspose.words.ParagraphFormat.character_unit_right_indent",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "partial_model_unit_preservation_native_dom_and_layout_not_aligned",
+      "implementation": "partial_dom_readonly_characters_and_model_unit_preservation_native_setters_and_layout_not_aligned",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
@@ -30322,6 +30352,21 @@
         "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "character_indent_dom_read_evidence": {
+        "report": "docs/benchmarks/paragraph-character-reads-26.9.json",
+        "probe": "docs/probes/paragraph_character_reads.py",
+        "implementation": "aspose/words_foss/dom/nodes.py:ParagraphFormat; aspose/words_foss/dom/styles.py:StyleParagraphFormat",
+        "tests": "tests/test_character_indent_dom.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_reads",
+        "scope": "read-only direct paragraph/style character getters and inherited style character getters; 24 native inheritance inputs and 205 native saved outputs",
+        "limits": "point resolution, native setters, paragraph effective point snapshots, numbering/table contexts, complex scripts and rendering remain incomplete",
+        "full_acceptance": false,
+        "input_validation": {
+          "reference": "https://www.w3.org/TR/xmlschema-2/#integer",
+          "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
+          "native_malformed_input_recovery": "not_measured"
+        }
       }
     },
     {
@@ -30436,6 +30481,21 @@
         "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "character_indent_dom_read_evidence": {
+        "report": "docs/benchmarks/paragraph-character-reads-26.9.json",
+        "probe": "docs/probes/paragraph_character_reads.py",
+        "implementation": "aspose/words_foss/dom/nodes.py:ParagraphFormat; aspose/words_foss/dom/styles.py:StyleParagraphFormat",
+        "tests": "tests/test_character_indent_dom.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_reads",
+        "scope": "read-only direct paragraph/style character getters and inherited style character getters; 24 native inheritance inputs and 205 native saved outputs",
+        "limits": "point resolution, native setters, paragraph effective point snapshots, numbering/table contexts, complex scripts and rendering remain incomplete",
+        "full_acceptance": false,
+        "input_validation": {
+          "reference": "https://www.w3.org/TR/xmlschema-2/#integer",
+          "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
+          "native_malformed_input_recovery": "not_measured"
+        }
       }
     },
     {
@@ -30638,6 +30698,21 @@
         "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "character_indent_dom_read_evidence": {
+        "report": "docs/benchmarks/paragraph-character-reads-26.9.json",
+        "probe": "docs/probes/paragraph_character_reads.py",
+        "implementation": "aspose/words_foss/dom/nodes.py:ParagraphFormat; aspose/words_foss/dom/styles.py:StyleParagraphFormat",
+        "tests": "tests/test_character_indent_dom.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_reads",
+        "scope": "read-only direct paragraph/style character getters and inherited style character getters; 24 native inheritance inputs and 205 native saved outputs",
+        "limits": "point resolution, native setters, paragraph effective point snapshots, numbering/table contexts, complex scripts and rendering remain incomplete",
+        "full_acceptance": false,
+        "input_validation": {
+          "reference": "https://www.w3.org/TR/xmlschema-2/#integer",
+          "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
+          "native_malformed_input_recovery": "not_measured"
+        }
       }
     },
     {
@@ -30850,6 +30925,21 @@
         "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
         "sdk_acceptance": false,
         "rendering_acceptance": false
+      },
+      "character_indent_dom_read_evidence": {
+        "report": "docs/benchmarks/paragraph-character-reads-26.9.json",
+        "probe": "docs/probes/paragraph_character_reads.py",
+        "implementation": "aspose/words_foss/dom/nodes.py:ParagraphFormat; aspose/words_foss/dom/styles.py:StyleParagraphFormat",
+        "tests": "tests/test_character_indent_dom.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_reads",
+        "scope": "read-only direct paragraph/style character getters and inherited style character getters; 24 native inheritance inputs and 205 native saved outputs",
+        "limits": "point resolution, native setters, paragraph effective point snapshots, numbering/table contexts, complex scripts and rendering remain incomplete",
+        "full_acceptance": false,
+        "input_validation": {
+          "reference": "https://www.w3.org/TR/xmlschema-2/#integer",
+          "scope": "ASCII signed integer lexical form, XML whitespace accepted; underscores, non-ASCII digits, exponent notation rejected without disclosing source; shared policy in DOM and conversion model",
+          "native_malformed_input_recovery": "not_measured"
+        }
       }
     },
     {
