@@ -1,0 +1,84 @@
+{
+  "baseline_commit": "46ea8f7bef7046b1613bbf698a3e6c1b4a6cce37",
+  "scope": "A1 external image exception rollback and concurrent filename ownership for Markdown export; not crash-safe multi-file atomicity",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "installed_cwd": "/tmp"
+  },
+  "reproduction": {
+    "test": "tests/test_markdown_image_rollback.py",
+    "baseline_wheel_extracted": "13 failed, 1 passed, 1 warning in 0.71s",
+    "baseline_package": "/tmp/docweave-image-rollback-baseline"
+  },
+  "implementation": "ExitStack tracks only newly created assets; a private context extends through Document main-file encoding and atomic publication. Exclusive O_CREAT|O_EXCL pending markers prevent other writers from claiming or reusing rollback-eligible images; own repeated bytes reuse the owned image. Markers always clean up on ordinary exit; new images clean up on failure only.",
+  "coverage": [
+    "Real python-docx picture plus Chinese paragraph plus merged table",
+    "ASCII and unknown codec failures; strict late merge-loss diagnostic; main output replace error; later image write error",
+    "Existing unrelated and equal-content reused files survive; original Markdown remains; direct writer can be reused after failure",
+    "Interleaved successful same-content export survives another export ASCII rollback",
+    "Two simultaneous exports compete for the first marker through a thread barrier; links resolve to independently checked red and blue image pixels after both exports finish",
+    "Pending claim descriptor-close error removes the newly created marker"
+  ],
+  "installed_integration": {
+    "result": "287 passed, 1592 deselected, 13 warnings in 14.37s",
+    "selection": "markdown or md_writer or image_collision or conversion_api or bounded_conversion or ecosystem_semantics or field_shape_visibility or nested_field_visibility",
+    "boundary": "Installed wheel from /tmp with --import-mode=importlib; targeted integration, not a fresh full suite"
+  },
+  "examples": "31 passed, 13 warnings in 6.02s",
+  "common_markdown": {
+    "result": "Five fixed inputs retain identical bytes, hashes and diagnostics",
+    "records": [
+      {
+        "name": "small",
+        "source_sha256": "e5c217ce9ab6e2de6ecadb6380699947826ceb39463fe7ccc055092f2ac0d703",
+        "markdown_bytes": 44,
+        "markdown_sha256": "390e64a3a33bd9d47b707dbf42478a2a62b84dbb72d08c525d575a38aa9400b1",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "hundred_pages",
+        "source_sha256": "4a58a34bdddd09e80f992dbc7c0055ab4a07ceea21146304564bd4e81b922d4c",
+        "markdown_bytes": 244286,
+        "markdown_sha256": "e36e62629bfaad7dd778d5936269dfddc522dbbd13db0a9cc9946d4bc6d68fad",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "image_table",
+        "source_sha256": "a1dae1a70968e0640b959f3fcc09b0a7c363f97556a5b54311be7b068e2bd8c2",
+        "markdown_bytes": 19478,
+        "markdown_sha256": "a9f49bd6762f0a9a301a64c101455cbecd3dca417adcf55d1ccdbb8bfcb67f28",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "repeated_images",
+        "source_sha256": "a19f56933135f9820b43e3e90f3ac091d5e3aed0db48a5a932abc4eedf7df3a2",
+        "markdown_bytes": 23159,
+        "markdown_sha256": "06463be1fce92e9c2a5b20c3d36c0e8a2a73f87f420cc2282cef6847d99b51e7",
+        "diagnostic_codes": []
+      },
+      {
+        "name": "mixed_styles",
+        "source_sha256": "db06ae569aba30457f3e83782be91d96dca3786684a6d878a767c3e97b48ff26",
+        "markdown_bytes": 16530,
+        "markdown_sha256": "4087e7cff57911ca214f9115d85c4b90b4790bf2091bb2fe7694dbc9bd882ff1",
+        "diagnostic_codes": []
+      }
+    ]
+  },
+  "wheel": {
+    "bytes": 26489449,
+    "size_delta_bytes": 531,
+    "sha256": "fca6b46af1f3c5bdd3a652b7f02d95ceff572c0f4bafc24f6166182c1dd06e36",
+    "source_py_files_matched": 125,
+    "resources": "scripts/check_wheel.py passes from /tmp using site-packages"
+  },
+  "limits": [
+    "Ordinary exception rollback is not power-loss or process-kill safe multi-file publication",
+    "An interrupted process can leave assets or pending markers; occupied names are skipped, not automatically deleted",
+    "New empty directories may remain after rollback",
+    "Controlled thread interleaving is validated on this local filesystem; independent-process and network-filesystem concurrency not accepted",
+    "No new native Word/LibreOffice or PDF layout acceptance; remaining A1/A4 gaps stay open"
+  ],
+  "installed_specialized": "14 passed in 0.70s"
+}

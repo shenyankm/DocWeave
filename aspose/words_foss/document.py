@@ -20,6 +20,7 @@ Usage:
 """
 
 import warnings
+from contextlib import ExitStack
 from enum import IntEnum
 from pathlib import Path
 from typing import Optional, Union, BinaryIO
@@ -475,6 +476,8 @@ class Document:
         doc: ldm.Document,
         options: Optional[MarkdownSaveOptions] = None,
         output_path: Optional[Path] = None,
+        *,
+        _image_transactions: Optional[ExitStack] = None,
     ) -> tuple[str, str]:
         """Shared Markdown rendering for path and memory output."""
         from aspose.words_foss.md_writer import LdmMarkdownWriter
@@ -503,20 +506,22 @@ class Document:
             encoding = options.encoding
 
         writer = LdmMarkdownWriter(conversion_opts)
+        if _image_transactions is not None:
+            _image_transactions.enter_context(writer._image_transaction())
         return writer.write(doc, output_path=output_path), encoding
 
     def _save_as_markdown(
         self, output_path: Path, doc: ldm.Document, options: Optional[MarkdownSaveOptions] = None,
     ) -> None:
-        markdown, encoding = self._render_markdown(doc, options, output_path)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
         # ``newline=""`` disables Python's universal-newline translation
         # so a caller's choice of ``paragraph_break`` ("\r\n", "\n",
         # ...) round-trips verbatim instead of being doubled into
         # "\r\r\n" on Windows (where text mode would otherwise rewrite
         # every ``\n`` to ``\r\n``).
-        with atomic_output(output_path) as temporary:
-            temporary.write_text(markdown, encoding=encoding, newline="")
+        with ExitStack() as transactions:
+            markdown, encoding = self._render_markdown(doc, options, output_path, _image_transactions=transactions)
+            with atomic_output(output_path) as temporary:
+                temporary.write_text(markdown, encoding=encoding, newline="")
 
     def _render_text(self, doc):
         for code, message in source_story_losses(doc):

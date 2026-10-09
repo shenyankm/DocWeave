@@ -47,7 +47,7 @@
 | `table_content_alignment` | 表格对齐覆盖 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `list_export_mode` | Markdown 列表或纯文本路径 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `export_images_as_base64` | 无 images_folder 时始终内联；有目录时选择内联/外部 | [test_conversion_api.py](../tests/test_conversion_api.py) |
-| `images_folder` | 外部图片目录；不同内容的同名图片分配序号，相同字节复用，已有文件及目标符号链接保留；副产物与主输出非事务整体 | [test_markdown_image_collisions.py](../tests/test_markdown_image_collisions.py)、[test_conversion_api.py](../tests/test_conversion_api.py) |
+| `images_folder` | 同名不同内容分配序号，已有文件及目标符号链接保留；普通失败回滚新图片，占用标记保护待提交图片；非断电安全多文件事务 | [test_markdown_image_rollback.py](../tests/test_markdown_image_rollback.py)、[test_markdown_image_collisions.py](../tests/test_markdown_image_collisions.py) |
 | `images_folder_alias` | 外部图片链接目录别名 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `export_underline_formatting` | 下划线 HTML 标记 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
 | `link_export_mode` | 自动/内联/引用链接 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
@@ -76,5 +76,5 @@
 - 标量参数范围、显式默认值和跨选项组合必须验证实际输出，不能仅以属性可以赋值作为通过。
 - HTML 合并跨度、格式标签与嵌套顺序已修复，见[复验记录](benchmarks/html-table-integrity.json)；字段动作/目标、语义注锚点、非图片形状和 Word 完整样式/布局仍未支持，相关损失明确诊断。不能把这些局部样本或 TABLES 枚举有效视为全语义验收通过。
 - `models.ConversionOptions` 是直接 writer 的额外接口，五个共享枚举已验证；其余字段不属于上述 46 项，仍需单独核对，不能宣称全部选项已通过。
-- 图片副产物与主文件不是整体事务；有损警告的拒绝策略与源文件保留应在调用边界验收。
+- 图片副产物普通异常回滚、已有文件保留和受控线程并发已验证，见[记录](benchmarks/markdown-image-rollback.json)；强制中断、独立进程和网络文件系统的整体发布/恢复仍是缺口。
 - ZIP64 强制输出、选择性 HTML 表格及图片重采样本轮未实现；新诊断说明现有退回路径，不计为功能完成。

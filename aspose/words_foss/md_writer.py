@@ -10,6 +10,7 @@ import base64
 import html
 import os
 import re
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import NamedTuple, Optional
 from urllib.parse import urlsplit
@@ -167,6 +168,9 @@ class LdmMarkdownWriter:
         self._doc: Optional[ldm.Document] = None
         self._output_path: Optional[Path] = None
         self._image_counter: int = 0
+        self._image_cleanup: Optional[ExitStack] = None
+        self._image_markers: Optional[ExitStack] = None
+        self._owned_images: dict[Path, bytes] = {}
         self._reference_links: list[tuple[str, str]] = []  # (label, url)
         self._in_footnotes = False
         self._trailing_list_indent = 0
@@ -179,6 +183,28 @@ class LdmMarkdownWriter:
     # ------------------------------------------------------------------
 
     def write(
+        self,
+        doc: ldm.Document,
+        output_path: Optional[Path] = None,
+    ) -> str:
+        """Convert to Markdown, removing newly created images if rendering fails."""
+        if self._image_cleanup is not None:
+            return self._write(doc, output_path)
+        with self._image_transaction():
+            return self._write(doc, output_path)
+
+    @contextmanager
+    def _image_transaction(self):
+        with ExitStack() as markers, ExitStack() as cleanup:
+            self._image_cleanup, self._image_markers = cleanup, markers
+            try:
+                yield
+                cleanup.pop_all()
+            finally:
+                self._image_cleanup = self._image_markers = None
+                self._owned_images.clear()
+
+    def _write(
         self,
         doc: ldm.Document,
         output_path: Optional[Path] = None,
@@ -398,18 +424,33 @@ class LdmMarkdownWriter:
             stem, suffix = filepath.stem, filepath.suffix
             number = 1
             output_path = self._output_path.resolve() if self._output_path is not None else None
-            while (filepath.exists() or filepath.is_symlink()
-                   or filepath.resolve() == output_path):
-                if (not filepath.is_symlink() and filepath.is_file()
+            while True:
+                if self._owned_images.get(filepath) == img.image_bytes:
+                    break
+                marker = filepath.with_name(f".{filepath.name}.pending")
+                occupied = marker.exists() or marker.is_symlink()
+                if (not occupied and not filepath.is_symlink() and filepath.is_file()
                         and filepath.resolve() != output_path
                         and filepath.stat().st_size == len(img.image_bytes)
                         and filepath.read_bytes() == img.image_bytes):
                     break
+                if not occupied and not filepath.exists() and not filepath.is_symlink() and filepath.resolve() != output_path:
+                    try:
+                        fd = os.open(marker, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+                    except FileExistsError:
+                        continue
+                    assert self._image_markers is not None and self._image_cleanup is not None
+                    self._image_markers.callback(marker.unlink, missing_ok=True)
+                    os.close(fd)
+                    # Another exporter must not reuse an image that can still roll back.
+                    if not filepath.exists() and not filepath.is_symlink():
+                        with atomic_output(filepath) as temporary:
+                            temporary.write_bytes(img.image_bytes)
+                        self._owned_images[filepath] = img.image_bytes
+                        self._image_cleanup.callback(filepath.unlink, missing_ok=True)
+                        break
                 number += 1
                 filepath = folder / f"{stem}_{number}{suffix}"
-            else:
-                with atomic_output(filepath) as temporary:
-                    temporary.write_bytes(img.image_bytes)
             filename = filepath.name
 
             # Use alias if set, otherwise compute relative path
