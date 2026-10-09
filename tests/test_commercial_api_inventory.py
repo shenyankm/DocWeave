@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions"])
+@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents"])
 def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, name):
     from zipfile import ZipInfo
 
@@ -19,7 +19,7 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     monkeypatch.setattr(ZipInfo, "__init__", windows_info)
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))[name]
-    assert check(root / "docs/benchmarks") in {10, 18, 360, 1296}
+    assert check(root / "docs/benchmarks") in {10, 18, 61, 360, 1296}
 
 
 
@@ -313,6 +313,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
+    names += ["paragraph-character-indents-26.9.json", "corpus/paragraph-character-indents-26.9.zip",
+              "corpus/paragraph-character-indents-26.9-outputs.zip"]
     names += ["paragraph-logical-indents-26.9.json", "corpus/paragraph-logical-indents-26.9.zip",
               "corpus/paragraph-logical-indents-26.9-outputs.zip", "paragraph-indent-limits-26.9.json", "corpus/paragraph-indent-limits-26.9.zip",
               "corpus/paragraph-indent-limits-26.9-outputs.zip", "corpus/paragraph-indent-limits-26.9-normalized.zip",
@@ -359,6 +361,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_paragraph_spacing_limits"] == 32
     assert result["checked_paragraph_indent_limits"] == 54
     assert result["checked_paragraph_logical_indents"] == 168
+    assert result["checked_paragraph_character_indents"] == 61
     assert result["checked_paragraph_dimension_rendering_pairs"] == 10
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
@@ -645,3 +648,65 @@ def test_indent_normalization_rejects_unrelated_package_edits(tmp_path):
     (tmp_path / name).write_text(json.dumps(report))
     with pytest.raises(AssertionError):
         check(tmp_path, name)
+
+
+@pytest.mark.parametrize("tamper", ["loaded", "after_edit", "before_save", "after_save_live", "after_reopen", "coverage", "setter_error", "acceptance"])
+def test_character_indent_evidence_rejects_forged_state(tmp_path, tamper):
+    import json
+    import shutil
+
+    root = Path(__file__).parents[1]
+    benchmarks = root / "docs/benchmarks"
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_paragraph_character_indents"]
+    report = json.loads((benchmarks / "paragraph-character-indents-26.9.json").read_text())
+    (tmp_path / "corpus").mkdir()
+    for key in ("corpus", "outputs"):
+        shutil.copyfile(benchmarks / report[key], tmp_path / report[key])
+    if tamper == "coverage":
+        report["records"][-1] = report["records"][-2]
+    elif tamper == "setter_error":
+        report["setter_errors"][0]["error"] = "returned"
+    elif tamper == "acceptance":
+        report["sdk_acceptance"] = True
+    else:
+        report["records"][0][tamper]["left_indent"] += 1
+    (tmp_path / "paragraph-character-indents-26.9.json").write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+@pytest.mark.parametrize("attribute", ["left", "leftChars"])
+def test_character_indent_evidence_checks_xml_after_digests_are_updated(tmp_path, attribute):
+    import json
+    import shutil
+    from hashlib import sha256
+    from io import BytesIO
+    from zipfile import ZipFile
+
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    root = Path(__file__).parents[1]
+    benchmarks = root / "docs/benchmarks"
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_paragraph_character_indents"]
+    report = json.loads((benchmarks / "paragraph-character-indents-26.9.json").read_text())
+    (tmp_path / "corpus").mkdir()
+    shutil.copyfile(benchmarks / report["corpus"], tmp_path / report["corpus"])
+    row = report["records"][0]
+    with ZipFile(benchmarks / report["outputs"]) as archive:
+        parts = {name: archive.read(name) for name in archive.namelist()}
+    document = Document(BytesIO(parts[row["output"]]))
+    paragraph = next(p for p in document.paragraphs if "IMPORT" in p.text)
+    paragraph._p.find(qn("w:pPr") + "/" + qn("w:ind")).set(qn("w:" + attribute), "12345")
+    stream = BytesIO()
+    document.save(stream)
+    parts[row["output"]] = stream.getvalue()
+    row["output_sha256"] = sha256(stream.getvalue()).hexdigest()
+    archive_path = tmp_path / report["outputs"]
+    with ZipFile(archive_path, "w") as archive:
+        for name, data in parts.items():
+            archive.writestr(name, data)
+    report["outputs_sha256"] = sha256(archive_path.read_bytes()).hexdigest()
+    (tmp_path / "paragraph-character-indents-26.9.json").write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)

@@ -1,0 +1,3219 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "full_format_acceptance": false,
+  "rendering_acceptance": false,
+  "sdk_acceptance": false,
+  "font_contexts": [
+    [
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      20,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      20,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      20,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      20
+    ],
+    [
+      12,
+      16,
+      20,
+      24
+    ],
+    [
+      12,
+      16,
+      null,
+      24
+    ],
+    [
+      12,
+      null,
+      20,
+      24
+    ]
+  ],
+  "records": [
+    {
+      "input": "fonts/0.docx",
+      "input_sha256": "99f5ebe23acd575409fc9f2582a2e5bf1aeba22c7ab3570bf5b341bdd56fb178",
+      "property": null,
+      "value": null,
+      "layout": false,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "000.docx",
+      "output_sha256": "a3db6c94fe3e50fcce631d4a6beb22ea0914ba550c9459d3fe79b53e8545e4b3",
+      "after_save_live": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/0.docx",
+      "input_sha256": "99f5ebe23acd575409fc9f2582a2e5bf1aeba22c7ab3570bf5b341bdd56fb178",
+      "property": null,
+      "value": null,
+      "layout": true,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "001.docx",
+      "output_sha256": "95f804a98452b981cf453fdbf087932ac4aefeedd4697c739dd560247733093c",
+      "after_save_live": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/1.docx",
+      "input_sha256": "1eb1d5f03346d407447e2a593a72196ce636776ea48a810504b7471982894bd0",
+      "property": null,
+      "value": null,
+      "layout": false,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "002.docx",
+      "output_sha256": "33ba667b0f712108acd6e7ec57de866ad6be9ef91c739683f5039f717ad5143a",
+      "after_save_live": {
+        "left_indent": 20.0,
+        "right_indent": 40.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 20.0,
+        "right_indent": 40.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/1.docx",
+      "input_sha256": "1eb1d5f03346d407447e2a593a72196ce636776ea48a810504b7471982894bd0",
+      "property": null,
+      "value": null,
+      "layout": true,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 20.0,
+        "right_indent": 40.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "003.docx",
+      "output_sha256": "19cf45aaa0a961352f3e117394d25698542f4a8e164a1baf6b637b7eb01ea107",
+      "after_save_live": {
+        "left_indent": 20.0,
+        "right_indent": 40.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 20.0,
+        "right_indent": 40.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/2.docx",
+      "input_sha256": "44f09b3c3f437d438d41769dbbb61467485d19ce98916039946b9af7c00c374b",
+      "property": null,
+      "value": null,
+      "layout": false,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "004.docx",
+      "output_sha256": "c3ade70916cb7931151b4b42458185670b1d954fc8f155158e2a464f0dbc38a8",
+      "after_save_live": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/2.docx",
+      "input_sha256": "44f09b3c3f437d438d41769dbbb61467485d19ce98916039946b9af7c00c374b",
+      "property": null,
+      "value": null,
+      "layout": true,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "005.docx",
+      "output_sha256": "2b9c2d3db139c52849fb4285d49a9917d960e4fae22d8fe6dea258b8a24c3561",
+      "after_save_live": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/3.docx",
+      "input_sha256": "047b4afea3ae992848c80672859d6ba412ec653830c999c8fb34e3f24bf0292e",
+      "property": null,
+      "value": null,
+      "layout": false,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "006.docx",
+      "output_sha256": "289a829dac150676d00263ea73afcc3579dc27ad2031b6e049052a4d54800702",
+      "after_save_live": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/3.docx",
+      "input_sha256": "047b4afea3ae992848c80672859d6ba412ec653830c999c8fb34e3f24bf0292e",
+      "property": null,
+      "value": null,
+      "layout": true,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "007.docx",
+      "output_sha256": "8bc9826252e14359601e0b832e17c672722cf9f89dabe70491c157beea0db595",
+      "after_save_live": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 5.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/4.docx",
+      "input_sha256": "daedbd3d28d2d371260d176f0be3b1dbaea6fef43610d4ed76b4f45871adffa3",
+      "property": null,
+      "value": null,
+      "layout": false,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "008.docx",
+      "output_sha256": "cc513f8785bef0782d35e8f9148d991a111f48208f26246c10d14bd4fca81f19",
+      "after_save_live": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/4.docx",
+      "input_sha256": "daedbd3d28d2d371260d176f0be3b1dbaea6fef43610d4ed76b4f45871adffa3",
+      "property": null,
+      "value": null,
+      "layout": true,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "009.docx",
+      "output_sha256": "13085f2471d4a2434921d904d223dfb4fc25a5dafd2aa72297a22db75b576fe8",
+      "after_save_live": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 10.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/5.docx",
+      "input_sha256": "2468c20f06531a47038fe9213cb4e2c9a7a0708d42fc8e9d5e638e6d511937d9",
+      "property": null,
+      "value": null,
+      "layout": false,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "010.docx",
+      "output_sha256": "e81f423b41d0d5bc94c152c6482e990575e366233c57139d61a143d726a73f97",
+      "after_save_live": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/5.docx",
+      "input_sha256": "2468c20f06531a47038fe9213cb4e2c9a7a0708d42fc8e9d5e638e6d511937d9",
+      "property": null,
+      "value": null,
+      "layout": true,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "011.docx",
+      "output_sha256": "3708f78d34378d0a6b88003d6d8789a15b281c3e3b9a1b208aac92ca1ba8561c",
+      "after_save_live": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/6.docx",
+      "input_sha256": "792af91e31a0229e3144829cf0cf4c8e0f94c0be096799814efa1d30f28339d6",
+      "property": null,
+      "value": null,
+      "layout": false,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "012.docx",
+      "output_sha256": "7c38c5d9f93e9eaa4fa0cdc26699c9bfe183cb50442d5cb2880b146c58c636c3",
+      "after_save_live": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/6.docx",
+      "input_sha256": "792af91e31a0229e3144829cf0cf4c8e0f94c0be096799814efa1d30f28339d6",
+      "property": null,
+      "value": null,
+      "layout": true,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "013.docx",
+      "output_sha256": "3e4f34ede4a72ff5b7b6770987971e6d10df250abeb4a37090b7262d0aceedcc",
+      "after_save_live": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/7.docx",
+      "input_sha256": "297e55a332e10ce92a286d53774837c4e4792d0aa325c9f0045cbc8074aaf46f",
+      "property": null,
+      "value": null,
+      "layout": false,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "014.docx",
+      "output_sha256": "5129f82c2aca4569b27b347dd7479475ceaaf71f9fa7cc12ba088cdfd22deff4",
+      "after_save_live": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "fonts/7.docx",
+      "input_sha256": "297e55a332e10ce92a286d53774837c4e4792d0aa325c9f0045cbc8074aaf46f",
+      "property": null,
+      "value": null,
+      "layout": true,
+      "loaded": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_edit": {
+        "left_indent": 10.0,
+        "right_indent": 20.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "before_save": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "output": "015.docx",
+      "output_sha256": "46c38cacc3f60eb537c4d1fa0986a35e723d95058e28fac6c0da91d4b1fdeee0",
+      "after_save_live": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      },
+      "after_reopen": {
+        "left_indent": 12.0,
+        "right_indent": 24.0,
+        "first_line_indent": 12.0,
+        "character_unit_left_indent": 1.0,
+        "character_unit_right_indent": 2.0,
+        "character_unit_first_line_indent": 0.5
+      }
+    },
+    {
+      "input": "character_unit_left_indent/0.docx",
+      "input_sha256": "f02501ac80909bf237a09415f2f34028b9cca1cac7c17228256957e536fd2271",
+      "property": "character_unit_left_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "016.docx",
+      "output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "after_save_live": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/0.docx",
+      "input_sha256": "f02501ac80909bf237a09415f2f34028b9cca1cac7c17228256957e536fd2271",
+      "property": "character_unit_left_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "017.docx",
+      "output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "after_save_live": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/0.docx",
+      "input_sha256": "f02501ac80909bf237a09415f2f34028b9cca1cac7c17228256957e536fd2271",
+      "property": "character_unit_left_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "018.docx",
+      "output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "after_save_live": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/0.docx",
+      "input_sha256": "f02501ac80909bf237a09415f2f34028b9cca1cac7c17228256957e536fd2271",
+      "property": "character_unit_left_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "019.docx",
+      "output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "after_save_live": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/0.docx",
+      "input_sha256": "f02501ac80909bf237a09415f2f34028b9cca1cac7c17228256957e536fd2271",
+      "property": "character_unit_left_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "020.docx",
+      "output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "after_save_live": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/1.docx",
+      "input_sha256": "20135f516f83b8ee54d4d3f495452dc70a07bd368c8828e814d8495482b02f09",
+      "property": "character_unit_left_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "021.docx",
+      "output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "after_save_live": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/1.docx",
+      "input_sha256": "20135f516f83b8ee54d4d3f495452dc70a07bd368c8828e814d8495482b02f09",
+      "property": "character_unit_left_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "022.docx",
+      "output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "after_save_live": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/1.docx",
+      "input_sha256": "20135f516f83b8ee54d4d3f495452dc70a07bd368c8828e814d8495482b02f09",
+      "property": "character_unit_left_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "023.docx",
+      "output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "after_save_live": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/1.docx",
+      "input_sha256": "20135f516f83b8ee54d4d3f495452dc70a07bd368c8828e814d8495482b02f09",
+      "property": "character_unit_left_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "024.docx",
+      "output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "after_save_live": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/1.docx",
+      "input_sha256": "20135f516f83b8ee54d4d3f495452dc70a07bd368c8828e814d8495482b02f09",
+      "property": "character_unit_left_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "025.docx",
+      "output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "after_save_live": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/2.docx",
+      "input_sha256": "c056ee255588748ad4b3528bbd1b62f5b9d6a179e251b62b3eb9a21445d142b4",
+      "property": "character_unit_left_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "026.docx",
+      "output_sha256": "8ba22199d222970f9c718b7bdd20d9d6beba94e649430d506080214a1f526df7",
+      "after_save_live": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": -13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": -1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/2.docx",
+      "input_sha256": "c056ee255588748ad4b3528bbd1b62f5b9d6a179e251b62b3eb9a21445d142b4",
+      "property": "character_unit_left_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "027.docx",
+      "output_sha256": "15ced01fc0c2a080d9833a3886eb85a50227a5811a57b9db6afa5cb29508cdfe",
+      "after_save_live": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/2.docx",
+      "input_sha256": "c056ee255588748ad4b3528bbd1b62f5b9d6a179e251b62b3eb9a21445d142b4",
+      "property": "character_unit_left_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "028.docx",
+      "output_sha256": "f1631a588c82d52b4c93646f7bd2c0f6200e71c280dd557dffb1f98993a70ca3",
+      "after_save_live": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.23,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/2.docx",
+      "input_sha256": "c056ee255588748ad4b3528bbd1b62f5b9d6a179e251b62b3eb9a21445d142b4",
+      "property": "character_unit_left_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "029.docx",
+      "output_sha256": "5779c517c5864428441ffdd2dc2940a31667a2dde1ddf295d18565e68da23f77",
+      "after_save_live": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 13.4,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.22,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_left_indent/2.docx",
+      "input_sha256": "c056ee255588748ad4b3528bbd1b62f5b9d6a179e251b62b3eb9a21445d142b4",
+      "property": "character_unit_left_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 12.5,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 1.25,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "030.docx",
+      "output_sha256": "4cd79150e515888fc63f4c1c0ac914e1667bf1e45dc31b8360bb994ebc3e0dd0",
+      "after_save_live": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 136.05,
+        "right_indent": 0.0,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 12.37,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/0.docx",
+      "input_sha256": "f2449e7626b6db15ead58fd0e2676aed891cb58ae482ccf667b3b8e7ff444b90",
+      "property": "character_unit_right_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "031.docx",
+      "output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/0.docx",
+      "input_sha256": "f2449e7626b6db15ead58fd0e2676aed891cb58ae482ccf667b3b8e7ff444b90",
+      "property": "character_unit_right_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "032.docx",
+      "output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/0.docx",
+      "input_sha256": "f2449e7626b6db15ead58fd0e2676aed891cb58ae482ccf667b3b8e7ff444b90",
+      "property": "character_unit_right_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "033.docx",
+      "output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/0.docx",
+      "input_sha256": "f2449e7626b6db15ead58fd0e2676aed891cb58ae482ccf667b3b8e7ff444b90",
+      "property": "character_unit_right_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "034.docx",
+      "output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/0.docx",
+      "input_sha256": "f2449e7626b6db15ead58fd0e2676aed891cb58ae482ccf667b3b8e7ff444b90",
+      "property": "character_unit_right_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "035.docx",
+      "output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/1.docx",
+      "input_sha256": "de89b69e4929dd9415f2c78de31ba8eab6e4f292886b9bf0c711e941cdb48999",
+      "property": "character_unit_right_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "036.docx",
+      "output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/1.docx",
+      "input_sha256": "de89b69e4929dd9415f2c78de31ba8eab6e4f292886b9bf0c711e941cdb48999",
+      "property": "character_unit_right_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "037.docx",
+      "output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/1.docx",
+      "input_sha256": "de89b69e4929dd9415f2c78de31ba8eab6e4f292886b9bf0c711e941cdb48999",
+      "property": "character_unit_right_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "038.docx",
+      "output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/1.docx",
+      "input_sha256": "de89b69e4929dd9415f2c78de31ba8eab6e4f292886b9bf0c711e941cdb48999",
+      "property": "character_unit_right_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "039.docx",
+      "output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/1.docx",
+      "input_sha256": "de89b69e4929dd9415f2c78de31ba8eab6e4f292886b9bf0c711e941cdb48999",
+      "property": "character_unit_right_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "040.docx",
+      "output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/2.docx",
+      "input_sha256": "c18a01f2f2c988226c55433f55f6e24f130dd2755f42d158bf6ef65cbe2a54ae",
+      "property": "character_unit_right_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "041.docx",
+      "output_sha256": "2affbeea84ef554d62ad513d549b2f578e429bd18ceb0da757f38d7f0484d1c0",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": -13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": -1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/2.docx",
+      "input_sha256": "c18a01f2f2c988226c55433f55f6e24f130dd2755f42d158bf6ef65cbe2a54ae",
+      "property": "character_unit_right_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "042.docx",
+      "output_sha256": "91efac932c7528649d1b42bc3cf80610a5d780e998c881b2c1e8c49baf72d033",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/2.docx",
+      "input_sha256": "c18a01f2f2c988226c55433f55f6e24f130dd2755f42d158bf6ef65cbe2a54ae",
+      "property": "character_unit_right_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "043.docx",
+      "output_sha256": "3f1c2df65d1e0a13beef1385ba5e544227db4b27564fb7d6469481e59b0adb91",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 13.55,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.23,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/2.docx",
+      "input_sha256": "c18a01f2f2c988226c55433f55f6e24f130dd2755f42d158bf6ef65cbe2a54ae",
+      "property": "character_unit_right_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "044.docx",
+      "output_sha256": "0a44f269f7007efb2a1abfd601a9066ea115a9eb9b40691670a81d8a9cbea144",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 13.4,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.22,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_right_indent/2.docx",
+      "input_sha256": "c18a01f2f2c988226c55433f55f6e24f130dd2755f42d158bf6ef65cbe2a54ae",
+      "property": "character_unit_right_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 12.5,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 1.25,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "045.docx",
+      "output_sha256": "4a62647b0e87d8d10757d9d5ce7a292a359f46d4d8f9d15b8053bac40b93e90b",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 136.05,
+        "first_line_indent": 0.0,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 12.37,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/0.docx",
+      "input_sha256": "6665082c1fc25e23255219c22a6fa72dcd83a73545b3b16da8ec359d670ca663",
+      "property": "character_unit_first_line_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "before_save": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "output": "046.docx",
+      "output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "after_save_live": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "after_reopen": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/0.docx",
+      "input_sha256": "6665082c1fc25e23255219c22a6fa72dcd83a73545b3b16da8ec359d670ca663",
+      "property": "character_unit_first_line_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "047.docx",
+      "output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/0.docx",
+      "input_sha256": "6665082c1fc25e23255219c22a6fa72dcd83a73545b3b16da8ec359d670ca663",
+      "property": "character_unit_first_line_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "output": "048.docx",
+      "output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/0.docx",
+      "input_sha256": "6665082c1fc25e23255219c22a6fa72dcd83a73545b3b16da8ec359d670ca663",
+      "property": "character_unit_first_line_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "output": "049.docx",
+      "output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/0.docx",
+      "input_sha256": "6665082c1fc25e23255219c22a6fa72dcd83a73545b3b16da8ec359d670ca663",
+      "property": "character_unit_first_line_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "output": "050.docx",
+      "output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/1.docx",
+      "input_sha256": "423bd6782313d1fcb27be637d0988bd8977ec27c9593cc26399c2e665d07872f",
+      "property": "character_unit_first_line_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "before_save": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "output": "051.docx",
+      "output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "after_save_live": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "after_reopen": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/1.docx",
+      "input_sha256": "423bd6782313d1fcb27be637d0988bd8977ec27c9593cc26399c2e665d07872f",
+      "property": "character_unit_first_line_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "052.docx",
+      "output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/1.docx",
+      "input_sha256": "423bd6782313d1fcb27be637d0988bd8977ec27c9593cc26399c2e665d07872f",
+      "property": "character_unit_first_line_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "output": "053.docx",
+      "output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/1.docx",
+      "input_sha256": "423bd6782313d1fcb27be637d0988bd8977ec27c9593cc26399c2e665d07872f",
+      "property": "character_unit_first_line_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "output": "054.docx",
+      "output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/1.docx",
+      "input_sha256": "423bd6782313d1fcb27be637d0988bd8977ec27c9593cc26399c2e665d07872f",
+      "property": "character_unit_first_line_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "output": "055.docx",
+      "output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/2.docx",
+      "input_sha256": "b8b1864f1a6dceff23c5475eabbfc713289a4e49b428d6b3577a27caf40aca2f",
+      "property": "character_unit_first_line_indent",
+      "value": -1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "before_save": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "output": "056.docx",
+      "output_sha256": "feccc8fcd8ad80df4d0edbb3eced85fd76b7579c62f380a453cbcf874e2271b5",
+      "after_save_live": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      },
+      "after_reopen": {
+        "left_indent": 13.55,
+        "right_indent": 0.0,
+        "first_line_indent": -13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": -1.23
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/2.docx",
+      "input_sha256": "b8b1864f1a6dceff23c5475eabbfc713289a4e49b428d6b3577a27caf40aca2f",
+      "property": "character_unit_first_line_indent",
+      "value": 0.0,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "output": "057.docx",
+      "output_sha256": "5838652095a5fda0cb784b457ab37477e877072d376e9ecdd6caa890d3bbacfe",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 0.0
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/2.docx",
+      "input_sha256": "b8b1864f1a6dceff23c5475eabbfc713289a4e49b428d6b3577a27caf40aca2f",
+      "property": "character_unit_first_line_indent",
+      "value": 1.235,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "output": "058.docx",
+      "output_sha256": "f9acae1dd212693e045ecabb30c7a70b39eddb396676fc363875dcd61c5c1aab",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.55,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.23
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/2.docx",
+      "input_sha256": "b8b1864f1a6dceff23c5475eabbfc713289a4e49b428d6b3577a27caf40aca2f",
+      "property": "character_unit_first_line_indent",
+      "value": 1.225,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "output": "059.docx",
+      "output_sha256": "f4100a72a06c2ef0cffb9b0db222fcb7951278f28ea2b051afe513ff31aceeff",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.4,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.22
+      }
+    },
+    {
+      "input": "character_unit_first_line_indent/2.docx",
+      "input_sha256": "b8b1864f1a6dceff23c5475eabbfc713289a4e49b428d6b3577a27caf40aca2f",
+      "property": "character_unit_first_line_indent",
+      "value": 12.375,
+      "layout": false,
+      "loaded": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 13.75,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 1.25
+      },
+      "after_edit": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "before_save": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "output": "060.docx",
+      "output_sha256": "17c074ee61739c7dbec1bf28de14190b7b1b1671d06d0a4afee1e79c9bc6e5a9",
+      "after_save_live": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      },
+      "after_reopen": {
+        "left_indent": 0.0,
+        "right_indent": 0.0,
+        "first_line_indent": 136.05,
+        "character_unit_left_indent": 0.0,
+        "character_unit_right_indent": 0.0,
+        "character_unit_first_line_indent": 12.37
+      }
+    }
+  ],
+  "setter_errors": [
+    {
+      "input": "character_unit_left_indent/0.docx",
+      "property": "character_unit_left_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_left_indent/0.docx",
+      "property": "character_unit_left_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_left_indent/0.docx",
+      "property": "character_unit_left_indent",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_left_indent/1.docx",
+      "property": "character_unit_left_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_left_indent/1.docx",
+      "property": "character_unit_left_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_left_indent/1.docx",
+      "property": "character_unit_left_indent",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_left_indent/2.docx",
+      "property": "character_unit_left_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_left_indent/2.docx",
+      "property": "character_unit_left_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_left_indent/2.docx",
+      "property": "character_unit_left_indent",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/0.docx",
+      "property": "character_unit_right_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/0.docx",
+      "property": "character_unit_right_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/0.docx",
+      "property": "character_unit_right_indent",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/1.docx",
+      "property": "character_unit_right_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/1.docx",
+      "property": "character_unit_right_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/1.docx",
+      "property": "character_unit_right_indent",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/2.docx",
+      "property": "character_unit_right_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/2.docx",
+      "property": "character_unit_right_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_right_indent/2.docx",
+      "property": "character_unit_right_indent",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/0.docx",
+      "property": "character_unit_first_line_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/0.docx",
+      "property": "character_unit_first_line_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/0.docx",
+      "property": "character_unit_first_line_indent",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/1.docx",
+      "property": "character_unit_first_line_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/1.docx",
+      "property": "character_unit_first_line_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/1.docx",
+      "property": "character_unit_first_line_indent",
+      "value": "bad",
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/2.docx",
+      "property": "character_unit_first_line_indent",
+      "value": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/2.docx",
+      "property": "character_unit_first_line_indent",
+      "value": true,
+      "error": "TypeError"
+    },
+    {
+      "input": "character_unit_first_line_indent/2.docx",
+      "property": "character_unit_first_line_indent",
+      "value": "bad",
+      "error": "TypeError"
+    }
+  ],
+  "corpus": "corpus/paragraph-character-indents-26.9.zip",
+  "corpus_sha256": "8a4526d1e0a4a629fa08933ed7e9231b0ba4db81944fb3d58e3586ce526de42e",
+  "outputs": "corpus/paragraph-character-indents-26.9-outputs.zip",
+  "outputs_sha256": "e18280b3ac1c99a8dee0066ee03949632a7b9351a26dcc3db06dcc056380ee8a",
+  "scope": "nonfirst paragraph: 8 font contexts with/without layout and 45 character setters; no style edits, aliases, complex scripts or rendered geometry"
+}

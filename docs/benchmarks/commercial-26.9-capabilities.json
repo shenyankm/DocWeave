@@ -30210,6 +30210,14 @@
         "tests": "tests/test_character_indent_diagnostics.py",
         "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
         "full_acceptance": false
+      },
+      "character_indent_baseline_evidence": {
+        "report": "paragraph-character-indents-26.9.json",
+        "probe": "docs/probes/paragraph_character_indents.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
+        "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
+        "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
+        "full_acceptance": false
       }
     },
     {
@@ -30227,6 +30235,14 @@
         "tests": "tests/test_character_indent_diagnostics.py",
         "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
         "full_acceptance": false
+      },
+      "character_indent_baseline_evidence": {
+        "report": "paragraph-character-indents-26.9.json",
+        "probe": "docs/probes/paragraph_character_indents.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
+        "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
+        "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
+        "full_acceptance": false
       }
     },
     {
@@ -30243,6 +30259,14 @@
         "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
         "tests": "tests/test_character_indent_diagnostics.py",
         "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
+        "full_acceptance": false
+      },
+      "character_indent_baseline_evidence": {
+        "report": "paragraph-character-indents-26.9.json",
+        "probe": "docs/probes/paragraph_character_indents.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
+        "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
+        "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
         "full_acceptance": false
       }
     },
@@ -30331,6 +30355,14 @@
         "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
         "tests": "tests/test_character_indent_diagnostics.py",
         "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
+        "full_acceptance": false
+      },
+      "character_indent_baseline_evidence": {
+        "report": "paragraph-character-indents-26.9.json",
+        "probe": "docs/probes/paragraph_character_indents.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
+        "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
+        "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
         "full_acceptance": false
       }
     },
@@ -30507,6 +30539,14 @@
         "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
         "tests": "tests/test_character_indent_diagnostics.py",
         "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
+        "full_acceptance": false
+      },
+      "character_indent_baseline_evidence": {
+        "report": "paragraph-character-indents-26.9.json",
+        "probe": "docs/probes/paragraph_character_indents.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
+        "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
+        "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
         "full_acceptance": false
       }
     },
@@ -30693,6 +30733,14 @@
         "implementation": "shared DOCX/Flat OPC reader scans six character-indent attributes in document, styles, numbering and source stories; aggregates trusted attribute names without text or values; strict conversion refuses before output",
         "tests": "tests/test_character_indent_diagnostics.py",
         "limits": "diagnostic only; full character-unit getters, setters, font-aware resolution and rendering remain incomplete",
+        "full_acceptance": false
+      },
+      "character_indent_baseline_evidence": {
+        "report": "paragraph-character-indents-26.9.json",
+        "probe": "docs/probes/paragraph_character_indents.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_indents",
+        "observations": "16 load/layout/save/reopen font-context chains; 45 paragraph character setters; 27 type errors; raw native DOCX outputs and independent XML checks",
+        "gap": "native points depend on lifecycle and distinct font contexts; zero character setter retains previous point value; negative first-line setter also changes left points; SDK getters/setters and layout mapping remain unimplemented",
         "full_acceptance": false
       }
     },

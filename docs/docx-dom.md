@@ -145,7 +145,7 @@ for style in editable.styles:
   值按 1/20pt 四舍六入五成双量化，如 12.375→12.4。负首行缩进写为 hanging，
   与 firstLine 同层出现时取 XML 中后出现的属性；编辑保留 ind/spacing 中未涉及的属性。
   [360 次官方编辑及 270 次错误观察](benchmarks/paragraph-dimensions-26.9.json)覆盖 45 个普通输入；
-  本项目直接值接受 `None` 清除，与官方已解析值接口不同。字符缩进须字体解析，当前有效格式明确拒绝；
+  本项目直接值接受 `None` 清除，与官方已解析值接口不同。字符缩进的字号上下文与加载/保存状态不同，见[原生生命周期观察](benchmarks/paragraph-character-indents-26.9.json)；当前有效格式明确拒绝；
   逻辑字符缩进、相对行间距、编号/条件表格上下文和完整 ParagraphFormat API 仍未对齐。
   `start/left`、`end/right` 及 `firstLine/hanging` 点值在同层冲突时按官方观察取 XML 中后出现的属性，
   这属于固定版本行为，不将属性顺序敏感解释为格式标准要求。不同层按就近属性继承；修改或清除 left/right

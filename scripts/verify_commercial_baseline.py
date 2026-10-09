@@ -198,6 +198,79 @@ def saved_dimensions(data):
             "paragraph": resolved(paragraph.style, paragraph.paragraph_format)}
 
 
+def verify_paragraph_character_indents(root):
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_character_indents.py"))
+    report = json.loads((root / "paragraph-character-indents-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is report["sdk_acceptance"] is False
+    assert report["font_contexts"] == [list(context) for context in probe["FONT_CONTEXTS"]]
+    generated = dict(probe["nonfirst_inputs"]())
+    source, raw = ((root / report[key]).read_bytes() for key in ("corpus", "outputs"))
+    assert digest(source) == report["corpus_sha256"] and digest(raw) == report["outputs_sha256"]
+    rows = report["records"]
+    expected = {(name, None, layout) for name in generated if name.startswith("fonts/") for layout in (False, True)}
+    expected |= {(name, value, False) for name in generated if not name.startswith("fonts/") for value in probe["VALUES"]}
+    assert len(rows) == len(expected) == 61
+    assert {(row["input"], row["value"], row["layout"]) for row in rows} == expected
+    properties = probe["PROPERTIES"]
+    attributes = ("left", "right", "firstLine", "leftChars", "rightChars", "firstLineChars")
+
+    def saved(data):
+        document = Document(BytesIO(data))
+        paragraph = next(p for p in document.paragraphs if "IMPORT" in p.text)
+        ind = paragraph._p.find(qn("w:pPr") + "/" + qn("w:ind"))
+        result = {}
+        for prop, attr in zip(properties, attributes):
+            alias = {"firstLine": "hanging", "firstLineChars": "hangingChars"}.get(attr)
+            value = ind.get(qn("w:" + attr)) if ind is not None else None
+            if value is None and alias and ind is not None:
+                other = ind.get(qn("w:" + alias))
+                value = str(-int(other)) if other is not None else None
+            result[prop] = int(value or "0") / (100 if attr.endswith("Chars") else 20)
+        return result
+
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        assert len(inputs.namelist()) == len(generated) == 17 and set(inputs.namelist()) == set(generated)
+        assert len(outputs.namelist()) == len(rows) and set(outputs.namelist()) == {row["output"] for row in rows}
+        for row in rows:
+            data = inputs.read(row["input"])
+            assert digest(data) == row["input_sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[row["input"]])) as original:
+                assert {name: actual.read(name) for name in actual.namelist()} == {name: original.read(name) for name in original.namelist()}
+            assert all(set(row[phase]) == set(properties) for phase in ("loaded", "after_edit", "before_save", "after_save_live", "after_reopen"))
+            initial = dict.fromkeys(properties, 0.0)
+            if row["property"] is None:
+                assert row["input"].startswith("fonts/")
+                index = int(Path(row["input"]).stem)
+                default, style, _, run = probe["FONT_CONTEXTS"][index]
+                initial.update(zip(properties, (10.0, 20.0, (run or style or default or 10) / 2, 1.0, 2.0, 0.5)))
+                assert row["after_edit"] == row["loaded"]
+            else:
+                assert row["property"] == row["input"].split("/")[0] and row["property"] in properties[3:]
+                index = properties.index(row["property"]) - 3
+                initial[properties[index]] = 13.75 if index == 2 else 12.5
+                initial[row["property"]] = 1.25
+                # Frozen native quantization observations, not Python round(value * 100).
+                quantized = dict(zip(probe["VALUES"], (-1.23, 0.0, 1.23, 1.22, 12.37)))
+                assert row["after_edit"][row["property"]] == quantized[row["value"]]
+                if row["value"] == 0:
+                    assert row["after_edit"][properties[index]] == row["loaded"][properties[index]]
+            assert row["loaded"] == initial
+            assert row["before_save"] == (row["after_save_live"] if row["layout"] else row["after_edit"])
+            output = outputs.read(row["output"])
+            assert digest(output) == row["output_sha256"]
+            assert saved(output) == row["after_reopen"] == row["after_save_live"]
+    errors = report["setter_errors"]
+    assert len(errors) == 27
+    assert {(row["input"], repr(row["value"])) for row in errors} == {
+        (name, repr(value)) for name in generated if not name.startswith("fonts/") for value in (None, True, "bad")}
+    assert all(row["property"] == row["input"].split("/")[0] and row["error"] == "TypeError" for row in errors)
+    return len(rows)
+
+
 def verify_paragraph_dimensions(root, filename="paragraph-dimensions-26.9.json"):
     assert filename in {"paragraph-dimensions-26.9.json", "paragraph-spacing-limits-26.9.json", "paragraph-indent-limits-26.9.json", "paragraph-logical-indents-26.9.json"}
     logical = filename == "paragraph-logical-indents-26.9.json"
@@ -899,6 +972,7 @@ def verify(root):
     spacing_limits = verify_paragraph_dimensions(root, "paragraph-spacing-limits-26.9.json")
     indent_limits = verify_paragraph_dimensions(root, "paragraph-indent-limits-26.9.json")
     logical_indents = verify_paragraph_dimensions(root, "paragraph-logical-indents-26.9.json")
+    character_indents = verify_paragraph_character_indents(root)
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
@@ -921,6 +995,7 @@ def verify(root):
             "checked_paragraph_spacing_limits": spacing_limits,
             "checked_paragraph_indent_limits": indent_limits,
             "checked_paragraph_logical_indents": logical_indents,
+            "checked_paragraph_character_indents": character_indents,
             "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 

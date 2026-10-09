@@ -140,6 +140,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [段落间距边界](benchmarks/paragraph-spacing-limits-26.9.json) / [极端 setter 未决项](benchmarks/paragraph-dimension-extremes-26.9.json) | 32 次间距边界编辑及保存重开；35 次极端 live getter 观察，非有限值仍不一致；有限缩进见下项 |
 | [有限缩进边界](benchmarks/paragraph-indent-limits-26.9.json) | 54 次段落/样式编辑；54 个原生输出、10 个合法 hanging 规范化对照，经官方和独立解析重开；极端渲染未验收 |
 | [逻辑缩进](benchmarks/paragraph-logical-indents-26.9.json) | 42 个逻辑/首行缩进别名与继承输入、168 次样式/段落编辑和重开；bidi getter 对照不等于双向排版验收 |
+| [字符缩进生命周期](benchmarks/paragraph-character-indents-26.9.json) | 8 种字号上下文分别执行直接保存和排版后保存，另有 45 次字符 setter、27 次类型错误；原生 DOCX 独立读取，字符 API 与渲染仍未实现 |
 | [首段分页未决差异](benchmarks/first-paragraph-page-break-26.9.json) | 4 次编辑输出及 [18 个试用对照](benchmarks/first-paragraph-trial-26.9.json)；首段变化伴随提示插入，持许可证对照仍缺失 |
 | [保存状态观察](benchmarks/style-save-state-26.9.json) | 商业试用包的内存/重开状态，区分水印内容 |
 | [样式导入投影](benchmarks/style-import-projections.json) | 当前导入的基准、输入输出 SHA 与独立格式读取 |
