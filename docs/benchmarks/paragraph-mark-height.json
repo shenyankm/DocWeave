@@ -1,0 +1,310 @@
+{
+  "phase": 62,
+  "baseline_commit": "3764a856d819be88f935726d9d0455e0f0276045",
+  "change": "Use positive paragraph_break_font.size for empty table paragraph line height.",
+  "source_probe": "import json\nimport sys\nfrom pathlib import Path\n\nimport pymupdf\nfrom docx import Document\nfrom docx.enum.text import WD_LINE_SPACING\nfrom docx.oxml import OxmlElement\nfrom docx.oxml.ns import qn\nfrom docx.shared import Pt\n\nroot = Path('/tmp/docweave-blank-runs')\nroot.mkdir(exist_ok=True)\nmode = sys.argv[1]\ncases = ['empty-run', 'hidden-run', 'field-code', 'mark-8', 'mark-30']\nif mode == 'generate':\n    for case in cases:\n        doc = Document()\n        doc.styles['Normal'].font.size = Pt(11)\n        table = doc.add_table(rows=3, cols=1)\n        table.style = 'Table Grid'\n        margins = OxmlElement('w:tblCellMar')\n        for side in ['top', 'bottom', 'left', 'right']:\n            child = OxmlElement('w:' + side)\n            child.set(qn('w:w'), '0')\n            child.set(qn('w:type'), 'dxa')\n            margins.append(child)\n        table._tbl.tblPr.append(margins)\n        for row in table.rows:\n            p = row.cells[0].paragraphs[0]\n            pf = p.paragraph_format\n            pf.space_before = Pt(0)\n            pf.space_after = Pt(0)\n            if case.startswith('mark-'):\n                pf.line_spacing = 1.0\n                mark = OxmlElement('w:rPr')\n                size = OxmlElement('w:sz')\n                size.set(qn('w:val'), str(int(case.split('-')[1])*2))\n                mark.append(size)\n                p._p.get_or_add_pPr().append(mark)\n                p.add_run('').font.size = Pt(80)\n            else:\n                pf.line_spacing = Pt(30)\n                pf.line_spacing_rule = WD_LINE_SPACING.EXACTLY\n                if case == 'field-code':\n                    for kind in ['begin', 'end']:\n                        run = OxmlElement('w:r')\n                        field = OxmlElement('w:fldChar')\n                        field.set(qn('w:fldCharType'), kind)\n                        run.append(field)\n                        p._p.append(run)\n                        if kind == 'begin':\n                            run = OxmlElement('w:r')\n                            text = OxmlElement('w:instrText')\n                            text.text = 'DOCPROPERTY SECRET'\n                            run.append(text)\n                            p._p.append(run)\n                else:\n                    run = p.add_run('SECRET' if case == 'hidden-run' else '')\n                    run.font.size = Pt(80)\n                    run.font.hidden = case == 'hidden-run'\n        doc.save(root/f'{case}.docx')\n    raise SystemExit\nif mode == 'baseline':\n    sys.path.insert(0, '/tmp/docweave-mark-height-baseline')\nimport aspose.words_foss as aw\nfrom aspose.words_foss.libreoffice import convert_to_pdf\nresult = {}\nfor case in cases:\n    source, output = root/f'{case}.docx', root/f'{mode}-{case}.pdf'\n    if mode == 'native':\n        convert_to_pdf(source, output)\n    else:\n        document = aw.Document(source)\n        output.write_bytes(document.to_bytes(aw.saving.PdfSaveOptions()))\n    with pymupdf.open(output) as pdf:\n        page_records=[]\n        for page in pdf:\n            ys=sorted(set(round(item[1].y,3) for d in page.get_drawings() for item in d['items']\n                          if item[0]=='l' and abs(item[1].y-item[2].y)<0.01))\n            page_records.append({'horizontal_lines':ys,'text':page.get_text().strip()})\n            page.get_pixmap(matrix=pymupdf.Matrix(2,2)).save(root/f'{mode}-{case}-{page.number}.png')\n        result[case]={'pages':len(pdf),'bytes':output.stat().st_size,'geometry':page_records}\n(root/f'{mode}.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint(json.dumps(result))\n",
+  "reproduction": [
+    "Install phase 61 wheel with --no-deps --target /tmp/docweave-mark-height-baseline.",
+    "Install candidate wheel in a venv outside the checkout.",
+    "Run source_probe with generate, baseline, current, native; native requires LibreOffice."
+  ],
+  "sources": {
+    "field-code.docx": "70c7168b45138370765beb4faf2587e5742219425395a68f543d1f3892e1da23",
+    "hidden-run.docx": "f28c9aef187558f4be0b475f29575803f65b88ee5b3418c3241964c942072b00",
+    "empty-run.docx": "fc1afc3163fc73cb32673221059e14c2ca6bc409e67535f69caf2bd200cd147a",
+    "mark-8.docx": "dbc586222a7b9ef9f7712cd92915113909238566c01d9ca95e5841dc80308fbd",
+    "mark-30.docx": "3d04164c19d04f86511b4593652d0e136d04d8965da51f23f2893cd062e4ed9c"
+  },
+  "baseline": {
+    "empty-run": {
+      "pages": 1,
+      "bytes": 3443,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            102.0,
+            132.0,
+            162.0
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "hidden-run": {
+      "pages": 1,
+      "bytes": 3450,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            77.5,
+            83.0,
+            88.5
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "field-code": {
+      "pages": 1,
+      "bytes": 3450,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            77.5,
+            83.0,
+            88.5
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "mark-8": {
+      "pages": 1,
+      "bytes": 3457,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            87.4,
+            102.8,
+            118.2
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "mark-30": {
+      "pages": 1,
+      "bytes": 3457,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            87.4,
+            102.8,
+            118.2
+          ],
+          "text": ""
+        }
+      ]
+    }
+  },
+  "current": {
+    "empty-run": {
+      "pages": 1,
+      "bytes": 3443,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            102.0,
+            132.0,
+            162.0
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "hidden-run": {
+      "pages": 1,
+      "bytes": 3450,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            77.5,
+            83.0,
+            88.5
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "field-code": {
+      "pages": 1,
+      "bytes": 3450,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            77.5,
+            83.0,
+            88.5
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "mark-8": {
+      "pages": 1,
+      "bytes": 3455,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            83.2,
+            94.4,
+            105.6
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "mark-30": {
+      "pages": 1,
+      "bytes": 3451,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.0,
+            114.0,
+            156.0,
+            198.0
+          ],
+          "text": ""
+        }
+      ]
+    }
+  },
+  "libreoffice": {
+    "empty-run": {
+      "pages": 1,
+      "bytes": 8835,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.25,
+            102.75,
+            133.25,
+            163.75
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "hidden-run": {
+      "pages": 1,
+      "bytes": 7954,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.25,
+            85.35,
+            85.85,
+            86.35
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "field-code": {
+      "pages": 1,
+      "bytes": 8544,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.25,
+            85.35,
+            98.35,
+            111.45
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "mark-8": {
+      "pages": 1,
+      "bytes": 8108,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.25,
+            82.15,
+            92.05,
+            101.95
+          ],
+          "text": ""
+        }
+      ]
+    },
+    "mark-30": {
+      "pages": 1,
+      "bytes": 8108,
+      "geometry": [
+        {
+          "horizontal_lines": [
+            72.25,
+            107.95,
+            143.55,
+            179.25
+          ],
+          "text": ""
+        }
+      ]
+    }
+  },
+  "common_corpus": {
+    "all_records_and_sizes_equal": true,
+    "pages": 113,
+    "source_probe": "import hashlib,json,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-current-performance');results={}\nfor case in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n raw=aw.Document(root/(case+'.docx')).to_bytes(aw.saving.PdfSaveOptions())\n pages=[]\n with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n  for page in pdf:\n   pages.append({key:hashlib.sha256(value).hexdigest() for key,value in {'words':repr(page.get_text('words')).encode(),'pixels':page.get_pixmap().samples,'drawings':repr(page.get_drawings()).encode(),'images':repr(page.get_image_info()).encode()}.items()})\n results[case]={'bytes':len(raw),'pages':pages}\nPath(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\\n');print('five PDF corpora saved')\n",
+    "cases": {
+      "small": {
+        "pages": 1,
+        "bytes": 6138,
+        "old_records_sha256": "3887f31f8114f8aa717c3f908d5d3a4f01b80fd3637593ae5e192716dfc6cf68",
+        "new_records_sha256": "3887f31f8114f8aa717c3f908d5d3a4f01b80fd3637593ae5e192716dfc6cf68"
+      },
+      "hundred_pages": {
+        "pages": 100,
+        "bytes": 75129,
+        "old_records_sha256": "96fa56501a2abdd2b5002cfdc325af82f227cb254ef5994a104db308b2bb40a0",
+        "new_records_sha256": "96fa56501a2abdd2b5002cfdc325af82f227cb254ef5994a104db308b2bb40a0"
+      },
+      "image_table": {
+        "pages": 3,
+        "bytes": 11337,
+        "old_records_sha256": "ff8d6df94bdeb3d67e82961ef5cfee0f65b7a964a0024a1882381ef2998141a5",
+        "new_records_sha256": "ff8d6df94bdeb3d67e82961ef5cfee0f65b7a964a0024a1882381ef2998141a5"
+      },
+      "repeated_images": {
+        "pages": 4,
+        "bytes": 5545,
+        "old_records_sha256": "9cabe49f4cbb40e34ef73bd5a693ea7ae07e8a770e39a61478722fa2a3b9eb9f",
+        "new_records_sha256": "9cabe49f4cbb40e34ef73bd5a693ea7ae07e8a770e39a61478722fa2a3b9eb9f"
+      },
+      "mixed_styles": {
+        "pages": 5,
+        "bytes": 19607,
+        "old_records_sha256": "9cf1c142de5431b298410982e1bb173d037989ad50f05a3b5df34b5e9dee5cbb",
+        "new_records_sha256": "9cf1c142de5431b298410982e1bb173d037989ad50f05a3b5df34b5e9dee5cbb"
+      }
+    }
+  },
+  "baseline_tests": {
+    "file": "tests/test_pdf_empty_cell_spacing.py",
+    "failed": 7,
+    "passed": 18
+  },
+  "limits": [
+    "Default natural leading remains 1.4; measured LibreOffice errors improve but are not zero.",
+    "An explicit mark size is used; inherited mark-font cascade is not newly implemented.",
+    "Hidden runs and field instructions have native layout discrepancies and remain unchanged.",
+    "Empty LDM Run nodes and rotated cells are not newly implemented.",
+    "No speed or RSS benchmark; no claim of universally smaller PDF output."
+  ],
+  "validation": {
+    "full_tests": 1592,
+    "full_seconds": 348.37,
+    "full_warnings": 165,
+    "examples": 31,
+    "example_seconds": 6.92,
+    "example_warnings": 13,
+    "package_files": 133,
+    "final_package_bytes_equal_full_test_install": true,
+    "wheel_bytes": 26486625,
+    "wheel_sha256": "252843cb850a3e34c1074adc0a03e78ec2f6ac445613eb29efd60135fc04ffff"
+  }
+}

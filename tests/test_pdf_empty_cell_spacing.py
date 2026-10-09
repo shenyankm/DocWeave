@@ -6,6 +6,8 @@ import pymupdf
 import pytest
 from docx import Document as WordDocument
 from docx.enum.text import WD_LINE_SPACING
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 from docx.shared import Pt
 
 from aspose.words_foss import Document
@@ -103,3 +105,88 @@ def test_multiple_empty_paragraphs_each_reserve_their_fixed_height():
         ]
     )
     assert rendered_height(LdmPdfWriter(), model) == pytest.approx(58, abs=0.02)
+
+
+@pytest.mark.parametrize("size", [8, 30])
+@pytest.mark.parametrize("rule,spacing", [(2, 0), (1, 20), (0, 30), (2, 24)])
+def test_empty_cell_uses_paragraph_mark_size_for_line_height(size, rule, spacing):
+    para = ldm.Paragraph(
+        paragraph_format=ldm.ParagraphFormat(
+            paragraph_break_font=ldm.Font(size=size),
+            line_spacing_rule=rule,
+            line_spacing=spacing,
+        )
+    )
+    model, table = empty_table([para])
+    original = model.model_dump_json()
+    expected = size * 1.4
+    if rule == 1:
+        expected = spacing
+    elif rule == 0:
+        expected = max(expected, spacing)
+    elif spacing:
+        expected *= spacing / 12
+    writer = LdmPdfWriter()
+    assert rendered_height(writer, model) == pytest.approx(expected, abs=0.02)
+    assert writer._estimate_table_height(table, 180 * PT_TO_MM) == pytest.approx(
+        expected * PT_TO_MM + POST_TABLE_SPACING_MM, abs=0.02
+    )
+    assert model.model_dump_json() == original
+
+
+@pytest.mark.parametrize("size", [8, 30])
+def test_public_docx_empty_run_uses_paragraph_mark_not_run_font(size):
+    source = WordDocument()
+    para = source.add_table(rows=1, cols=1).cell(0, 0).paragraphs[0]
+    para.paragraph_format.space_before = Pt(0)
+    para.paragraph_format.space_after = Pt(0)
+    para.paragraph_format.line_spacing = 1.0
+    mark = OxmlElement("w:rPr")
+    font_size = OxmlElement("w:sz")
+    font_size.set(qn("w:val"), str(size * 2))
+    mark.append(font_size)
+    para._p.get_or_add_pPr().append(mark)
+    para.add_run("").font.size = Pt(80)
+    stream = BytesIO()
+    source.save(stream)
+    stream.seek(0)
+    loaded = Document(stream).light_document_model.sections[0].body.tables[0]
+    paragraph = loaded.rows[0].cells[0].paragraphs[0]
+    assert paragraph.paragraph_break_font.size == size
+    assert not paragraph._children
+    model, _ = empty_table([paragraph])
+    assert rendered_height(LdmPdfWriter(), model) == pytest.approx(size * 1.4, abs=0.02)
+
+
+def test_empty_paragraph_mark_without_size_keeps_default_height():
+    model, _ = empty_table(
+        [
+            ldm.Paragraph(
+                paragraph_format=ldm.ParagraphFormat(
+                    paragraph_break_font=ldm.Font(size=0)
+                )
+            )
+        ]
+    )
+    assert rendered_height(LdmPdfWriter(), model) == pytest.approx(15.4, abs=0.02)
+
+
+def test_nonempty_cell_still_measures_visible_run_font():
+    model, _ = empty_table(
+        [
+            ldm.Paragraph(
+                paragraph_format=ldm.ParagraphFormat(
+                    paragraph_break_font=ldm.Font(size=30)
+                ),
+                children=[ldm.Run(text="VISIBLE", font=ldm.Font(size=8))],
+            )
+        ]
+    )
+    with pymupdf.open(
+        stream=LdmPdfWriter().write_to_bytes(model), filetype="pdf"
+    ) as pdf:
+        assert pdf[0].get_text().strip() == "VISIBLE"
+        rects = [drawing["rect"] for drawing in pdf[0].get_drawings()]
+        assert max(rect.y1 for rect in rects) - min(
+            rect.y0 for rect in rects
+        ) == pytest.approx(11.2, abs=0.02)

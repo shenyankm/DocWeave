@@ -345,7 +345,9 @@ class TableRenderer:
                         lines.extend(self._cell_lines(pdf, nested_cell, width))
             flush(final=True)
             if not para._children:
-                lines.append(_CellLine(w._paragraph_renderer.line_height_mm(DEFAULT_FONT_SIZE_PT, para.paragraph_format)))
+                mark = para.paragraph_break_font
+                size = mark.size if mark is not None and mark.size > 0 else DEFAULT_FONT_SIZE_PT
+                lines.append(_CellLine(w._paragraph_renderer.line_height_mm(size, para.paragraph_format)))
             if para.paragraph_format.space_after:
                 lines.append(_CellLine(para.paragraph_format.space_after * PT_TO_MM))
             if len(lines) > first_line:
