@@ -2,7 +2,8 @@
 
 范围为 `saving.py` 的三个保存选项类及其 `OutlineOptions`：40 + 6 个初始化公开字段，其中 15 个字段使用枚举描述符。
 下表记录源码行为与复验入口，不表示本轮已完整验收每项；全矩阵效果、标量边界和跨格式组合归于 A1/A4。
-本轮验收未知枚举拒绝与三项有效但未实现请求的诊断，见[记录](benchmarks/save-option-contract.json)。
+枚举拒绝与三项有效但未实现请求的诊断见[记录](benchmarks/save-option-contract.json)；
+后续标量及内容专项按各行记录核对，不能升级为全矩阵已通过。
 支持枚举值不等于对应功能已实现：有效但未实现值仍按表中限制处理。
 
 ## PdfSaveOptions
@@ -64,12 +65,12 @@
 
 | 字段 | 当前行为/限制 | 证据或复验入口 |
 |---|---|---|
-| `headings_outline_levels` | 标题深度；大于六的值按现有规则夹紧 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
-| `expanded_outline_levels` | 大纲展开范围 0..9 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
-| `default_bookmarks_outline_level` | 默认书签层级；名称过滤与补层规则有限制 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
-| `bookmarks_outline_levels` | 按名称指定书签层级 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
-| `create_outlines_for_headings_in_tables` | 表格标题输出导航 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
-| `create_missing_outline_levels` | 缺层导航补层 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
+| `headings_outline_levels` | 非负整数，拒绝 bool；标题深度大于六的值按现有规则夹紧 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
+| `expanded_outline_levels` | 大纲展开范围 0..9 整数，拒绝 bool | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
+| `default_bookmarks_outline_level` | 0..9 整数，拒绝 bool；0 且空映射保留 export_bookmarks_outline 退回规则，非商业版完全相同契约 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
+| `bookmarks_outline_levels` | 字符串名称到 0..9 整数的 Mapping，显式 0 省略该书签，隐藏名称仍跳过；每次保存重新校验 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
+| `create_outlines_for_headings_in_tables` | bool；表格标题输出导航 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
+| `create_missing_outline_levels` | bool；缺层导航补层，先验证请求层级防止无界分配 | [大纲契约](benchmarks/pdf-outline-contract.json)、[效果](../tests/test_pdf_outline_options.py) |
 
 ## 尚需复核
 

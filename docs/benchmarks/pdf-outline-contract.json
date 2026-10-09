@@ -1,0 +1,75 @@
+{
+  "baseline_commit": "995082bd09506096d4a6beab0c131f0528d0d2f2",
+  "scope": "A1 six OutlineOptions fields: early type/range validation and bounded bookmark gap allocation; not complete save-options or PDF reader acceptance",
+  "environment": {
+    "os": "macOS",
+    "python": "3.13.15",
+    "pypdf": "6.19.0",
+    "fpdf2": "2.8.9",
+    "installed_cwd": "/tmp"
+  },
+  "reproduction": {
+    "test": "tests/test_pdf_outline_contract.py",
+    "old_installed": "94 failed, 22 passed, 5 warnings in 2.33s",
+    "source_related": "225 passed, 7 warnings in 12.02s"
+  },
+  "contract": {
+    "headings": "Nonnegative integer, excludes bool; existing render clamp at six preserved, including very large positive requested depth",
+    "expanded_and_default_bookmark": "Integer 0..9, excludes bool",
+    "individual_bookmark": "Mapping from string names to integer 0..9; checks all entries on every save, including in-place mutations and unused names; MappingProxyType still accepted",
+    "switches": "create_missing_outline_levels and create_outlines_for_headings_in_tables require bool",
+    "timing": "Memory/path/direct writer validate before _render_pdf and before gap allocation; failed file output retains original, failed writer reusable",
+    "zero": "An explicitly mapped zero omits that bookmark. Default zero with empty map retains existing export_bookmarks_outline fallback, distinct from commercial default behavior"
+  },
+  "range_reference": {
+    "url": "https://reference.aspose.com/words/net/aspose.words.saving/outlineoptions/defaultbookmarksoutlinelevel/",
+    "verified": "Official default bookmark depth range is 0..9; scope and zero-default behavior of this fork remain separately documented"
+  },
+  "controlled_budget_probe": {
+    "before": {
+      "package": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py",
+      "requested_level": 1000000000,
+      "allocated_navigation_calls": 21,
+      "outcome": "RuntimeError: controlled stop after 20 navigation allocations"
+    },
+    "after": {
+      "package": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py",
+      "requested_level": 1000000000,
+      "allocated_navigation_calls": 0,
+      "outcome": "ValueError: default_bookmarks_outline_level must be a nonnegative integer from 0 to 9"
+    },
+    "source": "import importlib.util,json,sys\nfrom unittest.mock import patch\nfrom pathlib import Path\nfrom fpdf import FPDF\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nspec=importlib.util.spec_from_file_location('contract','/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_pdf_outline_contract.py')\nm=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)\noptions=aw.saving.PdfSaveOptions()\noptions.outline_options.default_bookmarks_outline_level=10**9\noptions.outline_options.create_missing_outline_levels=True\ncalls=[]\noriginal=FPDF.start_section\ndef guarded(self,name,*args,**kwargs):\n calls.append({'name':name,'level':kwargs.get('level')})\n if len(calls)>20:raise RuntimeError('controlled stop after 20 navigation allocations')\n return original(self,name,*args,**kwargs)\ntry:\n with patch.object(FPDF,'start_section',guarded):m.native_document().to_bytes(options)\n outcome='unexpected success'\nexcept Exception as exc:outcome=type(exc).__name__+': '+str(exc)\nresult={'package':aw.__file__,'requested_level':10**9,'allocated_navigation_calls':len(calls),'outcome':outcome}\nPath(sys.argv[1]).write_text(json.dumps(result,indent=2)+'\\n')\nprint(json.dumps(result))\n",
+    "interpretation": "Actual python-docx input; request depth one billion with gap filling. Old package reaches 21 start_section calls before probe aborts; new package raises ValueError with zero calls. This is a controlled resource-risk reproduction, not a completed billion-node allocation or speed benchmark."
+  },
+  "coverage": [
+    "Three output entry points reject wrong types, negative and oversized depths before rendering; actual original file and temporary cleanup guards",
+    "Real DOCX heading and bookmark input, compact/filled trees, depth nine, mapped zero omission, hidden names skipped, destinations and body text independently parsed by pypdf",
+    "Mapping mutation after writer creation rejected; correction permits reusing writer; existing outline/zoom/content-stream tests included"
+  ],
+  "common_pdf": {
+    "result": "Five fixed DOCX inputs, 113 pages: all size/words/pixels/drawings/image records equal to immediately preceding zoom wheel",
+    "record_sha256": "470e8cdaff77bbda91c1becbd1c2f56348e4f51bbd67c74512b7e3418b4a6dcc",
+    "baseline_record": "pdf-zoom-contract.json common_pdf",
+    "probe_source": "import hashlib,json,sys\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nassert 'site-packages' in aw.__file__,aw.__file__\nroot=Path('/tmp/docweave-current-performance');results={}\nfor case in ('small','hundred_pages','image_table','repeated_images','mixed_styles'):\n raw=aw.Document(root/(case+'.docx')).to_bytes(aw.saving.PdfSaveOptions())\n pages=[]\n with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n  for page in pdf:\n   pages.append({key:hashlib.sha256(value).hexdigest() for key,value in {'words':repr(page.get_text('words')).encode(),'pixels':page.get_pixmap().samples,'drawings':repr(page.get_drawings()).encode(),'images':repr(page.get_image_info()).encode()}.items()})\n results[case]={'bytes':len(raw),'pages':pages}\nPath(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\\n');print('five PDF corpora saved')\n"
+  },
+  "examples": "31 passed, 13 warnings in 6.81s",
+  "wheel": {
+    "bytes": 26490638,
+    "sha256": "f6b2bd466e356fdb83103343a5f9a8ffb66d5e5a92f8bb7251e86bf6750dd976",
+    "source_py_files_matched": 125,
+    "check": "scripts/check_wheel.py passes from /tmp using site-packages"
+  },
+  "limits": [
+    "Selected installed integration passes; not a fresh full suite",
+    "No fresh full suite or new Word/LibreOffice comparison",
+    "No actual reader navigation-panel operation or full accessibility/standards acceptance",
+    "Other public scalar fields and full A1/A4 acceptance remain incomplete",
+    "No new speed/RSS benchmark or size reduction claim"
+  ],
+  "installed_integration": {
+    "result": "1363 passed, 760 deselected, 28 warnings in 304.78s (0:05:04)",
+    "selection": "pdf or image or conversion_api or bounded_conversion",
+    "command": "PYPANDOC_PANDOC=/tmp/docweave-pandoc-arm64/pandoc /tmp/docweave-wheel-test/bin/python -m pytest /Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests -q --import-mode=importlib -k 'pdf or image or conversion_api or bounded_conversion' --tb=short",
+    "includes": "All 116 new outline-contract tests, existing outline/zoom tests and table-heading navigation; installed from final wheel outside checkout"
+  }
+}

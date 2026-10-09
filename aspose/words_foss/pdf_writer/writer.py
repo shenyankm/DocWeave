@@ -35,7 +35,7 @@ from aspose.words_foss.pdf_writer.font import close_fonts, register_fonts
 from aspose.words_foss.pdf_writer.diagnostics import document_nodes, warn_about_conversion
 from aspose.words_foss.pdf_writer.page_bands import install_page_footer, install_page_header
 from aspose.words_foss.pdf_writer.paragraph_renderer import ParagraphRenderer
-from aspose.words_foss.pdf_writer.outline import OutlineOutputProducer
+from aspose.words_foss.pdf_writer.outline import OutlineOutputProducer, _validate_outline_options
 from aspose.words_foss.pdf_writer.structure import TableStructureBuilder
 from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
 from aspose.words_foss.pdf_writer.shape_renderer import ShapeRenderer
@@ -166,15 +166,14 @@ class LdmPdfWriter:
             temporary.write_bytes(self.write_to_bytes(doc))
 
     def write_to_bytes(self, doc: ldm.Document) -> bytes:
-        expanded_levels = self.options.outline_options.expanded_outline_levels
         if self._measurement_pdf is not None:
             close_fonts(self._measurement_pdf)
         try:
             quality = self.options.jpeg_quality
             if isinstance(quality, bool) or not isinstance(quality, int) or not 0 <= quality <= 100:
                 raise ValueError("jpeg_quality must be an integer from 0 to 100")
-            if not isinstance(expanded_levels, int) or not 0 <= expanded_levels <= 9:
-                raise ValueError("expanded_outline_levels must be an integer from 0 to 9")
+            _validate_outline_options(self.options.outline_options)
+            expanded_levels = self.options.outline_options.expanded_outline_levels
             zoom = self.options.zoom_factor
             zoom_destination = None
             if self.options.zoom_behavior == PdfZoomBehavior.ZOOM_FACTOR:

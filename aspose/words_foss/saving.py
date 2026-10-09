@@ -167,6 +167,10 @@ class OutlineOptions:
     """Controls how outlines (bookmarks panel) are generated in the PDF.
     Missing levels are compacted by default (H1 then H3 becomes two levels).
     Enable ``create_missing_outline_levels`` to insert empty intermediate entries.
+    Saving validates nonnegative integer heading depth, integer expansion and
+    bookmark depths in 0..9, string bookmark names, and boolean switches.
+    Bookmark depth 0 omits that explicitly mapped bookmark; default depth 0
+    retains the existing ``export_bookmarks_outline`` fallback when no map is set.
     """
 
     def __init__(self):

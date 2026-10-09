@@ -39,6 +39,22 @@
 独立解析、正文保留和默认输出对照不代表已验证各阅读器的实际打开缩放效果；
 复验入口见[缩放契约记录](benchmarks/pdf-zoom-contract.json)。
 
+### PDF 大纲输入与补层上界
+
+保存时统一校验 `OutlineOptions` 的六个字段：标题深度为非负整数（既有标题输出仍夹紧到六），
+展开深度、默认书签深度和每个名称的书签深度为 0..9 整数；所有深度拒绝 bool。
+书签映射要求字符串键的 Mapping，两个 `create_*` 开关只接受 bool。
+错误在渲染和补层分配前抛出 `ValueError`，适用于内存、文件和直接 writer，保留原目标文件。
+创建 writer 后改字段或原地修改映射，同样会在下一次保存重新校验。
+
+0..9 书签深度与[商业版公开范围](https://reference.aspose.com/words/net/aspose.words.saving/outlineoptions/defaultbookmarksoutlinelevel/)
+一致，但不是完整兼容承诺：显式映射 0 省略该书签；默认深度 0 且映射为空时，
+仍按本项目 `export_bookmarks_outline` 退回到一级或省略。隐藏名称不因显式映射而输出。
+此前超大书签深度可能在 `create_missing_outline_levels=True` 时循环创建大量空节点；
+现在超界值提前拒绝，不把补层关闭或静默夹紧当作请求已生效。
+真实 DOCX、独立 pypdf 导航和受控分配探针见[复验记录](benchmarks/pdf-outline-contract.json)。
+实际阅读器导航操作及完整保存矩阵仍未验收。
+
 ### Markdown 页眉页脚损失
 
 Markdown 当前只导出默认页眉/页脚中顶层段落的图片，省略文字、表格、注引用、横线和变体图片。
