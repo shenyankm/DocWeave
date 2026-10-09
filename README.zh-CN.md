@@ -19,6 +19,9 @@ DocWeave 是独立维护的 [Aspose.Words FOSS for Python](https://github.com/as
 | Python | 3.10–3.14（`>=3.10,<3.15`） |
 | 代码 / 内置字体许可 | MIT / OFL-1.1 |
 
+固定商业 **26.9.0** 基准的[对齐计划与复验材料](docs/commercial-alignment-plan.md)记录公开 API 清单、行为观察和未决差距。
+完整能力对齐仍未验收。
+
 ## 导航
 
 - [分支定位与上游差异](#分支定位与上游差异)

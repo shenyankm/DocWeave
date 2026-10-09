@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "version": "26.9.0",
+  "scope": "three supporting document source URLs, retrieval times and digests; no full member documentation or behavioral acceptance",
+  "documents": [
+    {
+      "url": "https://reference.aspose.com/words/python-net/",
+      "fetched_utc": "2026-10-09T08:17:32.825381+00:00",
+      "sha256": "ca2f13a65ba4e2f58af370aafeeede85808f38c19c81fff8c91e3fd7f64672eb",
+      "version_policy": "rolling supporting documentation; wheel declarations freeze API version",
+      "snapshot_member": "5b9c16840d35.html"
+    },
+    {
+      "url": "https://docs.aspose.com/words/python-net/licensing/",
+      "fetched_utc": "2026-10-09T08:17:33.904388+00:00",
+      "sha256": "27c98a1482d3d5cca6628bf8b89734ba9922ba002555bf3dfc40f696e7094d90",
+      "version_policy": "rolling supporting documentation; wheel declarations freeze API version",
+      "snapshot_member": "eccdf8a44582.html"
+    },
+    {
+      "url": "https://releases.aspose.com/words/python/release-notes/2026/aspose-words-for-python-via-dotnet-26-9-release-notes/",
+      "fetched_utc": "2026-10-09T08:17:36.377072+00:00",
+      "sha256": "96368ec881e932d6452d987628b8648b3bc6f67050b3650d7fb45bb94d135a70",
+      "version_policy": "rolling supporting documentation; wheel declarations freeze API version",
+      "snapshot_member": "edd4fc2b7af3.html"
+    }
+  ]
+}

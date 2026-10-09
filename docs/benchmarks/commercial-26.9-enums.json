@@ -1,0 +1,444 @@
+{
+  "LoadFormat": [
+    {
+      "name": "AUTO",
+      "value": 0
+    },
+    {
+      "name": "AZW3",
+      "value": 54
+    },
+    {
+      "name": "CHM",
+      "value": 53
+    },
+    {
+      "name": "DOC",
+      "value": 10
+    },
+    {
+      "name": "DOCM",
+      "value": 21
+    },
+    {
+      "name": "DOCX",
+      "value": 20
+    },
+    {
+      "name": "DOC_PRE_WORD60",
+      "value": 12
+    },
+    {
+      "name": "DOT",
+      "value": 11
+    },
+    {
+      "name": "DOTM",
+      "value": 23
+    },
+    {
+      "name": "DOTX",
+      "value": 22
+    },
+    {
+      "name": "EPUB",
+      "value": 55
+    },
+    {
+      "name": "FLAT_OPC",
+      "value": 24
+    },
+    {
+      "name": "FLAT_OPC_MACRO_ENABLED",
+      "value": 25
+    },
+    {
+      "name": "FLAT_OPC_TEMPLATE",
+      "value": 26
+    },
+    {
+      "name": "FLAT_OPC_TEMPLATE_MACRO_ENABLED",
+      "value": 27
+    },
+    {
+      "name": "HTML",
+      "value": 50
+    },
+    {
+      "name": "MARKDOWN",
+      "value": 63
+    },
+    {
+      "name": "MHTML",
+      "value": 51
+    },
+    {
+      "name": "MOBI",
+      "value": 52
+    },
+    {
+      "name": "MS_WORKS",
+      "value": 8
+    },
+    {
+      "name": "ODT",
+      "value": 60
+    },
+    {
+      "name": "OTT",
+      "value": 61
+    },
+    {
+      "name": "PDF",
+      "value": 64
+    },
+    {
+      "name": "RTF",
+      "value": 30
+    },
+    {
+      "name": "TEXT",
+      "value": 62
+    },
+    {
+      "name": "UNKNOWN",
+      "value": 255
+    },
+    {
+      "name": "WORD_ML",
+      "value": 31
+    },
+    {
+      "name": "XML",
+      "value": 65
+    }
+  ],
+  "SaveFormat": [
+    {
+      "name": "AZW3",
+      "value": 53
+    },
+    {
+      "name": "BMP",
+      "value": 102
+    },
+    {
+      "name": "DOC",
+      "value": 10
+    },
+    {
+      "name": "DOCLING",
+      "value": 81
+    },
+    {
+      "name": "DOCM",
+      "value": 21
+    },
+    {
+      "name": "DOCX",
+      "value": 20
+    },
+    {
+      "name": "DOT",
+      "value": 11
+    },
+    {
+      "name": "DOTM",
+      "value": 23
+    },
+    {
+      "name": "DOTX",
+      "value": 22
+    },
+    {
+      "name": "EMF",
+      "value": 103
+    },
+    {
+      "name": "EPS",
+      "value": 106
+    },
+    {
+      "name": "EPUB",
+      "value": 52
+    },
+    {
+      "name": "FLAT_OPC",
+      "value": 24
+    },
+    {
+      "name": "FLAT_OPC_MACRO_ENABLED",
+      "value": 25
+    },
+    {
+      "name": "FLAT_OPC_TEMPLATE",
+      "value": 26
+    },
+    {
+      "name": "FLAT_OPC_TEMPLATE_MACRO_ENABLED",
+      "value": 27
+    },
+    {
+      "name": "GIF",
+      "value": 105
+    },
+    {
+      "name": "HTML",
+      "value": 50
+    },
+    {
+      "name": "HTML_FIXED",
+      "value": 45
+    },
+    {
+      "name": "JPEG",
+      "value": 104
+    },
+    {
+      "name": "MARKDOWN",
+      "value": 73
+    },
+    {
+      "name": "MHTML",
+      "value": 51
+    },
+    {
+      "name": "MOBI",
+      "value": 54
+    },
+    {
+      "name": "ODT",
+      "value": 60
+    },
+    {
+      "name": "OPEN_XPS",
+      "value": 46
+    },
+    {
+      "name": "OTT",
+      "value": 61
+    },
+    {
+      "name": "PCL",
+      "value": 48
+    },
+    {
+      "name": "PDF",
+      "value": 40
+    },
+    {
+      "name": "PNG",
+      "value": 101
+    },
+    {
+      "name": "PS",
+      "value": 47
+    },
+    {
+      "name": "RTF",
+      "value": 30
+    },
+    {
+      "name": "SVG",
+      "value": 44
+    },
+    {
+      "name": "TEXT",
+      "value": 70
+    },
+    {
+      "name": "TIFF",
+      "value": 100
+    },
+    {
+      "name": "UNKNOWN",
+      "value": 0
+    },
+    {
+      "name": "WEB_P",
+      "value": 107
+    },
+    {
+      "name": "WORD_ML",
+      "value": 31
+    },
+    {
+      "name": "XAML_FIXED",
+      "value": 42
+    },
+    {
+      "name": "XAML_FLOW",
+      "value": 71
+    },
+    {
+      "name": "XAML_FLOW_PACK",
+      "value": 72
+    },
+    {
+      "name": "XLSX",
+      "value": 80
+    },
+    {
+      "name": "XPS",
+      "value": 41
+    }
+  ],
+  "NodeType": [
+    {
+      "name": "ANY",
+      "value": 0
+    },
+    {
+      "name": "BODY",
+      "value": 3
+    },
+    {
+      "name": "BOOKMARK_END",
+      "value": 10
+    },
+    {
+      "name": "BOOKMARK_START",
+      "value": 9
+    },
+    {
+      "name": "BUILDING_BLOCK",
+      "value": 32
+    },
+    {
+      "name": "CELL",
+      "value": 7
+    },
+    {
+      "name": "COMMENT",
+      "value": 19
+    },
+    {
+      "name": "COMMENT_RANGE_END",
+      "value": 34
+    },
+    {
+      "name": "COMMENT_RANGE_START",
+      "value": 33
+    },
+    {
+      "name": "DOCUMENT",
+      "value": 1
+    },
+    {
+      "name": "EDITABLE_RANGE_END",
+      "value": 12
+    },
+    {
+      "name": "EDITABLE_RANGE_START",
+      "value": 11
+    },
+    {
+      "name": "FIELD_END",
+      "value": 24
+    },
+    {
+      "name": "FIELD_SEPARATOR",
+      "value": 23
+    },
+    {
+      "name": "FIELD_START",
+      "value": 22
+    },
+    {
+      "name": "FOOTNOTE",
+      "value": 20
+    },
+    {
+      "name": "FORM_FIELD",
+      "value": 25
+    },
+    {
+      "name": "GLOSSARY_DOCUMENT",
+      "value": 31
+    },
+    {
+      "name": "GROUP_SHAPE",
+      "value": 17
+    },
+    {
+      "name": "HEADER_FOOTER",
+      "value": 4
+    },
+    {
+      "name": "MOVE_FROM_RANGE_END",
+      "value": 14
+    },
+    {
+      "name": "MOVE_FROM_RANGE_START",
+      "value": 13
+    },
+    {
+      "name": "MOVE_TO_RANGE_END",
+      "value": 16
+    },
+    {
+      "name": "MOVE_TO_RANGE_START",
+      "value": 15
+    },
+    {
+      "name": "NULL",
+      "value": 38
+    },
+    {
+      "name": "OFFICE_MATH",
+      "value": 35
+    },
+    {
+      "name": "PARAGRAPH",
+      "value": 8
+    },
+    {
+      "name": "ROW",
+      "value": 6
+    },
+    {
+      "name": "RUN",
+      "value": 21
+    },
+    {
+      "name": "SECTION",
+      "value": 2
+    },
+    {
+      "name": "SHAPE",
+      "value": 18
+    },
+    {
+      "name": "SMART_TAG",
+      "value": 27
+    },
+    {
+      "name": "SPECIAL_CHAR",
+      "value": 26
+    },
+    {
+      "name": "STRUCTURED_DOCUMENT_TAG",
+      "value": 28
+    },
+    {
+      "name": "STRUCTURED_DOCUMENT_TAG_RANGE_END",
+      "value": 30
+    },
+    {
+      "name": "STRUCTURED_DOCUMENT_TAG_RANGE_START",
+      "value": 29
+    },
+    {
+      "name": "SUB_DOCUMENT",
+      "value": 36
+    },
+    {
+      "name": "SYSTEM",
+      "value": 37
+    },
+    {
+      "name": "TABLE",
+      "value": 5
+    }
+  ]
+}

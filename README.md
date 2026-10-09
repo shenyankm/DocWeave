@@ -20,6 +20,9 @@ The development branch is `dev`; the distribution and import names have **not** 
 | Python | 3.10–3.14 (`>=3.10,<3.15`) |
 | Code / bundled fonts | MIT / OFL-1.1 |
 
+Work toward the fixed commercial **26.9.0** baseline is recorded in the [alignment plan and evidence](docs/commercial-alignment-plan.md).
+Public API inventory, bounded behavior probes, and unresolved gaps are documented; full alignment remains unverified.
+
 ## Navigation
 
 - [Fork status and upstream differences](#fork-status-and-upstream-differences)

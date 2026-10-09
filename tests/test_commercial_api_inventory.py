@@ -1,0 +1,172 @@
+"""Public declarations can be inventoried without installing the commercial runtime."""
+
+import runpy
+from pathlib import Path
+
+import pytest
+
+
+def test_inventory_preserves_overloads_setters_and_enum_values(tmp_path):
+    inventory = runpy.run_path(
+        str(Path(__file__).parents[1] / "scripts" / "inventory_commercial_api.py")
+    )["inventory"]
+    (tmp_path / "__init__.pyi").write_text('''
+from enum import Enum
+class Format(Enum):
+    DOCX: int = 20
+class Document:
+    def __getitem__(self, index: int) -> str: ...
+    def save(self, filename: str) -> None: ...
+    def save(self, stream: object, format: Format) -> None: ...
+    @property
+    def text(self) -> str:
+        """Malformed published prose - "[Red]""""
+        ...
+    @text.setter
+    def text(self, value: str): ...
+    def _private(self): ...
+''')
+    hooks = tmp_path / "__nuitka"
+    hooks.mkdir()
+    (hooks / "__init__.pyi").write_text("class PackagingHook: ...")
+    modules = inventory(tmp_path)
+    assert len(modules) == 1
+    symbols = {symbol["id"]: symbol for symbol in modules[0]["symbols"]}
+    assert symbols["aspose.words.Format"]["kind"] == "enum"
+    assert symbols["aspose.words.Format.DOCX"]["value"] == "20"
+    assert len(symbols["aspose.words.Document.save"]["declarations"]) == 2
+    assert symbols["aspose.words.Document.__getitem__"]["kind"] == "method"
+    text = symbols["aspose.words.Document.text"]
+    assert text["kind"] == "property"
+    assert [item["decorators"] for item in text["declarations"]] == [["property"], ["text.setter"]]
+    assert "aspose.words.Document._private" not in symbols
+
+
+def test_runtime_inventory_keeps_inherited_owner_and_unstubbed_module():
+    from types import ModuleType
+
+    observe = runpy.run_path(
+        str(Path(__file__).parents[1] / "scripts" / "inventory_runtime_surface.py")
+    )["observe"]
+    root = ModuleType("aspose.words")
+    child_module = ModuleType("aspose.words.lowcode")
+
+    class Parent:
+        def visit(self):
+            return None
+
+    class Child(Parent):
+        pass
+
+    Parent.__module__ = Child.__module__ = root.__name__
+    root.Parent = Parent
+    root.Child = Child
+    root.lowcode = child_module
+    # A module cycle must terminate without dropping either surface.
+    child_module.parent = root
+    declarations = {"modules": [{"module": root.__name__, "symbols": [{"id": "aspose.words.Parent.visit"}]}]}
+    modules = observe(root, declarations)
+    assert len(modules) == 2
+    assert modules[1]["declaration_module_present"] is False
+    child = next(item for item in modules[0]["exports"] if item["id"] == "aspose.words.Child")
+    visit = next(item for item in child["members"] if item["name"] == "visit")
+    assert visit == {"name": "visit", "owner": "aspose.words.Parent.visit", "declaration_present": True}
+
+
+def test_ledger_does_not_promote_matching_names_to_compatibility():
+    build = runpy.run_path(
+        str(Path(__file__).parents[1] / "scripts" / "build_alignment_ledger.py")
+    )["build"]
+    declarations = {"version": "26.9.0", "capability_defaults": {"baseline_behavior": "not_measured"},
+                    "modules": [{"symbols": [{"id": "aspose.words.Document.save"}]}]}
+    baseline = {"root_module": "aspose.words", "modules": [{"exports": [
+        {"id": "aspose.words.Document", "kind": "type", "members": [
+            {"name": "save", "owner": "aspose.words.Document.save"},
+            {"name": "dynamic", "owner": "aspose.words.Document.dynamic"},
+        ]},
+    ]}]}
+    current = {"root_module": "aspose.words_foss", "runtime_version": "26.7.0.post2",
+               "modules": [{"exports": [{"id": "aspose.words_foss.Document", "kind": "type",
+                                         "members": [{"name": "save", "owner": "aspose.words_foss.Document.save"}]}]}]}
+    ledger = build(declarations, baseline, current)
+    records = {record["id"]: record for record in ledger["records"]}
+    assert records["aspose.words.Document.save"]["implementation"] == "name_present_behavior_unverified"
+    assert records["aspose.words.Document.dynamic"]["current_entrypoint"] is None
+    assert records["aspose.words.Document.dynamic"]["scope_confirmation"] == "runtime_only_requires_public_support_confirmation"
+    assert ledger["record_defaults"]["baseline_behavior"] == "not_measured"
+
+
+def test_runtime_enum_inventory_preserves_aliases():
+    from enum import IntEnum
+
+    members = runpy.run_path(
+        str(Path(__file__).parents[1] / "scripts" / "inventory_runtime_enums.py")
+    )["members"]
+
+    class Format(IntEnum):
+        PRIMARY = 1
+        ALIAS = 1
+        OTHER = 2
+
+    assert members(Format) == [
+        {"name": "PRIMARY", "value": 1, "canonical_name": "PRIMARY"},
+        {"name": "ALIAS", "value": 1, "canonical_name": "PRIMARY"},
+        {"name": "OTHER", "value": 2, "canonical_name": "OTHER"},
+    ]
+
+
+def test_enum_comparison_keeps_missing_types_and_protocol_gaps():
+    from types import SimpleNamespace
+
+    compare = runpy.run_path(
+        str(Path(__file__).parents[1] / "scripts" / "compare_enum_values.py")
+    )["compare"]
+    root = SimpleNamespace(NodeType=type("NodeType", (), {"RUN": 21, "BODY": 99}))
+    enums = [{"id": "aspose.words.NodeType", "values": [
+        {"name": "RUN", "value": 21}, {"name": "BODY", "value": 3}, {"name": "SECTION", "value": 2}]},
+        {"id": "aspose.words.lowcode.SplitCriteria", "values": [{"name": "PAGE", "value": 0}]}]
+    rows = compare(enums, root)
+    assert rows[0]["current_is_enum"] is False
+    assert [value["status"] for value in rows[0]["values"]] == ["integer_matches", "integer_differs", "absent_or_not_integer"]
+    assert rows[1]["current_type_present"] is False
+
+
+def test_format_ledger_keeps_missing_samples_and_literal_markup_failures():
+    format_records = runpy.run_path(
+        str(Path(__file__).parents[1] / "scripts" / "build_alignment_ledger.py")
+    )["format_records"]
+    saved = [{"name": "UNKNOWN", "value": 0, "outcome": {"status": "raised"}}]
+    loaded = [{"name": "CHM", "value": 60, "status": "missing_legal_sample_not_verified"},
+              {"name": "HTML", "value": 50, "status": "returned", "loaded": True}]
+    reports = {"save_commercial": {"records": saved}, "save_current": {"records": saved},
+               "load_commercial": {"records": loaded}, "load_current": {"records": loaded}}
+    rows = format_records({"reports": reports, "independent_docx_checks": {"load_current": [
+        {"format": "HTML", "literal_markup_present": True}]}})
+    assert len(rows) == 3
+    assert rows[1]["gap"] == "legal input sample missing; capability remains unverified"
+    assert rows[2]["gap"] == "markup accepted as literal text; semantic structure not preserved"
+    assert all(row["delivery"] == "baseline_observation_only" for row in rows)
+
+
+@pytest.mark.parametrize("tamper", ["archive_digest", "output_digest", "missing_output"])
+def test_format_output_verifier_rejects_tampered_or_missing_evidence(tmp_path, tamper):
+    from hashlib import sha256
+    from zipfile import ZipFile
+
+    check = runpy.run_path(str(Path(__file__).parents[1] / "scripts" / "verify_commercial_baseline.py"))["verify_format_outputs"]
+    archive = tmp_path / "outputs.zip"
+    with ZipFile(archive, "w") as zipfile:
+        zipfile.writestr("save_current/TEXT/output.bin", b"CONTENT")
+    report = {"outputs": {"sha256": sha256(archive.read_bytes()).hexdigest()},
+              "reports": {"save_current": {"records": [{"name": "TEXT", "files": [
+                  {"name": "output.bin", "size": 7, "sha256": sha256(b"CONTENT").hexdigest()}]}]}},
+              "independent_docx_checks": {}}
+    assert check(report, archive) == 1
+    if tamper == "archive_digest":
+        report["outputs"]["sha256"] = "incorrect"
+    elif tamper == "output_digest":
+        report["reports"]["save_current"]["records"][0]["files"][0]["sha256"] = "incorrect"
+    else:
+        report["reports"]["save_current"]["records"][0]["files"][0]["name"] = "missing.bin"
+    with pytest.raises((AssertionError, KeyError)):
+        check(report, archive)

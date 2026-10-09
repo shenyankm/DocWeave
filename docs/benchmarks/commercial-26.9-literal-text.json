@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "status": "observed outputs; semantic and visual comparison not complete",
+  "fixtures": {
+    "archive": "corpus/commercial-26.9-literal-text.zip",
+    "sha256": "ca1996de4e2ed594f682e9e2389c159a6d62c634bf5eb7c43442d956ed445b42",
+    "origin": "nine documents generated locally with python-docx 1.2.0, one plain paragraph each; no third-party input documents",
+    "generator": "python-docx Document(); add_paragraph(text); save(path), in TEXTS order from ../probes/markdown_literal_text.py",
+    "replay": "../probes/run_literal_corpus.py"
+  },
+  "commercial_python": "3.13.15",
+  "docweave_python": "3.14.7",
+  "docweave_commit": "dd52d3d3f5e328a7bcbd06a5d2dd683e0be99d96",
+  "license": "evaluation output retained verbatim",
+  "commercial": [
+    {
+      "source": "00.docx",
+      "source_sha256": "45cfbb8b3260fe6f2c24121de25e2e53b7d5a440c85b9411f4d7ed8954a2476c",
+      "markdown": "﻿![](00.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\n<script>alert(1)</script>\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "67a3e566b24e0229619e8ef035f5af3a2069fb5c4561a84f7e53277ce04d6373",
+      "output_member": "commercial/00.commercial.md"
+    },
+    {
+      "source": "01.docx",
+      "source_sha256": "06dbc78bc767a31f8e778de0f663834cf755506aada67fc9ddc491749fb844d4",
+      "markdown": "﻿![](01.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\n<img src=\"x\" onerror=\"alert(1)\">\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "4ece0b2960f878ed8410532f16e3411bbf44a26ca13440e96d05525abe6a0ad4",
+      "output_member": "commercial/01.commercial.md"
+    },
+    {
+      "source": "02.docx",
+      "source_sha256": "f31d091cb4a4ff45b10630109cc3c323da2f93a1483312d96d911d4a134fab2b",
+      "markdown": "﻿![](02.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\n[click](javascript:alert(1))\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "cce805e93bbabbeb8641d9fb1e9412efc0a217f044b8c14d1b933d8087b25b5b",
+      "output_member": "commercial/02.commercial.md"
+    },
+    {
+      "source": "03.docx",
+      "source_sha256": "20e22638142d5d9fdaefcca890299e149d29ba6af3be5f6fbd962acc04cda6b2",
+      "markdown": "﻿![](03.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\n![fake](https://evil.invalid/x.png)\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "6015dfb69fe36853ea1b5c595e6ff57abddb840a8f8223c76256d31b87926ff7",
+      "output_member": "commercial/03.commercial.md"
+    },
+    {
+      "source": "04.docx",
+      "source_sha256": "bcd6e730e1918eb60569ec623ce2bc572d47f9acd9e81f365c209995c7b3a484",
+      "markdown": "﻿![](04.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\n&copy; &#65; &amp;\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "f55f185eb624e48ddf7c592ef4ca8479243a3cc82cf2c248bcf42fe27c81a292",
+      "output_member": "commercial/04.commercial.md"
+    },
+    {
+      "source": "05.docx",
+      "source_sha256": "03309fdd337c7eb34177d26212ab1e0ec2d52c068db946ccbc61df0311e564b8",
+      "markdown": "﻿![](05.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\n`literal code`\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "ef13ef7b34904dfd321aaed2807c48142ab8e630f566f93209b729c8e31939eb",
+      "output_member": "commercial/05.commercial.md"
+    },
+    {
+      "source": "06.docx",
+      "source_sha256": "651ce4cdcea055a1adbefb9f253b3303bc4af4c33f65cfee9e4ee1d244754c12",
+      "markdown": "﻿![](06.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\nLiteral \\\\*star\\\\* and \\[bracket]\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "dd88f206ff3b3101c2ab95c8761491facbe6a84fbf109895e7091943e326962f",
+      "output_member": "commercial/06.commercial.md"
+    },
+    {
+      "source": "07.docx",
+      "source_sha256": "f4f35a188df7a94c910b1d7c2dbb32dff714a662ef778b43ec8c2ccabe0ae979",
+      "markdown": "﻿![](07.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\n~~literal strike~~ and order\\_count\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "35757969ba3d1fd77e9ba9ee4f3c392e322af3949ede662f3d67665b01335a55",
+      "output_member": "commercial/07.commercial.md"
+    },
+    {
+      "source": "08.docx",
+      "source_sha256": "5c0f58744aae025e76c09cb8b01bc85cd0d4a6a7ff8dcb08184829907678bf03",
+      "markdown": "﻿![](08.commercial.001.png)\n\n**Created with an evaluation copy of Aspose.Words. To remove all limitations, you can use Free Temporary License [**https://products.aspose.com/words/temporary-license/**](https://products.aspose.com/words/temporary-license/)**\n\n<https://example.invalid/path>\n**Evaluation Only. Created with Aspose.Words. Copyright 2003-2026 Aspose Pty Ltd.**\n",
+      "output_sha256": "b3f172691de3351782d2c9cdb401aea38720e730628bf05a9357ffd5a34c97b5",
+      "output_member": "commercial/08.commercial.md"
+    }
+  ],
+  "docweave": [
+    {
+      "source": "00.docx",
+      "source_sha256": "45cfbb8b3260fe6f2c24121de25e2e53b7d5a440c85b9411f4d7ed8954a2476c",
+      "markdown": "<script>alert(1)</script>\n",
+      "output_sha256": "cfc151a63b53ac09647ea69d07410784a48c62c857ab6079e2ee8b3a3c9efbbe",
+      "output_member": "docweave/00.docweave.md"
+    },
+    {
+      "source": "01.docx",
+      "source_sha256": "06dbc78bc767a31f8e778de0f663834cf755506aada67fc9ddc491749fb844d4",
+      "markdown": "<img src=\"x\" onerror=\"alert(1)\">\n",
+      "output_sha256": "89a62253e5750edc4ecf0f81db5044258431903dea081ce75d5a93c79edfc20f",
+      "output_member": "docweave/01.docweave.md"
+    },
+    {
+      "source": "02.docx",
+      "source_sha256": "f31d091cb4a4ff45b10630109cc3c323da2f93a1483312d96d911d4a134fab2b",
+      "markdown": "[click](javascript:alert(1))\n",
+      "output_sha256": "425f57ff5f236420bafd90ed7583dface14b93320e273b691cba9f45a54949b9",
+      "output_member": "docweave/02.docweave.md"
+    },
+    {
+      "source": "03.docx",
+      "source_sha256": "20e22638142d5d9fdaefcca890299e149d29ba6af3be5f6fbd962acc04cda6b2",
+      "markdown": "![fake](https://evil.invalid/x.png)\n",
+      "output_sha256": "dd12f324b351fd761d68f6772b5fc824af99cfee5690856dc90c0148103f39a2",
+      "output_member": "docweave/03.docweave.md"
+    },
+    {
+      "source": "04.docx",
+      "source_sha256": "bcd6e730e1918eb60569ec623ce2bc572d47f9acd9e81f365c209995c7b3a484",
+      "markdown": "&copy; &#65; &amp;\n",
+      "output_sha256": "143ba76fff4740a9ca0107fe450ddf041fbe83324633d1e744890732e48cf035",
+      "output_member": "docweave/04.docweave.md"
+    },
+    {
+      "source": "05.docx",
+      "source_sha256": "03309fdd337c7eb34177d26212ab1e0ec2d52c068db946ccbc61df0311e564b8",
+      "markdown": "`literal code`\n",
+      "output_sha256": "7f830b7dc5b90923129484cc301db8907ae184fa201047c20f13317dc8041439",
+      "output_member": "docweave/05.docweave.md"
+    },
+    {
+      "source": "06.docx",
+      "source_sha256": "651ce4cdcea055a1adbefb9f253b3303bc4af4c33f65cfee9e4ee1d244754c12",
+      "markdown": "Literal \\*star\\* and \\[bracket]\n",
+      "output_sha256": "6a2151491328ef7612424644f73f07ff21964703d29d017ad80d86856b0adcb8",
+      "output_member": "docweave/06.docweave.md"
+    },
+    {
+      "source": "07.docx",
+      "source_sha256": "f4f35a188df7a94c910b1d7c2dbb32dff714a662ef778b43ec8c2ccabe0ae979",
+      "markdown": "~~literal strike~~ and order_count\n",
+      "output_sha256": "b2eb26edf7648bd96cb5eca9a8914d58df11fcae4db38de05edda3fb8b3c5c69",
+      "output_member": "docweave/07.docweave.md"
+    },
+    {
+      "source": "08.docx",
+      "source_sha256": "5c0f58744aae025e76c09cb8b01bc85cd0d4a6a7ff8dcb08184829907678bf03",
+      "markdown": "\\<https://example.invalid/path>\n",
+      "output_sha256": "ee1b5e6c7587113f6b99fcb39b71867c2314b46b0b8f0f980a4191ae76822cc9",
+      "output_member": "docweave/08.docweave.md"
+    }
+  ],
+  "raw_outputs": {
+    "archive": "corpus/commercial-26.9-literal-outputs.zip",
+    "sha256": "702a1632c3a717099bbb699782b13da1cf21bc4abe1bfabce1736e45fa8ff300",
+    "scope": "exact replay outputs matching all recorded raw-byte digests, including trial images; readable markdown field normalizes CRLF to LF"
+  },
+  "current_replay": "all nine raw output digests reproduced with installed dd52d3d wheel"
+}

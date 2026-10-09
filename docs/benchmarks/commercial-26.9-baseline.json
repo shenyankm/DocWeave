@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "version": "26.9.0",
+  "platform": {
+    "os": "27.0.1",
+    "architecture": "arm64",
+    "official_python": "3.13.15",
+    "target_python": "3.14.7"
+  },
+  "license": "official evaluation package; no license applied",
+  "wheel": [
+    {
+      "filename": "aspose_words-26.9.0-py3-none-macosx_11_0_arm64.whl",
+      "size": 74783600,
+      "upload_time_iso_8601": "2026-09-16T10:43:27.621824Z",
+      "digests": {
+        "blake2b_256": "8695f69823c82c82d35a641596a80315d585f6a54934b3344281a1ad83c1efee",
+        "md5": "88084e2162621fcacd90e3465e6312d2",
+        "sha256": "730bd8a7e9cea1562dff16d59db9bddb326300ebd62a157634184b54b272893b"
+      }
+    }
+  ],
+  "requires_python": "<3.14,>=3.6",
+  "runtime_smoke": {
+    "import": true,
+    "reported_version": "26.9.0",
+    "document_builder_and_docx_save": true,
+    "evaluation_watermark_observed": true
+  },
+  "documentation": [
+    {
+      "url": "https://reference.aspose.com/words/python-net/",
+      "fetched_utc": "2026-10-09T08:17:32.825381+00:00",
+      "sha256": "ca2f13a65ba4e2f58af370aafeeede85808f38c19c81fff8c91e3fd7f64672eb",
+      "local_snapshot": "/tmp/docweave-baseline-discovery/5b9c16840d35.html",
+      "version_policy": "rolling supporting documentation; wheel declarations freeze API version",
+      "snapshot_archive": "corpus/commercial-26.9-doc-snapshots.zip",
+      "snapshot_member": "5b9c16840d35.html"
+    },
+    {
+      "url": "https://docs.aspose.com/words/python-net/licensing/",
+      "fetched_utc": "2026-10-09T08:17:33.904388+00:00",
+      "sha256": "27c98a1482d3d5cca6628bf8b89734ba9922ba002555bf3dfc40f696e7094d90",
+      "local_snapshot": "/tmp/docweave-baseline-discovery/eccdf8a44582.html",
+      "version_policy": "rolling supporting documentation; wheel declarations freeze API version",
+      "snapshot_archive": "corpus/commercial-26.9-doc-snapshots.zip",
+      "snapshot_member": "eccdf8a44582.html"
+    },
+    {
+      "url": "https://releases.aspose.com/words/python/release-notes/2026/aspose-words-for-python-via-dotnet-26-9-release-notes/",
+      "fetched_utc": "2026-10-09T08:17:36.377072+00:00",
+      "sha256": "96368ec881e932d6452d987628b8648b3bc6f67050b3650d7fb45bb94d135a70",
+      "local_snapshot": "/tmp/docweave-baseline-discovery/edd4fc2b7af3.html",
+      "version_policy": "rolling supporting documentation; wheel declarations freeze API version",
+      "snapshot_archive": "corpus/commercial-26.9-doc-snapshots.zip",
+      "snapshot_member": "edd4fc2b7af3.html"
+    }
+  ],
+  "api_inventory": "commercial-26.9-api.json",
+  "capability_completion": false,
+  "ci": {
+    "head": "4a74ec6835bc3f1588e9040c8f095294ec2f0ced",
+    "run": "https://github.com/shenyankm/DocWeave/actions/runs/37901879429",
+    "conclusion": "success",
+    "matrix": [
+      "Ubuntu 3.10",
+      "Ubuntu 3.14",
+      "macOS 3.14",
+      "Windows 3.14"
+    ]
+  },
+  "documentation_snapshot_archive": {
+    "path": "corpus/commercial-26.9-doc-snapshots.zip",
+    "sha256": "968a32df072afaba624e3c1a1696aca38e1c93497ca67cb314e5273c727ea865",
+    "scope": "local-only raw supporting HTML archive; not included in repository publication; not all member documentation"
+  },
+  "later_delivery_checks": [
+    {
+      "commit": "a1b5a60b77a23d5bdf8bf3113e93be8023433b8c",
+      "run": "https://github.com/shenyankm/DocWeave/actions/runs/37906411435",
+      "status": "completed",
+      "conclusion": "success",
+      "matrix": [
+        "Ubuntu 3.10",
+        "Ubuntu 3.14",
+        "macOS 3.14",
+        "Windows 3.14"
+      ],
+      "scope": "published standalone DOM removal persistence fix; excludes uncommitted inventory and format probes"
+    },
+    {
+      "commit": "aab2cb30a2f006487ff5599ae668ad651f6a91e0",
+      "run": "https://github.com/shenyankm/DocWeave/actions/runs/37911376821",
+      "status": "completed",
+      "conclusion": "success",
+      "scope": "published Flat OPC loading; inventory is separately incomplete"
+    }
+  ],
+  "documentation_registry": {
+    "path": "commercial-26.9-doc-registry.json",
+    "sha256": "d9aa950299d05894a917abbb5af9101301fe667e42a3c4b041e08d6db8c05d02"
+  },
+  "current_snapshot_commit": "dd52d3d3f5e328a7bcbd06a5d2dd683e0be99d96"
+}
