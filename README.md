@@ -321,6 +321,10 @@ backgrounds are painted per row after page/column breaks. Mixed-position rotated
 a conversion loss. These metrics are not Word-identical; see the
 [script validation](docs/benchmarks/vertical-positions.json) and
 [code-run validation](docs/benchmarks/code-runs.json).
+Justified rich-text and Code paragraphs stretch spaces on soft-wrapped rows, including links and
+decorations. Final and explicit-break rows remain natural. Table-cell justification, CJK character
+distribution and Word manual-break compatibility remain incomplete; see
+[justification validation](docs/benchmarks/justification.json).
 
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
 
@@ -487,7 +491,7 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Latest installed-wheel verification on macOS/Python 3.13.15: **1,266 regression tests and 31 API examples passed**;
+Latest installed-wheel verification on macOS/Python 3.13.15: **1,301 regression tests and 31 API examples passed**;
 installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
 See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
 These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.

@@ -311,6 +311,9 @@ aw.Document("report.docx").save("checked.pdf")
 代码块保留逐 run 字号、颜色、粗斜体、装饰和上下标，背景在换页/换栏后逐行绘制。
 混合上下标旋转单元格仍会报告转换损失。度量不承诺与 Word 一致，见
 [上下标验收](docs/benchmarks/vertical-positions.json)与[代码块验收](docs/benchmarks/code-runs.json)。
+富文本正文和代码块的两端对齐会伸展自动换行行中的空格，链接与装饰同步伸展；
+段末和显式换行保持自然宽度。表格内两端对齐、CJK 字符分布及 Word 手动换行兼容设置
+仍未完成，见[两端对齐验收](docs/benchmarks/justification.json)。
 
 阿拉伯语等复杂文字可安装塑形支持，并部署适合语言的可信 fallback 字体：
 
@@ -470,7 +473,7 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-最新本地安装包验收环境为 macOS/Python 3.13.15：**1,266 项回归测试、31 项 API 示例通过**，
+最新本地安装包验收环境为 macOS/Python 3.13.15：**1,301 项回归测试、31 项 API 示例通过**，
 并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
 环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
 这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。

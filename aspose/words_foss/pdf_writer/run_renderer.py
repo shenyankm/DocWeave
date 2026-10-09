@@ -47,6 +47,12 @@ class _ShapedSegment(tuple):
         return segment
 
 
+class _SegmentRow(list):
+    def __init__(self, segments=(), *, hard_break=False):
+        super().__init__(segments)
+        self.hard_break = hard_break
+
+
 class RunRenderer:
     """Renders formatted runs (text segments with fonts, colors, links)."""
 
@@ -338,14 +344,21 @@ class RunRenderer:
                     2 * line_h <= pdf.h - pdf.b_margin - pdf.t_margin + 1e-7 and
                     pdf.y + 2 * line_h > pdf.h - pdf.b_margin + 1e-7):
                 getattr(pdf, "_advance_region", pdf.add_page)()
-            row_w = sum(seg[2] for seg in row)
             offset = first_offset if index == 0 else 0.0
+            word_spacing = 0.0
+            if align == "J" and index < len(rows) - 1 and not row.hard_break:
+                row = self._trim_row_end(pdf, row)
+                spaces = sum(segment[1].count(" ") for segment in row)
+                if spaces:
+                    word_spacing = max(0.0, (text_width - offset - sum(s[2] for s in row)) / spaces)
+            row_w = sum(seg[2] for seg in row)
             x_start = pdf.l_margin + offset
             if align == "C":
                 x_start += (usable_w - offset - row_w - 2 * pdf.c_margin) / 2
             elif align == "R":
                 x_start += usable_w - offset - row_w - 2 * pdf.c_margin
-            self._render_segment_row(pdf, row, line_h, fs, at_x=x_start, background=background)
+            self._render_segment_row(pdf, row, line_h, fs, at_x=x_start,
+                                     background=background, word_spacing=word_spacing)
             if trailing and index == len(rows) - 1:
                 right_x = pdf.l_margin + trailing_right - right_w - pdf.c_margin
                 pdf.set_y(pdf.get_y() - line_h)
@@ -410,7 +423,7 @@ class RunRenderer:
         saved_vpos = pdf.char_vpos
         saved_color = pdf.text_color
         saved_font = (pdf.font_family, pdf.font_style + ("U" if pdf.underline else "") + ("S" if pdf.strikethrough else ""), pdf.font_size_pt)
-        rows, row, used = [], [], 0.0
+        rows, row, used = [], _SegmentRow(), 0.0
         available = width if first_width is None else max(0.0, first_width)
         try:
             # ponytail: oversized words use character breaks; typography-specific punctuation rules are deferred.
@@ -439,18 +452,19 @@ class RunRenderer:
                     if (used and not token.isspace() and token_width <= width
                             and used + token_width > available + 1e-7):
                         rows.append(row)
-                        row, used, available = [], 0.0, width
+                        row, used, available = _SegmentRow(), 0.0, width
                     for char in token:
                         if char == "\n":
+                            row.hard_break = True
                             rows.append(row)
-                            row, used, available = [], 0.0, width
+                            row, used, available = _SegmentRow(), 0.0, width
                             continue
                         char_w = widths[char]
                         if char_w > width:
                             raise ValueError("A glyph is wider than the usable text area")
                         if used + char_w > available + 1e-7:
                             rows.append(row)
-                            row, used, available = [], 0.0, width
+                            row, used, available = _SegmentRow(), 0.0, width
                         if row and row[-1][0] is run and row[-1][4] == link:
                             previous = row[-1]
                             row[-1] = (run, previous[1] + char, previous[2] + char_w, size, link)
@@ -464,6 +478,25 @@ class RunRenderer:
             if saved_font[0]:
                 pdf.set_font(*saved_font)
         return rows
+
+    @staticmethod
+    def _trim_row_end(pdf, row):
+        row = list(row)
+        while row and row[-1][1].endswith(" "):
+            segment = row.pop()
+            run, text, _, size, link = segment
+            text = text.rstrip(" ")
+            if text:
+                if isinstance(segment, _ShapedSegment):
+                    fragment = segment.fragment
+                    fragment = type(fragment)(fragment.characters[:len(text)],
+                                              fragment.graphics_state.copy(), fragment.k, fragment.link)
+                    row.append(_ShapedSegment((run, text, fragment.get_width(), size, link), fragment))
+                else:
+                    apply_run_font(pdf, run.font, default_size=size)
+                    row.append((run, text, pdf.get_string_width(text), size, link))
+                break
+        return row
 
     @staticmethod
     def _wrap_shaped_segments(pdf: FPDF, segments: list, width: float, first_width) -> list:
@@ -522,7 +555,7 @@ class RunRenderer:
                                      first_line_indent=0 if first_width is None else width - first_width)
             rows = []
             while line := breaker.get_line():
-                row = []
+                row = _SegmentRow(hard_break=line.trailing_nl)
                 if contextual:
                     positions = [char.source_index for fragment in line.fragments for char in fragment.characters
                                  if isinstance(char, SourceCharacter)]
@@ -551,6 +584,7 @@ class RunRenderer:
         *,
         at_x: float,
         background: Optional[Tuple[int, int, int]] = None,
+        word_spacing: float = 0.0,
     ) -> None:
         """Emit *segments* on a single line starting at *at_x*."""
         offset = at_x - pdf.l_margin
@@ -563,13 +597,25 @@ class RunRenderer:
         for segment in segments:
             run, safe, seg_w, size, link = segment
             apply_run_font(pdf, run.font, default_size=fs)
+            expanded_width = seg_w + word_spacing * safe.count(" ")
             highlight = parse_color(run.font.highlight_color)
             if highlight:
-                self._draw_highlight(pdf, safe, line_h, highlight)
+                self._draw_highlight(pdf, safe, line_h, highlight,
+                                     width=expanded_width if word_spacing else None)
             if link is not None:
                 pdf.set_text_color(*HYPERLINK_TEXT_RGB)
             link_target = self._writer._link_target_for(pdf, link)
-            if isinstance(segment, _ShapedSegment):
+            if word_spacing:
+                fragments = ([segment.fragment] if isinstance(segment, _ShapedSegment)
+                             else pdf._preload_font_styles(safe, False))
+                for fragment in fragments:
+                    fragment.link = link_target or None
+                    fragment.graphics_state.text_color = pdf.text_color
+                start_x = pdf.get_x()
+                pdf._render_styled_text_line(TextLine(fragments, seg_w, safe.count(" "),
+                    Align.J, line_h, expanded_width + 2 * pdf.c_margin), line_h)
+                pdf.set_x(start_x + expanded_width)
+            elif isinstance(segment, _ShapedSegment):
                 fragment = segment.fragment
                 fragment.link = None  # Source indices are not PDF link IDs.
                 fragment.graphics_state.text_color = pdf.text_color
@@ -612,11 +658,13 @@ class RunRenderer:
         text: str,
         line_h: float,
         rgb: Tuple[int, int, int],
+        *,
+        width: Optional[float] = None,
     ) -> None:
         """Paint a single highlight rectangle behind *text*."""
         if not text:
             return
-        w = pdf.get_string_width(text)
+        w = pdf.get_string_width(text) if width is None else width
         if w <= 0:
             return
         # ``pdf.cell`` renders text shifted right by ``c_margin`` (1 mm by

@@ -1,0 +1,792 @@
+{
+  "date": "2026-10-09",
+  "purpose": "Justify soft-wrapped rich-text rows through native fpdf2 space stretching, retaining source format and stretched decoration/link/highlight geometry.",
+  "scope": "Shared aligned-run body and Code paths; final and explicit-break rows remain natural. Table-cell direct painting is not justified by this phase.",
+  "wheel": {
+    "bytes": 26258089,
+    "previous_bytes": 26257537,
+    "sha256": "e48be1249bb066810b713cd841b35372f1b8ff208c1c9242ec0fb5fdaac034bc",
+    "source_package_files_equal": 133
+  },
+  "before": {
+    "Normal-False-False": {
+      "bytes": 4642,
+      "pages": 1,
+      "right_edge_error_pt": [
+        16.0313
+      ],
+      "final_right_pt": 173.63400268554688,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Normal-False-True": {
+      "bytes": 7963,
+      "pages": 1,
+      "right_edge_error_pt": [
+        16.4174,
+        23.4313
+      ],
+      "final_right_pt": 88.48200988769531,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Normal-True-False": {
+      "bytes": 4666,
+      "pages": 1,
+      "right_edge_error_pt": [
+        18.9933
+      ],
+      "final_right_pt": 173.63400268554688,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Normal-True-True": {
+      "bytes": 7982,
+      "pages": 1,
+      "right_edge_error_pt": [
+        19.3793,
+        26.1193
+      ],
+      "final_right_pt": 88.48200988769531,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Code-False-False": {
+      "bytes": 4683,
+      "pages": 1,
+      "right_edge_error_pt": [
+        16.0313
+      ],
+      "final_right_pt": 173.63400268554688,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Code-False-True": {
+      "bytes": 8008,
+      "pages": 1,
+      "right_edge_error_pt": [
+        16.4174,
+        23.4313
+      ],
+      "final_right_pt": 88.48200988769531,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Code-True-False": {
+      "bytes": 4709,
+      "pages": 1,
+      "right_edge_error_pt": [
+        18.9933
+      ],
+      "final_right_pt": 173.63400268554688,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Code-True-True": {
+      "bytes": 8026,
+      "pages": 1,
+      "right_edge_error_pt": [
+        19.3793,
+        26.1193
+      ],
+      "final_right_pt": 88.48200988769531,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    }
+  },
+  "after": {
+    "Normal-False-False": {
+      "bytes": 4660,
+      "pages": 1,
+      "right_edge_error_pt": [
+        0.0045
+      ],
+      "final_right_pt": 173.63400268554688,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Normal-False-True": {
+      "bytes": 8012,
+      "pages": 1,
+      "right_edge_error_pt": [
+        -0.0046,
+        -0.0007
+      ],
+      "final_right_pt": 88.48200988769531,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Normal-True-False": {
+      "bytes": 4693,
+      "pages": 1,
+      "right_edge_error_pt": [
+        -0.0026
+      ],
+      "final_right_pt": 173.63400268554688,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Normal-True-True": {
+      "bytes": 8015,
+      "pages": 1,
+      "right_edge_error_pt": [
+        -0.0007,
+        -0.0007
+      ],
+      "final_right_pt": 88.48200988769531,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Code-False-False": {
+      "bytes": 4701,
+      "pages": 1,
+      "right_edge_error_pt": [
+        0.0045
+      ],
+      "final_right_pt": 173.63400268554688,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Code-False-True": {
+      "bytes": 8052,
+      "pages": 1,
+      "right_edge_error_pt": [
+        -0.0046,
+        -0.0007
+      ],
+      "final_right_pt": 88.48200988769531,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Code-True-False": {
+      "bytes": 4737,
+      "pages": 1,
+      "right_edge_error_pt": [
+        -0.0026
+      ],
+      "final_right_pt": 173.63400268554688,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    },
+    "Code-True-True": {
+      "bytes": 8057,
+      "pages": 1,
+      "right_edge_error_pt": [
+        -0.0007,
+        -0.0007
+      ],
+      "final_right_pt": 88.48200988769531,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ]
+    }
+  },
+  "native_comparison": {
+    "native": {
+      "pages": 1,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN",
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "lines": [
+        {
+          "text": "ONE TWO THREE FOUR FIVE ",
+          "bbox": [
+            20.100000381469727,
+            19.990814208984375,
+            203.4739990234375,
+            33.382816314697266
+          ]
+        },
+        {
+          "text": "SIX SEVEN EIGHT NINE TEN",
+          "bbox": [
+            20.100000381469727,
+            35.8408203125,
+            182.60401916503906,
+            49.23282241821289
+          ]
+        },
+        {
+          "text": "SHORT",
+          "bbox": [
+            20.100000381469727,
+            61.690826416015625,
+            62.052001953125,
+            75.08282470703125
+          ]
+        },
+        {
+          "text": " ",
+          "bbox": [
+            116.07600402832031,
+            61.690826416015625,
+            119.4000015258789,
+            75.08282470703125
+          ]
+        },
+        {
+          "text": "LINE",
+          "bbox": [
+            173.41200256347656,
+            61.690826416015625,
+            200.0760040283203,
+            75.08282470703125
+          ]
+        },
+        {
+          "text": "ONE TWO THREE FOUR FIVE ",
+          "bbox": [
+            20.100000381469727,
+            77.54081726074219,
+            203.4739990234375,
+            90.93281555175781
+          ]
+        },
+        {
+          "text": "SIX SEVEN EIGHT NINE TEN",
+          "bbox": [
+            20.100000381469727,
+            93.39082336425781,
+            182.60401916503906,
+            106.78282165527344
+          ]
+        }
+      ]
+    },
+    "library": {
+      "pages": 1,
+      "words": [
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN",
+        "SHORT",
+        "LINE",
+        "ONE",
+        "TWO",
+        "THREE",
+        "FOUR",
+        "FIVE",
+        "SIX",
+        "SEVEN",
+        "EIGHT",
+        "NINE",
+        "TEN"
+      ],
+      "lines": [
+        {
+          "text": "ONE TWO THREE FOUR FIVE",
+          "bbox": [
+            22.829999923706055,
+            21.259994506835938,
+            197.1608428955078,
+            35.659996032714844
+          ]
+        },
+        {
+          "text": "SIX SEVEN EIGHT NINE TEN",
+          "bbox": [
+            22.829999923706055,
+            40.58000183105469,
+            173.63400268554688,
+            54.980003356933594
+          ]
+        },
+        {
+          "text": "SHORT LINE",
+          "bbox": [
+            22.829999923706055,
+            69.89999389648438,
+            90.89400482177734,
+            84.29999542236328
+          ]
+        },
+        {
+          "text": "ONE TWO THREE FOUR FIVE",
+          "bbox": [
+            22.829999923706055,
+            89.22000122070312,
+            197.1608428955078,
+            103.62000274658203
+          ]
+        },
+        {
+          "text": "SIX SEVEN EIGHT NINE TEN",
+          "bbox": [
+            22.829999923706055,
+            108.53999328613281,
+            173.63400268554688,
+            122.93999481201172
+          ]
+        }
+      ]
+    }
+  },
+  "validation": {
+    "source_targeted": {
+      "passed": 35,
+      "warnings": 1,
+      "seconds": 7.72
+    },
+    "source_related": {
+      "passed": 101,
+      "warnings": 5,
+      "seconds": 27.06
+    },
+    "examples": {
+      "passed": 31,
+      "warnings": 13,
+      "seconds": 7.51
+    },
+    "full_installed": {
+      "passed": 1301,
+      "warnings": 18,
+      "seconds": 293.11,
+      "skipped": 0
+    },
+    "targeted_installed": {
+      "passed": 35,
+      "warnings": 1,
+      "seconds": 8.24
+    }
+  },
+  "probes": {
+    "installed_comparison": "import json,sys,runpy\nfrom pathlib import Path\nimport pymupdf\nimport aspose.words_foss as aw\nfrom aspose.words_foss.saving import PdfSaveOptions\nassert 'site-packages' in aw.__file__, aw.__file__\nns=runpy.run_path('/Users/sheny/Developer/code/Aspose.Words-FOSS-for-Python/tests/test_pdf_justification.py')\nresult={}\nfor style in ('Normal','Code'):\n for shaping in (False,True):\n  for mixed in (False,True):\n   model,_=ns['justified_model'](style,mixed=mixed)\n   options=PdfSaveOptions();options.text_shaping=shaping\n   raw=ns['LdmPdfWriter'](options).write_to_bytes(model)\n   key=f'{style}-{shaping}-{mixed}'\n   with pymupdf.open(stream=raw,filetype='pdf') as pdf:\n    rows=ns['lines'](pdf[0])\n    result[key]={'bytes':len(raw),'pages':len(pdf),'right_edge_error_pt':[round(200-72/25.4-row['bbox'][2],4) for row in rows[:-1]],'final_right_pt':rows[-1]['bbox'][2],'words':[word[4] for page in pdf for word in page.get_text('words')]}\n    if key=='Code-False-True':pdf[0].get_pixmap(matrix=pymupdf.Matrix(3,3)).save('/tmp/docweave-justification-'+sys.argv[1]+'.png')\nPath('/tmp/docweave-justification-'+sys.argv[1]+'.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint(result)\n"
+  },
+  "limits": [
+    "LibreOffice default stretches explicit line breaks; this renderer does not yet honor doNotExpandShiftReturn compatibility.",
+    "Source fonts, absolute line height, padding and Word pagination differ.",
+    "Table-cell paragraph justification and CJK character distribution remain incomplete.",
+    "The latest cross-platform CI must be verified separately."
+  ],
+  "existing_corpora": {
+    "small": {
+      "equal": true,
+      "pages": 1,
+      "bytes": 6138
+    },
+    "hundred_pages": {
+      "equal": true,
+      "pages": 100,
+      "bytes": 75129
+    },
+    "image_table": {
+      "equal": true,
+      "pages": 3,
+      "bytes": 11337
+    },
+    "repeated_images": {
+      "equal": true,
+      "pages": 4,
+      "bytes": 5545
+    },
+    "mixed_styles": {
+      "equal": true,
+      "pages": 5,
+      "bytes": 19607
+    }
+  },
+  "performance": {
+    "method": "80 Code paragraphs; warm-up plus 3 renders in each fresh process; 3 paired before/after processes, alternating order; runs executed sequentially after full tests. RSS is macOS resource.ru_maxrss bytes, including interpreter/imports.",
+    "samples": {
+      "0": {
+        "before": [
+          {
+            "alignment": 0,
+            "seconds": [
+              0.13699608299793908,
+              0.12247529200249119,
+              0.12370641599409282
+            ],
+            "median_seconds": 0.12370641599409282,
+            "bytes": 12595,
+            "peak_rss_bytes": 204800000,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-stage52-venv/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          },
+          {
+            "alignment": 0,
+            "seconds": [
+              0.13398683299601544,
+              0.12120579199836357,
+              0.12290691700036405
+            ],
+            "median_seconds": 0.12290691700036405,
+            "bytes": 12595,
+            "peak_rss_bytes": 197148672,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-stage52-venv/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          },
+          {
+            "alignment": 0,
+            "seconds": [
+              0.13464599999861093,
+              0.12228070799756097,
+              0.12354829199466622
+            ],
+            "median_seconds": 0.12354829199466622,
+            "bytes": 12595,
+            "peak_rss_bytes": 205455360,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-stage52-venv/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          }
+        ],
+        "after": [
+          {
+            "alignment": 0,
+            "seconds": [
+              0.13874045799457235,
+              0.12314995800261386,
+              0.12180850000004284
+            ],
+            "median_seconds": 0.12314995800261386,
+            "bytes": 12595,
+            "peak_rss_bytes": 198852608,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          },
+          {
+            "alignment": 0,
+            "seconds": [
+              0.13553879200480878,
+              0.1211921669964795,
+              0.12220645799970953
+            ],
+            "median_seconds": 0.12220645799970953,
+            "bytes": 12595,
+            "peak_rss_bytes": 202964992,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          },
+          {
+            "alignment": 0,
+            "seconds": [
+              0.13500429099804023,
+              0.12566162499570055,
+              0.1321633749976172
+            ],
+            "median_seconds": 0.1321633749976172,
+            "bytes": 12595,
+            "peak_rss_bytes": 192774144,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          }
+        ]
+      },
+      "3": {
+        "before": [
+          {
+            "alignment": 3,
+            "seconds": [
+              0.13541983300092397,
+              0.12243866700009676,
+              0.12132041600125376
+            ],
+            "median_seconds": 0.12243866700009676,
+            "bytes": 12595,
+            "peak_rss_bytes": 196018176,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-stage52-venv/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          },
+          {
+            "alignment": 3,
+            "seconds": [
+              0.13557729100284632,
+              0.13028295800177148,
+              0.13273833299899707
+            ],
+            "median_seconds": 0.13273833299899707,
+            "bytes": 12595,
+            "peak_rss_bytes": 194396160,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-stage52-venv/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          },
+          {
+            "alignment": 3,
+            "seconds": [
+              0.1368878749999567,
+              0.12261291700269794,
+              0.12281266700301785
+            ],
+            "median_seconds": 0.12281266700301785,
+            "bytes": 12595,
+            "peak_rss_bytes": 196689920,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-stage52-venv/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          }
+        ],
+        "after": [
+          {
+            "alignment": 3,
+            "seconds": [
+              0.1378446249946137,
+              0.1235637920035515,
+              0.12302129100135062
+            ],
+            "median_seconds": 0.1235637920035515,
+            "bytes": 12874,
+            "peak_rss_bytes": 194265088,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          },
+          {
+            "alignment": 3,
+            "seconds": [
+              0.13551983300567372,
+              0.12364112499926705,
+              0.12305637499957811
+            ],
+            "median_seconds": 0.12364112499926705,
+            "bytes": 12874,
+            "peak_rss_bytes": 193232896,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          },
+          {
+            "alignment": 3,
+            "seconds": [
+              0.1372135419951519,
+              0.12401104099990334,
+              0.12488670899620047
+            ],
+            "median_seconds": 0.12488670899620047,
+            "bytes": 12874,
+            "peak_rss_bytes": 193200128,
+            "python": "3.13.15",
+            "module": "/tmp/docweave-wheel-test/lib/python3.13/site-packages/aspose/words_foss/__init__.py"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "0": {
+        "before": {
+          "median_seconds": 0.12354829199466622,
+          "peak_rss_bytes": [
+            204800000,
+            197148672,
+            205455360
+          ],
+          "bytes": 12595
+        },
+        "after": {
+          "median_seconds": 0.12314995800261386,
+          "peak_rss_bytes": [
+            198852608,
+            202964992,
+            192774144
+          ],
+          "bytes": 12595
+        }
+      },
+      "3": {
+        "before": {
+          "median_seconds": 0.12281266700301785,
+          "peak_rss_bytes": [
+            196018176,
+            194396160,
+            196689920
+          ],
+          "bytes": 12595
+        },
+        "after": {
+          "median_seconds": 0.12364112499926705,
+          "peak_rss_bytes": [
+            194265088,
+            193232896,
+            193200128
+          ],
+          "bytes": 12874
+        }
+      }
+    },
+    "interpretation": "Ratios near 1 are not evidence of speed or memory improvement. Justified output recovers layout; PDF bytes grow from 12595 to 12874 in this sample.",
+    "probe_source": "import json,sys,time,resource,statistics\nfrom pathlib import Path\nimport aspose.words_foss as aw\nfrom aspose.words_foss import light_document_model as ldm\nfrom aspose.words_foss.pdf_writer import LdmPdfWriter\nassert Path(aw.__file__).is_relative_to(Path(sys.prefix)),(aw.__file__,sys.prefix)\nparagraphs=[]\nfor i in range(80):\n paragraphs.append(ldm.Paragraph(children=[ldm.Run(text='ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE TEN ',font=ldm.Font(size=12,color='FF0000' if i%2 else ''))],paragraph_format=ldm.ParagraphFormat(alignment=int(sys.argv[1]),style_name='Code')))\nmodel=ldm.Document(sections=[ldm.Section(page_setup=ldm.PageSetup(page_width=220,page_height=300,left_margin=20,right_margin=20,top_margin=20,bottom_margin=20),body=ldm.Body(children=paragraphs))])\nLdmPdfWriter().write_to_bytes(model)\ntimes=[]\nfor _ in range(3):\n start=time.perf_counter();raw=LdmPdfWriter().write_to_bytes(model);times.append(time.perf_counter()-start)\nprint(json.dumps({'alignment':int(sys.argv[1]),'seconds':times,'median_seconds':statistics.median(times),'bytes':len(raw),'peak_rss_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,'python':sys.version.split()[0],'module':aw.__file__}))\n"
+  }
+}
