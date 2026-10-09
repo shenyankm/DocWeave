@@ -154,7 +154,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [保存状态观察](benchmarks/style-save-state-26.9.json) | 商业试用包的内存/重开状态，区分水印内容 |
 | [样式导入投影](benchmarks/style-import-projections.json) | 当前导入的基准、输入输出 SHA 与独立格式读取 |
 | [Flat OPC 加载](benchmarks/flat-opc-loading.json) / [保存](benchmarks/flat-opc-saving.json) | 四种受测变体；复杂宏、模板与布局仍未全面验收 |
-| [保存选项审计](save-option-audit.md) | 公开字段的实现路径、限制及验证入口 |
+| [保存选项审计](enhanced-conversion.md#保存选项逐字段审计) | 公开字段的实现路径、限制及验证入口 |
 | [生态借鉴](ecosystem-adoption.md) | Python 同类项目的差别与吸收方向 |
 
 执行 `python scripts/verify_commercial_baseline.py` 检查记录和产物摘要；执行

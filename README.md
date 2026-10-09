@@ -511,8 +511,7 @@ Historical measurements apply to their recorded environment and inputs; measure 
 |---|---|
 | [Chinese README](README.zh-CN.md) | Corresponding Chinese usage guide |
 | [DOCX DOM guide](docs/docx-dom.md) | Ranges, formatting inheritance, resources, merges, and preservation rules |
-| [Conversion and safety](docs/enhanced-conversion.md) | Fonts, diagnostics, limits, CLI, and LibreOffice |
-| [Save-option audit](docs/save-option-audit.md) | Implemented behavior, unsupported requests, and evidence |
+| [Conversion and safety](docs/enhanced-conversion.md) | Save options, fonts, diagnostics, limits, CLI, and LibreOffice |
 | [Ecosystem comparison](docs/ecosystem-adoption.md) | Python alternatives, adopted ideas, and evidence pointers |
 | [Commercial alignment](docs/commercial-alignment-plan.md) | Fixed baseline, complete scope, gaps, and verification |
 | [Issues](https://github.com/shenyankm/DocWeave/issues) | Fork-specific bugs and requests |

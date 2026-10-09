@@ -494,8 +494,7 @@ wheel 核验应在独立环境安装后，离开源码目录运行 `scripts/chec
 |---|---|
 | [英文 README](README.md) | 内容对应的英文使用指南 |
 | [DOCX DOM 指南](docs/docx-dom.md) | 文本范围、格式继承、资源、合并与原包保留规则 |
-| [转换与安全说明](docs/enhanced-conversion.md) | 字体、诊断、限制、CLI 与 LibreOffice |
-| [保存选项审计](docs/save-option-audit.md) | 已实现行为、不支持请求与证据 |
+| [转换与安全说明](docs/enhanced-conversion.md) | 保存选项、字体、诊断、限制、CLI 与 LibreOffice |
 | [生态对比与借鉴](docs/ecosystem-adoption.md) | Python 同类产品、吸收方向与证据入口 |
 | [商业对齐计划](docs/commercial-alignment-plan.md) | 固定基准、完整范围、差距及复验 |
 | [Issues](https://github.com/shenyankm/DocWeave/issues) | 增强分支的问题与需求 |
