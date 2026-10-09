@@ -244,9 +244,15 @@ def verify_style_imports(root, name="style-import-conflicts-26.9.json"):
 
 def saved_story_formats(data):
     from aspose.words_foss import DocxDocument
+    from aspose.words_foss.dom.styles import _style_stories
 
+    document = DocxDocument(BytesIO(data))
+    paragraphs = []
+    for root in _style_stories(document._package):
+        part = next(name for name, tree in document._package._trees.items() if tree.documentElement is root)
+        paragraphs.extend((document.body if part == "word/document.xml" else document.story(part)).paragraphs)
     result = {}
-    for paragraph in DocxDocument(BytesIO(data)).body.paragraphs:
+    for paragraph in paragraphs:
         if paragraph.text not in {"IMPORT", "DESTINATION"}:
             continue
         assert paragraph.text not in result
@@ -313,7 +319,8 @@ def saved_style_fonts(data):
 
 
 def verify_style_save_state(root, name="style-save-state-26.9.json"):
-    counts = {"style-save-state-26.9.json": (247, 132), "character-style-save-state-26.9.json": (108,)}
+    counts = {"style-save-state-26.9.json": (247, 132), "character-style-save-state-26.9.json": (108,),
+              "style-normalization-contexts-26.9.json": (36,)}
     report = json.loads((root / name).read_text())
     raw = (root / report["outputs"]["archive"]).read_bytes()
     assert digest(raw) == report["outputs"]["sha256"]
@@ -360,6 +367,50 @@ def verify_style_save_state(root, name="style-save-state-26.9.json"):
                 assert actual[key]["formats"] == native[key]["after_reopen"]["paragraphs"]
             else:
                 assert row["outcome"] == "raised" and row["destination_unchanged"] is True
+    return len(members)
+
+
+def verify_style_projections(root):
+    report = json.loads((root / "style-import-projections.json").read_text())
+    assert report["baseline_version"] == "26.9.0"
+    raw = (root / report["outputs"]["archive"]).read_bytes()
+    assert digest(raw) == report["outputs"]["sha256"]
+    inspect = runpy.run_path(str(Path(__file__).parents[1] / "docs" / "probes" / "inspect_style_imports.py"))["inspect_document"]
+    members = set()
+    with ZipFile(BytesIO(raw)) as outputs:
+        for count, matrix in zip((247, 132, 108, 36), report["reports"], strict=True):
+            assert matrix["count"] == count
+            baseline = (root / matrix["native"]["file"]).read_bytes()
+            assert digest(baseline.replace(b"\r\n", b"\n")) == matrix["native"]["sha256"]
+            native = {row["case"]: row for row in json.loads(baseline)["reports"][matrix["native"]["report_index"]]["records"]}
+            corpus = (root / matrix["corpus"]["archive"]).read_bytes()
+            assert digest(corpus) == matrix["corpus"]["sha256"] == matrix["candidate"]["corpus_sha256"]
+            rows = {row["case"]: row for row in matrix["candidate"]["records"]}
+            reread = matrix["official_reread"]
+            assert reread["version"] == "26.9.0" and reread["licensed"] is False
+            observed = {row["case"]: row for row in reread["records"]}
+            checks = {row["case"]: row for row in matrix["independent_checks"]}
+            assert len(rows) == len(matrix["candidate"]["records"]) == len(native) == len(observed) == len(reread["records"]) == len(checks) == len(matrix["independent_checks"]) == count
+            assert set(rows) == set(native) == set(observed) == set(checks)
+            with ZipFile(BytesIO(corpus)) as inputs:
+                assert set(inputs.namelist()) == {key + "/" + phase + ".docx" for key in rows for phase in ("source", "destination")}
+                for key, row in rows.items():
+                    assert row["outcome"] == "returned"
+                    assert all(digest(inputs.read(key + "/" + phase + ".docx")) == row["inputs"][phase] == native[key]["inputs"][phase]
+                               for phase in ("source", "destination"))
+                    member = str(count) + "/" + row["output"]
+                    data = outputs.read(member)
+                    assert digest(data) == row["output_sha256"] == observed[key]["output_sha256"]
+                    assert saved_story_formats(data) == observed[key]["formats"] == native[key]["after_reopen"]["paragraphs"]
+                    assert saved_style_fonts(data) == native[key]["after_reopen"]["styles"]
+                    warm = row["imported_format"]
+                    warm = {**warm, "alignment": {"both": "JUSTIFY"}.get(warm["alignment"], (warm["alignment"] or "left").upper())}
+                    assert warm == native[key]["before_save"]["paragraphs"]["IMPORT"]
+                    assert {"case": key, **inspect(BytesIO(data))} == checks[key]
+                    assert member not in members
+                    members.add(member)
+        assert set(outputs.namelist()) == members and len(members) == report["outputs"]["files"] == 523
+    assert report["validation"]["full_import_acceptance"] is report["validation"]["full_format_acceptance"] is report["validation"]["rendering_acceptance"] is False
     return len(members)
 
 
@@ -411,6 +462,8 @@ def verify(root):
     roundtrips = verify_style_roundtrips(root)
     save_states = verify_style_save_state(root)
     save_states += verify_style_save_state(root, "character-style-save-state-26.9.json")
+    save_states += verify_style_save_state(root, "style-normalization-contexts-26.9.json")
+    projections = verify_style_projections(root)
     defaults = verify_font_defaults(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
@@ -419,6 +472,7 @@ def verify(root):
             "checked_font_default_inputs": defaults,
             "checked_style_roundtrip_outputs": roundtrips,
             "checked_style_save_states": save_states,
+            "checked_style_projection_outputs": projections,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

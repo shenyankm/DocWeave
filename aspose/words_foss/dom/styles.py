@@ -2,7 +2,119 @@
 
 from dataclasses import dataclass
 
-from aspose.words_foss.dom.nodes import W, _elements, _find, _is, _onoff, _read_size
+from aspose.words_foss import _io
+from aspose.words_foss._opc import resolve_target
+from aspose.words_foss.dom.nodes import (
+    XMLNS,
+    W,
+    _elements,
+    _find,
+    _is,
+    _onoff,
+    _read_size,
+)
+
+
+def _style_stories(package):
+    names = {"word/document.xml"}
+    rels = "word/_rels/document.xml.rels"
+    if rels in package.part_names:
+        for link in package.tree(rels).getElementsByTagNameNS("http://schemas.openxmlformats.org/package/2006/relationships", "Relationship"):
+            if link.getAttribute("Type") in {
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header",
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer",
+            } and link.getAttribute("TargetMode") != "External":
+                name = resolve_target("word/document.xml", link.getAttribute("Target"))
+                if name not in package.part_names:
+                    raise ValueError("Header/footer relationship points to a missing part")
+                root = package.tree(name).documentElement
+                if not (_is(root, "hdr") or _is(root, "ftr")):
+                    raise ValueError("Expected a Word header/footer part")
+                names.add(name)
+    return [package.tree(name).documentElement for name in sorted(names)]
+
+
+def serialized_style_payload(package, part_name, *, root=None, extra=None):
+    """Project supported root toggles for referenced character contexts, retaining live XML."""
+    tree = package.tree(part_name).cloneNode(deep=True)
+    if root is not None:
+        tree.replaceChild(tree.importNode(root, deep=True), tree.documentElement)
+    root = tree.documentElement
+    styles = {node.getAttributeNS(W, "styleId"): node for node in _elements(root) if _is(node, "style")}
+    selected = set()
+
+    def select(identifier, kind):
+        seen = set()
+        while identifier:
+            if identifier in seen:
+                raise ValueError("Cycle in style basedOn chain")
+            seen.add(identifier)
+            style = styles.get(identifier)
+            if style is None or (style.getAttributeNS(W, "type") or "paragraph") != kind:
+                raise ValueError("Missing or incompatible style in saved character context")
+            base = _child(style, "basedOn")
+            if base is None:
+                selected.add(identifier)
+                return
+            identifier = base.getAttributeNS(W, "val")
+
+    defaults = [key for key, style in styles.items() if (style.getAttributeNS(W, "type") or "paragraph") == "paragraph"
+                and style.getAttributeNS(W, "default") in {"1", "true", "on"}]
+    for story in _style_stories(package) + ([extra] if extra is not None else []):
+        paragraphs = ([story] if _is(story, "p") else []) + list(story.getElementsByTagNameNS(W, "p"))
+        for paragraph in paragraphs:
+            references = []
+            for reference in paragraph.getElementsByTagNameNS(W, "rStyle"):
+                properties = reference.parentNode
+                run = properties.parentNode
+                if not (_is(properties, "rPr") and _is(run, "r")):
+                    raise NotImplementedError("Saving paragraph-mark character styles requires format calibration")
+                ancestor = run.parentNode
+                while ancestor is not None and not _is(ancestor, "p"):
+                    ancestor = ancestor.parentNode
+                if ancestor is paragraph:
+                    references.append(reference)
+            if not references:
+                continue
+            reference = _child(_child(paragraph, "pPr"), "pStyle")
+            if reference is not None:
+                select(reference.getAttributeNS(W, "val"), "paragraph")
+            elif defaults:
+                if len(defaults) != 1:
+                    raise ValueError("Multiple default paragraph styles")
+                select(defaults[0], "paragraph")
+            for reference in references:
+                select(reference.getAttributeNS(W, "val"), "character")
+    default = _child(_child(_child(root, "docDefaults"), "rPrDefault"), "rPr")
+    changed = False
+    for key in selected:
+        groups = [node for node in _elements(styles[key]) if _is(node, "rPr")]
+        if len(groups) > 1:
+            raise ValueError("Duplicate root style property groups")
+        properties = groups[0] if groups else None
+        for name in ("b", "i"):
+            elements = [node for node in _elements(properties) if _is(node, name)] if properties is not None else []
+            if len(elements) > 1:
+                raise ValueError("Duplicate root style toggle")
+            element = elements[0] if elements else None
+            default_element = _child(default, name)
+            if element is None or _onoff(element) != _onoff(default_element):
+                continue
+            for candidate in (element, default_element):
+                if candidate is None:
+                    continue
+                attributes = [candidate.attributes.item(index) for index in range(candidate.attributes.length)]
+                if candidate.childNodes or any(attribute.namespaceURI != XMLNS and
+                        (attribute.namespaceURI != W or attribute.localName != "val") for attribute in attributes):
+                    raise NotImplementedError("Normalizing decorated root style toggles requires metadata preservation")
+            properties.removeChild(element)
+            changed = True
+    if not changed:
+        return None
+    data = tree.toxml(encoding="utf-8")
+    if len(data) > _io.MAX_PART_BYTES:
+        raise ValueError("Projected styles part exceeds the safety limit")
+    return data
 
 
 def _child(node, name):

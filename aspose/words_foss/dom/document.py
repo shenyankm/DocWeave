@@ -144,7 +144,7 @@ class DocxDocument:
         return StyleResolver(self).has_style(style_id, style_type)
 
     def save(self, destination):
-        """Atomically save original payloads except parts modified through this DOM."""
+        """Atomically save edits and supported style/table serialization projections."""
         self._package.save(destination)
 
     def to_bytes(self):

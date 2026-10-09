@@ -105,7 +105,15 @@ def main():
         if commercial:
             return next(node.as_paragraph() for node in doc.get_child_nodes(aw.NodeType.PARAGRAPH, True)
                         if node.get_text().strip() == label)
-        return next(node for node in doc.body.paragraphs if node.text == label)
+        from aspose.words_foss.dom.styles import _style_stories
+
+        for root in _style_stories(doc._package):
+            part = next(name for name, tree in doc._package._trees.items() if tree.documentElement is root)
+            story = doc.body if part == "word/document.xml" else doc.story(part)
+            for node in story.paragraphs:
+                if node.text == label:
+                    return node
+        raise ValueError("Missing owned paragraph: " + label)
 
     def formatting(node):
         font = node.runs[0].as_run().font if commercial else node.runs[0].effective_font

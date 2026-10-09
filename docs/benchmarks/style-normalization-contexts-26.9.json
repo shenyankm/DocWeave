@@ -1,0 +1,3624 @@
+{
+  "probe": "docs/probes/style_save_state.py",
+  "generator": "docs/probes/style_normalization_contexts.py",
+  "reports": [
+    {
+      "module": "aspose.words",
+      "version": "26.9.0",
+      "licensed": false,
+      "python": "3.13.15",
+      "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+      "corpus_sha256": "d49050ae2a976c0c3c6a3aad13fa53b5c09167d6bb74dc5ce8a0b5b61c542338",
+      "records": [
+        {
+          "case": "footer-False-False-False",
+          "inputs": {
+            "source": "e880e972d5a3ebda736b778c298ad61ea9659b00810ddc28d56d9ffd61bd1961",
+            "destination": "df32574fafb3b164a272fdddf7098d27a583c900f546e98bfa6ad65b11a07404"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/000.docx",
+          "output_sha256": "cf7d1bb75ff64f6ecffd39291e12fd2b29b8cf281403350325b63681a3c52864"
+        },
+        {
+          "case": "footer-False-False-True",
+          "inputs": {
+            "source": "ffe58f6aeef507817e8544f5e41dfd3deb87fd2e4cffe65c4c468cde93587da5",
+            "destination": "c254309511c909e717cfbff59b2314b057dc9d2cd7abe62935d554bb33d15797"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/001.docx",
+          "output_sha256": "efec228a4653ee5183aafb03db064d1bc5f88f110f19b3391136a559f8b0d3f9"
+        },
+        {
+          "case": "footer-False-True-False",
+          "inputs": {
+            "source": "97b59128ec0b3a27f47773efc291a28a9a763c4abd8a5deca24ce3da61037127",
+            "destination": "8e410d57e6492f3977b0acfd3591773b06d60536fb5ebf5137db27de7f4be5fc"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/002.docx",
+          "output_sha256": "a3dc5465947b056d5463eb6aa89d768469349ff577ef94f259f3d9edd0359cac"
+        },
+        {
+          "case": "footer-False-True-True",
+          "inputs": {
+            "source": "2bfc89640d7f3b97afef40f214cd3db616e26c8e4c370ad981fee0d13d37eda6",
+            "destination": "e3baed8e85d14242d0338123c7d4e8174b66ae1110b40602e23c7798768b759a"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/003.docx",
+          "output_sha256": "8be22c8b48e68d2cf27090ed1a0d4b3c9b9e5d3e9201331ee170db293ca8adfe"
+        },
+        {
+          "case": "footer-True-False-False",
+          "inputs": {
+            "source": "8ff9eb440838c16c9f9091f69dbd8683f23afcd855afc36b9aeaee7768caf40b",
+            "destination": "49e72fb64c860c795b0ddae87a271485fffb9cf876ffdc07cb9c6f30e8382903"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/004.docx",
+          "output_sha256": "0cd077004564d3251b224874fb83be8f6e18de7ab8c9f07a7e10c6b56008670e"
+        },
+        {
+          "case": "footer-True-False-True",
+          "inputs": {
+            "source": "e50aac15f724d8d6373d1b381cab553e0e2051e66b9558fd868f0fef7f2ed8da",
+            "destination": "21eb46efd5772d0e1841bf9130939c8d94a5ac2d850a6b1f8e7183b179bc4459"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/005.docx",
+          "output_sha256": "536fabd8715c409ad910b3d8701e55119badbb3bec44636c3d5433f11efdb893"
+        },
+        {
+          "case": "footer-True-True-False",
+          "inputs": {
+            "source": "9a3c5696f249f285333b8c515966ddd34c633f24aafa579074acc1b8363a2043",
+            "destination": "99f102c2aa89d16a1caff45d07a45b98488479bd5f073a91ebf91cba3d4dc142"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/006.docx",
+          "output_sha256": "44153fed6820ef1347020b10cb78188a34741bebb345146df727925fef51d26e"
+        },
+        {
+          "case": "footer-True-True-True",
+          "inputs": {
+            "source": "4fa47b16b4d21f43d3309b8fed2c54b8fcad3ff571920ce496ab5bf896909edc",
+            "destination": "6da719a591323de7ed69f0b0c8623a993b47fbf41ce85100a870374c8cc7a3b5"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/007.docx",
+          "output_sha256": "1b28220237d40d6a47c0436e1ae3b1525d75da2b848b51a2a3976ee98c5650ad"
+        },
+        {
+          "case": "header-False-False-False",
+          "inputs": {
+            "source": "e880e972d5a3ebda736b778c298ad61ea9659b00810ddc28d56d9ffd61bd1961",
+            "destination": "cdf69ffab7d888cbe432d01119f711ca2ee2be97b4d0304696fa8f87828e7e58"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/008.docx",
+          "output_sha256": "39f2c52a330587c874b055ff8dfb975c302b63fb7f7f86220698e0b7478146a5"
+        },
+        {
+          "case": "header-False-False-True",
+          "inputs": {
+            "source": "ffe58f6aeef507817e8544f5e41dfd3deb87fd2e4cffe65c4c468cde93587da5",
+            "destination": "a111e8252ec0fe6fa2f314b90da343fe66262457ab689e696d33bad16386093a"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/009.docx",
+          "output_sha256": "2c3fdb9b4b27f3b4c171a8cf6455b77779c17878344c966e9573b41a042a6647"
+        },
+        {
+          "case": "header-False-True-False",
+          "inputs": {
+            "source": "97b59128ec0b3a27f47773efc291a28a9a763c4abd8a5deca24ce3da61037127",
+            "destination": "ce2b0c0430832644bb393f687fa2f45e3f3cdeb65ba960ca4420048aaa2900da"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/010.docx",
+          "output_sha256": "7785f98a96c48077a8cd52e44c32d8290104371cee71673509702d54e697d4c8"
+        },
+        {
+          "case": "header-False-True-True",
+          "inputs": {
+            "source": "2bfc89640d7f3b97afef40f214cd3db616e26c8e4c370ad981fee0d13d37eda6",
+            "destination": "aa41d93ec94591a27e240ef1af81ce2f7c1fc96f66bff14fa250613b25a4b417"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/011.docx",
+          "output_sha256": "d3332d94dc68c781e971d28559cd39dc26e8abf965699f5fb708e6b64e05da49"
+        },
+        {
+          "case": "header-True-False-False",
+          "inputs": {
+            "source": "8ff9eb440838c16c9f9091f69dbd8683f23afcd855afc36b9aeaee7768caf40b",
+            "destination": "7155ca411c7c1b1633d7e96b04f5c1156ecdc95231e136890cee68430a17fa61"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/012.docx",
+          "output_sha256": "0cbb32ef629ea86972dd53b8c66f5c7372aba7856a8d425532f5dd6df739ba00"
+        },
+        {
+          "case": "header-True-False-True",
+          "inputs": {
+            "source": "e50aac15f724d8d6373d1b381cab553e0e2051e66b9558fd868f0fef7f2ed8da",
+            "destination": "1d96b38a2560873257a9d7b942c383a4038059a1e6173981dcef59911229dcbd"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/013.docx",
+          "output_sha256": "714d6fa671a11482290967bd13f62160dd1bc14f6e16185ac5a5f148c54d10b1"
+        },
+        {
+          "case": "header-True-True-False",
+          "inputs": {
+            "source": "9a3c5696f249f285333b8c515966ddd34c633f24aafa579074acc1b8363a2043",
+            "destination": "9a2becc26eee5a54e5d4938cfb05fb862d1ab071871d82dd3bf890fd90117c47"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/014.docx",
+          "output_sha256": "e7abb4460320a09927ea9c2d2a4b0505a4574deed427e95212cc6ad76561514f"
+        },
+        {
+          "case": "header-True-True-True",
+          "inputs": {
+            "source": "4fa47b16b4d21f43d3309b8fed2c54b8fcad3ff571920ce496ab5bf896909edc",
+            "destination": "924682b6b85d405c1c10c5a2450f7982443946732eb6683b4031ec8f4b36ef06"
+          },
+          "before_save": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/015.docx",
+          "output_sha256": "95da03c5a8e856daf717175babd18f0ccfcf368d2b6272cb27dd43c7007ffb3e"
+        },
+        {
+          "case": "root-False-False-False-False",
+          "inputs": {
+            "source": "68343efcb892e3a81f7b74d6502f919ffc3a9ac5a5e2455d83bcc9d6e79f3a9a",
+            "destination": "2d4f37cb6fce3f973301b3ac4390c297dcc45a1443c92d097429bb46aa55e416"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/016.docx",
+          "output_sha256": "85548afe5927c8066e7853ad07d11d76bc5aa24f3a270e11249cc56ee9d5468a"
+        },
+        {
+          "case": "root-False-False-False-True",
+          "inputs": {
+            "source": "8bc604b4f22e05cdcf48a803612a75e2d13b120e741214379be450baece3aafc",
+            "destination": "6e69f54bfb00be9fdfcc0919d9c785f203c00095970b2c5e976b50ea14096d5c"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/017.docx",
+          "output_sha256": "6b3c086ab2c481d9adbcb0459afbda3617fcfcccc488d744bd07dd1a6b96d156"
+        },
+        {
+          "case": "root-False-False-None-False",
+          "inputs": {
+            "source": "9e530cd34325bddd30955ed5dc80caf5c5f5f1fc38cf05151c70ebab1b4983dc",
+            "destination": "f1cfdc72a363933e1aecb3f50560bb406d3360e756eea1826551602e15daa3d2"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/018.docx",
+          "output_sha256": "2ae1c67d173440572a40143f794afcba5f283ae7a39a49173fe3afff0e15c0e7"
+        },
+        {
+          "case": "root-False-False-True-False",
+          "inputs": {
+            "source": "4ef06b7f0d3f9536f5c61f059bb15504b0a359d660d40d235f84d79fc11a1d0a",
+            "destination": "0e0e833afc057c495b0c3e4b1c679ee53eb9ce36c9e99cb5008b37d742668f4c"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/019.docx",
+          "output_sha256": "61e67280985fff7fe5283f739676ae0bcfe81da52819a57226408b530dccef82"
+        },
+        {
+          "case": "root-False-False-True-True",
+          "inputs": {
+            "source": "6d02d753794235bed358a6ec01461e98f6cef92f17de4b174bdc4f92a7b90f9e",
+            "destination": "aede66b39e0d998c46dd40889ce2a726d1e000625feace545b2efdf3796c8bd0"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/020.docx",
+          "output_sha256": "c609ea530c2e3aa9bae2cdf5c40c18f6d0facbd3ad4779d7cc575fe1b37be545"
+        },
+        {
+          "case": "root-False-True-False-False",
+          "inputs": {
+            "source": "df44126a750a40ae9ee3d285429d3315abfda58fd7116513882500cd1a05ea79",
+            "destination": "120ca0258b07f559385f35975a8be0d3c0d9d0fef27964c2f5a81da7d454c2c4"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/021.docx",
+          "output_sha256": "5245ff490c5b5735561cfe2901b7b27bbc2685cc93c70c47c8b55eddfb728271"
+        },
+        {
+          "case": "root-False-True-False-True",
+          "inputs": {
+            "source": "b75a33d55ddd21d6fe23a6b50346c6e1052ceaa16b9590161669cad6dd9aabe6",
+            "destination": "7f0d8a423d0424f61f397604aacee4508f615e718af4fa10e7de0e7312778cf1"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/022.docx",
+          "output_sha256": "f49ae1473cdb5de840e592769da918217303f6dc181a923e14688531190e4814"
+        },
+        {
+          "case": "root-False-True-None-False",
+          "inputs": {
+            "source": "757d7b0eff0bdfdbc8715c9152bc4c3ac6061288fd40659da082e7a9d201e2d7",
+            "destination": "ced8fbb5282e86bbbdf5bf4a8bb7ae1c56f80fd78548dca918d1500ffebc22ec"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/023.docx",
+          "output_sha256": "33112ffe8ce5a3db81225fcd399287b3ac40bdcca0f5d757794ffbce5c952fce"
+        },
+        {
+          "case": "root-False-True-True-False",
+          "inputs": {
+            "source": "f080bee7c3a857ca9be411475e2dc5f60267121754bc12c7aff5b6a6d808c9a1",
+            "destination": "7a1f5185ac8610bce569078543748d7e820beb57c167a4ead4040c08d52f2b62"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/024.docx",
+          "output_sha256": "903d611d45d994433816d6db9d348cde445b1d3bdd3f816c18c86eab516056d8"
+        },
+        {
+          "case": "root-False-True-True-True",
+          "inputs": {
+            "source": "f21eb14c101ce68afd911b681f1e37aaf41b14ba81c35e44bf5d7f7d4b4e40ee",
+            "destination": "540d2e402078900b678598cd0e44990b6cea3d52fc6afd99ea7dbd6291272bca"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/025.docx",
+          "output_sha256": "d4f81ffe75f4c5163a85f1e8c81c6c3d8ee490f743b3f27ba6dbc22ec6268df2"
+        },
+        {
+          "case": "root-True-False-False-False",
+          "inputs": {
+            "source": "5af9576ac64faf69fd99a450bfe201bcf6ec1bd937befd5a299b04fb3e956b99",
+            "destination": "0fa50bbda62146fef0b84378e36ba712319c28cad72d365024322b6aab54fb09"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/026.docx",
+          "output_sha256": "fcea1cb0d267111cb49df700efa39f6084f8d5506ac9d66256a9285942e796c3"
+        },
+        {
+          "case": "root-True-False-False-True",
+          "inputs": {
+            "source": "659860d88dbe1f4b7caf4eadffff7746ee31b5d0cdbea561465746f8b96ee2d6",
+            "destination": "296890e53d97059751c46d9fa2350101e29cee6dab92676abcd08e17b7f8773c"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/027.docx",
+          "output_sha256": "e95129d019c4807349c884cf3272ee1f01b9e94def7fcd936c0b138bf924c067"
+        },
+        {
+          "case": "root-True-False-None-False",
+          "inputs": {
+            "source": "c816c5c0b8b8e939062d199d8f1755df73c14778a1890091cb6d31306626f9c7",
+            "destination": "2d77d95f2949cb03c2387e3d71f1eacacaffda039f8d0d90dffef9b353bd67a3"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/028.docx",
+          "output_sha256": "737d257d342bc8e2361a97c6d998f8b7873000233e5ec4afcc1493b0731338ca"
+        },
+        {
+          "case": "root-True-False-True-False",
+          "inputs": {
+            "source": "97ddcc8155892beb6a3addbbe82b82e395e446866242e09359ab333b796c47be",
+            "destination": "2a36ac87de84f387dc112c8aa93d4655387fae328c652a2b7d25aa42ea00c333"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/029.docx",
+          "output_sha256": "5a8746ebef6e44bfc94ea3bd939d9e686660bf423ff082a14b4a09c3dc2719fd"
+        },
+        {
+          "case": "root-True-False-True-True",
+          "inputs": {
+            "source": "fd91510e7c4ffca9b97298e830a2bb542dfc878b0eb11f6bd996458a486f8128",
+            "destination": "a9711b3523002a7d02857b6ca92773ceb54fbc408df77dec7585ab118e9ba29e"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/030.docx",
+          "output_sha256": "f080547b1be60e79b7d8f678d04d7db7ec19ad8c8f936ee128baf2ba9e8e7eb9"
+        },
+        {
+          "case": "root-True-True-False-False",
+          "inputs": {
+            "source": "cc1e8778944ac5bd9b6afe8c2bbfef71ed2f707fb831d3bc13b8e986a3ec49e1",
+            "destination": "07878d8b17c47d3b6459fa1672c0b3f2a3c59ed704afbfbea3410be0a6f259ef"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/031.docx",
+          "output_sha256": "72536ba22ee76e034867a34dd9e417b752e2d8ea86223e9df1138fce1c5e9203"
+        },
+        {
+          "case": "root-True-True-False-True",
+          "inputs": {
+            "source": "60f5d1c0100ae18f3882de31eee87cf56ea7137424afc787edeaf372ffdfcb32",
+            "destination": "983b2c36d1c64139c905c2e89cc7a431c7535899d2d43f31a2fff5f8f555c838"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": false,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/032.docx",
+          "output_sha256": "fc7099c101f19a1836129faf1c29b6146058886f749cf1976f8766862f3bcb21"
+        },
+        {
+          "case": "root-True-True-None-False",
+          "inputs": {
+            "source": "7446abe248a0c6ac4cc025940d943d76d50f417a959200880492f15cc11287cc",
+            "destination": "14ecd3899d2a20c61184a890cc4c3797d24fef45f6367134aa4499df4539c30c"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/033.docx",
+          "output_sha256": "9be39e8bb0fc27e97df09df537a818aa65b4922fae0d1ddacde585368ce1f4b9"
+        },
+        {
+          "case": "root-True-True-True-False",
+          "inputs": {
+            "source": "619b55ccf3099c0b6f797540172aa142a7f8e81d59252df36b573873a27139a9",
+            "destination": "1497e3fceb1e53d6b335c8c2e6ad32d481716cc2b2a21d5cc5c4c3d90ddcadde"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/034.docx",
+          "output_sha256": "7caedf35cfe84f8426eb0b59969f68322881e2cfe3b1f307a04ef00f5cc7f621"
+        },
+        {
+          "case": "root-True-True-True-True",
+          "inputs": {
+            "source": "f94699f249b894ad6456e089a6adbeb121ac542241cdbb28b200e10dc6047495",
+            "destination": "454e5b9688f164ff82d81416a4f5a4ecc9fc85c1ca2aaf597b81914454084743"
+          },
+          "before_save": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_save_live": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "after_reopen": {
+            "paragraphs": {
+              "DESTINATION": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              },
+              "IMPORT": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0,
+                "alignment": "LEFT"
+              }
+            },
+            "styles": {
+              "Base": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "P": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              },
+              "C": {
+                "bold": true,
+                "italic": false,
+                "size": 11.0
+              }
+            }
+          },
+          "output": "36/035.docx",
+          "output_sha256": "128e37d2232f5e887c675d98590f8a311d29108c5dd917daf43f104ad13a0333"
+        }
+      ],
+      "scope": "default-mode deep paragraph import; live/cold Run and owned Style b/i/size getters",
+      "full_format_acceptance": false,
+      "rendering_acceptance": false,
+      "corpus": "corpus/style-normalization-contexts-26.9.zip"
+    }
+  ],
+  "outputs": {
+    "archive": "corpus/style-normalization-context-outputs-26.9.zip",
+    "sha256": "376f5065078ae4e52934adb74b988248c04e4a049f43eab4ecaa50834260638f"
+  },
+  "live_changes": [],
+  "reopen_paragraph_changes": [
+    "36/footer-True-False-True",
+    "36/footer-True-True-False",
+    "36/header-True-False-True",
+    "36/header-True-True-False",
+    "36/root-True-False-True-True",
+    "36/root-True-True-False-True"
+  ],
+  "reopen_style_changes": [],
+  "full_format_acceptance": false,
+  "rendering_acceptance": false
+}

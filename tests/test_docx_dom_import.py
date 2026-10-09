@@ -81,7 +81,7 @@ def test_unimplemented_format_modes_fail_before_destination_changes(mode):
 
 @pytest.mark.parametrize("name", ["b", "i"])
 @pytest.mark.parametrize("child", [None, False, True])
-def test_default_on_character_base_requires_saved_story_normalization(name, child):
+def test_default_on_character_base_projects_saved_story_without_mutating_live_format(name, child):
     import runpy
     from pathlib import Path
 
@@ -94,10 +94,15 @@ def test_default_on_character_base_requires_saved_story_normalization(name, chil
                         '<w:pStyle w:val="P"/>', '<w:rStyle w:val="Derived"/>')
     target_data = build(common, '<w:pStyle w:val="P"/>', '<w:rStyle w:val="Base"/>')
     source, target = aw.DocxDocument(BytesIO(source_data)), aw.DocxDocument(BytesIO(target_data))
-    before = target.to_bytes()
-    with pytest.raises(NotImplementedError, match="destination-story normalization"):
-        target.import_node(source.body.paragraphs[0], True)
-    assert source.to_bytes() == source_data and target.to_bytes() == before
+    existing = target.body.paragraphs[0].runs[0]
+    copied = target.import_node(source.body.paragraphs[0], True)
+    target.body.append_child(copied)
+    attribute = "bold" if name == "b" else "italic"
+    assert getattr(existing.effective_font, attribute) is True
+    saved = target.to_bytes()
+    assert getattr(existing.effective_font, attribute) is True
+    assert getattr(aw.DocxDocument(BytesIO(saved)).body.paragraphs[0].runs[0].effective_font, attribute) is False
+    assert target.to_bytes() == saved and source.to_bytes() == source_data
 
 
 def test_implicit_source_font_size_is_refused_before_destination_changes():
@@ -163,7 +168,7 @@ def test_import_resolves_conflicting_ancestor_with_identical_immediate_base(kind
     target.body.append_child(copied)
     assert copied.runs[0].effective_font.bold is True
     assert aw.DocxDocument(BytesIO(target.to_bytes())).body.paragraphs[-1].runs[0].effective_font.bold is True
-    assert Document(BytesIO(target.to_bytes())).styles["Ancestor"].font.bold is False
+    assert Document(BytesIO(target.to_bytes())).styles["Ancestor"].font.bold is (None if kind == WD_STYLE_TYPE.CHARACTER else False)
     assert source.to_bytes() == before_source
 
 

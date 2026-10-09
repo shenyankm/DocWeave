@@ -43,6 +43,7 @@ class DocxPackage:
                 data = read_bounded(stream)
         self._trees = {}
         self._dirty = set()
+        self._style_projection_part = None
         if is_flat_opc(data):
             data = decode(data)
         with ZipFile(BytesIO(data)) as archive:
@@ -75,6 +76,12 @@ class DocxPackage:
         return self._trees[name]
 
     def payload(self, name):
+        if name == self._style_projection_part:
+            from aspose.words_foss.dom.styles import serialized_style_payload
+
+            data = serialized_style_payload(self, name)
+            if data is not None:
+                return data
         if name in self._dirty:
             tree = self.tree(name)
             # Native saving omits empty tables; retain the live detached/imported DOM state.

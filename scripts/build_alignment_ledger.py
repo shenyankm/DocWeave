@@ -92,18 +92,18 @@ def build(declarations, baseline, current, observations=None, formats=None):
             records[-1]["baseline_behavior"] = "partially_observed; canonical Font getter alignment remains incomplete"
         if name in {"aspose.words.Document.import_node", "aspose.words.DocumentBase.import_node"}:
             records[-1]["style_conflict_evidence"] = {
-                "file": "style-import-character-default-on.json",
-                "scope": "247 default-mode imports; both imported and existing destination paragraphs checked; partial getters only",
+                "file": "style-import-projections.json",
+                "scope": "523 default-mode imports; live/cold owned paragraphs and cold Style b/i/size checked; partial getters only",
                 "current_alternative_entrypoint": "DocxDocument.import_node",
-                "delivery": "236 cases returned; 11 cases remain unsupported; default-on target-base serialization, full import and rendering unverified",
+                "delivery": "523 cases returned; referenced root b/i serialization implemented in body/header/footer; full import and rendering unverified",
             }
             records[-1]["paragraph_default_evidence"] = {
-                "file": "paragraph-style-defaults-26.9.json",
-                "scope": "132 default-on paragraph/character combinations; 114 returned, 18 serialization contexts unsupported",
+                "file": "style-import-projections.json",
+                "scope": "132 default-on paragraph/character combinations returned and matched scoped observations",
             }
             records[-1]["character_default_evidence"] = {
-                "file": "character-style-save-state-26.9.json",
-                "scope": "108 default-on italic/both character imports; 81 returned and matched Run/Style observations; 27 target serialization contexts unsupported",
+                "file": "style-import-projections.json",
+                "scope": "108 default-on italic/both character imports returned and matched scoped Run/Style observations",
             }
         if name == "aspose.words.Font.size":
             records[-1]["default_format_evidence"] = {
@@ -116,6 +116,11 @@ def build(declarations, baseline, current, observations=None, formats=None):
                 "file": "style-save-state-26.9.json",
                 "scope": "379 owned default-mode imports; live save preserves observed Run/Style getters; reopening changes Run getters in 22 cases and Style getters in none",
                 "delivery": "serialization projection and canonical editable Style API remain incomplete; not rendering acceptance",
+            }
+            records[-1]["root_serialization_evidence"] = {
+                "file": "style-normalization-contexts-26.9.json",
+                "scope": "36 used/unused body/header/footer contexts; save preserves live state; only referenced root b/i toggles projected",
+                "delivery": "alternate DocxDocument serialization implemented; canonical Style API and other formatting remain incomplete",
             }
     assert len({item["id"] for item in records}) == len(records)
     return {"schema": 1, "baseline_version": declarations["version"], "current_runtime_version": current["runtime_version"],

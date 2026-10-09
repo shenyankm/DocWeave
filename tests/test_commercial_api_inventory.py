@@ -197,6 +197,9 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
+    names += ["style-normalization-contexts-26.9.json", "corpus/style-normalization-contexts-26.9.zip",
+              "corpus/style-normalization-context-outputs-26.9.zip", "style-import-projections.json",
+              "corpus/style-import-projections.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -210,7 +213,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_style_inputs"] == 745
     assert result["checked_style_import_outputs"] == 1878
     assert result["checked_style_roundtrip_outputs"] == 494
-    assert result["checked_style_save_states"] == 487
+    assert result["checked_style_save_states"] == 523
+    assert result["checked_style_projection_outputs"] == 523
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]
@@ -220,8 +224,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     import_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                    if row["id"] in {"aspose.words.Document.import_node", "aspose.words.DocumentBase.import_node"}]
     assert len(import_rows) == 2
-    assert all(row["style_conflict_evidence"]["file"] == "style-import-character-default-on.json" for row in import_rows)
-    assert all("11 cases remain unsupported" in row["style_conflict_evidence"]["delivery"] for row in import_rows)
+    assert all(row["style_conflict_evidence"]["file"] == "style-import-projections.json" for row in import_rows)
+    assert all("523 cases returned" in row["style_conflict_evidence"]["delivery"] for row in import_rows)
     archive = tmp_path / "corpus" / "commercial-26.9-literal-outputs.zip"
     archive.write_bytes(archive.read_bytes() + b"corruption")
     with pytest.raises(AssertionError):
@@ -384,6 +388,32 @@ def test_save_state_evidence_rejects_forged_getters(tmp_path, phase, category):
     assert check(tmp_path) == 379
     fonts = report["reports"][0]["records"][0][phase][category]
     font = next(iter(fonts.values()))
+    font["bold"] = not font["bold"]
+    (tmp_path / name).write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+@pytest.mark.parametrize("phase", ["cold", "warm"])
+def test_projection_evidence_rejects_forged_formats(tmp_path, phase):
+    import json
+    from shutil import copyfile
+
+    root = Path(__file__).parents[1]
+    source = root / "docs" / "benchmarks"
+    check = runpy.run_path(str(root / "scripts" / "verify_commercial_baseline.py"))["verify_style_projections"]
+    name = "style-import-projections.json"
+    report = json.loads((source / name).read_text())
+    files = {name, report["outputs"]["archive"]}
+    files.update(matrix["native"]["file"] for matrix in report["reports"])
+    files.update(matrix["corpus"]["archive"] for matrix in report["reports"])
+    for file in files:
+        path = tmp_path / file
+        path.parent.mkdir(exist_ok=True)
+        copyfile(source / file, path)
+    assert check(tmp_path) == 523
+    matrix = report["reports"][0]
+    font = matrix["official_reread"]["records"][0]["formats"]["DESTINATION"] if phase == "cold" else matrix["candidate"]["records"][0]["imported_format"]
     font["bold"] = not font["bold"]
     (tmp_path / name).write_text(json.dumps(report))
     with pytest.raises(AssertionError):

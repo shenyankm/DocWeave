@@ -18,7 +18,12 @@ from aspose.words_foss.dom.nodes import (
     _read_size,
     _safe_structure,
 )
-from aspose.words_foss.dom.styles import StyleResolver, _child, _style_toggle
+from aspose.words_foss.dom.styles import (
+    StyleResolver,
+    _child,
+    _style_toggle,
+    serialized_style_payload,
+)
 
 
 class ImportFormatMode(IntEnum):
@@ -127,17 +132,10 @@ def _translate_style(imported, source_chain, source_bases, target_bases, source,
     if any(not _safe_structure(base, properties=True) for base in source_bases + target_bases):
         raise NotImplementedError("Importing complex base-style dependencies requires resource translation")
     default = source._defaults("rPr")
-    default_on = any(_onoff(_child(default, name)) for name in ("b", "i"))
-    character_context = default_on and any(resolver._kind(style) == "character" for resolver in (source, target) for style in resolver.styles.values())
-    if kind not in {"paragraph", "character"} or default_on and character_context and kind == "paragraph":
-        # shortcut: default-on character contexts need native existing-story normalization calibrated before migration.
+    if kind not in {"paragraph", "character"}:
         if _format_layers(source_bases) != _format_layers(target_bases):
             raise NotImplementedError("Importing a new style over a conflicting base requires effective-format translation")
-        if kind in {"paragraph", "character"} and character_context and any(_onoff(_child(default, name)) and _style_toggle(target_bases, name) is True for name in ("b", "i")):
-            raise NotImplementedError("Default-on bases in character contexts require saved destination-story normalization")
         return
-    if kind == "character" and any(_onoff(_child(default, name)) and _style_toggle(target_bases, name) is True for name in ("b", "i")):
-        raise NotImplementedError("Default-on bases in character contexts require saved destination-story normalization")
     a, b = _other_format_layers(source_bases), _other_format_layers(target_bases)
     if (any(a) or any(b)) and a != b:
         raise NotImplementedError("Importing other conflicting style properties requires effective-format translation")
@@ -258,8 +256,13 @@ def import_node(destination, node, deep, mode):
         kind = {"pStyle": "paragraph", "rStyle": "character", "tblStyle": "table"}.get(item.localName)
         if item.namespaceURI == W and kind is not None:
             _set_word_attribute(item, "val", map_style(item.getAttributeNS(W, "val"), kind))
-    if root is not None and len(_elements(root)) != len(_elements(target_styles.root)):
+    if root is not None:
         part_name = next(name for name, tree in destination._package._trees.items()
                          if tree is target_styles.root.ownerDocument)
-        destination._package.set_parts({part_name: root.toxml(encoding="utf-8")})
+        serialized_style_payload(destination._package, part_name, root=root, extra=element)
+        if len(_elements(root)) != len(_elements(target_styles.root)):
+            tree = destination._package.tree(part_name).cloneNode(deep=True)
+            tree.replaceChild(tree.importNode(root, deep=True), tree.documentElement)
+            destination._package.set_parts({part_name: tree.toxml(encoding="utf-8")})
+        destination._package._style_projection_part = part_name
     return destination._wrap("word/document.xml", element)
