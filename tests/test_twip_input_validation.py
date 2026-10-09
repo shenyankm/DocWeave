@@ -1,5 +1,6 @@
 """Malformed dimensions fail before conversion and do not disclose source data."""
 
+import os
 import subprocess
 import sys
 import traceback
@@ -171,7 +172,8 @@ def test_cli_retains_existing_output_on_malformed_dimensions(tmp_path):
     output.write_bytes(b"existing output")
     result = subprocess.run([sys.executable, "-m", "aspose.words_foss.convert", str(path), str(output)],
                             capture_output=True, text=True, timeout=20, check=False)
-    assert result.returncode != 0 and "integer twips" in result.stderr
+    error = "requires POSIX process groups" if os.name == "nt" else "integer twips"
+    assert result.returncode != 0 and error in result.stderr
     assert "PRIVATE POINT VALUE" not in result.stderr and "PRIVATE BODY" not in result.stderr
     assert output.read_bytes() == b"existing output"
     assert not list(tmp_path.glob(".conversion-*"))

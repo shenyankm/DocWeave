@@ -1,6 +1,7 @@
 """Ordinary size decoding matches frozen native getters without silent fallback."""
 
 import json
+import os
 import runpy
 import subprocess
 import sys
@@ -35,13 +36,28 @@ def test_positive_ordinary_sizes_match_native_and_roundtrip(row):
     else:
         assert run.font.size is None
         assert document.styles.get_by_name('Derived').font.size == expected
-    assert document.to_bytes() == data
+    with ZipFile(BytesIO(document.to_bytes())) as saved, ZipFile(BytesIO(data)) as original:
+        assert {name: saved.read(name) for name in saved.namelist()} == {
+            name: original.read(name) for name in original.namelist()}
     model = document.to_light_document()
     assert model.sections[0].body.paragraphs[0].runs[0].font.size == expected
     output = Document(BytesIO(data)).to_bytes('docx')
     reopened = DocxDocument(BytesIO(output))
     assert reopened.body.paragraphs[0].runs[0].effective_font.size == row['cold']['run_size']
     assert 'IMPORT' in reopened.body.paragraphs[0].text
+
+
+def test_font_size_roundtrip_accepts_windows_zip_metadata(monkeypatch):
+    from zipfile import ZipInfo
+
+    original = ZipInfo.__init__
+
+    def windows_info(self, *args, **kwargs):
+        original(self, *args, **kwargs)
+        self.create_system = 0
+
+    monkeypatch.setattr(ZipInfo, '__init__', windows_info)
+    test_positive_ordinary_sizes_match_native_and_roundtrip(ROWS[0])
 
 
 BAD = ('PRIVATE FONT VALUE', '', '0', '-2', '2_4', '٢٤', 'NaN', 'Infinity', '24hp', ' 24 ', '9' * 400)
@@ -85,7 +101,8 @@ def test_cli_keeps_existing_output_on_invalid_font_size(tmp_path):
     output.write_bytes(b'existing')
     result = subprocess.run([sys.executable, '-m', 'aspose.words_foss.convert', str(source), str(output)],
                             capture_output=True, text=True, check=False, timeout=20)
-    assert result.returncode != 0 and 'OOXML font size' in result.stderr
+    error = 'requires POSIX process groups' if os.name == 'nt' else 'OOXML font size'
+    assert result.returncode != 0 and error in result.stderr
     assert 'PRIVATE FONT VALUE' not in result.stderr and 'IMPORT' not in result.stderr
     assert output.read_bytes() == b'existing' and not list(tmp_path.glob('.conversion-*'))
 
