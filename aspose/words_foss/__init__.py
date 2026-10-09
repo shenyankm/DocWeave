@@ -7,6 +7,7 @@ from aspose.words_foss.document import (
 )
 from aspose.words_foss import loading, saving
 from aspose.words_foss.dom import DocxDocument
+from aspose.words_foss.dom.importing import ImportFormatMode
 from aspose.words_foss.diagnostics import ContentLossWarning, ConversionDiagnostic, ConversionWarning
 from aspose.words_foss.model import wrap_type as wrap_type, enums as enums
 from aspose.words_foss.light_document_model import NodeType  # noqa: F401
@@ -30,6 +31,7 @@ __upstream_revision__ = "2d2efee2787cb9e56d071d17f8d7b740dce8b784"
 __all__ = [
     "Document",
     "DocxDocument",
+    "ImportFormatMode",
     "SaveFormat",
     "LoadFormat",
     "LoadOptions",

@@ -1280,8 +1280,8 @@
         "cross_document_import"
       ],
       "baseline_behavior": "copies with destination ownership and no parent, original remains attached and unchanged",
-      "current_implementation": "DocxDocument.import_node absent",
-      "gap": "import entry point and mode enum absent; style/default/inheritance/list/resource translation unimplemented; all node kinds/options/errors/rendering remain incomplete",
+      "current_implementation": "DocxDocument.import_node candidate: same-document cloning and bounded USE_DESTINATION_STYLES mapping; canonical DocumentBase surface remains incomplete",
+      "gap": "40 of 56 observed combinations unsupported; source/different-style modes, conflicting bases/defaults/themes, list/resource/options/node-kind/rendering semantics incomplete",
       "dependencies": [
         "OPC relationships",
         "style/list mapping",
@@ -1289,8 +1289,8 @@
       ],
       "approach": "implement node/resource import with collision mapping and atomic failure",
       "exit_criteria": "all overloads, depths, format modes and resources verified through save and render",
-      "supplementary_evidence": "import-node-26.9.json",
-      "delivery": "56 baseline/current paired observations; implementation_not_started"
+      "supplementary_evidence": "import-node-current.json",
+      "delivery": "local candidate wheel full suite passed; 16 bounded saved observations match; remote platform verification pending"
     },
     "aspose.words.CompositeNode.append_child": {
       "samples": [

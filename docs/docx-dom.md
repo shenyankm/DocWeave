@@ -179,6 +179,17 @@ runs = editable.get_child_nodes(aw.NodeType.RUN, deep=True)
   现有表格仅开放下述受限水平合并；行/列增删、垂直合并和拆分暂不支持。
 - 创建但未插入的节点不会使原包 part 被重新序列化。
 
+`destination.import_node(source_node, True)` 返回归属目标、无父节点的副本，来源保持不变。
+当前跨文档路径仅实现 USE_DESTINATION_STYLES：按样式名称/类型匹配目标样式，新增简单
+样式时处理 ID 冲突；依赖校验完成后才提交 styles part。相同文档的普通节点支持三种模式
+及两种复制深度，页眉普通节点可导入正文。`ImportFormatMode` 的三个枚举值与固定基准
+一致，但枚举存在不表示跨文档 KEEP_SOURCE_FORMATTING / KEEP_DIFFERENT_STYLES 已实现。
+
+编号、图片/复杂关系、不同默认值或主题的新样式、依赖冲突基样式的有效格式转换仍报
+NotImplementedError，未视为范围豁免。不能用这个初步入口宣称完整跨文档导入。
+修改 part 后保存会省略仅含格式属性/网格的零行普通表格，与已观测的官方浅导入保存结果
+一致；内存 DOM 不删除它。带注释、非空文本、修订或不受支持元数据的表格仍保留。
+
 `get_child_nodes()` 默认遍历正文 story 的直属节点；`deep=True` 递归遍历，也能读到未知容器内的已知节点。
 这些节点不一定允许修改，例如内容控件和修订容器下的 Run 只读。
 `UnknownNode.xml` 可查看未建模内容；未知内容不会因遍历或保存而丢弃。
@@ -209,7 +220,7 @@ picture_run = paragraph.add_picture("logo.png", width=72, alternative_text="公�
   旧单格首选宽度移除，由网格与新跨度决定宽度；内容按原顺序移动，不重复 ID。
   vMerge、旧式 hMerge、省略网格单元格、复杂范围/未知结构明确拒绝。
 - 图片/链接可加到正文及可编辑页眉页脚。含字段、修订、书签范围等不安全 story 的插入仍拒绝；
-  不开放带关系节点的任意复制、移动或跨 part/跨文档导入。
+  不开放带关系节点的任意复制、移动或跨 part/跨文档导入；普通节点的初步导入见上文。
 
 ## 页眉页脚与转换兼容
 

@@ -2,9 +2,11 @@
 
 from aspose.words_foss._io import MAX_TABLE_COLUMNS
 from aspose.words_foss._opc import resolve_target
+from aspose.words_foss.dom.importing import ImportFormatMode
 from aspose.words_foss.dom.nodes import (
     _NODE_CLASSES,
     Body,
+    Node,
     Paragraph,
     Run,
     Table,
@@ -76,6 +78,13 @@ class DocxDocument:
         run = self._wrap(part_name, element)
         run.text = text
         return run
+
+    def import_node(self, src_node: Node, is_import_children: bool,
+                    import_format_mode: ImportFormatMode = ImportFormatMode.USE_DESTINATION_STYLES) -> Node:
+        """Return a detached copy owned by this document; unsupported references fail before commit."""
+        from aspose.words_foss.dom.importing import import_node
+
+        return import_node(self, src_node, is_import_children, import_format_mode)
 
     def create_paragraph(self, text="", *, part_name="word/document.xml") -> Paragraph:
         _validate_text(text)

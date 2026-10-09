@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import runpy
 from io import BytesIO
 from pathlib import Path
 from zipfile import ZipFile
@@ -38,6 +39,36 @@ def verify_format_outputs(report, archive_path):
                 assert len(doc.paragraphs) == check["paragraph_count"] and len(doc.tables) == check["table_count"]
                 assert {label: label in text for label in check["labels_present"]} == check["labels_present"]
                 assert any(token in text for token in ("<pkg:package", "<html", "<w:wordDocument", "<w:document")) == check["literal_markup_present"]
+    return checked
+
+
+def verify_import_outputs(root):
+    inspect = runpy.run_path(str(Path(__file__).parents[1] / "docs" / "probes" / "inspect_import_outputs.py"))["inspect_document"]
+    baseline = json.loads((root / "import-node-26.9.json").read_text())
+    current = json.loads((root / "import-node-current.json").read_text())
+    checked, actual = 0, {}
+    for report, phases in ((baseline, baseline["reports"]), (current, {"candidate": current["report"]})):
+        raw = (root / report["archive"]).read_bytes()
+        assert digest(raw) == report["archive_sha256"], "import archive digest mismatch"
+        with ZipFile(BytesIO(raw)) as archive:
+            for phase, observed in phases.items():
+                checks = report["independent_checks"] if phase == "candidate" else report["independent_checks"][phase]
+                recorded = {row["output"]: row for row in checks}
+                assert len(recorded) == len(checks) == len(observed["records"])
+                actual[phase] = {}
+                for row in observed["records"]:
+                    name = row["output"] if phase == "candidate" else phase + "/" + row["output"]
+                    data = archive.read(name)
+                    assert digest(data) == row["sha256"], "import output digest mismatch"
+                    result = {"output": row["output"], **inspect(BytesIO(data))}
+                    assert result == recorded[row["output"]], "import independent observation mismatch"
+                    actual[phase][row["output"]] = result
+                    checked += 1
+    matched = {row["output"] for row in current["report"]["records"] if row["outcome"]["status"] == "returned"}
+    assert matched == set(current["matched_observations"])
+    for name in matched:
+        assert actual["candidate"][name] == actual["commercial"][name]
+    assert current["validation"]["full_import_acceptance"] is False
     return checked
 
 
@@ -79,7 +110,9 @@ def verify(root):
                 data = generated.read(row["output_member"])
                 assert digest(data) == row["output_sha256"]
                 assert data.decode().replace("\r\n", "\n") == row["markdown"]
+    imports = verify_import_outputs(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
+            "checked_import_outputs": imports,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

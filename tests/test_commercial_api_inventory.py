@@ -182,7 +182,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "commercial-26.9-baseline.json", "commercial-26.9-doc-registry.json", "commercial-26.9-format-behavior.json",
              "commercial-26.9-literal-text.json", "corpus/commercial-26.9-dom.docx",
              "corpus/commercial-26.9-format-outputs.zip", "corpus/commercial-26.9-literal-text.zip",
-             "corpus/commercial-26.9-literal-outputs.zip"]
+             "corpus/commercial-26.9-literal-outputs.zip", "import-node-26.9.json", "import-node-current.json",
+             "corpus/import-node-26.9.zip", "corpus/import-node-current.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -192,10 +193,37 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
             copyfile(source / name, target)
     result = verify(tmp_path)
     assert result["checked_format_outputs"] == 100 and result["behavioral_acceptance"] is False
+    assert result["checked_import_outputs"] == 168
     archive = tmp_path / "corpus" / "commercial-26.9-literal-outputs.zip"
     archive.write_bytes(archive.read_bytes() + b"corruption")
     with pytest.raises(AssertionError):
         verify(tmp_path)
+
+
+def test_import_evidence_rejects_fabricated_observation_and_changed_archive(tmp_path):
+    import json
+    from shutil import copyfile
+
+    root = Path(__file__).parents[1]
+    check = runpy.run_path(str(root / "scripts" / "verify_commercial_baseline.py"))["verify_import_outputs"]
+    source = root / "docs" / "benchmarks"
+    (tmp_path / "corpus").mkdir()
+    for name in ("import-node-26.9.json", "import-node-current.json",
+                 "corpus/import-node-26.9.zip", "corpus/import-node-current.zip"):
+        copyfile(source / name, tmp_path / name)
+    assert check(tmp_path) == 168
+    path = tmp_path / "import-node-current.json"
+    original = path.read_bytes()
+    data = json.loads(original)
+    data["independent_checks"][0]["paragraphs"][0]["style_chain"][0]["font"]["bold"] = True
+    path.write_text(json.dumps(data))
+    with pytest.raises(AssertionError, match="independent observation"):
+        check(tmp_path)
+    path.write_bytes(original)
+    archive = tmp_path / "corpus" / "import-node-current.zip"
+    archive.write_bytes(archive.read_bytes() + b"corruption")
+    with pytest.raises(AssertionError, match="archive digest"):
+        check(tmp_path)
 
 
 def test_format_ledger_identifies_refusal_return_contract_and_load_error_gaps():

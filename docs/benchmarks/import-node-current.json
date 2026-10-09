@@ -1,0 +1,2624 @@
+{
+  "schema": 1,
+  "source_base": "03aab7b902761416130373a173183c57413df922",
+  "candidate": "working tree DOM import and empty-table preservation changes",
+  "python": "3.14.7",
+  "baseline_evidence": "import-node-26.9.json",
+  "wheel_sha256": "53fc9500943ce643a740ac805ddff197cab9f7904f8cfdf01f0b68ed953b1bfa",
+  "archive": "corpus/import-node-current.zip",
+  "archive_sha256": "6c70ddd8a23b0c1a4995632104a646e52795c8230f2654f032945a39ab3c2c0f",
+  "report": {
+    "module": "aspose.words_foss",
+    "source_sha256": {
+      "source": "bf12f9becbf943706da84394ef1109599f0c3b3e747cedbb7b898ac2b3f07857",
+      "destination": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+    },
+    "scope": "seven node/resource cases, two depths, default and three explicit modes; evaluation artifacts retained",
+    "records": [
+      {
+        "subject": "conflict",
+        "deep": false,
+        "mode": "default",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "conflict-0-default.docx",
+        "sha256": "7f1039bac5c88864b3c538f1c226a4e7acefa95ddfe15556ff5270b9f2935cfa"
+      },
+      {
+        "subject": "conflict",
+        "deep": false,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "conflict-0-USE_DESTINATION_STYLES.docx",
+        "sha256": "7f1039bac5c88864b3c538f1c226a4e7acefa95ddfe15556ff5270b9f2935cfa"
+      },
+      {
+        "subject": "conflict",
+        "deep": false,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "conflict-0-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "conflict",
+        "deep": false,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "conflict-0-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "conflict",
+        "deep": true,
+        "mode": "default",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "conflict-1-default.docx",
+        "sha256": "6b35b39e97162c1c6c40b39e3b44d9e747a55f68e787c64e5ccffdc6bec4578b"
+      },
+      {
+        "subject": "conflict",
+        "deep": true,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "conflict-1-USE_DESTINATION_STYLES.docx",
+        "sha256": "6b35b39e97162c1c6c40b39e3b44d9e747a55f68e787c64e5ccffdc6bec4578b"
+      },
+      {
+        "subject": "conflict",
+        "deep": true,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "conflict-1-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "conflict",
+        "deep": true,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "conflict-1-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "derived",
+        "deep": false,
+        "mode": "default",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Importing a new style over a conflicting base requires effective-format translation"
+        },
+        "output": "derived-0-default.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "derived",
+        "deep": false,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Importing a new style over a conflicting base requires effective-format translation"
+        },
+        "output": "derived-0-USE_DESTINATION_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "derived",
+        "deep": false,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "derived-0-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "derived",
+        "deep": false,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "derived-0-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "derived",
+        "deep": true,
+        "mode": "default",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Importing a new style over a conflicting base requires effective-format translation"
+        },
+        "output": "derived-1-default.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "derived",
+        "deep": true,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Importing a new style over a conflicting base requires effective-format translation"
+        },
+        "output": "derived-1-USE_DESTINATION_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "derived",
+        "deep": true,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "derived-1-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "derived",
+        "deep": true,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "derived-1-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "normal",
+        "deep": false,
+        "mode": "default",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "normal-0-default.docx",
+        "sha256": "4de250e8e585c529c7f09d31752fbfd3bf8fbc0af959e97d46a7fc6303dbe2d1"
+      },
+      {
+        "subject": "normal",
+        "deep": false,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "normal-0-USE_DESTINATION_STYLES.docx",
+        "sha256": "4de250e8e585c529c7f09d31752fbfd3bf8fbc0af959e97d46a7fc6303dbe2d1"
+      },
+      {
+        "subject": "normal",
+        "deep": false,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "normal-0-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "normal",
+        "deep": false,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "normal-0-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "normal",
+        "deep": true,
+        "mode": "default",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "normal-1-default.docx",
+        "sha256": "b7fffe2b03320b804be8e533f55558ae64065c4485a0e613da19cfb68996bf7f"
+      },
+      {
+        "subject": "normal",
+        "deep": true,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "normal-1-USE_DESTINATION_STYLES.docx",
+        "sha256": "b7fffe2b03320b804be8e533f55558ae64065c4485a0e613da19cfb68996bf7f"
+      },
+      {
+        "subject": "normal",
+        "deep": true,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "normal-1-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "normal",
+        "deep": true,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "normal-1-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "numbered",
+        "deep": false,
+        "mode": "default",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Importing numbered styles requires numbering remapping"
+        },
+        "output": "numbered-0-default.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "numbered",
+        "deep": false,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Importing numbered styles requires numbering remapping"
+        },
+        "output": "numbered-0-USE_DESTINATION_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "numbered",
+        "deep": false,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "numbered-0-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "numbered",
+        "deep": false,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "numbered-0-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "numbered",
+        "deep": true,
+        "mode": "default",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Importing numbered styles requires numbering remapping"
+        },
+        "output": "numbered-1-default.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "numbered",
+        "deep": true,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Importing numbered styles requires numbering remapping"
+        },
+        "output": "numbered-1-USE_DESTINATION_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "numbered",
+        "deep": true,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "numbered-1-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "numbered",
+        "deep": true,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "numbered-1-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "image",
+        "deep": false,
+        "mode": "default",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Cloning complex content requires resource import support"
+        },
+        "output": "image-0-default.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "image",
+        "deep": false,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Cloning complex content requires resource import support"
+        },
+        "output": "image-0-USE_DESTINATION_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "image",
+        "deep": false,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "image-0-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "image",
+        "deep": false,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "image-0-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "image",
+        "deep": true,
+        "mode": "default",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Cloning complex content requires resource import support"
+        },
+        "output": "image-1-default.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "image",
+        "deep": true,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Cloning complex content requires resource import support"
+        },
+        "output": "image-1-USE_DESTINATION_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "image",
+        "deep": true,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "image-1-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "image",
+        "deep": true,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "image-1-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "table",
+        "deep": false,
+        "mode": "default",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "table-0-default.docx",
+        "sha256": "1bcc18db9b2b45dd822a58e5da037bebb7a14627bbe4e551a7ecb6e4f7f2f179"
+      },
+      {
+        "subject": "table",
+        "deep": false,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "table-0-USE_DESTINATION_STYLES.docx",
+        "sha256": "1bcc18db9b2b45dd822a58e5da037bebb7a14627bbe4e551a7ecb6e4f7f2f179"
+      },
+      {
+        "subject": "table",
+        "deep": false,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "table-0-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "table",
+        "deep": false,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "table-0-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "table",
+        "deep": true,
+        "mode": "default",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "table-1-default.docx",
+        "sha256": "e10f83492209a71a822d3dc19d2948f51e7ff1df9afeb7db58fb8426d44b84ee"
+      },
+      {
+        "subject": "table",
+        "deep": true,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "table-1-USE_DESTINATION_STYLES.docx",
+        "sha256": "e10f83492209a71a822d3dc19d2948f51e7ff1df9afeb7db58fb8426d44b84ee"
+      },
+      {
+        "subject": "table",
+        "deep": true,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "table-1-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "table",
+        "deep": true,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "table-1-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "run",
+        "deep": false,
+        "mode": "default",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "run-0-default.docx",
+        "sha256": "12fa72f92050a090ee36effcc6051749183612ee397677aeea50791f3d7ad66c"
+      },
+      {
+        "subject": "run",
+        "deep": false,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "run-0-USE_DESTINATION_STYLES.docx",
+        "sha256": "12fa72f92050a090ee36effcc6051749183612ee397677aeea50791f3d7ad66c"
+      },
+      {
+        "subject": "run",
+        "deep": false,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "run-0-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "run",
+        "deep": false,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "run-0-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "run",
+        "deep": true,
+        "mode": "default",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "run-1-default.docx",
+        "sha256": "12fa72f92050a090ee36effcc6051749183612ee397677aeea50791f3d7ad66c"
+      },
+      {
+        "subject": "run",
+        "deep": true,
+        "mode": "USE_DESTINATION_STYLES",
+        "outcome": {
+          "status": "returned",
+          "detached": true,
+          "owner_is_destination": true,
+          "source_parent_unchanged": true
+        },
+        "output": "run-1-USE_DESTINATION_STYLES.docx",
+        "sha256": "12fa72f92050a090ee36effcc6051749183612ee397677aeea50791f3d7ad66c"
+      },
+      {
+        "subject": "run",
+        "deep": true,
+        "mode": "KEEP_SOURCE_FORMATTING",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "run-1-KEEP_SOURCE_FORMATTING.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      },
+      {
+        "subject": "run",
+        "deep": true,
+        "mode": "KEEP_DIFFERENT_STYLES",
+        "outcome": {
+          "status": "raised",
+          "exception_type": "NotImplementedError",
+          "message": "Source-format preservation and different-style merging are not implemented"
+        },
+        "output": "run-1-KEEP_DIFFERENT_STYLES.docx",
+        "sha256": "f60b74c5505275ff3402f49f68fa4241c3898422135deed49a3dcfdf1ed9dfc0"
+      }
+    ]
+  },
+  "independent_checks": [
+    {
+      "output": "conflict-0-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "conflict-0-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "conflict-0-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "conflict-0-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "conflict-1-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        },
+        {
+          "text": "IMPORT_CONFLICT",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "IMPORT_CONFLICT",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "conflict-1-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        },
+        {
+          "text": "IMPORT_CONFLICT",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "IMPORT_CONFLICT",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "conflict-1-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "conflict-1-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "derived-0-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "derived-0-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "derived-0-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "derived-0-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "derived-1-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "derived-1-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "derived-1-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "derived-1-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "normal-0-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "normal-0-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "normal-0-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "normal-0-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "normal-1-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        },
+        {
+          "text": "IMPORT_NORMAL",
+          "style_chain": [
+            {
+              "id": "Normal",
+              "name": "Normal",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": 10.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "IMPORT_NORMAL",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "normal-1-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        },
+        {
+          "text": "IMPORT_NORMAL",
+          "style_chain": [
+            {
+              "id": "Normal",
+              "name": "Normal",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": 10.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "IMPORT_NORMAL",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "normal-1-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "normal-1-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "numbered-0-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "numbered-0-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "numbered-0-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "numbered-0-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "numbered-1-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "numbered-1-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "numbered-1-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "numbered-1-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "image-0-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "image-0-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "image-0-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "image-0-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "image-1-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "image-1-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "image-1-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "image-1-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "table-0-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "table-0-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "table-0-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "table-0-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "table-1-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": [
+        [
+          "IMPORT_CELL"
+        ]
+      ]
+    },
+    {
+      "output": "table-1-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": [
+        [
+          "IMPORT_CELL"
+        ]
+      ]
+    },
+    {
+      "output": "table-1-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "table-1-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "run-0-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATIONIMPORT_CONFLICT",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            },
+            {
+              "text": "IMPORT_CONFLICT",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "run-0-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATIONIMPORT_CONFLICT",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            },
+            {
+              "text": "IMPORT_CONFLICT",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "run-0-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "run-0-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "run-1-default.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATIONIMPORT_CONFLICT",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            },
+            {
+              "text": "IMPORT_CONFLICT",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "run-1-USE_DESTINATION_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATIONIMPORT_CONFLICT",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            },
+            {
+              "text": "IMPORT_CONFLICT",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "run-1-KEEP_SOURCE_FORMATTING.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    },
+    {
+      "output": "run-1-KEEP_DIFFERENT_STYLES.docx",
+      "paragraphs": [
+        {
+          "text": "DESTINATION",
+          "style_chain": [
+            {
+              "id": "ImportConflict",
+              "name": "Import Conflict",
+              "font": {
+                "bold": false,
+                "italic": null,
+                "size_pt": 11.0
+              }
+            }
+          ],
+          "runs": [
+            {
+              "text": "DESTINATION",
+              "font": {
+                "bold": null,
+                "italic": null,
+                "size_pt": null
+              }
+            }
+          ],
+          "picture_sha256": []
+        }
+      ],
+      "table_text": []
+    }
+  ],
+  "matched_observations": [
+    "conflict-0-default.docx",
+    "conflict-0-USE_DESTINATION_STYLES.docx",
+    "conflict-1-default.docx",
+    "conflict-1-USE_DESTINATION_STYLES.docx",
+    "normal-0-default.docx",
+    "normal-0-USE_DESTINATION_STYLES.docx",
+    "normal-1-default.docx",
+    "normal-1-USE_DESTINATION_STYLES.docx",
+    "table-0-default.docx",
+    "table-0-USE_DESTINATION_STYLES.docx",
+    "table-1-default.docx",
+    "table-1-USE_DESTINATION_STYLES.docx",
+    "run-0-default.docx",
+    "run-0-USE_DESTINATION_STYLES.docx",
+    "run-1-default.docx",
+    "run-1-USE_DESTINATION_STYLES.docx"
+  ],
+  "unsupported_without_package_changes": 40,
+  "validation": {
+    "full_suite": {
+      "passed": 2483,
+      "skipped": 2,
+      "seconds": 372.36
+    },
+    "full_import_acceptance": false,
+    "installed_dom_checks": 123,
+    "installed_import_and_process_checks": 48,
+    "installed_examples": 31,
+    "evidence_tool_checks": 12,
+    "platform_ci": "pending_for_this_import_change"
+  },
+  "limits": [
+    "16 small-input observations match; 40 combinations remain unsupported.",
+    "No full formatting/list/resource/import-options/node-kind/rendering acceptance.",
+    "Initial destination-style path and same-document cloning; source-format merge and different-style merge across documents remain unimplemented.",
+    "Original descriptions/unknown XML/comments/revision metadata on empty tables are preserved; only known plain empty tables are omitted on modified-part save."
+  ]
+}

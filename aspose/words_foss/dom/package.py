@@ -1,7 +1,7 @@
 """Original OPC payloads with lazy, namespace-preserving XML trees."""
 
-from io import BytesIO
 from hashlib import sha256
+from io import BytesIO
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
@@ -15,6 +15,21 @@ from aspose.words_foss._io import (
     read_bounded,
     validate_docx_archive,
 )
+from aspose.words_foss.dom.nodes import W, _elements, _is, _safe_structure
+
+
+def _empty_plain_table(element):
+    formatting = {"tbl", "tblPr", "tblGrid", "gridCol", "tblStyle", "tblW", "tblLook",
+                  "tblLayout", "jc", "tblInd", "tblCellSpacing", "tblCellMar", "tblBorders",
+                  "top", "left", "bottom", "right", "start", "end", "insideH", "insideV",
+                  "shd", "bidiVisual", "tblOverlap", "tblpPr", "tblStyleRowBandSize", "tblStyleColBandSize"}
+    return (_is(element, "tbl") and _safe_structure(element) and
+            all(_is(child, "tblPr") or _is(child, "tblGrid") for child in _elements(element)) and
+            all(parent.namespaceURI == W and parent.localName in formatting and
+                all(child.nodeType == child.ELEMENT_NODE or
+                    child.nodeType == child.TEXT_NODE and not child.data.strip()
+                    for child in parent.childNodes)
+                for parent in [element, *element.getElementsByTagNameNS("*", "*")]))
 
 
 class DocxPackage:
@@ -61,7 +76,14 @@ class DocxPackage:
 
     def payload(self, name):
         if name in self._dirty:
-            return self.tree(name).toxml(encoding="utf-8")
+            tree = self.tree(name)
+            # Native saving omits empty tables; retain the live detached/imported DOM state.
+            if any(_empty_plain_table(node) for node in tree.getElementsByTagNameNS(W, "tbl")):
+                tree = tree.cloneNode(deep=True)
+                for node in list(tree.getElementsByTagNameNS(W, "tbl")):
+                    if _empty_plain_table(node):
+                        node.parentNode.removeChild(node)
+            return tree.toxml(encoding="utf-8")
         return self._payloads[name]
 
     def preservation_report(self):
