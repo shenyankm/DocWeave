@@ -1,5 +1,6 @@
 """Markdown must diagnose omitted page-band content without leaking hidden text."""
 
+import os
 import subprocess
 import sys
 import warnings
@@ -100,7 +101,8 @@ def test_strict_cli_refuses_page_band_loss_without_replacing_output(tmp_path, re
     result = subprocess.run([sys.executable, "-m", "aspose.words_foss.convert",
                              str(source), str(output), "--strict"],
                             capture_output=True, text=True, timeout=20, check=False)
-    assert result.returncode != 0 and "header/footer" in result.stderr
+    expected = "header/footer" if os.name == "posix" else "requires POSIX process groups"
+    assert result.returncode != 0 and expected in result.stderr
     assert output.read_bytes() == b"ORIGINAL"
 
 

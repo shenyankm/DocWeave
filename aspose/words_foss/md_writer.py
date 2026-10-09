@@ -457,7 +457,7 @@ class LdmMarkdownWriter:
             if self.options.images_folder_alias:
                 url = f"{self.options.images_folder_alias.rstrip('/')}/{filename}"
             elif self._output_path is not None:
-                url = os.path.relpath(filepath, self._output_path.parent)
+                url = os.path.relpath(filepath, self._output_path.parent).replace(os.sep, "/")
             else:
                 url = str(filepath)
             return url, alt
