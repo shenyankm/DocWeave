@@ -8,7 +8,7 @@ from aspose.words_foss.document import (
 from aspose.words_foss import loading, saving
 from aspose.words_foss.dom import DocxDocument
 from aspose.words_foss.diagnostics import ContentLossWarning, ConversionDiagnostic, ConversionWarning
-from aspose.words_foss.model import wrap_type, enums
+from aspose.words_foss.model import wrap_type as wrap_type, enums as enums
 from aspose.words_foss.light_document_model import NodeType  # noqa: F401
 from aspose.words_foss.model.enums import (  # noqa: F401 — re-export for aw.ParagraphAlignment etc.
     CellMerge,

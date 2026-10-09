@@ -2,7 +2,6 @@
 Core DOC file reader — loading, parsing, property resolution, Markdown iteration.
 """
 
-import re
 import struct
 from io import BytesIO
 from pathlib import Path

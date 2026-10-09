@@ -7,12 +7,6 @@ and PlcSpaMom/PlcSpaHdr shape anchors.
 
 import struct
 
-from aspose.words_foss.doc_reader.constants import (
-    ESCHER_BLIP_JPEG,
-    ESCHER_BLIP_JPEG2,
-)
-
-
 class BlipInfo:
     """Parsed BSE (Blip Store Entry) with location of image data."""
 

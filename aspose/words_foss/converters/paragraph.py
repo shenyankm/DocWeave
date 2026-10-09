@@ -1,7 +1,6 @@
 """Paragraph conversion utilities."""
 
 import re
-from typing import Optional
 
 from aspose.words_foss.models import ParagraphInfo, RunFormatting, ConversionOptions
 from aspose.words_foss.docx_reader import ParagraphData, RunData
