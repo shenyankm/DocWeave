@@ -99,7 +99,7 @@ def inputs():
         yield name + ".docx", name.split("_orphan")[0].split("_widow")[0], stream.getvalue()
 
 
-def main():
+def main(input_generator=inputs, values=(False, True)):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("backend", choices=("commercial", "docweave"))
     parser.add_argument("output", type=Path)
@@ -113,9 +113,9 @@ def main():
         import aspose.words_foss as aw
     args.output.mkdir(parents=True, exist_ok=True)
     rows = []
-    for name, prop, raw in inputs():
+    for name, prop, raw in input_generator():
         (args.output / name).write_bytes(raw)
-        for value in (False, True):
+        for value in values:
             if commercial:
                 document = aw.Document(BytesIO(raw))
                 settings = aw.fonts.FontSettings()

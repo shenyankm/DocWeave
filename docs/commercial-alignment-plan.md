@@ -149,6 +149,7 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 | [样式段落格式观察](benchmarks/style-paragraph-format-26.9.json) | 27 个继承输入、108 次基本对齐编辑及官方原始输出 |
 | [段落分页属性](benchmarks/paragraph-pagination-26.9.json) | 324 个非首段输入、1296 次样式/直接值编辑，24 次非法 setter 观察 |
 | [分页渲染对照](benchmarks/pagination-rendering-26.9.json) | 五个自有输入、10 个原生/当前 PDF；非首页面位置、字宽及黑色像素，完整排版仍未验收 |
+| [段落数值格式](benchmarks/paragraph-dimensions-26.9.json) / [渲染](benchmarks/paragraph-dimensions-rendering-26.9.json) | 五个 pt 属性的层次继承、360 次编辑和 270 次错误观察；10 个普通字体 PDF 对照，完整格式仍未验收 |
 | [首段分页未决差异](benchmarks/first-paragraph-page-break-26.9.json) | 4 次编辑输出及 [18 个试用对照](benchmarks/first-paragraph-trial-26.9.json)；首段变化伴随提示插入，持许可证对照仍缺失 |
 | [保存状态观察](benchmarks/style-save-state-26.9.json) | 商业试用包的内存/重开状态，区分水印内容 |
 | [样式导入投影](benchmarks/style-import-projections.json) | 当前导入的基准、输入输出 SHA 与独立格式读取 |

@@ -624,7 +624,7 @@ class _Format:
         properties = _find(self._node._element, self.property_name)
         return _find(properties, name) if properties is not None else None
 
-    def _set(self, name, value):
+    def _set(self, name, value, *, attribute="val", remove=()):
         node = self._node
         node._editable()
         properties = _find(node._element, self.property_name)
@@ -636,7 +636,12 @@ class _Format:
         element = _find(properties, name)
         if value is None:
             if element is not None:
-                properties.removeChild(element)
+                if attribute == "val":
+                    properties.removeChild(element)
+                else:
+                    for attr in (attribute, *remove):
+                        if element.hasAttributeNS(W, attr):
+                            element.removeAttributeNS(W, attr)
                 node._changed()
             return
         if element is None:
@@ -649,7 +654,10 @@ class _Format:
         if not node._element.prefix:
             # Attributes never inherit a default namespace.
             element.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:w", W)
-        element.setAttributeNS(W, f"{prefix}:val", value)
+        for attr in remove:
+            if element.hasAttributeNS(W, attr):
+                element.removeAttributeNS(W, attr)
+        element.setAttributeNS(W, f"{prefix}:{attribute}", value)
         node._changed()
 
 
@@ -699,6 +707,29 @@ class Font(_Format):
 PAGINATION_PROPERTIES = {"keep_with_next": "keepNext", "keep_together": "keepLines",
                          "page_break_before": "pageBreakBefore", "widow_control": "widowControl"}
 
+DIMENSION_PROPERTIES = {"left_indent": ("ind", "left"), "right_indent": ("ind", "right"),
+                        "first_line_indent": ("ind", "firstLine"),
+                        "space_before": ("spacing", "before"), "space_after": ("spacing", "after")}
+
+
+def _read_dimension(element, prop):
+    if element is None:
+        return None
+    _, attribute = DIMENSION_PROPERTIES[prop]
+    relative = ("firstLineChars", "hangingChars") if prop == "first_line_indent" else (attribute + "Chars",)
+    if any(element.hasAttributeNS(W, attr) for attr in relative):
+        raise NotImplementedError("Character-based paragraph indents require font-aware resolution")
+    hanging = prop == "first_line_indent" and element.hasAttributeNS(W, "hanging")
+    if hanging:
+        attribute = "hanging"
+    if not element.hasAttributeNS(W, attribute):
+        return None
+    try:
+        value = int(element.getAttributeNS(W, attribute)) / 20
+    except ValueError as exc:
+        raise ValueError("Paragraph dimensions require integer twips") from exc
+    return -value if hanging else value
+
 
 class ParagraphFormat(_Format):
     property_name = "pPr"
@@ -708,6 +739,34 @@ class ParagraphFormat(_Format):
              "bidi", "adjustRightInd", "snapToGrid", "spacing", "ind", "contextualSpacing",
              "mirrorIndents", "suppressOverlap", "jc", "textDirection", "textAlignment",
              "textboxTightWrap", "outlineLvl", "divId", "cnfStyle", "rPr", "sectPr", "pPrChange")
+
+    def _dimension(self, prop):
+        return _read_dimension(self._get(DIMENSION_PROPERTIES[prop][0]), prop)
+
+    def _set_dimension(self, prop, value):
+        tag, attribute = DIMENSION_PROPERTIES[prop]
+        remove = ("firstLine", "hanging", "firstLineChars", "hangingChars") if prop == "first_line_indent" else (attribute + "Chars",)
+        if value is not None:
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise TypeError("Paragraph dimensions require a number or None for an unset direct value")
+            if not isfinite(value) or abs(value) > 2147483647 / 20:
+                raise ValueError("Paragraph dimension exceeds finite signed twip limits")
+            if tag == "spacing" and value < 0:
+                raise RuntimeError("Paragraph spacing cannot be negative")
+            twips = round(value * 20)
+            if prop == "first_line_indent" and twips < 0:
+                attribute, twips = "hanging", -twips
+            value = str(twips)
+        groups = [node for node in _elements(self._node._element) if _is(node, "pPr")]
+        if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, tag)]) > 1:
+            raise ValueError("Duplicate paragraph dimension properties")
+        self._set(tag, value, attribute=attribute, remove=tuple(attr for attr in remove if attr != attribute))
+
+    left_indent = property(lambda self: self._dimension("left_indent"), lambda self, value: self._set_dimension("left_indent", value))
+    right_indent = property(lambda self: self._dimension("right_indent"), lambda self, value: self._set_dimension("right_indent", value))
+    first_line_indent = property(lambda self: self._dimension("first_line_indent"), lambda self, value: self._set_dimension("first_line_indent", value))
+    space_before = property(lambda self: self._dimension("space_before"), lambda self, value: self._set_dimension("space_before", value))
+    space_after = property(lambda self: self._dimension("space_after"), lambda self, value: self._set_dimension("space_after", value))
 
     def _toggle(self, name):
         element = self._get(name)

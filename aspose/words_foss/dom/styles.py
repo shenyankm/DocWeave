@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from aspose.words_foss import _io
 from aspose.words_foss._opc import resolve_target
 from aspose.words_foss.dom.nodes import (
+    DIMENSION_PROPERTIES,
     PAGINATION_PROPERTIES,
     XMLNS,
     Font,
@@ -14,6 +15,7 @@ from aspose.words_foss.dom.nodes import (
     _find,
     _is,
     _onoff,
+    _read_dimension,
     _read_size,
 )
 
@@ -185,6 +187,18 @@ class StyleParagraphFormat(ParagraphFormat):
             raise TypeError("Style pagination properties require bool; use direct_paragraph_format to clear")
         super()._set_toggle(name, value)
 
+    def _dimension(self, prop):
+        if not self._resolved:
+            return super()._dimension(prop)
+        resolver = StyleResolver(self._node.owner_document)
+        layers = [resolver._defaults("pPr")] + [_child(style, "pPr") for style in
+                  resolver._chain(self._node.style_id, "paragraph")]
+        for layer in reversed(layers):
+            value = _read_dimension(_child(layer, DIMENSION_PROPERTIES[prop][0]), prop)
+            if value is not None:
+                return value
+        return 0.0
+
     @property
     def alignment(self):
         value = _read_alignment(self._get("jc"))
@@ -194,15 +208,15 @@ class StyleParagraphFormat(ParagraphFormat):
     def alignment(self, value):
         ParagraphFormat.alignment.fset(self, value)
 
-    def _set(self, name, value):
-        if name not in {"jc", *PAGINATION_PROPERTIES.values()}:
+    def _set(self, name, value, **kwargs):
+        if name not in {"jc", "ind", "spacing", *PAGINATION_PROPERTIES.values()}:
             raise NotImplementedError("Nested paragraph style references require calibration")
         if value is None and self._resolved:
             raise TypeError("Use direct_paragraph_format to clear style properties")
         groups = [node for node in _elements(self._node._element) if _is(node, "pPr")]
         if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, name)]) > 1:
             raise ValueError("Duplicate style paragraph properties")
-        super()._set(name, value)
+        super()._set(name, value, **kwargs)
         self._node.owner_document._package._style_property_overrides.add((self._node.style_id, name))
 
 
@@ -378,6 +392,11 @@ class EffectiveParagraphFormat:
     keep_together: bool = False
     page_break_before: bool = False
     widow_control: bool = True
+    left_indent: float = 0.0
+    right_indent: float = 0.0
+    first_line_indent: float = 0.0
+    space_before: float = 0.0
+    space_after: float = 0.0
 
 
 class StyleResolver:
@@ -462,6 +481,7 @@ class StyleResolver:
         _, layers = self._paragraph_layers(paragraph)
         alignment = "left"
         flags = {name: name == "widow_control" for name in PAGINATION_PROPERTIES}
+        dimensions = {name: 0.0 for name in DIMENSION_PROPERTIES}
         for layer in layers:
             element = _child(layer, "jc")
             if element is not None:
@@ -470,7 +490,11 @@ class StyleResolver:
                 element = _child(layer, tag)
                 if element is not None:
                     flags[name] = _onoff(element)
-        return EffectiveParagraphFormat(alignment, **flags)
+            for name, (tag, _) in DIMENSION_PROPERTIES.items():
+                value = _read_dimension(_child(layer, tag), name)
+                if value is not None:
+                    dimensions[name] = value
+        return EffectiveParagraphFormat(alignment, **flags, **dimensions)
 
     def font(self, run):
         run._editable()

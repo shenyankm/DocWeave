@@ -1,0 +1,2057 @@
+{
+  "commercial_environment": {
+    "backend": "commercial",
+    "version": "26.9.0",
+    "licensed": false,
+    "python": "3.13.15",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "font_sha256": "024bb318b2cbd2078bda331c005f5e810bd3dcc1b426881b15a0fab5a00f6e3b",
+    "font_source_sha256": "1ce49f638ec660b48be82801605a939aa6fb313eda6bb2cbb29b5306851be7cc",
+    "full_rendering_acceptance": false
+  },
+  "docweave_environment": {
+    "backend": "docweave",
+    "version": "26.7.0.post2",
+    "licensed": null,
+    "python": "3.14.7",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "font_sha256": "024bb318b2cbd2078bda331c005f5e810bd3dcc1b426881b15a0fab5a00f6e3b",
+    "font_source_sha256": "1ce49f638ec660b48be82801605a939aa6fb313eda6bb2cbb29b5306851be7cc",
+    "full_rendering_acceptance": false
+  },
+  "tolerances": {
+    "text_origin_pt": 0.02,
+    "text_advance_pt": 0.02,
+    "black_ink_difference_ratio": 0.01
+  },
+  "full_rendering_acceptance": false,
+  "scope": "five point properties, 0 and 12.375pt style edits quantized to twips; ASCII regular font, fixed 12pt lines, nonfirst page; first page, trial pixels, font metadata, complex scripts, tables, automatic wrapping and negative-indent rendering excluded",
+  "records": [
+    {
+      "input": "left_indent.docx",
+      "input_sha256": "f3d01d0c7beb99ddbea3c1a9ba3629080baaa8b2f68436b9072af4b796afd01c",
+      "property": "left_indent",
+      "value": 0.0,
+      "output": "left_indent-0.pdf",
+      "output_sha256": "620456d919b20ee43aa89a15c6a64758126ea276d6d140445c48e07049596fc8",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.60000610351562
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.0
+      ],
+      "current_output_sha256": "947d9289efebab33c7860e07e1389aca1345ecfe18a902cc353194f24a78aa82"
+    },
+    {
+      "input": "left_indent.docx",
+      "input_sha256": "f3d01d0c7beb99ddbea3c1a9ba3629080baaa8b2f68436b9072af4b796afd01c",
+      "property": "left_indent",
+      "value": 12.375,
+      "output": "left_indent-12.pdf",
+      "output_sha256": "e7a84dd1691c3a4110984f745f8aa34cebc67b59b325625f9f5d085e1b9e916e",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              81.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              93.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              105.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              117.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              81.60000610351562
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              93.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              105.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              117.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.00021748586341887777
+      ],
+      "current_output_sha256": "32ce27da5177f6c8b6b8e4ccafd22c62a3aec39b52077cf0dddbb7553a80490a"
+    },
+    {
+      "input": "right_indent.docx",
+      "input_sha256": "9e426a5e1cbf84d9293dc2e49625be719bc98a6543f0e099cf96ccfa9ee81d50",
+      "property": "right_indent",
+      "value": 0.0,
+      "output": "right_indent-0.pdf",
+      "output_sha256": "c1f28f21161035314f606ed5251c5a3b7cafeed84ba1800c53ace49c23cf064b",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              266.052001953125,
+              81.5999984741211
+            ],
+            "advance": 57.947998046875,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              266.052001953125,
+              93.5999984741211
+            ],
+            "advance": 57.947998046875,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              266.052001953125,
+              105.5999984741211
+            ],
+            "advance": 57.947998046875,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              266.052001953125,
+              117.5999984741211
+            ],
+            "advance": 57.947998046875,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              266.04998779296875,
+              81.60000610351562
+            ],
+            "advance": 57.947967529296875,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              266.04998779296875,
+              93.5999984741211
+            ],
+            "advance": 57.947967529296875,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              266.04998779296875,
+              105.5999984741211
+            ],
+            "advance": 57.947967529296875,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              266.04998779296875,
+              117.5999984741211
+            ],
+            "advance": 57.947967529296875,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.0010743446497636442
+      ],
+      "current_output_sha256": "7b1fc59379641775a52e680a2f5b7d90401638e10aaed011be203df714eeb2ab"
+    },
+    {
+      "input": "right_indent.docx",
+      "input_sha256": "9e426a5e1cbf84d9293dc2e49625be719bc98a6543f0e099cf96ccfa9ee81d50",
+      "property": "right_indent",
+      "value": 12.375,
+      "output": "right_indent-12.pdf",
+      "output_sha256": "984715d1f8b0958ec99b9b69af9b0f3ba4ecf5bd2fe8633eee7db6c441cd9790",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              253.65199279785156,
+              81.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              253.65199279785156,
+              93.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              253.65199279785156,
+              105.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              253.65199279785156,
+              117.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              253.64999389648438,
+              81.60000610351562
+            ],
+            "advance": 57.947967529296875,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              253.64999389648438,
+              93.5999984741211
+            ],
+            "advance": 57.947967529296875,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              253.64999389648438,
+              105.5999984741211
+            ],
+            "advance": 57.947967529296875,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              253.64999389648438,
+              117.5999984741211
+            ],
+            "advance": 57.947967529296875,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.00411433521004764
+      ],
+      "current_output_sha256": "6e373e63f368a4a910e9f4501d1a215cb3c9d79390e6ec27c512fd7fb6e286f3"
+    },
+    {
+      "input": "first_line_indent.docx",
+      "input_sha256": "f3d01d0c7beb99ddbea3c1a9ba3629080baaa8b2f68436b9072af4b796afd01c",
+      "property": "first_line_indent",
+      "value": 0.0,
+      "output": "first_line_indent-0.pdf",
+      "output_sha256": "2f27aa664512df15b6a12a0de067ab4146f32c4ed95fd14cc18382121abc4801",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.60000610351562
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.0
+      ],
+      "current_output_sha256": "947d9289efebab33c7860e07e1389aca1345ecfe18a902cc353194f24a78aa82"
+    },
+    {
+      "input": "first_line_indent.docx",
+      "input_sha256": "f3d01d0c7beb99ddbea3c1a9ba3629080baaa8b2f68436b9072af4b796afd01c",
+      "property": "first_line_indent",
+      "value": 12.375,
+      "output": "first_line_indent-12.pdf",
+      "output_sha256": "cf46e0cd7f297eef43e89778757390c801dcbc602077ff21656fb1aacfb134fa",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              81.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              48.400001525878906,
+              81.60000610351562
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.0
+      ],
+      "current_output_sha256": "c261ed40d6b17b57abf17d6b6895795e92f44f8b3ab55187acff173ae87b892f"
+    },
+    {
+      "input": "space_before.docx",
+      "input_sha256": "f3d01d0c7beb99ddbea3c1a9ba3629080baaa8b2f68436b9072af4b796afd01c",
+      "property": "space_before",
+      "value": 0.0,
+      "output": "space_before-0.pdf",
+      "output_sha256": "5c7efc6d0b003539ee3fc0e8b124814c803aa383e85405dab8c12f44a9d485ec",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.60000610351562
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.0
+      ],
+      "current_output_sha256": "947d9289efebab33c7860e07e1389aca1345ecfe18a902cc353194f24a78aa82"
+    },
+    {
+      "input": "space_before.docx",
+      "input_sha256": "f3d01d0c7beb99ddbea3c1a9ba3629080baaa8b2f68436b9072af4b796afd01c",
+      "property": "space_before",
+      "value": 12.375,
+      "output": "space_before-12.pdf",
+      "output_sha256": "d285c5fce56fbfe7c31af2838de734964f4c59843a6cc398ded57c76fc625901",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              94.0
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              106.0
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              118.0
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              130.0
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              142.0
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              94.0
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              106.0
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              118.0
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              130.0
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              142.0
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.0
+      ],
+      "current_output_sha256": "186eef39179f2da0e8fc13fa45b0e0771787d14124ff732a4a71097fce418e2c"
+    },
+    {
+      "input": "space_after.docx",
+      "input_sha256": "f3d01d0c7beb99ddbea3c1a9ba3629080baaa8b2f68436b9072af4b796afd01c",
+      "property": "space_after",
+      "value": 0.0,
+      "output": "space_after-0.pdf",
+      "output_sha256": "1968ae95aadb6f68aea0fbaf284552d7cbd4a813b0a7adcfabbaba74e5334574",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.60000610351562
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              129.60000610351562
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.0
+      ],
+      "current_output_sha256": "01e98b9013f1202b8453de3ace6eb287580e2d19859465b8312fec9847ae98ad"
+    },
+    {
+      "input": "space_after.docx",
+      "input_sha256": "f3d01d0c7beb99ddbea3c1a9ba3629080baaa8b2f68436b9072af4b796afd01c",
+      "property": "space_after",
+      "value": 12.375,
+      "output": "space_after-12.pdf",
+      "output_sha256": "e167125bfe6ff4fa77d9b12858840411bd9a41d738ba7bd6a530e8c257bf52d1",
+      "native_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 45.167999267578125,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.599998474121094
+            ],
+            "advance": 48.88800811767578,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.599998474121094
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.5999984741211
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94800567626953,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              142.0
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "current_snapshot": {
+        "page_sizes": [
+          [
+            360.0,
+            216.0
+          ],
+          [
+            360.0,
+            216.0
+          ]
+        ],
+        "lines": {
+          "BEFORE": {
+            "page": 1,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 45.168006896972656,
+            "size": 12.0
+          },
+          "ANCHOR": {
+            "page": 2,
+            "origin": [
+              36.0,
+              45.600006103515625
+            ],
+            "advance": 48.88800048828125,
+            "size": 12.0
+          },
+          "FILL00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              57.600006103515625
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "FILL01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              69.60000610351562
+            ],
+            "advance": 36.49200439453125,
+            "size": 12.0
+          },
+          "TARGET00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              81.60000610351562
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET01": {
+            "page": 2,
+            "origin": [
+              36.0,
+              93.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET02": {
+            "page": 2,
+            "origin": [
+              36.0,
+              105.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "TARGET03": {
+            "page": 2,
+            "origin": [
+              36.0,
+              117.5999984741211
+            ],
+            "advance": 57.94801330566406,
+            "size": 12.0
+          },
+          "FOLLOW00": {
+            "page": 2,
+            "origin": [
+              36.0,
+              142.0
+            ],
+            "advance": 61.32000732421875,
+            "size": 12.0
+          }
+        }
+      },
+      "black_ink_difference": [
+        0.0
+      ],
+      "current_output_sha256": "3646e59ae0cd0d45b4bb14d44f7e1cb333c908c1933d23fecea957cf3f028511"
+    }
+  ],
+  "corpus": "corpus/paragraph-dimensions-rendering-26.9.zip",
+  "corpus_sha256": "28b498c552e91aaebd369ff4e9285591a2f9ae79ab68f9ff99242e9d964d73ac",
+  "commercial_outputs": "corpus/paragraph-dimensions-rendering-26.9-commercial.zip",
+  "commercial_outputs_sha256": "41f0d6a7e088fd3cb73fc4b5664b11f3db454f1273575f84d6be3183661b9fc6",
+  "current_outputs": "corpus/paragraph-dimensions-rendering-26.9-current.zip",
+  "current_outputs_sha256": "dcc9b037230009975818134885c598c1ec00a2f09f1bc2b437674ca9b5d348a0"
+}

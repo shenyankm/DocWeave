@@ -147,25 +147,101 @@ def verify_first_paragraph_trial(root):
     return len(rows)
 
 
-def verify_pagination_rendering(root):
-    report = json.loads((root / "pagination-rendering-26.9.json").read_text())
+def saved_dimensions(data):
+    from copy import deepcopy
+
+    from docx import Document
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    from docx.text.parfmt import ParagraphFormat
+
+    props = ("left_indent", "right_indent", "first_line_indent", "space_before", "space_after")
+    document = Document(BytesIO(data))
+    element = OxmlElement("w:p")
+    defaults = document.styles.element.find(qn("w:docDefaults"))
+    if defaults is not None:
+        group = defaults.find(qn("w:pPrDefault"))
+        if group is not None and group.find(qn("w:pPr")) is not None:
+            element.append(deepcopy(group.find(qn("w:pPr"))))
+    initial = {prop: (getattr(ParagraphFormat(element), prop).pt if getattr(ParagraphFormat(element), prop) is not None else 0.0) for prop in props}
+
+    def resolved(style, direct=None):
+        chain = []
+        while style is not None:
+            assert style.style_id not in {item.style_id for item in chain}
+            chain.append(style)
+            style = style.base_style
+        result = dict(initial)
+        for fmt in [item.paragraph_format for item in reversed(chain)] + ([direct] if direct is not None else []):
+            for prop in props:
+                value = getattr(fmt, prop)
+                if value is not None:
+                    result[prop] = value.pt
+        return result
+
+    paragraph = next(p for p in document.paragraphs if "IMPORT" in p.text)
+    return {"base": resolved(document.styles["Base"]), "derived": resolved(document.styles["Derived"]),
+            "paragraph": resolved(paragraph.style, paragraph.paragraph_format)}
+
+
+def verify_paragraph_dimensions(root):
+    report = json.loads((root / "paragraph-dimensions-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_dimensions.py"))
+    generated = {name: (prop, data) for name, prop, data in probe["inputs"]()}
+    assert len(generated) == 45 and len(report["records"]) == 360 and len(report["setter_errors"]) == 270
+    archives = {}
+    for key in ("corpus", "outputs"):
+        raw = (root / report[key]).read_bytes()
+        assert digest(raw) == report[key + "_sha256"]
+        with ZipFile(BytesIO(raw)) as archive:
+            archives[key] = {name: archive.read(name) for name in archive.namelist()}
+    assert set(archives["corpus"]) == set(generated)
+    assert set(archives["outputs"]) == {row["output"] for row in report["records"] if row["error"] is None}
+    before = {}
+    for name, (prop, expected) in generated.items():
+        data = archives["corpus"][name]
+        with ZipFile(BytesIO(data)) as source, ZipFile(BytesIO(expected)) as current:
+            assert {n: source.read(n) for n in source.namelist()} == {n: current.read(n) for n in current.namelist()}
+        before[name] = saved_dimensions(data)
+    assert {(r["input"], r["target"], r["value"]) for r in report["records"]} == {(name, target, value) for name in generated for target in ("style", "paragraph") for value in probe["VALUES"]}
+    for row in report["records"]:
+        assert row["input_sha256"] == digest(archives["corpus"][row["input"]])
+        assert row["property"] == generated[row["input"]][0] and row["before_edit"] == before[row["input"]]
+        if row["property"].startswith("space_") and row["value"] < 0:
+            assert row["error"] == "RuntimeError" and row["after_edit"] == row["before_edit"]
+        else:
+            assert row["error"] is None
+            raw = archives["outputs"][row["output"]]
+            assert digest(raw) == row["output_sha256"]
+            assert saved_dimensions(raw) == row["after_reopen"] == row["after_edit"] == row["after_save_live"]
+    assert all(row["error"] == "TypeError" and row["property"] == generated[row["input"]][0] for row in report["setter_errors"])
+    return len(report["records"])
+
+
+def verify_pagination_rendering(root, filename="pagination-rendering-26.9.json"):
+    dimensions = filename == "paragraph-dimensions-rendering-26.9.json"
+    assert filename in {"pagination-rendering-26.9.json", "paragraph-dimensions-rendering-26.9.json"}
+    report = json.loads((root / filename).read_text())
     assert report["commercial_environment"]["version"] == "26.9.0"
     assert report["commercial_environment"]["licensed"] is False
     assert report["full_rendering_acceptance"] is False
     assert report["tolerances"] == {"text_origin_pt": 0.02, "text_advance_pt": 0.02, "black_ink_difference_ratio": 0.01}
     probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/pagination_rendering.py"))
-    generated = {name: (prop, data) for name, prop, data in probe["inputs"]()}
+    generator = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_dimensions_rendering.py")) if dimensions else probe
+    generated = {name: (prop, data) for name, prop, data in generator["inputs"]()}
     rows = report["records"]
     assert len(rows) == 10 and len(generated) == 5
-    assert {(r["input"], r["value"]) for r in rows} == {(name, value) for name in generated for value in (False, True)}
+    assert {(r["input"], r["value"]) for r in rows} == {(name, value) for name in generated for value in ((0.0, 12.375) if dimensions else (False, True))}
     archives = {}
-    for key in ("corpus", "commercial_outputs", "current_outputs", "before_outputs"):
+    keys = ("commercial_outputs", "current_outputs") + (() if dimensions else ("before_outputs",))
+    for key in ("corpus", *keys):
         data = (root / report[key]).read_bytes()
         assert digest(data) == report[key + "_sha256"]
         with ZipFile(BytesIO(data)) as archive:
             archives[key] = {name: archive.read(name) for name in archive.namelist()}
     assert set(archives["corpus"]) == set(generated)
-    for key in ("commercial_outputs", "current_outputs", "before_outputs"):
+    for key in keys:
         assert set(archives[key]) == {r["output"] for r in rows}
     for row in rows:
         prop, expected = generated[row["input"]]
@@ -173,9 +249,11 @@ def verify_pagination_rendering(root):
         assert row["property"] == prop and digest(data) == row["input_sha256"]
         with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(expected)) as source:
             assert {name: actual.read(name) for name in actual.namelist()} == {name: source.read(name) for name in source.namelist()}
-        for key, snapshot, sha in (("commercial_outputs", "native_snapshot", "output_sha256"),
-                                   ("current_outputs", "current_snapshot", "current_output_sha256"),
-                                   ("before_outputs", "before_snapshot", "before_output_sha256")):
+        snapshots = (("commercial_outputs", "native_snapshot", "output_sha256"),
+                     ("current_outputs", "current_snapshot", "current_output_sha256"))
+        if not dimensions:
+            snapshots += (("before_outputs", "before_snapshot", "before_output_sha256"),)
+        for key, snapshot, sha in snapshots:
             raw = archives[key][row["output"]]
             assert digest(raw) == row[sha]
             actual, frozen = probe["pdf_snapshot"](raw), row[snapshot]
@@ -195,17 +273,22 @@ def verify_pagination_rendering(root):
             if label != "BEFORE":
                 assert max(abs(a - b) for a, b in zip(line["origin"], own["origin"], strict=True)) <= 0.02
                 assert abs(line["advance"] - own["advance"]) <= 0.02 and line["size"] == own["size"]
-        for key, field in (("current_outputs", "black_ink_difference"), ("before_outputs", "before_black_ink_difference")):
+        pairs = (("current_outputs", "black_ink_difference"),)
+        if not dimensions:
+            pairs += (("before_outputs", "before_black_ink_difference"),)
+        for key, field in pairs:
             ratios = probe["ink_difference"](archives["commercial_outputs"][row["output"]], archives[key][row["output"]])
             assert ratios == row[field]
         assert max(row["black_ink_difference"]) <= 0.01
-        assert max(row["before_black_ink_difference"]) > 0.01
+        if not dimensions:
+            assert max(row["before_black_ink_difference"]) > 0.01
     ledger = json.loads((root / "commercial-26.9-capabilities.json").read_text())
-    linked = [record for record in ledger["records"] if "pagination_rendering_evidence" in record]
+    field = "dimension_rendering_evidence" if dimensions else "pagination_rendering_evidence"
+    linked = [record for record in ledger["records"] if field in record]
     assert {record["id"] for record in linked} == {"aspose.words.ParagraphFormat." + row["property"] for row in rows}
     for record in linked:
-        evidence = record["pagination_rendering_evidence"]
-        assert evidence["file"] == "pagination-rendering-26.9.json" and evidence["tolerances"] == report["tolerances"]
+        evidence = record[field]
+        assert evidence["file"] == filename and evidence["tolerances"] == report["tolerances"]
         assert evidence["observed_black_ink_difference_ratio"] == max(max(row["black_ink_difference"]) for row in rows)
     return len(rows)
 
@@ -774,6 +857,8 @@ def verify(root):
     first_paragraph = verify_first_paragraph_page_break(root)
     first_trial = verify_first_paragraph_trial(root)
     pagination_rendering = verify_pagination_rendering(root)
+    dimensions = verify_paragraph_dimensions(root)
+    dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -791,6 +876,8 @@ def verify(root):
             "checked_unresolved_first_paragraph_outputs": first_paragraph,
             "checked_trial_first_paragraph_outputs": first_trial,
             "checked_pagination_rendering_pairs": pagination_rendering,
+            "checked_paragraph_dimension_edits": dimensions,
+            "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

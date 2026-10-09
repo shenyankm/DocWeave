@@ -312,10 +312,10 @@ class ParagraphFormatBuilder:
             pf.right_indent = right
         first_line = read_twip(ind, "firstLine")
         hanging = read_twip(ind, "hanging")
-        if first_line is not None:
-            pf.first_line_indent = first_line
-        elif hanging is not None:
+        if hanging is not None:
             pf.first_line_indent = -hanging
+        elif first_line is not None:
+            pf.first_line_indent = first_line
 
     @staticmethod
     def _apply_spacing(pPr: ET.Element, pf: ldm.ParagraphFormat) -> None:

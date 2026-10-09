@@ -126,7 +126,7 @@ for style in editable.styles:
 - 段落样式的 `paragraph_format.alignment` 沿文档默认和 basedOn 链解析，未声明时为
   `left`；四种基本对齐的 108 次编辑/保存/重开已有官方固定观察。`direct_paragraph_format`
   保留当前层的 `None`，可用 `None` 清除；继承 getter 的 setter 拒绝 `None`。
-  字符/列表样式不提供段落格式，表格样式仍拒绝，新增分页属性见下；其余段落属性和嵌套 pStyle 编辑未实现。
+  字符/列表样式不提供段落格式，表格样式仍拒绝，新增分页和数值属性见下；其余段落属性和嵌套 pStyle 编辑未实现。
 - `keep_with_next`、`keep_together`、`page_break_before`、`widow_control` 支持段落直接值、
   样式继承值和有效值；前三项默认 `False`，孤行控制默认 `True`。直接值为 `None` 表示未设置，
   可用 `None` 清除；样式继承 setter 只接受 `bool`。324 个非首段输入、1296 次官方编辑已对照
@@ -137,6 +137,17 @@ for style in editable.styles:
   官方试用包会在加载时关闭受测首段的显式
   段前分页；18 个加载/新建对照观察表明，首段值变化与加入试用提示段落同时出现，
   已有前置段落时保留。持许可证的对照仍未执行，本项目保留原始值，差异继续记为未决。
+- `left_indent`、`right_indent`、`first_line_indent`、`space_before`、`space_after` 以 pt 读写，
+  继承值和有效值默认 0；直接值的 `None` 表示未设置，可清除。继承 setter 拒绝 `None`，
+  布尔和字符串也拒绝；非有限值或超出有符号 twip 范围的值在修改前拒绝。段间距不能为负。
+  值按 1/20pt 四舍六入五成双量化，如 12.375→12.4。负首行缩进写为 hanging，
+  与 firstLine 同层出现时 hanging 优先；编辑保留 ind/spacing 中未涉及的属性。
+  [360 次官方编辑及 270 次错误观察](benchmarks/paragraph-dimensions-26.9.json)覆盖 45 个普通输入；
+  本项目直接值接受 `None` 清除，与官方已解析值接口不同。字符缩进须字体解析，当前有效格式明确拒绝；
+  逻辑缩进、相对行间距、编号/条件表格上下文和完整 ParagraphFormat API 仍未对齐。
+  [10 个原生 PDF 对照](benchmarks/paragraph-dimensions-rendering-26.9.json)覆盖 0/12.375pt 样式编辑，
+  原点/字宽容差 0.02pt、144dpi 黑色像素差上限 1%，实测最大约 0.412%。
+  仅覆盖普通字体 ASCII、固定行距和非首页面，负缩进及复杂内容的最终渲染仍未验收。
 - 读取不改变部件。样式句柄按 ID 读取当前相关部件，部件替换后不会继续编辑旧树。
   编辑启用保存投影，保留内存格式和未涉及的属性；保存重开后的 Run 格式可能按官方
   受测行为变化。重复直接属性在写入前拒绝，保存失败仍保留既有目标文件。
@@ -159,7 +170,7 @@ print(paragraph.effective_paragraph_format.widow_control)
   此规则按官方 26.9.0 的固定语料校准，不能推广为所有 Word 版本、表格或复杂文字的行为。
 - 段落对齐按 `docDefaults → 段落样式链 → 直接格式` 解析；段落标记字体不错误地应用到文字 Run。
 - 样式循环、缺失父样式、跨类型继承、重复 ID 和非法已支持属性值不会静默忽略。
-- 当前解析 `w:b`、`w:i`、`w:sz`、`w:jc` 和上述四个分页标志，不是完整字体或排版解析器。
+- 当前解析 `w:b`、`w:i`、`w:sz`、`w:jc`、上述分页标志及五个点数属性，不是完整字体或排版解析器。
   未定义对齐时返回 `left`；未定义粗斜体则返回 `False`。普通字号的隐式默认值按
   官方 26.9.0 固定观察解析为 10pt/11pt，不作为复杂文字脚本选择或最终字形尺寸。
 - 编号段落、有显式或默认表格样式的单元格，以及样式定义内嵌套 `rStyle` 暂不提供有效值，

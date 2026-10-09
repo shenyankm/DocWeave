@@ -30263,7 +30263,29 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_dimensions_evidence": {
+        "file": "paragraph-dimensions-26.9.json",
+        "scope": "45 owned inputs; 360 style/direct numeric edits, 270 rejected native setter observations; five point properties and attribute-wise inheritance",
+        "current_alternative_entrypoint": "DocxDocument ParagraphFormat, Style.paragraph_format and effective_paragraph_format",
+        "implementation": "point attributes with twip quantization, direct None clears; native resolved interface rejects None",
+        "limits": [
+          "character/logical indents, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
+        ],
+        "tests": "tests/test_paragraph_dimensions.py"
+      },
+      "dimension_rendering_evidence": {
+        "file": "paragraph-dimensions-rendering-26.9.json",
+        "scope": "five point properties, 0 and 12.375pt style edits quantized to twips; ASCII regular font, fixed 12pt lines, nonfirst page; first page, trial pixels, font metadata, complex scripts, tables, automatic wrapping and negative-indent rendering excluded",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.00411433521004764,
+        "tests": "tests/test_paragraph_dimensions.py",
+        "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.get_type",
@@ -30391,7 +30413,29 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_dimensions_evidence": {
+        "file": "paragraph-dimensions-26.9.json",
+        "scope": "45 owned inputs; 360 style/direct numeric edits, 270 rejected native setter observations; five point properties and attribute-wise inheritance",
+        "current_alternative_entrypoint": "DocxDocument ParagraphFormat, Style.paragraph_format and effective_paragraph_format",
+        "implementation": "point attributes with twip quantization, direct None clears; native resolved interface rejects None",
+        "limits": [
+          "character/logical indents, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
+        ],
+        "tests": "tests/test_paragraph_dimensions.py"
+      },
+      "dimension_rendering_evidence": {
+        "file": "paragraph-dimensions-rendering-26.9.json",
+        "scope": "five point properties, 0 and 12.375pt style edits quantized to twips; ASCII regular font, fixed 12pt lines, nonfirst page; first page, trial pixels, font metadata, complex scripts, tables, automatic wrapping and negative-indent rendering excluded",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.00411433521004764,
+        "tests": "tests/test_paragraph_dimensions.py",
+        "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.line_spacing",
@@ -30529,7 +30573,29 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_dimensions_evidence": {
+        "file": "paragraph-dimensions-26.9.json",
+        "scope": "45 owned inputs; 360 style/direct numeric edits, 270 rejected native setter observations; five point properties and attribute-wise inheritance",
+        "current_alternative_entrypoint": "DocxDocument ParagraphFormat, Style.paragraph_format and effective_paragraph_format",
+        "implementation": "point attributes with twip quantization, direct None clears; native resolved interface rejects None",
+        "limits": [
+          "character/logical indents, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
+        ],
+        "tests": "tests/test_paragraph_dimensions.py"
+      },
+      "dimension_rendering_evidence": {
+        "file": "paragraph-dimensions-rendering-26.9.json",
+        "scope": "five point properties, 0 and 12.375pt style edits quantized to twips; ASCII regular font, fixed 12pt lines, nonfirst page; first page, trial pixels, font metadata, complex scripts, tables, automatic wrapping and negative-indent rendering excluded",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.00411433521004764,
+        "tests": "tests/test_paragraph_dimensions.py",
+        "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.shading",
@@ -30559,7 +30625,29 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_dimensions_evidence": {
+        "file": "paragraph-dimensions-26.9.json",
+        "scope": "45 owned inputs; 360 style/direct numeric edits, 270 rejected native setter observations; five point properties and attribute-wise inheritance",
+        "current_alternative_entrypoint": "DocxDocument ParagraphFormat, Style.paragraph_format and effective_paragraph_format",
+        "implementation": "point attributes with twip quantization, direct None clears; native resolved interface rejects None",
+        "limits": [
+          "character/logical indents, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
+        ],
+        "tests": "tests/test_paragraph_dimensions.py"
+      },
+      "dimension_rendering_evidence": {
+        "file": "paragraph-dimensions-rendering-26.9.json",
+        "scope": "five point properties, 0 and 12.375pt style edits quantized to twips; ASCII regular font, fixed 12pt lines, nonfirst page; first page, trial pixels, font metadata, complex scripts, tables, automatic wrapping and negative-indent rendering excluded",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.00411433521004764,
+        "tests": "tests/test_paragraph_dimensions.py",
+        "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.space_after_auto",
@@ -30579,7 +30667,29 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "paragraph_dimensions_evidence": {
+        "file": "paragraph-dimensions-26.9.json",
+        "scope": "45 owned inputs; 360 style/direct numeric edits, 270 rejected native setter observations; five point properties and attribute-wise inheritance",
+        "current_alternative_entrypoint": "DocxDocument ParagraphFormat, Style.paragraph_format and effective_paragraph_format",
+        "implementation": "point attributes with twip quantization, direct None clears; native resolved interface rejects None",
+        "limits": [
+          "character/logical indents, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
+        ],
+        "tests": "tests/test_paragraph_dimensions.py"
+      },
+      "dimension_rendering_evidence": {
+        "file": "paragraph-dimensions-rendering-26.9.json",
+        "scope": "five point properties, 0 and 12.375pt style edits quantized to twips; ASCII regular font, fixed 12pt lines, nonfirst page; first page, trial pixels, font metadata, complex scripts, tables, automatic wrapping and negative-indent rendering excluded",
+        "tolerances": {
+          "text_origin_pt": 0.02,
+          "text_advance_pt": 0.02,
+          "black_ink_difference_ratio": 0.01
+        },
+        "observed_black_ink_difference_ratio": 0.00411433521004764,
+        "tests": "tests/test_paragraph_dimensions.py",
+        "delivery": "implemented for measured point controls; full paragraph formatting and rendering acceptance remain incomplete"
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.space_before_auto",
