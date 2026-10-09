@@ -22,6 +22,7 @@ from aspose.words_foss.dom.styles import (
     Style,
     StyleCollection,
     StyleFont,
+    StyleParagraphFormat,
 )
 
 __all__ = [
@@ -41,6 +42,7 @@ __all__ = [
     "Style",
     "StyleCollection",
     "StyleFont",
+    "StyleParagraphFormat",
     "Table",
     "TextRange",
     "UnknownNode",

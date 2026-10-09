@@ -30155,7 +30155,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "style_paragraph_format_evidence": {
+        "file": "style-paragraph-format-26.9.json",
+        "scope": "108 owned paragraph-style alignment edits; live/save/reopen and font preservation",
+        "current_alternative_entrypoint": "DocxDocument Style.paragraph_format.alignment",
+        "implementation": "partial_alternative_dom_api; direct clear supported; missing effective alignment resolves to left",
+        "tests": "tests/test_style_paragraph_formats.py",
+        "delivery": "basic alignment implemented; table/other paragraph attributes, canonical API, errors and rendering remain incomplete"
+      }
     },
     {
       "id": "aspose.words.ParagraphFormat.baseline_alignment",
@@ -37427,7 +37435,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "style_paragraph_format_evidence": {
+        "file": "style-paragraph-format-26.9.json",
+        "scope": "108 owned paragraph-style alignment edits; live/save/reopen and font preservation",
+        "current_alternative_entrypoint": "DocxDocument Style.paragraph_format.alignment",
+        "implementation": "partial_alternative_dom_api; direct clear supported; missing effective alignment resolves to left",
+        "tests": "tests/test_style_paragraph_formats.py",
+        "delivery": "basic alignment implemented; table/other paragraph attributes, canonical API, errors and rendering remain incomplete"
+      }
     },
     {
       "id": "aspose.words.Style.priority",

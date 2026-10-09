@@ -93,6 +93,8 @@ if style is not None:
     style.font.bold = True
     style.font.size = 17.5
     style.direct_font.italic = None  # 清除该层，恢复基样式/文档默认值
+    style.paragraph_format.alignment = "center"
+    style.direct_paragraph_format.alignment = None  # 清除当前层的对齐
 for style in editable.styles:
     print(style.name)
 ```
@@ -105,6 +107,10 @@ for style in editable.styles:
   没有该组为 11pt。直接值 getter 仍返回 `None`，读取不会写入 XML。
 - 段落/字符样式的这三项编辑已按 1482 次固定官方观察验证；尚无新增、删除、重命名或
   修改继承关系接口，不提供完整 Style/Font API。表格/列表字体编辑和嵌套 rStyle 修改拒绝。
+- 段落样式的 `paragraph_format.alignment` 沿文档默认和 basedOn 链解析，未声明时为
+  `left`；四种基本对齐的 108 次编辑/保存/重开已有官方固定观察。`direct_paragraph_format`
+  保留当前层的 `None`，可用 `None` 清除；继承 getter 的 setter 拒绝 `None`。
+  字符/列表样式不提供段落格式，表格样式仍拒绝，其他段落属性和嵌套 pStyle 编辑未实现。
 - 读取不改变部件。样式句柄按 ID 读取当前相关部件，部件替换后不会继续编辑旧树。
   编辑启用保存投影，保留内存格式和未涉及的属性；保存重开后的 Run 格式可能按官方
   受测行为变化。重复直接属性在写入前拒绝，保存失败仍保留既有目标文件。
@@ -127,7 +133,7 @@ print(paragraph.effective_paragraph_format.alignment)
 - 段落对齐按 `docDefaults → 段落样式链 → 直接格式` 解析；段落标记字体不错误地应用到文字 Run。
 - 样式循环、缺失父样式、跨类型继承、重复 ID 和非法已支持属性值不会静默忽略。
 - 当前只解析 `w:b`、`w:i`、`w:sz` 与 `w:jc`，不是完整字体或排版解析器。
-  缺少对齐定义时返回 `None`；未定义粗斜体则返回 `False`。普通字号的隐式默认值按
+  未定义对齐时返回 `left`；未定义粗斜体则返回 `False`。普通字号的隐式默认值按
   官方 26.9.0 固定观察解析为 10pt/11pt，不作为复杂文字脚本选择或最终字形尺寸。
 - 编号段落、有显式或默认表格样式的单元格，以及样式定义内嵌套 `rStyle` 暂不提供有效值，
   抛出 `NotImplementedError`。直接格式修改仍可用。主题字体/颜色、条件表格样式和复杂文字的

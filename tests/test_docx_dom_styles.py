@@ -88,7 +88,7 @@ def test_default_styles_docdefaults_and_paragraph_mark_not_applied_to_run(tmp_pa
     run = doc.body.paragraphs[0].runs[0]
     assert run.effective_font.bold is True and run.effective_font.italic is True
     assert run.effective_font.size == 12
-    assert doc.body.paragraphs[0].effective_paragraph_format.alignment is None
+    assert doc.body.paragraphs[0].effective_paragraph_format.alignment == "left"
 
 
 def test_character_style_setter_validates_type_and_effective_values_are_fresh(tmp_path):

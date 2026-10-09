@@ -391,6 +391,61 @@ def verify_style_save_state(root, name="style-save-state-26.9.json"):
     return len(members)
 
 
+def saved_style_alignments(data):
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    document = Document(BytesIO(data))
+    default = document.styles.element
+    for tag in ("docDefaults", "pPrDefault", "pPr", "jc"):
+        default = default.find(qn("w:" + tag)) if default is not None else None
+    value = "left" if default is None else default.get(qn("w:val"))
+    result = {}
+    for name in ("Base", "Derived"):
+        style, chain = document.styles[name], []
+        while style is not None:
+            assert style.style_id not in {item.style_id for item in chain}
+            chain.append(style)
+            style = style.base_style
+        alignment = {"left": "LEFT", "center": "CENTER", "right": "RIGHT", "both": "JUSTIFY"}[value]
+        for style in reversed(chain):
+            if style.paragraph_format.alignment is not None:
+                alignment = style.paragraph_format.alignment.name
+        result[name] = alignment
+    return result
+
+
+def verify_style_paragraph_formats(root):
+    report = json.loads((root / "style-paragraph-format-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    source = (root / report["corpus"]).read_bytes()
+    raw = (root / report["outputs"]).read_bytes()
+    assert digest(source) == report["corpus_sha256"] and digest(raw) == report["outputs_sha256"]
+    generated = dict(runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/style_paragraph_formats.py"))["inputs"]())
+    rows = report["records"]
+    assert len(rows) == 108 and len(generated) == 27
+    assert {(row["input"], row["alignment"]) for row in rows} == {
+        (name, alignment) for name in generated for alignment in ("LEFT", "CENTER", "RIGHT", "JUSTIFY")}
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        assert set(inputs.namelist()) == set(generated)
+        assert set(outputs.namelist()) == {row["output"] for row in rows}
+        for row in rows:
+            data = inputs.read(row["input"])
+            assert digest(data) == row["input_sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[row["input"]])) as expected:
+                assert {key: actual.read(key) for key in actual.namelist()} == {key: expected.read(key) for key in expected.namelist()}
+            assert saved_style_alignments(data) == row["before_edit"]["style_alignment"]
+            assert row["after_edit"]["style_alignment"]["Derived"] == row["alignment"]
+            assert row["after_edit"] == row["after_save_live"] == row["after_reopen"]
+            saved = outputs.read(row["output"])
+            assert digest(saved) == row["output_sha256"]
+            assert saved_style_alignments(saved) == row["after_reopen"]["style_alignment"]
+            assert saved_style_fonts(saved) == row["after_reopen"]["styles"]
+            assert saved_story_formats(saved) == row["after_reopen"]["paragraphs"]
+    return len(rows)
+
+
 def verify_style_font_edits(root):
     report = json.loads((root / "style-font-edits-26.9.json").read_text())
     assert report["version"] == "26.9.0" and report["licensed"] is False
@@ -517,6 +572,7 @@ def verify(root):
     save_states += verify_style_save_state(root, "style-normalization-contexts-26.9.json")
     projections = verify_style_projections(root)
     edits = verify_style_font_edits(root)
+    paragraph_edits = verify_style_paragraph_formats(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -529,6 +585,7 @@ def verify(root):
             "checked_style_save_states": save_states,
             "checked_style_projection_outputs": projections,
             "checked_style_font_edit_outputs": edits,
+            "checked_style_paragraph_edit_outputs": paragraph_edits,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

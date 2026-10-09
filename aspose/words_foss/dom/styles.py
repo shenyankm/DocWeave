@@ -7,6 +7,7 @@ from aspose.words_foss._opc import resolve_target
 from aspose.words_foss.dom.nodes import (
     XMLNS,
     Font,
+    ParagraphFormat,
     W,
     _elements,
     _find,
@@ -86,6 +87,19 @@ class Style:
         self._editable()
         return StyleFont(self, resolved=False)
 
+    @property
+    def paragraph_format(self):
+        if self.type in {"character", "numbering"}:
+            return None
+        self._editable()
+        return StyleParagraphFormat(self)
+
+    @property
+    def direct_paragraph_format(self):
+        if self.paragraph_format is None:
+            return None
+        return StyleParagraphFormat(self, resolved=False)
+
     def _editable(self):
         if self.type not in {"paragraph", "character"}:
             raise NotImplementedError("Editing fonts of table/list styles requires calibration")
@@ -94,11 +108,12 @@ class Style:
 
     def _changed(self):
         element = self._element
-        properties = _child(element, "rPr")
-        if properties is not None:
-            anchor = next((node for node in _elements(element) if node.localName in
-                           {"tblPr", "trPr", "tcPr", "tblStylePr"} and node.namespaceURI == W), None)
-            element.insertBefore(properties, anchor)
+        for name, later in (("pPr", {"rPr", "tblPr", "trPr", "tcPr", "tblStylePr"}),
+                            ("rPr", {"tblPr", "trPr", "tcPr", "tblStylePr"})):
+            properties = _child(element, name)
+            if properties is not None:
+                anchor = next((node for node in _elements(element) if node.localName in later and node.namespaceURI == W), None)
+                element.insertBefore(properties, anchor)
         package = self.owner_document._package
         part = next(name for name, tree in package._trees.items() if tree is element.ownerDocument)
         package._dirty.add(part)
@@ -142,7 +157,43 @@ class StyleFont(Font):
         if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, name)]) > 1:
             raise ValueError("Duplicate style font properties")
         super()._set(name, value)
-        self._node.owner_document._package._style_font_overrides.add((self._node.style_id, name))
+        self._node.owner_document._package._style_property_overrides.add((self._node.style_id, name))
+
+
+class StyleParagraphFormat(ParagraphFormat):
+    """Style alignment; direct values can be cleared without changing inheritance."""
+
+    def __init__(self, style, resolved=True):
+        super().__init__(style)
+        self._resolved = resolved
+
+    def _get(self, name):
+        if not self._resolved or name != "jc":
+            return super()._get(name)
+        resolver = StyleResolver(self._node.owner_document)
+        layers = [resolver._defaults("pPr")] + [_child(style, "pPr") for style in
+                  resolver._chain(self._node.style_id, "paragraph")]
+        return next((element for layer in reversed(layers) if (element := _child(layer, name)) is not None), None)
+
+    @property
+    def alignment(self):
+        value = _read_alignment(self._get("jc"))
+        return value or "left" if self._resolved else value
+
+    @alignment.setter
+    def alignment(self, value):
+        ParagraphFormat.alignment.fset(self, value)
+
+    def _set(self, name, value):
+        if name != "jc":
+            raise NotImplementedError("Nested paragraph style references require calibration")
+        if value is None and self._resolved:
+            raise TypeError("Use direct_paragraph_format to clear style properties")
+        groups = [node for node in _elements(self._node._element) if _is(node, "pPr")]
+        if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, name)]) > 1:
+            raise ValueError("Duplicate style paragraph properties")
+        super()._set(name, value)
+        self._node.owner_document._package._style_property_overrides.add((self._node.style_id, name))
 
 
 def _style_stories(package):
@@ -184,7 +235,7 @@ def serialized_style_payload(package, part_name, *, root=None, extra=None):
             if style is None or (style.getAttributeNS(W, "type") or "paragraph") != kind:
                 raise ValueError("Missing or incompatible style in saved character context")
             base = _child(style, "basedOn")
-            if kind == "character" and package._style_font_overrides:
+            if kind == "character" and package._style_property_overrides:
                 selected.add(identifier)
                 if len(seen) > 1:
                     character_ancestors.add(identifier)
@@ -223,7 +274,7 @@ def serialized_style_payload(package, part_name, *, root=None, extra=None):
     default = _child(_child(_child(root, "docDefaults"), "rPrDefault"), "rPr")
     changed = False
     for key in selected:
-        if (package._style_font_overrides and styles[key].getAttributeNS(W, "type") == "character"
+        if (package._style_property_overrides and styles[key].getAttributeNS(W, "type") == "character"
                 and _child(styles[key], "basedOn") is None and key not in character_ancestors):
             continue
         groups = [node for node in _elements(styles[key]) if _is(node, "rPr")]
@@ -231,7 +282,7 @@ def serialized_style_payload(package, part_name, *, root=None, extra=None):
             raise ValueError("Duplicate root style property groups")
         properties = groups[0] if groups else None
         for name in ("b", "i"):
-            if (key, name) in package._style_font_overrides:
+            if (key, name) in package._style_property_overrides:
                 continue
             elements = [node for node in _elements(properties) if _is(node, name)] if properties is not None else []
             if len(elements) > 1:
@@ -267,6 +318,16 @@ def serialized_style_payload(package, part_name, *, root=None, extra=None):
 
 def _child(node, name):
     return _find(node, name) if node is not None else None
+
+
+def _read_alignment(element):
+    if element is None:
+        return None
+    value = element.getAttributeNS(W, "val")
+    if value not in {"left", "right", "center", "both", "distribute", "start", "end",
+                     "numTab", "highKashida", "mediumKashida", "lowKashida", "thaiDistribute"}:
+        raise ValueError("Invalid OOXML paragraph alignment")
+    return value
 
 
 def _style_toggle(styles, name):
@@ -385,14 +446,11 @@ class StyleResolver:
 
     def paragraph_format(self, paragraph):
         _, layers = self._paragraph_layers(paragraph)
-        alignment = None
+        alignment = "left"
         for layer in layers:
             element = _child(layer, "jc")
             if element is not None:
-                alignment = element.getAttributeNS(W, "val")
-                if alignment not in {"left", "right", "center", "both", "distribute", "start", "end",
-                                     "numTab", "highKashida", "mediumKashida", "lowKashida", "thaiDistribute"}:
-                    raise ValueError("Invalid OOXML paragraph alignment")
+                alignment = _read_alignment(element)
         return EffectiveParagraphFormat(alignment)
 
     def font(self, run):
