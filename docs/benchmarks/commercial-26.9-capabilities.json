@@ -30270,7 +30270,7 @@
         "current_alternative_entrypoint": "DocxDocument ParagraphFormat, Style.paragraph_format and effective_paragraph_format",
         "implementation": "point attributes with twip quantization, direct None clears; native resolved interface rejects None",
         "limits": [
-          "character/logical indents, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
+          "character-based indents, bidi rendering, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
         ],
         "tests": "tests/test_paragraph_dimensions.py"
       },
@@ -30296,6 +30296,13 @@
         "implementation": "finite twip clamping and multiplication overflow sentinel; 54 style/direct edits and saved output observations; unsigned hanging normalized in 10 native outputs and reopened natively",
         "tests": "tests/test_paragraph_dimensions.py",
         "limits": "nonfinite setters, complete canonical API and extreme rendering remain unaligned/unverified",
+        "full_acceptance": false
+      },
+      "logical_indents_evidence": {
+        "file": "paragraph-logical-indents-26.9.json",
+        "implementation": "start/left, end/right and firstLine/hanging conflicts follow same-layer XML attribute order; nearer layers win; setters clear matching aliases; 42 inputs and 168 native edits with save/reopen and LDM mapping",
+        "tests": "tests/test_paragraph_dimensions.py",
+        "limits": "character-based indents, bidi rendering, nonfinite behavior, canonical API and complete paragraph formatting remain incomplete",
         "full_acceptance": false
       }
     },
@@ -30432,7 +30439,7 @@
         "current_alternative_entrypoint": "DocxDocument ParagraphFormat, Style.paragraph_format and effective_paragraph_format",
         "implementation": "point attributes with twip quantization, direct None clears; native resolved interface rejects None",
         "limits": [
-          "character/logical indents, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
+          "character-based indents, bidi rendering, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
         ],
         "tests": "tests/test_paragraph_dimensions.py"
       },
@@ -30458,6 +30465,13 @@
         "implementation": "finite twip clamping and multiplication overflow sentinel; 54 style/direct edits and saved output observations; unsigned hanging normalized in 10 native outputs and reopened natively",
         "tests": "tests/test_paragraph_dimensions.py",
         "limits": "nonfinite setters, complete canonical API and extreme rendering remain unaligned/unverified",
+        "full_acceptance": false
+      },
+      "logical_indents_evidence": {
+        "file": "paragraph-logical-indents-26.9.json",
+        "implementation": "start/left, end/right and firstLine/hanging conflicts follow same-layer XML attribute order; nearer layers win; setters clear matching aliases; 42 inputs and 168 native edits with save/reopen and LDM mapping",
+        "tests": "tests/test_paragraph_dimensions.py",
+        "limits": "character-based indents, bidi rendering, nonfinite behavior, canonical API and complete paragraph formatting remain incomplete",
         "full_acceptance": false
       }
     },
@@ -30604,7 +30618,7 @@
         "current_alternative_entrypoint": "DocxDocument ParagraphFormat, Style.paragraph_format and effective_paragraph_format",
         "implementation": "point attributes with twip quantization, direct None clears; native resolved interface rejects None",
         "limits": [
-          "character/logical indents, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
+          "character-based indents, bidi rendering, relative spacing, nonfinite native behavior, canonical API and full formatting remain incomplete"
         ],
         "tests": "tests/test_paragraph_dimensions.py"
       },
@@ -30630,6 +30644,13 @@
         "implementation": "finite twip clamping and multiplication overflow sentinel; 54 style/direct edits and saved output observations; unsigned hanging normalized in 10 native outputs and reopened natively",
         "tests": "tests/test_paragraph_dimensions.py",
         "limits": "nonfinite setters, complete canonical API and extreme rendering remain unaligned/unverified",
+        "full_acceptance": false
+      },
+      "logical_indents_evidence": {
+        "file": "paragraph-logical-indents-26.9.json",
+        "implementation": "start/left, end/right and firstLine/hanging conflicts follow same-layer XML attribute order; nearer layers win; setters clear matching aliases; 42 inputs and 168 native edits with save/reopen and LDM mapping",
+        "tests": "tests/test_paragraph_dimensions.py",
+        "limits": "character-based indents, bidi rendering, nonfinite behavior, canonical API and complete paragraph formatting remain incomplete",
         "full_acceptance": false
       }
     },

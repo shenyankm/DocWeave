@@ -304,18 +304,15 @@ class ParagraphFormatBuilder:
         ind = pPr.find(f"{W_NS}ind")
         if ind is None:
             return
-        left = read_twip(ind, "left")
-        if left is not None:
-            pf.left_indent = left
-        right = read_twip(ind, "right")
-        if right is not None:
-            pf.right_indent = right
-        first_line = read_twip(ind, "firstLine")
-        hanging = read_twip(ind, "hanging")
-        if hanging is not None:
-            pf.first_line_indent = -hanging
-        elif first_line is not None:
-            pf.first_line_indent = first_line
+        dimensions = {f"{W_NS}{name}": target for name, target in
+                      (("left", "left_indent"), ("start", "left_indent"),
+                       ("right", "right_indent"), ("end", "right_indent"),
+                       ("firstLine", "first_line_indent"), ("hanging", "first_line_indent"))}
+        for attribute in ind.attrib:
+            if attribute in dimensions:
+                value = read_twip(ind, attribute[len(W_NS):])
+                if value is not None:
+                    setattr(pf, dimensions[attribute], -value if attribute == f"{W_NS}hanging" else value)
 
     @staticmethod
     def _apply_spacing(pPr: ET.Element, pf: ldm.ParagraphFormat) -> None:

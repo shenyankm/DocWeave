@@ -14,6 +14,7 @@ BENCHMARKS = ROOT / "docs/benchmarks"
 REPORT = json.loads((BENCHMARKS / "paragraph-dimensions-26.9.json").read_text())
 LIMITS = json.loads((BENCHMARKS / "paragraph-spacing-limits-26.9.json").read_text())
 INDENTS = json.loads((BENCHMARKS / "paragraph-indent-limits-26.9.json").read_text())
+LOGICAL = json.loads((BENCHMARKS / "paragraph-logical-indents-26.9.json").read_text())
 PROPERTIES = ("left_indent", "right_indent", "first_line_indent", "space_before", "space_after")
 
 
@@ -33,9 +34,9 @@ def load(name, report=REPORT):
         return DocxDocument(BytesIO(archive.read(name)))
 
 
-@pytest.mark.parametrize("row", REPORT["records"] + LIMITS["records"] + INDENTS["records"], ids=lambda row: f'{row["input"]}-{row["target"]}-{row["value"]}')
+@pytest.mark.parametrize("row", REPORT["records"] + LIMITS["records"] + INDENTS["records"] + LOGICAL["records"], ids=lambda row: f'{row["input"]}-{row["target"]}-{row["value"]}')
 def test_dimensions_match_native_edit_and_reopen(row):
-    report = INDENTS if row in INDENTS["records"] else LIMITS if row in LIMITS["records"] else REPORT
+    report = LOGICAL if row in LOGICAL["records"] else INDENTS if row in INDENTS["records"] else LIMITS if row in LIMITS["records"] else REPORT
     document = load(row["input"], report)
     assert snapshot(document) == row["before_edit"]
     before = document.to_bytes()
@@ -111,7 +112,7 @@ def with_direct_properties(properties):
     return DocxDocument(BytesIO(output.getvalue()))
 
 
-def test_hanging_precedes_firstline_and_edits_keep_sibling_attributes():
+def test_later_hanging_overrides_firstline_and_edits_keep_sibling_attributes():
     document = with_direct_properties('<w:ind w:firstLine="240" w:hanging="120" w:left="80"/>')
     p = paragraph(document)
     assert p.paragraph_format.first_line_indent == p.effective_paragraph_format.first_line_indent == -6
@@ -170,3 +171,38 @@ def test_dimension_style_edit_reaches_native_pdf_geometry(row):
     with ZipFile(BENCHMARKS / RENDER_REPORT["commercial_outputs"]) as archive:
         reference = archive.read(row["output"])
     assert max(probe["ink_difference"](reference, raw)) <= 0.01
+
+
+@pytest.mark.parametrize("prop,alias", [("left_indent", "start"), ("right_indent", "end")])
+@pytest.mark.parametrize("chars", [False, True])
+def test_logical_alias_edits_and_clear_preserve_unrelated_attributes(prop, alias, chars):
+    with ZipFile(BENCHMARKS / LOGICAL["corpus"]) as archive:
+        raw = archive.read(f"{prop}/0-1.docx")
+    if chars:
+        with ZipFile(BytesIO(raw)) as package:
+            parts = {name: package.read(name) for name in package.namelist()}
+        parts["word/document.xml"] = parts["word/document.xml"].replace(f'w:{alias}="600"'.encode(), f'w:{alias}Chars="100"'.encode())
+        output = BytesIO()
+        with ZipFile(output, "w") as package:
+            for name, data in parts.items():
+                package.writestr(name, data)
+        raw = output.getvalue()
+    document = DocxDocument(BytesIO(raw))
+    node = paragraph(document)
+    if chars:
+        before = document.to_bytes()
+        with pytest.raises(NotImplementedError):
+            getattr(node.paragraph_format, prop)
+        with pytest.raises(NotImplementedError):
+            _ = node.effective_paragraph_format
+        assert document.to_bytes() == before
+    else:
+        assert getattr(node.paragraph_format, prop) == 10.0
+    setattr(node.paragraph_format, prop, 12.375)
+    assert getattr(node.paragraph_format, prop) == 12.4
+    assert f'w:{alias}=' not in document.part_xml("word/document.xml")
+    assert f'w:{alias}Chars=' not in document.part_xml("word/document.xml")
+    assert '<w:bidi w:val="0"' in document.part_xml("word/document.xml")
+    setattr(node.paragraph_format, prop, None)
+    assert getattr(node.paragraph_format, prop) is None
+    assert snapshot(DocxDocument(BytesIO(document.to_bytes()))) == snapshot(document)

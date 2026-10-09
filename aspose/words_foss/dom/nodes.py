@@ -712,23 +712,31 @@ DIMENSION_PROPERTIES = {"left_indent": ("ind", "left"), "right_indent": ("ind", 
                         "space_before": ("spacing", "before"), "space_after": ("spacing", "after")}
 
 
+INDENT_ALIASES = {"left": "start", "right": "end", "firstLine": "hanging"}
+
+
 def _read_dimension(element, prop):
     if element is None:
         return None
     _, attribute = DIMENSION_PROPERTIES[prop]
-    relative = ("firstLineChars", "hangingChars") if prop == "first_line_indent" else (attribute + "Chars",)
+    alias = INDENT_ALIASES.get(attribute)
+    relative = ("firstLineChars", "hangingChars") if prop == "first_line_indent" else (attribute + "Chars",) + ((alias + "Chars",) if alias else ())
     if any(element.hasAttributeNS(W, attr) for attr in relative):
         raise NotImplementedError("Character-based paragraph indents require font-aware resolution")
-    hanging = prop == "first_line_indent" and element.hasAttributeNS(W, "hanging")
-    if hanging:
-        attribute = "hanging"
+    if alias:
+        # Native conflict resolution follows XML attribute order within each layer.
+        candidates = [element.attributes.item(index).localName for index in range(element.attributes.length)
+                      if element.attributes.item(index).namespaceURI == W and
+                      element.attributes.item(index).localName in {attribute, alias}]
+        if candidates:
+            attribute = candidates[-1]
     if not element.hasAttributeNS(W, attribute):
         return None
     try:
         value = int(element.getAttributeNS(W, attribute)) / 20
     except ValueError as exc:
         raise ValueError("Paragraph dimensions require integer twips") from exc
-    return -value if hanging else value
+    return -value if attribute == "hanging" else value
 
 
 class ParagraphFormat(_Format):
@@ -745,7 +753,8 @@ class ParagraphFormat(_Format):
 
     def _set_dimension(self, prop, value):
         tag, attribute = DIMENSION_PROPERTIES[prop]
-        remove = ("firstLine", "hanging", "firstLineChars", "hangingChars") if prop == "first_line_indent" else (attribute + "Chars",)
+        alias = INDENT_ALIASES.get(attribute)
+        remove = ("firstLine", "hanging", "firstLineChars", "hangingChars") if prop == "first_line_indent" else (attribute + "Chars",) + ((alias, alias + "Chars") if alias else ())
         if value is not None:
             if isinstance(value, bool) or not isinstance(value, (int, float)):
                 raise TypeError("Paragraph dimensions require a number or None for an unset direct value")

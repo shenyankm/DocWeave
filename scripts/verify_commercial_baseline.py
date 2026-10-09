@@ -163,7 +163,21 @@ def saved_dimensions(data):
         group = defaults.find(qn("w:pPrDefault"))
         if group is not None and group.find(qn("w:pPr")) is not None:
             element.append(deepcopy(group.find(qn("w:pPr"))))
-    initial = {prop: (getattr(ParagraphFormat(element), prop).pt if getattr(ParagraphFormat(element), prop) is not None else 0.0) for prop in props}
+    def point(fmt, prop):
+        alias = {"left_indent": "start", "right_indent": "end", "first_line_indent": "hanging"}.get(prop)
+        ppr = fmt._element.find(qn("w:pPr"))
+        ind = ppr.find(qn("w:ind")) if ppr is not None else None
+        if alias and ind is not None:
+            physical = {"start": "left", "end": "right", "hanging": "firstLine"}[alias]
+            values = [(attribute, value) for attribute, value in ind.attrib.items()
+                      if attribute in {qn("w:" + alias), qn("w:" + physical)}]
+            if values:
+                attribute, value = values[-1]
+                return int(value) / (-20 if attribute == qn("w:hanging") else 20)
+        value = getattr(fmt, prop)
+        return value.pt if value is not None else None
+
+    initial = {prop: point(ParagraphFormat(element), prop) or 0.0 for prop in props}
 
     def resolved(style, direct=None):
         chain = []
@@ -174,9 +188,9 @@ def saved_dimensions(data):
         result = dict(initial)
         for fmt in [item.paragraph_format for item in reversed(chain)] + ([direct] if direct is not None else []):
             for prop in props:
-                value = getattr(fmt, prop)
+                value = point(fmt, prop)
                 if value is not None:
-                    result[prop] = value.pt
+                    result[prop] = value
         return result
 
     paragraph = next(p for p in document.paragraphs if "IMPORT" in p.text)
@@ -185,14 +199,15 @@ def saved_dimensions(data):
 
 
 def verify_paragraph_dimensions(root, filename="paragraph-dimensions-26.9.json"):
-    assert filename in {"paragraph-dimensions-26.9.json", "paragraph-spacing-limits-26.9.json", "paragraph-indent-limits-26.9.json"}
+    assert filename in {"paragraph-dimensions-26.9.json", "paragraph-spacing-limits-26.9.json", "paragraph-indent-limits-26.9.json", "paragraph-logical-indents-26.9.json"}
+    logical = filename == "paragraph-logical-indents-26.9.json"
     limits = filename == "paragraph-spacing-limits-26.9.json"
     indents = filename == "paragraph-indent-limits-26.9.json"
     report = json.loads((root / filename).read_text())
     assert report["version"] == "26.9.0" and report["licensed"] is False
-    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes" / ("paragraph_indent_limits.py" if indents else "paragraph_spacing_limits.py" if limits else "paragraph_dimensions.py")))
+    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes" / ("paragraph_logical_indents.py" if logical else "paragraph_indent_limits.py" if indents else "paragraph_spacing_limits.py" if limits else "paragraph_dimensions.py")))
     generated = {name: (prop, data) for name, prop, data in probe["inputs"]()}
-    assert (len(generated), len(report["records"]), len(report["setter_errors"])) == ((3, 54, 18) if indents else (2, 32, 12) if limits else (45, 360, 270))
+    assert (len(generated), len(report["records"]), len(report["setter_errors"])) == ((42, 168, 252) if logical else (3, 54, 18) if indents else (2, 32, 12) if limits else (45, 360, 270))
     archives = {}
     for key in ("corpus", "outputs") + (("normalized_outputs",) if indents else ()):
         raw = (root / report[key]).read_bytes()
@@ -883,6 +898,7 @@ def verify(root):
     dimensions = verify_paragraph_dimensions(root)
     spacing_limits = verify_paragraph_dimensions(root, "paragraph-spacing-limits-26.9.json")
     indent_limits = verify_paragraph_dimensions(root, "paragraph-indent-limits-26.9.json")
+    logical_indents = verify_paragraph_dimensions(root, "paragraph-logical-indents-26.9.json")
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
@@ -904,6 +920,7 @@ def verify(root):
             "checked_paragraph_dimension_edits": dimensions,
             "checked_paragraph_spacing_limits": spacing_limits,
             "checked_paragraph_indent_limits": indent_limits,
+            "checked_paragraph_logical_indents": logical_indents,
             "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
