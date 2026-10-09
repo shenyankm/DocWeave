@@ -1,4 +1,4 @@
-"""Read-only style resolution for supported XML properties, with explicit context limits."""
+"""Editable style fonts and resolution for supported XML properties."""
 
 from dataclasses import dataclass
 
@@ -6,6 +6,7 @@ from aspose.words_foss import _io
 from aspose.words_foss._opc import resolve_target
 from aspose.words_foss.dom.nodes import (
     XMLNS,
+    Font,
     W,
     _elements,
     _find,
@@ -13,6 +14,126 @@ from aspose.words_foss.dom.nodes import (
     _onoff,
     _read_size,
 )
+
+
+class StyleCollection:
+    """Styles in XML order; lookup validates unique IDs in the related part."""
+
+    def __init__(self, document):
+        self.document = document
+
+    def __iter__(self):
+        return iter(Style(self.document, key) for key in StyleResolver(self.document).styles)
+
+    def __len__(self):
+        return len(StyleResolver(self.document).styles)
+
+    def get_by_id(self, identifier):
+        return Style(self.document, identifier) if identifier in StyleResolver(self.document).styles else None
+
+    def get_by_name(self, name):
+        matches = [style for style in self if style.name == name]
+        if len(matches) > 1:
+            raise ValueError("Ambiguous style name")
+        return matches[0] if matches else None
+
+
+class Style:
+    """Live handle to a style ID, retaining unrelated style XML when editing."""
+
+    def __init__(self, document, identifier):
+        self._document = document
+        self._identifier = identifier
+
+    @property
+    def document(self):
+        return self._document
+
+    @property
+    def owner_document(self):
+        return self._document
+
+    @property
+    def style_id(self):
+        return self._identifier
+
+    @property
+    def _element(self):
+        element = StyleResolver(self.owner_document).styles.get(self.style_id)
+        if element is None:
+            raise ValueError("Style no longer exists")
+        return element
+
+    @property
+    def name(self):
+        element = _child(self._element, "name")
+        return element.getAttributeNS(W, "val") if element is not None else self.style_id
+
+    @property
+    def type(self):
+        return StyleResolver._kind(self._element)
+
+    @property
+    def font(self):
+        if self.type == "numbering":
+            return None
+        self._editable()
+        return StyleFont(self)
+
+    @property
+    def direct_font(self):
+        """Direct values; None means unset and assigning None removes a property."""
+        self._editable()
+        return StyleFont(self, resolved=False)
+
+    def _editable(self):
+        if self.type not in {"paragraph", "character"}:
+            raise NotImplementedError("Editing fonts of table/list styles requires calibration")
+        resolver = StyleResolver(self.owner_document)
+        resolver._chain(self.style_id, self.type)
+
+    def _changed(self):
+        element = self._element
+        properties = _child(element, "rPr")
+        if properties is not None:
+            anchor = next((node for node in _elements(element) if node.localName in
+                           {"tblPr", "trPr", "tcPr", "tblStylePr"} and node.namespaceURI == W), None)
+            element.insertBefore(properties, anchor)
+        package = self.owner_document._package
+        part = next(name for name, tree in package._trees.items() if tree is element.ownerDocument)
+        package._dirty.add(part)
+        package._style_projection_part = part
+
+
+class StyleFont(Font):
+    """Nearest inherited b/i/sz getters; setters write this style's own layer."""
+
+    def __init__(self, style, resolved=True):
+        super().__init__(style)
+        self._resolved = resolved
+
+    def _get(self, name):
+        if not self._resolved or name not in {"b", "i", "sz"}:
+            return super()._get(name)
+        resolver = StyleResolver(self._node.owner_document)
+        layers = [resolver._defaults("rPr")] + [_child(style, "rPr") for style in
+                  resolver._chain(self._node.style_id, self._node.type)]
+        return next((element for layer in reversed(layers) if (element := _child(layer, name)) is not None), None)
+
+    def _toggle(self, name):
+        value = super()._toggle(name)
+        return bool(value) if self._resolved else value
+
+    def _set(self, name, value):
+        if name == "rStyle":
+            raise NotImplementedError("Nested character references in styles require calibration")
+        if value is None and self._resolved:
+            raise TypeError("Use direct_font to clear inherited style properties")
+        groups = [node for node in _elements(self._node._element) if _is(node, "rPr")]
+        if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, name)]) > 1:
+            raise ValueError("Duplicate style font properties")
+        super()._set(name, value)
+        self._node.owner_document._package._style_font_overrides.add((self._node.style_id, name))
 
 
 def _style_stories(package):
@@ -42,6 +163,7 @@ def serialized_style_payload(package, part_name, *, root=None, extra=None):
     root = tree.documentElement
     styles = {node.getAttributeNS(W, "styleId"): node for node in _elements(root) if _is(node, "style")}
     selected = set()
+    character_ancestors = set()
 
     def select(identifier, kind):
         seen = set()
@@ -53,6 +175,10 @@ def serialized_style_payload(package, part_name, *, root=None, extra=None):
             if style is None or (style.getAttributeNS(W, "type") or "paragraph") != kind:
                 raise ValueError("Missing or incompatible style in saved character context")
             base = _child(style, "basedOn")
+            if kind == "character" and package._style_font_overrides:
+                selected.add(identifier)
+                if len(seen) > 1:
+                    character_ancestors.add(identifier)
             if base is None:
                 selected.add(identifier)
                 return
@@ -88,16 +214,29 @@ def serialized_style_payload(package, part_name, *, root=None, extra=None):
     default = _child(_child(_child(root, "docDefaults"), "rPrDefault"), "rPr")
     changed = False
     for key in selected:
+        if (package._style_font_overrides and styles[key].getAttributeNS(W, "type") == "character"
+                and _child(styles[key], "basedOn") is None and key not in character_ancestors):
+            continue
         groups = [node for node in _elements(styles[key]) if _is(node, "rPr")]
         if len(groups) > 1:
             raise ValueError("Duplicate root style property groups")
         properties = groups[0] if groups else None
         for name in ("b", "i"):
+            if (key, name) in package._style_font_overrides:
+                continue
             elements = [node for node in _elements(properties) if _is(node, name)] if properties is not None else []
             if len(elements) > 1:
                 raise ValueError("Duplicate root style toggle")
             element = elements[0] if elements else None
             default_element = _child(default, name)
+            base = _child(styles[key], "basedOn")
+            while base is not None:
+                ancestor = styles[base.getAttributeNS(W, "val")]
+                inherited = _child(_child(ancestor, "rPr"), name)
+                if inherited is not None:
+                    default_element = inherited
+                    break
+                base = _child(ancestor, "basedOn")
             if element is None or _onoff(element) != _onoff(default_element):
                 continue
             for candidate in (element, default_element):

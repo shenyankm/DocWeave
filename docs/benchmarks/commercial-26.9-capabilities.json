@@ -11176,7 +11176,15 @@
       "dependencies": [
         "aspose.words.DocumentBase.styles"
       ],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "style_font_edit_evidence": {
+        "file": "style-font-edits-26.9.json",
+        "scope": "1482 owned Derived paragraph/character style b/i/size edits; before-edit, edited, saved-live, reopened state",
+        "current_alternative_entrypoint": "DocxDocument.styles",
+        "implementation": "partial_alternative_dom_api",
+        "tests": "tests/test_style_font_edits.py",
+        "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
+      }
     },
     {
       "id": "aspose.words.Document.theme",
@@ -16105,7 +16113,15 @@
         "scope": "745 plain-DOCX b/i getter observations; saved/rendered formatting and full Font API unverified",
         "current_alternative_entrypoint": "DocxDocument Run.effective_font.bold"
       },
-      "baseline_behavior": "partially_observed; canonical Font getter alignment remains incomplete"
+      "baseline_behavior": "partially_observed; canonical Font getter alignment remains incomplete",
+      "style_font_edit_evidence": {
+        "file": "style-font-edits-26.9.json",
+        "scope": "1482 owned Derived paragraph/character style b/i/size edits; before-edit, edited, saved-live, reopened state",
+        "current_alternative_entrypoint": "DocxDocument Style.font.bold",
+        "implementation": "partial_alternative_dom_api",
+        "tests": "tests/test_style_font_edits.py",
+        "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
+      }
     },
     {
       "id": "aspose.words.Font.bold_bi",
@@ -16262,7 +16278,15 @@
         "scope": "745 plain-DOCX b/i getter observations; saved/rendered formatting and full Font API unverified",
         "current_alternative_entrypoint": "DocxDocument Run.effective_font.italic"
       },
-      "baseline_behavior": "partially_observed; canonical Font getter alignment remains incomplete"
+      "baseline_behavior": "partially_observed; canonical Font getter alignment remains incomplete",
+      "style_font_edit_evidence": {
+        "file": "style-font-edits-26.9.json",
+        "scope": "1482 owned Derived paragraph/character style b/i/size edits; before-edit, edited, saved-live, reopened state",
+        "current_alternative_entrypoint": "DocxDocument Style.font.italic",
+        "implementation": "partial_alternative_dom_api",
+        "tests": "tests/test_style_font_edits.py",
+        "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
+      }
     },
     {
       "id": "aspose.words.Font.italic_bi",
@@ -16457,6 +16481,14 @@
         "file": "font-defaults-26.9.json",
         "scope": "five owned implicit-size Run/Style getter observations; full default-font semantics unverified",
         "delivery": "implicit size migration guarded; canonical default-font mapping remains incomplete"
+      },
+      "style_font_edit_evidence": {
+        "file": "style-font-edits-26.9.json",
+        "scope": "1482 owned Derived paragraph/character style b/i/size edits; before-edit, edited, saved-live, reopened state",
+        "current_alternative_entrypoint": "DocxDocument Style.font.size",
+        "implementation": "partial_alternative_dom_api",
+        "tests": "tests/test_style_font_edits.py",
+        "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
       }
     },
     {
@@ -37271,6 +37303,14 @@
         "file": "style-normalization-contexts-26.9.json",
         "scope": "36 used/unused body/header/footer contexts; save preserves live state; only referenced root b/i toggles projected",
         "delivery": "alternate DocxDocument serialization implemented; canonical Style API and other formatting remain incomplete"
+      },
+      "style_font_edit_evidence": {
+        "file": "style-font-edits-26.9.json",
+        "scope": "1482 owned Derived paragraph/character style b/i/size edits; before-edit, edited, saved-live, reopened state",
+        "current_alternative_entrypoint": "DocxDocument.styles.get_by_name(...).font",
+        "implementation": "partial_alternative_dom_api",
+        "tests": "tests/test_style_font_edits.py",
+        "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
       }
     },
     {
@@ -37551,7 +37591,15 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "style_font_edit_evidence": {
+        "file": "style-font-edits-26.9.json",
+        "scope": "1482 owned Derived paragraph/character style b/i/size edits; before-edit, edited, saved-live, reopened state",
+        "current_alternative_entrypoint": "DocxDocument.styles.get_by_name",
+        "implementation": "partial_alternative_dom_api",
+        "tests": "tests/test_style_font_edits.py",
+        "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
+      }
     },
     {
       "id": "aspose.words.StyleCollection.get_by_style_identifier",

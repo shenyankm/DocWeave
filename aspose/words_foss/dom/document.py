@@ -48,6 +48,12 @@ class DocxDocument:
         return self._wrap("word/document.xml", _find(root, "body"))
 
     @property
+    def styles(self):
+        from aspose.words_foss.dom.styles import StyleCollection
+
+        return StyleCollection(self)
+
+    @property
     def part_names(self):
         return self._package.part_names
 

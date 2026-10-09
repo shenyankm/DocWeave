@@ -44,6 +44,7 @@ class DocxPackage:
         self._trees = {}
         self._dirty = set()
         self._style_projection_part = None
+        self._style_font_overrides = set()
         if is_flat_opc(data):
             data = decode(data)
         with ZipFile(BytesIO(data)) as archive:

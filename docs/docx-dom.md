@@ -83,6 +83,31 @@ paragraph.paragraph_format.alignment = None
 character style，`paragraph.paragraph_format.style_id` 只接受 paragraph style；两者支持 `None` 移除引用。
 不把样式继承结果物化为直接格式，也不自动创建样式。
 
+### 样式集合与字体编辑
+
+```python
+style = editable.styles.get_by_name("Heading 1")
+if style is not None:
+    print(style.style_id, style.name, style.type)
+    print(style.font.bold, style.font.italic, style.font.size)
+    style.font.bold = True
+    style.font.size = 17.5
+    style.direct_font.italic = None  # 清除该层，恢复基样式/文档默认值
+for style in editable.styles:
+    print(style.name)
+```
+
+- 集合按实际 styles XML 顺序遍历，支持 `len()`、`get_by_id()` 和精确名称
+  `get_by_name()`；未找到返回 `None`，同名歧义抛出 `ValueError`。不自动创建内建样式。
+- `Style.font` 读取最近的样式层及文档默认 b/i/sz，设置写入当前层；`direct_font`
+  读取当前层，未设置返回 `None`，可赋 `None` 清除。`font` 的这三项 setter 拒绝 `None`。
+  字号仍限正的半点数；未声明应用默认字号时 getter 返回 `None`，该隐式默认差距尚未补齐。
+- 段落/字符样式的这三项编辑已按 1482 次固定官方观察验证；尚无新增、删除、重命名或
+  修改继承关系接口，不提供完整 Style/Font API。表格/列表字体编辑和嵌套 rStyle 修改拒绝。
+- 读取不改变部件。样式句柄按 ID 读取当前相关部件，部件替换后不会继续编辑旧树。
+  编辑启用保存投影，保留内存格式和未涉及的属性；保存重开后的 Run 格式可能按官方
+  受测行为变化。重复直接属性在写入前拒绝，保存失败仍保留既有目标文件。
+
 ### 有效格式读取
 
 ```python

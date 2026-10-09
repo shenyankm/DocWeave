@@ -16,10 +16,32 @@ from aspose.words_foss.dom.nodes import (
     UnknownNode,
 )
 from aspose.words_foss.dom.ranges import TextRange
-from aspose.words_foss.dom.styles import EffectiveFont, EffectiveParagraphFormat
+from aspose.words_foss.dom.styles import (
+    EffectiveFont,
+    EffectiveParagraphFormat,
+    Style,
+    StyleCollection,
+    StyleFont,
+)
 
 __all__ = [
-    "Body", "Cell", "DocxDocument", "EffectiveFont", "EffectiveParagraphFormat", "Font",
-    "HeaderFooter", "Hyperlink", "Node", "Paragraph", "ParagraphFormat", "Row", "Run", "Table",
-    "TextRange", "UnknownNode",
+    "Body",
+    "Cell",
+    "DocxDocument",
+    "EffectiveFont",
+    "EffectiveParagraphFormat",
+    "Font",
+    "HeaderFooter",
+    "Hyperlink",
+    "Node",
+    "Paragraph",
+    "ParagraphFormat",
+    "Row",
+    "Run",
+    "Style",
+    "StyleCollection",
+    "StyleFont",
+    "Table",
+    "TextRange",
+    "UnknownNode",
 ]
