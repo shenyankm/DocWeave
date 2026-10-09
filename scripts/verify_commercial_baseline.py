@@ -370,6 +370,37 @@ def verify_style_save_state(root, name="style-save-state-26.9.json"):
     return len(members)
 
 
+def verify_style_font_edits(root):
+    report = json.loads((root / "style-font-edits-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    source = (root / "corpus" / report["corpus"]).read_bytes()
+    raw = (root / "corpus/style-font-edits-26.9.zip").read_bytes()
+    assert digest(source) == report["corpus_sha256"]
+    assert digest(raw) == report["outputs_sha256"]
+    rows = report["records"]
+    assert len(rows) == 1482
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        expected = {(name, prop, value) for name in inputs.namelist() if name.endswith("/source.docx")
+                    for prop, values in (("bold", (False, True)), ("italic", (False, True)), ("size", (10, 17.5)))
+                    for value in values}
+        assert {(row["input"], row["property"], row["value"]) for row in rows} == expected
+        assert set(outputs.namelist()) == {row["output"] for row in rows}
+        for row in rows:
+            assert row["style"] == "Derived"
+            assert digest(inputs.read(row["input"])) == row["input_sha256"]
+            assert row["before_edit"]["styles"] == saved_style_fonts(inputs.read(row["input"]))
+            assert row["after_edit"]["styles"]["Derived"][row["property"]] == row["value"]
+            assert row["after_edit"] == row["after_save_live"]
+            data = outputs.read(row["output"])
+            assert digest(data) == row["output_sha256"]
+            assert saved_story_formats(data) == row["after_reopen"]["paragraphs"]
+            assert saved_style_fonts(data) == row["after_reopen"]["styles"]
+            assert row["after_edit"]["styles"] == row["after_reopen"]["styles"]
+    assert sum(row["after_edit"] != row["after_reopen"] for row in rows) == 36
+    return len(rows)
+
+
 def verify_style_projections(root):
     report = json.loads((root / "style-import-projections.json").read_text())
     assert report["baseline_version"] == "26.9.0"
@@ -464,6 +495,7 @@ def verify(root):
     save_states += verify_style_save_state(root, "character-style-save-state-26.9.json")
     save_states += verify_style_save_state(root, "style-normalization-contexts-26.9.json")
     projections = verify_style_projections(root)
+    edits = verify_style_font_edits(root)
     defaults = verify_font_defaults(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
@@ -473,6 +505,7 @@ def verify(root):
             "checked_style_roundtrip_outputs": roundtrips,
             "checked_style_save_states": save_states,
             "checked_style_projection_outputs": projections,
+            "checked_style_font_edit_outputs": edits,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

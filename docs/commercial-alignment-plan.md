@@ -520,3 +520,20 @@ XML 副本中省略实际引用的根段落/字符样式中与 docDefaults 相�
 重开，以及删除字符样式引用使根属性重新出现后的实际部件大小。超限保存保留已有
 目标文件及内存编辑内容。最终安装包在 checkout 外专项 **553 passed**（20.04 秒），
 示例 **31 passed**（5.82 秒）；完整套件 **3792 passed、2 skipped**（361.90 秒）。
+
+### 可编辑 Style.font 的固定行为基准
+
+当前 `DocxDocument` 尚无公共 styles 集合和可编辑 `Style.font`，这仍是 DOM 能力缺口。
+官方接口说明见 [Style.font](https://reference.aspose.com/words/python-net/aspose.words/style/font/)；
+本批先使用固定 26.9.0 试用包、Mac/Python 3.13，从既有 247 对样式冲突输入的 source
+分别设置 Derived 样式的 bold/italic（False、True）和 size（10、17.5），记录 **1482** 次
+编辑前、编辑后、保存后同对象及重新加载的自有 Run/Style 状态。
+
+结果冻结为 `benchmarks/style-font-edits-26.9.json` 和对应输出 ZIP，生成器为
+`probes/style_font_edits.py`。1482 次 setter 的即时 getter 均得到指定值，保存均不改变
+内存状态，Style getter 重开后均保持一致；其中 **36** 次 Run 状态在重开后变化。
+因此样式编辑实现需要覆盖独立编辑触发的保存投影，不能仅依赖跨文档导入路径。
+复验器检查输入/输出 SHA、完整矩阵、独立 python-docx 样式继承及自有 Run 格式，并
+明确保持功能、格式和渲染的全量验收为未完成。该批是行为证据，尚未实现公共接口。
+固定证据复验器通过；证据测试 **25 passed**（22.99 秒），包含 Windows 文本换行后
+复验及伪造 setter 结果的拒绝测试。生产代码未改动，本批未重复运行完整套件或示例。
