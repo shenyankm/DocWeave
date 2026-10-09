@@ -1,0 +1,16 @@
+{
+  "scope": "standard footnotes part paths; both kinds, inline order and body content, no layout equivalence claim",
+  "mammoth_html": "<p>body<sup><a href=\"#footnote-7\" id=\"footnote-ref-7\">[1]</a></sup><sup><a href=\"#endnote-9\" id=\"endnote-ref-9\">[2]</a></sup></p><p>second</p><ol><li id=\"footnote-7\"><p>footnote text <a href=\"#footnote-ref-7\">↑</a></p></li><li id=\"endnote-9\"><p>endnote text <a href=\"#endnote-ref-9\">↑</a></p></li></ol>",
+  "own_markdown": "body[^note1][^note2]\n\nsecond\n\n[^note1]: footnote text\n\n[^note2]: endnote text\n",
+  "pandoc_markdown": "body[^1][^2]\n\nsecond\n\n[^1]: footnote text\n\n[^2]: endnote text\n",
+  "own_markdown_parsed_by_pandoc_html": "<p>body<a href=\"#fn1\" class=\"footnote-ref\" id=\"fnref1\"\nrole=\"doc-noteref\"><sup>1</sup></a><a href=\"#fn2\" class=\"footnote-ref\"\nid=\"fnref2\" role=\"doc-noteref\"><sup>2</sup></a></p>\n<p>second</p>\n<section id=\"footnotes\" class=\"footnotes footnotes-end-of-document\"\nrole=\"doc-endnotes\">\n<hr />\n<ol>\n<li id=\"fn1\"><p>footnote text<a href=\"#fnref1\" class=\"footnote-back\"\nrole=\"doc-backlink\">↩︎</a></p></li>\n<li id=\"fn2\"><p>endnote text<a href=\"#fnref2\" class=\"footnote-back\"\nrole=\"doc-backlink\">↩︎</a></p></li>\n</ol>\n</section>\n",
+  "nonstandard_encoded_path_mammoth_error": "KeyError ('footnote', '7')",
+  "pandoc_mixed_run_markdown": "[^1]\n\nsecond\n\n[^1]: footnote text\n",
+  "pandoc_mixed_run_loss_observed": true,
+  "status": "standard_separate_runs_passed_with_mixed_run_difference",
+  "verified_versions": {
+    "mammoth": "1.13.0",
+    "pypandoc_binary": "1.17",
+    "pandoc": "3.8.3"
+  }
+}

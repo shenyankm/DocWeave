@@ -74,6 +74,18 @@ DocWeave 是独立维护的 [Aspose.Words FOSS for Python](https://github.com/as
 受支持的内联图片可嵌入 DOCX/Markdown 或渲染到 PDF；Markdown 未指定外置图片目录时使用 base64。
 TXT 不保留图片。复杂定位、字段、脚注/尾注、修订以及按分节区分的页眉页脚，即使能提取内容，也仍有保真限制。
 
+启用 `PdfSaveOptions.export_document_structure` 可输出表格、行、单元格和段落的逻辑层级，
+保留嵌套关系、合并单元格跨度及图片替代文本；结构信息可能增加 PDF 体积，不代表完整 PDF/UA 合规。
+重复表头副本标记为 `Artifact`，首次表头保留语义；普通文本提取器可能仍返回视觉副本。
+页眉页脚标记为分页 `Artifact`，其中的显式分页和 keep-together 不推进正文页面；
+超高页边内容仍可能超出页面，不承诺自动缩放或 Word 一致布局。
+页边书签和大纲只登记首次可见位置，后续页面的重复绘制不改变导航目标。
+跨页正文段落、标题、引用和代码块复用逻辑节点，页内片段保留各页引用。
+正文及普通表格单元格列表输出 `L → LI → Lbl/LBody`，嵌套列表归到所属项正文。
+正文列表的续行、换页和换栏保留正文缩进，编号在必要的区域推进后定位。
+普通单元格绘制编号/项目符号，并应用源左右缩进及悬挂偏移，续行对齐正文起点；跨页不重复编号。
+缺少正左缩进时按层级使用默认缩进；旋转单元格列表、复杂编号制表位和复杂混合内容仍有限制。
+
 ## 安装
 
 建议使用干净的虚拟环境，从本仓库的 `dev` 分支安装：
@@ -242,6 +254,11 @@ print(json.dumps(content, ensure_ascii=False))
 print([asdict(item) for item in doc.diagnostics])
 ```
 
+保存完整的已支持 LDM 内容可使用 `doc.light_document_model.model_dump_json(by_alias=True)`，
+再用 `light_document_model.Document.model_validate_json(...)` 恢复。该 JSON 中的图片字节使用
+`{"encoding": "base64", "data": "..."}`；Python 模式的 `model_dump()` 保持 bytes，旧 UTF-8 图片字符串仍可读取。
+该快照与 `to_dict()` 不同，也不保留原始 OOXML 包部件。
+
 `to_dict()` 当前使用 `schema_version: 1`，以加法方式增加字段：
 
 | 字段 | 含义 |
@@ -249,7 +266,8 @@ print([asdict(item) for item in doc.diagnostics])
 | `source` | 以路径加载时的输入路径，可能含敏感信息 |
 | `blocks` | 有序正文段落/表格，包括格式、链接、图片元数据及模型位置 |
 | 单元格 `blocks` | 有序段落与嵌套表格；原 `paragraphs` / `tables` 字段继续保留 |
-| 段落 `note_references` | 脚注/尾注类型及标识符 |
+| 段落 `note_references` | 脚注/尾注类型及标识符；隐藏引用另有标记 |
+| 段落/表格 `provenance` | 原 DOCX XML 的 `part_name` 与从零开始的元素 `child_path`；生成内容为 null |
 | `source_stories` | 已提取的注 ID/内容，以及页眉页脚 part 的分节、变体和继承引用 |
 | `headers_footers` | 原有 LDM 页眉页脚表示，不是完整分节渲染契约 |
 | `diagnostics` | 累积记录的快照，含 `code`、`severity`、`location`、`message` |
@@ -258,8 +276,14 @@ print([asdict(item) for item in doc.diagnostics])
 过滤隐藏 run 和字段指令，显示真实超链接的标签，不会把普通文本中的字面链接语法误当成链接。
 它们不附加 source stories、页眉页脚或图片。
 
-**能够提取脚注/尾注，不代表能够渲染或完整写回。** DOCX/PDF/Markdown/TXT 转换会报告
-`*.notes_omitted`；Markdown 对合并单元格几何丢失和嵌套表格展平发出诊断。
+DOCX/PDF/TXT 与默认 Markdown 转换会报告 `*.notes_omitted`。Markdown 显式设置
+`export_notes=True` 后，按正文锚点导出可见脚注/尾注及其定义；隐藏引用和未引用的注不输出。
+代码块中的引用移至块后，并发出诊断。Markdown 对合并单元格几何丢失和嵌套表格展平发出诊断。
+
+`MarkdownSaveOptions.style_map` 将精确源样式名（含继承样式）映射为 `Heading 1` 至
+`Heading 6`、`Quote`、`Code` 或 `Normal`，不修改源模型。例如：
+`opts.style_map = {"业务标题": "Heading 2"}; opts.export_notes = True`。
+原始定位描述解析时的 XML 快照，不是 PDF 坐标，也不表示模型编辑后的新位置。
 `diagnostics` 在加载和各次转换之间累积，包括失败前已检测到的警告；不会自动清空，也不是完整损失审计。
 可将已知内容损失和缺字作为错误：
 
@@ -279,7 +303,7 @@ aw.Document("report.docx").save("checked.pdf")
 ## PDF 字体与可选塑形
 
 内置渲染器对子集化的 Document Sans SC 字体进行嵌入，覆盖常用简体/繁体中文、拉丁文字和标点。
-使用独立粗体字面与派生倾斜字面；四个 WOFF 资源合计约 **25 MiB**。
+使用独立粗体字面与派生倾斜字面；四个 WOFF 资源合计约 **24.6 MiB**。
 不保留源字体家族、等宽字体度量或精确分页。缺字会报警；源字体替换可能改变布局。
 
 阿拉伯语等复杂文字可安装塑形支持，并部署适合语言的可信 fallback 字体：
@@ -302,7 +326,9 @@ python -m aspose.words_foss.convert report.docx report.pdf --strict --timeout 60
 
 该单任务 CLI 需要 **POSIX**，Windows 请使用普通库 API。默认墙钟超时 60 秒、内存阈值 1024 MiB、
 单输出文件上限 256 MiB。Linux 还设置地址空间限制；macOS 使用可能短暂超限的 RSS watchdog，
-不是硬内存配额。`--memory-mb 0` 关闭内存检查。
+不是硬内存配额。`--memory-mb 0` 关闭内存检查。子进程 stdout/stderr 合并日志
+设有 64 MiB watchdog 阈值，以至多 100 ms 间隔检查，可能短暂超出，并非硬磁盘配额。
+超限会终止任务并保留已有输出；返回消息仍限于前 4 KiB。可选 LibreOffice 后端同样适用。
 `--strict` 拒绝检测到的损失/缺字，不保证检测每种保真问题。
 普通 `Document.save()` 不提供进程超时/内存隔离。
 
@@ -338,6 +364,22 @@ python ApiExamples/template_report.py template.docx context.json report.docx rep
 
 模板必须可信。示例使用 Jinja `StrictUndefined` 与 autoescape；DOCX、PDF 分别发布，不是双文件事务。
 模板路径及两个输出路径必须互不相同。
+
+在仓库根目录使用 Python 示例时，context 可传入工厂函数，为实际模板创建动态图片；模板中放置 `{{ logo }}`：
+
+```python
+from docxtpl import InlineImage
+from docx.shared import Mm
+from ApiExamples.template_report import render_report
+
+def context(template):
+    return {"company": "示例公司", "logo": InlineImage(template, "logo.png", width=Mm(25))}
+
+render_report("template.docx", context, "report.docx", "report.pdf")
+```
+
+工厂每次调用一次并必须返回 dict；普通 dict 和 CLI JSON 用法不变。图片不存在或 context 构造/渲染失败时，
+尚未发布两个输出；DOCX 读取和 PDF 转换发生在 DOCX 发布之后，后续失败仍可能留下新版 DOCX。
 
 | [ApiExamples/](ApiExamples/) 中的文件 | 用途 |
 |---|---|
@@ -376,15 +418,21 @@ python ApiExamples/template_report.py template.docx context.json report.docx rep
 ## 支持范围与限制
 
 - 不提供内置 PDF 读取、DOC/RTF 写出、OCR 或完整 Word 排版/字段计算引擎。
-- LDM 转换不是无损往返。脚注/尾注单独提取，但不写入转换输出；批注、修订、复杂字段、内容控件、
+- LDM 转换不是无损往返。脚注/尾注单独提取，仅显式开启的 Markdown 输出可见锚点注；批注、修订、复杂字段、内容控件、
   数学公式、浮动内容及页眉页脚变体仍有限制。支持内联图片不等于任意形状/图片定位或完整 OOXML 保真。
 - Markdown 的合并网格与嵌套表格会丢失几何；parser 仅实现选定 CommonMark/GFM 子集。
   Tab 缩进沿用固定 `+4`，不是按列位置计算的 tab stop。
 - Strict OOXML 写出抛出 `NotImplementedError`。`ECMA376_2006` 与 `ISO29500_2008_TRANSITIONAL`
   使用同一输出；`Zip64Mode.ALWAYS` 等同于 `IF_NECESSARY`，不强制生成 ZIP64 记录。
 - 未实现 PDF/A、PDF/UA 合规。显式设置以下未使用 PDF 字段会报警：
-  `text_compression`、`embed_full_fonts`、`use_core_fonts`、`font_embedding_mode`、`page_mode`、
+  `embed_full_fonts`、`use_core_fonts`、`font_embedding_mode`、
   `color_mode`、`preserve_form_fields`、`memory_optimization`。
+- PDF `text_compression` 控制页面内容流压缩（`NONE` / `FLATE`），不控制字体或图片压缩。
+  `page_mode` 请求阅读器打开模式，默认为 `USE_OUTLINES`；阅读器可能忽略该偏好，
+  它不会自动创建大纲、图层或附件。
+- PDF 大纲默认压缩缺失层级；`create_missing_outline_levels=True` 插入空白中间项。
+  `expanded_outline_levels` 接受 0–9 的整数：0 全部折叠，1 展开 PDF 树的首层，依此类推。
+  阅读器可能覆盖文件中保存的初始展开状态。
 - Markdown `image_resolution` 未使用；`export_as_html=NON_COMPATIBLE_TABLES` 等同于 `NONE`。
   属性存在不意味着它影响输出。
 - 默认上限：输入/单 ZIP 部件/图片数据 **64 MiB**、DOCX 总展开大小 **256 MiB**、**10,000** 个 ZIP 条目、
@@ -455,3 +503,17 @@ wheel 核验应在独立环境安装后，离开源码目录运行 `scripts/chec
 内置字体单独采用 [SIL OFL-1.1](aspose/words_foss/pdf_writer/fonts/OFL.txt)，不是 MIT；
 来源和修改说明见 [字体说明](aspose/words_foss/pdf_writer/fonts/README.md)。
 软件不提供担保；可选集成组件有各自的许可与部署要求。
+
+### 参考 DOCX 样式
+
+设置 `OoxmlSaveOptions.reference_docx = "brand.docx"`，生成 DOCX 时应用参考文件中受支持的样式定义。
+run 字体读取时先应用字符样式继承，再应用直接格式；写出时省略匹配的继承值，使参考字符样式生效，
+同样覆盖链接和 PAGE 域。LDM 尚不能区分恰好等于原继承值的显式直接格式，换参考样式后该值可能随样式改变；
+完整 Word toggle 语义仍未保证。
+未显式指定段落样式的 DOCX 段落现在使用 XML 标记的默认段落样式，而非按 Normal 名称猜测；
+正文、表格和页眉页脚共用此解析规则。LDM `Style.is_default` 保留默认标记，旧模型缺少字段仍兼容。
+按样式显示名匹配，并重映射 ID 和 basedOn 引用；正文样式及超链接关系保持有效。已有直接格式优先。
+不导入参考正文、图片、页眉页脚和页面设置。样式经过现有 LDM reader/writer，未支持的 OOXML 属性
+不会原样保留；这不是原包模板复制或无损样式导入。
+
+本轮生态吸收、实测结果及待办见 [验收台账](docs/ecosystem-adoption.md)。

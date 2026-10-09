@@ -77,6 +77,18 @@ Supported inline images can be embedded in DOCX/Markdown and rendered in PDF; Ma
 an external image folder is requested. TXT does not retain images. Complex positioning, fields, notes,
 revisions, and section-specific headers/footers have fidelity limits even when their content can be extracted.
 
+`PdfSaveOptions.export_document_structure` adds logical table, row, cell, and paragraph relationships,
+including nested tables, merged-cell spans, and image alternate text. These structures can increase PDF size and do not establish PDF/UA compliance.
+Repeated table-header copies are marked as `Artifact`, retaining the first header's semantics; plain text extractors may still return visible copies.
+Headers and footers are pagination artifacts. Their explicit page breaks and keep-together settings do not advance body pages;
+oversized page bands may still overflow, without automatic scaling or a promise of Word-identical layout.
+Page-band bookmarks and outlines retain their first visible destination across repeated pages.
+Cross-page body paragraphs, headings, quotes, and code blocks retain one logical node with page-local content references.
+Body and ordinary table-cell lists use `L → LI → Lbl/LBody`, with nested lists under their parent item's body.
+Body lists retain text indents on continuation lines, pages and columns; markers are positioned after any required region advance.
+Ordinary cells draw markers once per item across page fragments and apply source left/right indents and hanging offsets, aligning continuation lines with the body.
+Lists without a positive left indent use level-based defaults; rotated cell lists, complex numbering tabs and mixed content remain limited.
+
 ## Installation
 
 Use a clean virtual environment and install this repository's `dev` branch:
@@ -247,6 +259,11 @@ print(json.dumps(content, ensure_ascii=False))
 print([asdict(item) for item in doc.diagnostics])
 ```
 
+For a complete supported LDM snapshot, use `doc.light_document_model.model_dump_json(by_alias=True)`
+and restore it with `light_document_model.Document.model_validate_json(...)`. Image bytes in this JSON
+use `{"encoding": "base64", "data": "..."}`; Python-mode `model_dump()` retains bytes, and legacy UTF-8
+image strings remain readable. This snapshot differs from `to_dict()` and does not retain original OOXML parts.
+
 `to_dict()` currently uses `schema_version: 1` with additive fields:
 
 | Field | Meaning |
@@ -254,7 +271,8 @@ print([asdict(item) for item in doc.diagnostics])
 | `source` | Input path when loaded from a path; may contain sensitive information |
 | `blocks` | Ordered body paragraphs/tables with formatting, links, image metadata, and model locations |
 | Cell `blocks` | Ordered paragraphs and nested tables; legacy `paragraphs` / `tables` remain available |
-| Paragraph `note_references` | Footnote/endnote kind and identifier |
+| Paragraph `note_references` | Footnote/endnote kind and identifier; hidden references are marked |
+| Paragraph/table `provenance` | Original DOCX XML `part_name` and zero-based element `child_path`; null for generated content |
 | `source_stories` | Extracted note IDs/content and header/footer parts with section, variant, and inheritance references |
 | `headers_footers` | Existing LDM header/footer representation, not a full section-aware rendering contract |
 | `diagnostics` | Snapshot of accumulated `code`, `severity`, `location`, and `message` records |
@@ -263,8 +281,15 @@ Locations are model paths, **not PDF page coordinates**. `get_text()` / TXT incl
 in content order, exclude hidden runs/field instructions, and show real hyperlink labels without
 misinterpreting ordinary literal link syntax. They do not append source stories, headers/footers, or images.
 
-**Extracting notes is not rendering or writing them back.** DOCX/PDF/Markdown/TXT conversions report
-`*.notes_omitted`; Markdown reports merged-cell geometry loss and nested-table flattening.
+DOCX/PDF/TXT and default Markdown conversions report `*.notes_omitted`. Opt-in Markdown
+`export_notes=True` emits visible anchored footnotes/endnotes and referenced definitions; hidden
+references and unreferenced notes are excluded. Code-block references move after the block with a warning.
+Markdown reports merged-cell geometry loss and nested-table flattening.
+
+`MarkdownSaveOptions.style_map` maps exact source style names (including inherited styles) to
+`Heading 1` through `Heading 6`, `Quote`, `Code`, or `Normal`, without changing the source model.
+For example: `opts.style_map = {"Business Title": "Heading 2"}; opts.export_notes = True`.
+Provenance describes the original parsed XML snapshot, not PDF coordinates or positions after model edits.
 `diagnostics` accumulate across loading and conversions, including detected warnings before failure;
 records are not cleared automatically and are not a complete loss audit. Treat known loss and missing glyphs as errors:
 
@@ -285,7 +310,7 @@ outside your trust boundary; this output is not a redacted document archive.
 
 The built-in renderer embeds subsets of bundled Document Sans SC fonts for common Simplified/Traditional
 Chinese, Latin text, and punctuation. It uses a dedicated bold face and derived oblique faces; the four
-WOFF resources total about **25 MiB**. Original font families, monospace metrics, and exact pagination
+WOFF resources total about **24.6 MiB**. Original font families, monospace metrics, and exact pagination
 are not preserved. Missing glyphs warn; source-font substitution may change layout.
 
 For Arabic and other complex scripts, install shaping support and deploy suitable trusted fallback fonts:
@@ -309,7 +334,10 @@ python -m aspose.words_foss.convert report.docx report.pdf --strict --timeout 60
 This single-job CLI requires **POSIX**; use the ordinary library API on Windows. It has a default 60-second
 wall timeout, 1024 MiB memory threshold, and 256 MiB output-file limit. Linux also applies an address-space
 limit; macOS uses an RSS watchdog that can briefly overshoot, not a hard memory quota. `--memory-mb 0`
-disables memory checks. `--strict` rejects detected loss/missing glyphs, not every possible fidelity problem.
+disables memory checks. Combined subprocess stdout/stderr has a 64 MiB watchdog threshold;
+checks occur at up to 100 ms intervals and can briefly overshoot. Excessive logs fail the job and
+preserve existing output; returned messages remain limited to 4 KiB. This also applies to the
+optional LibreOffice backend. `--strict` rejects detected loss/missing glyphs, not every possible fidelity problem.
 The ordinary `Document.save()` API does not impose process timeout/memory isolation.
 
 ### Original-file LibreOffice backend
@@ -344,6 +372,24 @@ python ApiExamples/template_report.py template.docx context.json report.docx rep
 
 Templates must be trusted. The example uses Jinja `StrictUndefined` and autoescaping; DOCX and PDF are
 published separately, not as a two-file transaction. Template and output paths must be distinct.
+
+From the repository root, a Python context factory can create images bound to the actual template.
+Place `{{ logo }}` in the Word template:
+
+```python
+from docxtpl import InlineImage
+from docx.shared import Mm
+from ApiExamples.template_report import render_report
+
+def context(template):
+    return {"company": "Example", "logo": InlineImage(template, "logo.png", width=Mm(25))}
+
+render_report("template.docx", context, "report.docx", "report.pdf")
+```
+
+The factory runs once per report and must return a dict. Plain dict and CLI JSON contexts still work.
+Missing image files and context/render failures happen before publishing either output. A later DOCX
+load or PDF conversion failure can leave the new DOCX alongside the previous PDF.
 
 | Example in [ApiExamples/](ApiExamples/) | Purpose |
 |---|---|
@@ -382,7 +428,7 @@ These are the main implemented entry points, not an exhaustive catalog of intern
 ## Scope and Limitations
 
 - No built-in PDF reading, DOC/RTF writing, OCR, or complete Word layout/field-computation engine.
-- Conversion via LDM is not lossless. Notes are extracted separately but omitted from conversion output;
+- Conversion via LDM is not lossless. Notes are extracted separately; only opt-in Markdown exports visible anchored notes;
   comments, revisions, complex fields, content controls, math, floating content, and header/footer variants have limits.
   Supported inline images do not imply arbitrary image/shape placement or complete OOXML round-trip fidelity.
 - Markdown merged grids/nested tables lose geometry; the parser implements a selected CommonMark/GFM subset.
@@ -390,8 +436,14 @@ These are the main implemented entry points, not an exhaustive catalog of intern
 - Strict OOXML output raises `NotImplementedError`. `ECMA376_2006` and `ISO29500_2008_TRANSITIONAL`
   use the same output; `Zip64Mode.ALWAYS` behaves like `IF_NECESSARY`, not forced ZIP64 records.
 - PDF/A and PDF/UA conformance are not implemented. Explicit unused PDF fields warn:
-  `text_compression`, `embed_full_fonts`, `use_core_fonts`, `font_embedding_mode`, `page_mode`,
+  `embed_full_fonts`, `use_core_fonts`, `font_embedding_mode`,
   `color_mode`, `preserve_form_fields`, and `memory_optimization`.
+- PDF `text_compression` controls page content streams (`NONE` / `FLATE`), independently of font/image
+  compression. `page_mode` requests a viewer opening mode; the default is `USE_OUTLINES`.
+  Readers may ignore this preference; it does not create outlines, layers, or attachments.
+- PDF outline gaps are compacted by default; `create_missing_outline_levels=True` inserts empty
+  intermediate entries. `expanded_outline_levels` accepts integers 0–9: 0 collapses all items, 1 expands
+  the first PDF tree level, and so on. Readers may override the stored opening state.
 - Markdown `image_resolution` is unused; `export_as_html=NON_COMPATIBLE_TABLES` behaves like `NONE`.
   Attribute presence is not evidence that an option affects output.
 - Defaults: input/individual ZIP part/image data **64 MiB**, expanded DOCX **256 MiB**, **10,000** ZIP entries,
@@ -466,3 +518,20 @@ Library code is under the [MIT License](LICENSE); retain the copyright and permi
 Bundled fonts are separately under [SIL OFL-1.1](aspose/words_foss/pdf_writer/fonts/OFL.txt), not MIT;
 see [font provenance and modifications](aspose/words_foss/pdf_writer/fonts/README.md).
 The software is provided without warranty. Optional integrations have their own licenses and deployment requirements.
+
+### Reference DOCX styles
+
+Set `OoxmlSaveOptions.reference_docx = "brand.docx"` to apply supported reference style definitions
+when generating DOCX. Style display names match existing output styles; IDs and based-on links
+are remapped so body references and hyperlink relationships remain valid. Existing direct
+formatting takes precedence. The reference body, media, headers/footers and page setup are not imported.
+Styles pass through the existing LDM reader/writer, so unsupported OOXML properties are not preserved.
+This does not provide raw template copying or a lossless style import.
+Run fonts now resolve character-style inheritance before direct formatting. DOCX output omits
+matching inherited values so reference character styles can take effect, including links and PAGE fields.
+Explicit direct values equal to the original inherited value are not distinguishable in the LDM
+and may follow a replacement reference style. Complete Word toggle semantics are not guaranteed.
+DOCX paragraphs without an explicit style use the XML-marked default paragraph style, including
+custom defaults and their base chains. LDM `Style.is_default` preserves the marker; older models remain accepted.
+
+Current ecosystem adoption, validation results, and remaining work: [acceptance ledger](docs/ecosystem-adoption.md).

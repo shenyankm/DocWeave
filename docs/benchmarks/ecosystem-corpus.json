@@ -1,0 +1,53 @@
+[
+  {
+    "case": "text_and_emphasis",
+    "content_tokens": [
+      "中文报告",
+      "普通",
+      "粗体",
+      "粗斜体",
+      "Literal *stars* _under_ [brackets]"
+    ],
+    "mammoth_text": "中文报告 普通 粗体 和 粗斜体 Literal *stars* _under_ [brackets] \\ slashes | pipe # hash",
+    "pandoc_text": "中文报告 普通 粗体 和 粗斜体 Literal *stars* _under_ [brackets] \\ slashes | pipe # hash",
+    "pandoc_error": null,
+    "status": "passed"
+  },
+  {
+    "case": "business_style",
+    "content_tokens": [
+      "业务章节",
+      "第一项",
+      "第二项"
+    ],
+    "mammoth_text": "业务章节 第一项 第二项",
+    "pandoc_text": "业务章节 第一项 第二项",
+    "pandoc_error": null,
+    "status": "passed"
+  },
+  {
+    "case": "merged_table",
+    "content_tokens": [
+      "表前",
+      "Header left",
+      "Header right",
+      "A | B",
+      "中文表格",
+      "表后"
+    ],
+    "mammoth_text": "表前 Header left Header right A | B 中文表格 表后",
+    "pandoc_text": "表前 Header left Header right A | B 中文表格 表后",
+    "pandoc_error": null,
+    "status": "passed"
+  },
+  {
+    "case": "links",
+    "content_tokens": [
+      "链接 [说明]"
+    ],
+    "mammoth_text": "链接： 链接 [说明]",
+    "pandoc_text": "链接： 链接 [说明]",
+    "pandoc_error": null,
+    "status": "passed"
+  }
+]
