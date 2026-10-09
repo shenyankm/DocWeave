@@ -138,7 +138,10 @@ doc.save("report.txt", aw.SaveFormat.TEXT)
 ```
 
 路径输入按扩展名选择 reader；`save(path)` 可从目标扩展名推断输出格式。
-实际仅支持 DOCX、Markdown、PDF 和 TXT 输出。
+在现有 LDM 边界内支持 DOCX、Markdown、PDF、TXT 与四种 Flat OPC 变体输出。
+Flat OPC 必须显式指定 `SaveFormat.FLAT_OPC` 或其宏/模板变体，`.xml` 文件也不例外。
+保留未知部件或宏资源的编辑使用[原包 DOM 的 Flat OPC 导出](docs/docx-dom.md)；
+经过 LDM 的转换会省略 VBA，并记录诊断。
 
 ### Markdown 与内存输出
 
@@ -153,7 +156,7 @@ pdf_bytes = doc.to_bytes(aw.SaveFormat.PDF)
 print(doc.get_text())
 ```
 
-流输入可通过魔数识别 DOCX 及 OLE2/DOC。Markdown 没有可区分的魔数，需传入 `MarkdownLoadOptions`
+流输入可通过魔数识别 DOCX 及 OLE2/DOC，通过 XML 根命名空间识别 Flat OPC。Markdown 没有可区分的魔数，需传入 `MarkdownLoadOptions`
 或显式指定 `LoadOptions.load_format`。标准 RTF 魔数能够识别，但内置 reader 仍拒绝该格式。
 字节输入请包装为 `BytesIO`；`stream=` / `data=` 参数已弃用。
 
@@ -432,7 +435,7 @@ render_report("template.docx", context, "report.docx", "report.pdf")
 |---|---|
 | `aw.Document(source, load_options=None)` | 路径或二进制流，构造时立即生成 LDM |
 | `Document.save(path, format_or_options=None)` | 按扩展名推断格式或接受格式/保存选项对象；原子发布主文件 |
-| `Document.to_bytes(format_or_options)` | 显式 DOCX/Markdown/PDF/TXT 内存输出 |
+| `Document.to_bytes(format_or_options)` | 显式 DOCX/Flat OPC/Markdown/PDF/TXT 内存输出 |
 | `Document.get_text()` / `to_dict()` | 正文文本 / 结构化内容提取 |
 | `Document.light_document_model` | 可变解析模型，不是保留原 OOXML 的 DOM |
 | `Document.page_count` | 模型估算值，不是精确 Word/PDF 页数 |

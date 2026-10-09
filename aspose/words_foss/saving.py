@@ -344,9 +344,9 @@ class Zip64Mode(IntEnum):
 
 
 class OoxmlSaveOptions:
-    """Options for saving a document as DOCX (Office Open XML).
+    """Options for saving DOCX or a Flat OPC XML variant.
 
-    * ``save_format``        — only ``"docx"`` is currently supported.
+    * ``save_format``        — DOCX or one of the four Flat OPC variants.
     * ``compression_level``  — :class:`CompressionLevel` integer enum
       (``NORMAL=0`` → ``compresslevel=6``, ``MAXIMUM=1`` → ``9``,
       ``FAST=2`` → ``3``, ``SUPER_FAST=3`` → ``1``).
@@ -380,7 +380,7 @@ class OoxmlSaveOptions:
     def __init__(self, save_format: "int | str | None" = None):
         from aspose.words_foss.document import SaveFormat, _coerce_save_format
 
-        # Only DOCX is accepted; other requested formats fail before output.
+        # Unsupported requested formats fail before output.
         self.save_format = (
             SaveFormat.DOCX if save_format is None
             else (_coerce_save_format(save_format) or save_format)

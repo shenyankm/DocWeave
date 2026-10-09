@@ -143,7 +143,10 @@ doc.save("report.txt", aw.SaveFormat.TEXT)
 ```
 
 Path input uses its extension; `save(path)` can infer the output format from the destination extension.
-Only DOCX, Markdown, PDF, and TXT output are implemented.
+DOCX, Markdown, PDF, TXT, and four Flat OPC variants are implemented within the existing LDM limits.
+Flat OPC requires an explicit `SaveFormat.FLAT_OPC` (or its macro/template variants), including for `.xml` files.
+For editing with opaque parts or macro resources retained, use the original-package
+[DOM Flat OPC export](docs/docx-dom.md); conversion through LDM omits VBA and records a diagnostic.
 
 ### Markdown and in-memory output
 
@@ -158,7 +161,7 @@ pdf_bytes = doc.to_bytes(aw.SaveFormat.PDF)
 print(doc.get_text())
 ```
 
-For streams, DOCX and OLE2/DOC can be detected from magic bytes. Markdown has no distinguishing magic;
+For streams, DOCX and OLE2/DOC can be detected from magic bytes; Flat OPC is detected from its XML root namespace. Markdown has no distinguishing magic;
 pass `MarkdownLoadOptions` or an explicit `LoadOptions.load_format`. Standard RTF magic is recognized,
 but the built-in reader still rejects that format. Pass bytes via `BytesIO`; `stream=` / `data=` are deprecated.
 
@@ -451,7 +454,7 @@ These are the main implemented entry points, not an exhaustive catalog of intern
 |---|---|
 | `aw.Document(source, load_options=None)` | Path or binary stream; constructs the LDM immediately |
 | `Document.save(path, format_or_options=None)` | Infers format from extension or accepts a format/save-options object; atomic main-file publication |
-| `Document.to_bytes(format_or_options)` | Explicit DOCX/Markdown/PDF/TXT in-memory output |
+| `Document.to_bytes(format_or_options)` | Explicit DOCX/Flat OPC/Markdown/PDF/TXT in-memory output |
 | `Document.get_text()` / `to_dict()` | Body text / structured content extraction |
 | `Document.light_document_model` | Mutable parsed model; not an OOXML-preserving DOM |
 | `Document.page_count` | Estimated model count, not exact Word/PDF pagination |

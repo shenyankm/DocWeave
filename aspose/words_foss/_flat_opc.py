@@ -2,7 +2,7 @@
 
 import base64
 from io import BytesIO
-from urllib.parse import unquote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 from xml.dom import Node
 from zipfile import ZIP_DEFLATED, ZipFile
 
@@ -10,13 +10,19 @@ from defusedxml.ElementTree import ParseError, iterparse
 from defusedxml.minidom import parseString
 
 from aspose.words_foss import _io
-from aspose.words_foss._opc import bind_namespace_context
+from aspose.words_foss._opc import bind_namespace_context, resolve_target
 
 PKG = "http://schemas.microsoft.com/office/2006/xmlPackage"
 CT = "http://schemas.openxmlformats.org/package/2006/content-types"
+MAIN_TYPES = {
+    24: "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml",
+    25: "application/vnd.ms-word.document.macroEnabled.main+xml",
+    26: "application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml",
+    27: "application/vnd.ms-word.template.macroEnabledTemplate.main+xml",
+}
 
 
-def is_flat_opc(data):
+def is_flat_opc(data: bytes) -> bool:
     """Recognize the actual root namespace, including UTF-16 and inherited prefixes."""
     _io.check_input_size(len(data))
     if data.startswith(b"PK"):
@@ -27,7 +33,7 @@ def is_flat_opc(data):
         return False
 
 
-def decode(data):
+def decode(data: bytes) -> bytes:
     _io.check_input_size(len(data))
     root = parseString(data, forbid_dtd=True).documentElement
     if root.namespaceURI != PKG or root.localName != "package":
@@ -97,3 +103,63 @@ def decode(data):
         for name, payload in parts.items():
             archive.writestr(name, payload)
     return stream.getvalue()
+
+
+def encode(data: bytes, main_content_type: str | None = None) -> bytes:
+    """Flatten a bounded OPC package; XML serialization is normalized."""
+    _io.check_input_size(len(data))
+    document = parseString(f'<pkg:package xmlns:pkg="{PKG}"/>')
+    root = document.documentElement
+    with ZipFile(BytesIO(data)) as archive:
+        _io.validate_docx_archive(archive)
+        types = parseString(archive.read("[Content_Types].xml"), forbid_dtd=True).documentElement
+        if types.namespaceURI != CT or types.localName != "Types":
+            raise ValueError("Expected OPC content types")
+        defaults, overrides = {}, {}
+        for item in types.childNodes:
+            if item.nodeType != Node.ELEMENT_NODE:
+                continue
+            if item.namespaceURI != CT or item.localName not in {"Default", "Override"}:
+                raise ValueError("Unexpected OPC content type declaration")
+            mapping = defaults if item.localName == "Default" else overrides
+            key = (item.getAttribute("Extension").lower() if mapping is defaults
+                   else resolve_target("", item.getAttribute("PartName")))
+            value = item.getAttribute("ContentType")
+            if not key or not value or key in mapping or any(ord(char) < 32 for char in value):
+                raise ValueError("Missing or duplicate OPC content type")
+            mapping[key] = value
+        seen = set()
+        for name in archive.namelist():
+            if name == "[Content_Types].xml":
+                continue
+            if name.endswith("/"):
+                raise ValueError("OPC directory entries cannot be flattened as parts")
+            uri = "/" + quote(name, safe="/")
+            if resolve_target("", uri) != name or name.casefold() in seen:
+                raise ValueError("Unsafe or duplicate OPC part name")
+            seen.add(name.casefold())
+            content_type = overrides.get(name, defaults.get(name.rsplit(".", 1)[-1].lower()))
+            if name == "word/document.xml" and main_content_type is not None:
+                if main_content_type not in MAIN_TYPES.values():
+                    raise ValueError("Unsupported Flat OPC main content type")
+                content_type = main_content_type
+            if not content_type:
+                raise ValueError("OPC part has no content type")
+            part = document.createElementNS(PKG, "pkg:part")
+            part.setAttributeNS(PKG, "pkg:name", uri)
+            part.setAttributeNS(PKG, "pkg:contentType", content_type)
+            value = archive.read(name)
+            if content_type in {"application/xml", "text/xml"} or content_type.endswith("+xml"):
+                payload = document.createElementNS(PKG, "pkg:xmlData")
+                xml = parseString(value, forbid_dtd=True)
+                for child in xml.childNodes:
+                    payload.appendChild(document.importNode(child, deep=True))
+            else:
+                part.setAttributeNS(PKG, "pkg:compression", "store")
+                payload = document.createElementNS(PKG, "pkg:binaryData")
+                payload.appendChild(document.createTextNode(base64.b64encode(value).decode("ascii")))
+            part.appendChild(payload)
+            root.appendChild(part)
+    output = document.toxml(encoding="utf-8")
+    _io.check_input_size(len(output))
+    return output

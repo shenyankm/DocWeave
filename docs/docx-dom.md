@@ -7,14 +7,23 @@
 `DocxDocument` 也可从路径或二进制流加载 Flat OPC XML 包。四种文档、宏文档、模板、宏模板
 变体均还原 XML 与二进制部件，保留祖先命名空间及主部件 Content Type；沿用原包 DOM 的
 编辑边界。`save()` / `to_bytes()` 输出 ZIP OOXML 包，需使用与主部件类型对应的
-`.docx` / `.docm` / `.dotx` / `.dotm` 扩展名；不输出 Flat OPC XML，也不保留输入 XML 的字面序列化。
+`.docx` / `.docm` / `.dotx` / `.dotm` 扩展名；不保留输入 XML 的字面序列化。
+`to_flat_opc()` 返回 UTF-8 XML 字节，`save_flat_opc(path)` 原子保存 Flat OPC XML；
+两者保留部件类型、XML 节点和二进制资源，但 XML 声明、编码及序列化会规范化。
 宏部件仅作为原始资源保留，不执行宏。签名包仍按原有边界拒绝修改。
 
 现有 `Document` 转换入口也能识别 Flat OPC 字节/流，路径可使用 `.xml`，或显式指定
 `LoadFormat.FLAT_OPC`、`FLAT_OPC_MACRO_ENABLED`、`FLAT_OPC_TEMPLATE`、
 `FLAT_OPC_TEMPLATE_MACRO_ENABLED`。显式 `TEXT` 保留字面文本行为。
-它仍经过 LDM，具有现有内容损失边界；需要保留未知部件的编辑应使用 `DocxDocument`。
-四种原生试用样本与部件比较记录见 [加载验证](benchmarks/flat-opc-loading.json)。
+`Document.save(path, SaveFormat.FLAT_OPC)` 和 `to_bytes(SaveFormat.FLAT_OPC)`
+以及其余三种变体可写出 Flat OPC；也接受对应的 `OoxmlSaveOptions`。必须显式指定格式，
+不把 `.xml` 后缀推断为 Flat OPC（官方默认 `.xml` 实际选择 WordML）。
+它仍经过 LDM，具有现有内容损失边界；VBA project 被省略时记录
+`load.vba_project_omitted`。输出宏类型不意味着 VBA 被导出；需要保留未知部件或
+宏资源的编辑应使用 `DocxDocument`。
+四种原生试用样本与部件比较记录见 [加载验证](benchmarks/flat-opc-loading.json)，
+导出与官方包回读见 [保存验证](benchmarks/flat-opc-saving.json)。
+未以这些普通样本验收复杂宏、模板全部语义或视觉排版。
 
 ## 读取、格式与跨 Run 替换
 

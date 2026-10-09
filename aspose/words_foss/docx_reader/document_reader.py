@@ -134,6 +134,9 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         stories = []
         for rid, rel_type, target, mode in relationships:
             kind = rel_type.rsplit("/", 1)[-1]
+            if kind == "vbaProject":
+                warn("VBA project resources are omitted by the conversion model; use DocxDocument for package preservation",
+                     DocumentLoadWarning, code="load.vba_project_omitted", location="word/document.xml")
             if mode == "External":
                 if kind == "hyperlink":
                     self._rels[rid] = target

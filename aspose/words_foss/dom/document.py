@@ -141,6 +141,19 @@ class DocxDocument:
     def to_bytes(self):
         return self._package.to_bytes()
 
+    def to_flat_opc(self):
+        """Return Flat OPC XML bytes, retaining part types and opaque binary resources."""
+        from aspose.words_foss._flat_opc import encode
+
+        return encode(self.to_bytes())
+
+    def save_flat_opc(self, destination):
+        """Atomically save Flat OPC XML; XML serialization is normalized."""
+        from aspose.words_foss._io import atomic_output
+
+        with atomic_output(destination) as temporary:
+            temporary.write_bytes(self.to_flat_opc())
+
     def to_light_document(self):
         """Produce an independent, potentially lossy conversion snapshot of current edits.
 

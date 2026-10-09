@@ -1,0 +1,249 @@
+{
+  "schema": 1,
+  "scope": "four Flat OPC output variants from LDM and edited original-package DOM; one small source each, not full fidelity",
+  "baseline": {
+    "product": "Aspose.Words for Python via .NET",
+    "version": "26.9.0",
+    "python": "3.13.15",
+    "platform": "Mac arm64",
+    "license": "official trial; limitations retained"
+  },
+  "candidate": {
+    "python": "3.14.7",
+    "platform": "Mac arm64",
+    "validation": "eight installed-wheel exports outside checkout, read back by official 26.9.0"
+  },
+  "inputs": [
+    "corpus/commercial-26.9-dom.docx",
+    "../../tests/fixtures/flat-opc-26.9.zip"
+  ],
+  "output_archive": "corpus/flat-opc-saving.zip",
+  "output_archive_sha256": "f050430191847494ea9530c659d0bb1e7928d7c651cda9321e14d1f3a0e12fea",
+  "readback_by_commercial": [
+    {
+      "name": "dom-FLAT_OPC.xml",
+      "sha256": "cf467b1786c115efb6ede4ae39f4a4517bf7d39f943e1cb21a568958d4df86b7",
+      "original_load_format": 24,
+      "table_count": 1,
+      "expected_labels": [
+        "EDITED",
+        "BETA",
+        "CELL"
+      ],
+      "labels_present": true
+    },
+    {
+      "name": "dom-FLAT_OPC_MACRO_ENABLED.xml",
+      "sha256": "9fb1ebb45d494d2997e45cd184b8205a7bea62ba997eae717c9c3c5bedc1180d",
+      "original_load_format": 25,
+      "table_count": 1,
+      "expected_labels": [
+        "EDITED",
+        "BETA",
+        "CELL"
+      ],
+      "labels_present": true
+    },
+    {
+      "name": "dom-FLAT_OPC_TEMPLATE.xml",
+      "sha256": "5282f113ed39cfd37527a85819faf8ebff14fc0caccc23fc636ce5cf8151998c",
+      "original_load_format": 26,
+      "table_count": 1,
+      "expected_labels": [
+        "EDITED",
+        "BETA",
+        "CELL"
+      ],
+      "labels_present": true
+    },
+    {
+      "name": "dom-FLAT_OPC_TEMPLATE_MACRO_ENABLED.xml",
+      "sha256": "32fea8b20d3006459e3e8115ffac2309e7b9d11a26683c53eadff855baa6da5c",
+      "original_load_format": 27,
+      "table_count": 1,
+      "expected_labels": [
+        "EDITED",
+        "BETA",
+        "CELL"
+      ],
+      "labels_present": true
+    },
+    {
+      "name": "ldm-FLAT_OPC.xml",
+      "sha256": "e776d7aab4b921813181ca7bccfd364dff37f1263b26d3119a2031f9390c0a76",
+      "original_load_format": 24,
+      "table_count": 1,
+      "expected_labels": [
+        "ALPHA",
+        "BETA",
+        "CELL"
+      ],
+      "labels_present": true
+    },
+    {
+      "name": "ldm-FLAT_OPC_MACRO_ENABLED.xml",
+      "sha256": "86ad5f06ef5372ea44a3a7e0febd10f9d6f557456c4080641935921c5afd2a5f",
+      "original_load_format": 25,
+      "table_count": 1,
+      "expected_labels": [
+        "ALPHA",
+        "BETA",
+        "CELL"
+      ],
+      "labels_present": true
+    },
+    {
+      "name": "ldm-FLAT_OPC_TEMPLATE.xml",
+      "sha256": "04c1dd924e5b84764d3e0aba47022155371e472b667155026051088e3419b97e",
+      "original_load_format": 26,
+      "table_count": 1,
+      "expected_labels": [
+        "ALPHA",
+        "BETA",
+        "CELL"
+      ],
+      "labels_present": true
+    },
+    {
+      "name": "ldm-FLAT_OPC_TEMPLATE_MACRO_ENABLED.xml",
+      "sha256": "a75351715a343d7d2c248de5ecdc6320a76fa8763c8b1b74f9fd466c10a02746",
+      "original_load_format": 27,
+      "table_count": 1,
+      "expected_labels": [
+        "ALPHA",
+        "BETA",
+        "CELL"
+      ],
+      "labels_present": true
+    }
+  ],
+  "official_ooxml_options_observations": [
+    {
+      "save_format": 24,
+      "loaded_as": 24,
+      "returned": true
+    },
+    {
+      "save_format": 25,
+      "loaded_as": 25,
+      "returned": true
+    },
+    {
+      "save_format": 26,
+      "loaded_as": 26,
+      "returned": true
+    },
+    {
+      "save_format": 27,
+      "loaded_as": 27,
+      "returned": true
+    }
+  ],
+  "official_xml_extension_inference": {
+    "observed_load_format": 31,
+    "meaning": "WordML; no Flat OPC suffix inference added"
+  },
+  "focused_tests": "237 passed",
+  "remaining": [
+    "complex macros/templates and executable VBA corpus",
+    "all OOXML save options",
+    "ZIP metadata and XML lexical byte identity are not preserved by Flat OPC serialization",
+    "visual rendering parity",
+    "full LDM content fidelity"
+  ],
+  "dom_part_comparison": [
+    {
+      "format": "FLAT_OPC",
+      "same_part_set": true,
+      "xml_normalized_parts": [
+        "customXml/item1.xml",
+        "customXml/itemProps1.xml",
+        "word/fontTable.xml",
+        "word/footer1.xml",
+        "word/header1.xml",
+        "word/numbering.xml",
+        "word/settings.xml",
+        "word/styles.xml",
+        "word/theme/theme1.xml",
+        "word/webSettings.xml"
+      ],
+      "unchanged_xml_semantics": true,
+      "binary_parts_byte_identical": [
+        "word/media/image1.png"
+      ]
+    },
+    {
+      "format": "FLAT_OPC_MACRO_ENABLED",
+      "same_part_set": true,
+      "xml_normalized_parts": [
+        "customXml/item1.xml",
+        "customXml/itemProps1.xml",
+        "word/fontTable.xml",
+        "word/footer1.xml",
+        "word/header1.xml",
+        "word/numbering.xml",
+        "word/settings.xml",
+        "word/styles.xml",
+        "word/theme/theme1.xml",
+        "word/webSettings.xml"
+      ],
+      "unchanged_xml_semantics": true,
+      "binary_parts_byte_identical": [
+        "word/media/image1.png"
+      ]
+    },
+    {
+      "format": "FLAT_OPC_TEMPLATE",
+      "same_part_set": true,
+      "xml_normalized_parts": [
+        "customXml/item1.xml",
+        "customXml/itemProps1.xml",
+        "word/fontTable.xml",
+        "word/footer1.xml",
+        "word/header1.xml",
+        "word/numbering.xml",
+        "word/settings.xml",
+        "word/styles.xml",
+        "word/theme/theme1.xml",
+        "word/webSettings.xml"
+      ],
+      "unchanged_xml_semantics": true,
+      "binary_parts_byte_identical": [
+        "word/media/image1.png"
+      ]
+    },
+    {
+      "format": "FLAT_OPC_TEMPLATE_MACRO_ENABLED",
+      "same_part_set": true,
+      "xml_normalized_parts": [
+        "customXml/item1.xml",
+        "customXml/itemProps1.xml",
+        "word/fontTable.xml",
+        "word/footer1.xml",
+        "word/header1.xml",
+        "word/numbering.xml",
+        "word/settings.xml",
+        "word/styles.xml",
+        "word/theme/theme1.xml",
+        "word/webSettings.xml"
+      ],
+      "unchanged_xml_semantics": true,
+      "binary_parts_byte_identical": [
+        "word/media/image1.png"
+      ]
+    }
+  ],
+  "xml_normalization": "Attribute order and document-level whitespace can change. No unchanged XML byte identity claim.",
+  "verification": {
+    "installed_workspace_regression": "2434 passed, 2 skipped; includes 6 unpublished API inventory tests; collected before 6 additional parser-boundary cases",
+    "installed_flat_opc_final_suite": "56 passed, including 6 additional parser-boundary cases and all-part semantic comparison",
+    "installed_examples": "31 passed",
+    "ruff_parser_and_tests": "passed",
+    "git_diff_check": "passed",
+    "previous_load_commit_ci": {
+      "head": "aab2cb30a2f006487ff5599ae668ad651f6a91e0",
+      "run": "https://github.com/shenyankm/DocWeave/actions/runs/37911376821",
+      "conclusion": "success"
+    }
+  }
+}

@@ -16,6 +16,7 @@ from typing import Optional, Union
 from dataclasses import dataclass
 
 from aspose.words_foss import light_document_model as ldm
+from aspose.words_foss._flat_opc import MAIN_TYPES, encode
 from aspose.words_foss._io import atomic_output
 from aspose.words_foss.diagnostics import ContentLossWarning, ConversionWarning, document_nodes, header_footer_losses, source_story_losses, warn
 from aspose.words_foss.saving import (
@@ -92,7 +93,7 @@ def _collect_hf_children(
 
 
 class LdmDocxWriter:
-    """Convert an :class:`ldm.Document` into a DOCX file.
+    """Convert an :class:`ldm.Document` into DOCX or Flat OPC XML.
 
     The writer is intentionally stateless across calls — every
     invocation produces a fresh hyperlink relationship map.  This keeps
@@ -145,8 +146,8 @@ class LdmDocxWriter:
         """Render every XML part the package needs and return them bundled."""
         from aspose.words_foss.document import SaveFormat, _coerce_save_format
 
-        if _coerce_save_format(getattr(self.options, "save_format", SaveFormat.DOCX)) != SaveFormat.DOCX:
-            raise ValueError("OoxmlSaveOptions.save_format must be DOCX")
+        if _coerce_save_format(getattr(self.options, "save_format", SaveFormat.DOCX)) not in {SaveFormat.DOCX, *MAIN_TYPES}:
+            raise ValueError("OoxmlSaveOptions.save_format must be DOCX or a Flat OPC variant")
         if coerce_enum(Zip64Mode, getattr(self.options, "zip_64_mode", Zip64Mode.NEVER)) == Zip64Mode.ALWAYS:
             warn("DOCX zip_64_mode=ALWAYS does not force ZIP64 records; behaves like IF_NECESSARY",
                  ConversionWarning, code="docx.unsupported_option")
@@ -255,7 +256,13 @@ class LdmDocxWriter:
 
     # ------------------------------------------------------------------
     def write(self, doc: ldm.Document, output_path: Union[str, Path]) -> None:
-        """Render ``doc`` and write the resulting ``.docx`` to disk."""
+        """Render ``doc`` and atomically write DOCX or explicit Flat OPC XML."""
+        from aspose.words_foss.document import _coerce_save_format
+
+        if _coerce_save_format(getattr(self.options, "save_format", None)) in MAIN_TYPES:
+            with atomic_output(output_path) as temporary:
+                temporary.write_bytes(self.write_to_bytes(doc))
+            return
         parts = self._render_parts(doc)
         compress_type, compresslevel = self._compression()
         with atomic_output(output_path) as temporary:
@@ -269,7 +276,7 @@ class LdmDocxWriter:
             )
 
     def write_to_bytes(self, doc: ldm.Document) -> bytes:
-        """Render ``doc`` and return the ``.docx`` as raw bytes."""
+        """Render ``doc`` and return DOCX or explicit Flat OPC XML bytes."""
         parts = self._render_parts(doc)
         buffer = io.BytesIO()
         compress_type, compresslevel = self._compression()
@@ -281,7 +288,11 @@ class LdmDocxWriter:
             allow_zip64=self._allow_zip64(),
             pretty_format=self._pretty_format(),
         )
-        return buffer.getvalue()
+        data = buffer.getvalue()
+        from aspose.words_foss.document import _coerce_save_format
+
+        fmt = _coerce_save_format(getattr(self.options, "save_format", None))
+        return encode(data, MAIN_TYPES[fmt]) if fmt in MAIN_TYPES else data
 
 
 @dataclass

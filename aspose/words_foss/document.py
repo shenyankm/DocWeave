@@ -27,7 +27,7 @@ from typing import Optional, Union, BinaryIO
 
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss._io import atomic_output, check_input_size, read_bounded
-from aspose.words_foss._flat_opc import is_flat_opc
+from aspose.words_foss._flat_opc import MAIN_TYPES, is_flat_opc
 from aspose.words_foss.models import ConversionOptions
 from aspose.words_foss.diagnostics import (
     ContentLossWarning, ConversionDiagnostic, ConversionWarning, collect_diagnostics, source_story_losses, warn,
@@ -154,6 +154,10 @@ class SaveFormat(IntEnum):
 
     DOC = 10
     DOCX = 20
+    FLAT_OPC = 24
+    FLAT_OPC_MACRO_ENABLED = 25
+    FLAT_OPC_TEMPLATE = 26
+    FLAT_OPC_TEMPLATE_MACRO_ENABLED = 27
     PDF = 40
     TEXT = 70
     MARKDOWN = 73
@@ -162,6 +166,10 @@ class SaveFormat(IntEnum):
 _SAVE_FORMAT_ALIASES = {
     "doc": SaveFormat.DOC,
     "docx": SaveFormat.DOCX,
+    "flat_opc": SaveFormat.FLAT_OPC,
+    "flat_opc_macro_enabled": SaveFormat.FLAT_OPC_MACRO_ENABLED,
+    "flat_opc_template": SaveFormat.FLAT_OPC_TEMPLATE,
+    "flat_opc_template_macro_enabled": SaveFormat.FLAT_OPC_TEMPLATE_MACRO_ENABLED,
     "pdf": SaveFormat.PDF,
     "text": SaveFormat.TEXT,
     "txt": SaveFormat.TEXT,
@@ -430,10 +438,12 @@ class Document:
         if fmt is None and save_format_or_options is not None:
             raise ValueError(
                 f"Unsupported save format: {save_format_or_options!r}. "
-                f"Supported formats: Markdown, Text, PDF, DOCX."
+                f"Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
             )
 
-        if fmt == SaveFormat.MARKDOWN or (fmt is None and suffix == ".md"):
+        if fmt in MAIN_TYPES:
+            self._save_as_docx(output_path, doc, OoxmlSaveOptions(fmt))
+        elif fmt == SaveFormat.MARKDOWN or (fmt is None and suffix == ".md"):
             self._save_as_markdown(output_path, doc)
         elif fmt == SaveFormat.TEXT or (fmt is None and suffix == ".txt"):
             self._save_as_text(output_path, doc)
@@ -444,7 +454,7 @@ class Document:
         else:
             raise ValueError(
                 f"Unsupported save format: {save_format_or_options!r}. "
-                f"Supported formats: Markdown, Text, PDF, DOCX."
+                f"Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
             )
 
     def to_bytes(
@@ -469,13 +479,14 @@ class Document:
                 from aspose.words_foss.pdf_writer import LdmPdfWriter
                 pdf_options = save_format_or_options if isinstance(save_format_or_options, PdfSaveOptions) else None
                 return LdmPdfWriter(pdf_options).write_to_bytes(doc)
-            if isinstance(save_format_or_options, OoxmlSaveOptions) or fmt == SaveFormat.DOCX:
+            if isinstance(save_format_or_options, OoxmlSaveOptions) or fmt == SaveFormat.DOCX or fmt in MAIN_TYPES:
                 from aspose.words_foss.docx_writer import LdmDocxWriter
-                docx_options = save_format_or_options if isinstance(save_format_or_options, OoxmlSaveOptions) else None
+                docx_options = (save_format_or_options if isinstance(save_format_or_options, OoxmlSaveOptions)
+                                else OoxmlSaveOptions(fmt) if fmt in MAIN_TYPES else None)
                 return LdmDocxWriter(docx_options).write_to_bytes(doc)
             if fmt == SaveFormat.TEXT:
                 return self._render_text(doc).encode("utf-8")
-            raise ValueError("Unsupported save format; supported formats: Markdown, Text, PDF, DOCX")
+            raise ValueError("Unsupported save format; supported formats: Markdown, Text, PDF, DOCX, Flat OPC")
 
     def to_dict(self) -> dict:
         """Export ordered content with model locations, not inferred PDF page positions."""
