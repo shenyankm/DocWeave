@@ -51,7 +51,7 @@ def verify(root):
     baseline = read("commercial-26.9-baseline.json")
     registry = baseline["documentation_registry"]
     raw_registry = (root / registry["path"]).read_bytes()
-    assert digest(raw_registry) == registry["sha256"]
+    assert digest(raw_registry.replace(b"\r\n", b"\n")) == registry["sha256"]
     assert [(row["url"], row["sha256"]) for row in json.loads(raw_registry)["documents"]] == [
         (row["url"], row["sha256"]) for row in baseline["documentation"]]
     symbols = [item["id"] for module in declarations["modules"] for item in module["symbols"]]

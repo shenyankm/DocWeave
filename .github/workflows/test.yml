@@ -37,6 +37,9 @@ jobs:
       - name: Check installed resources and imports
         working-directory: ${{ runner.temp }}
         run: python "${{ github.workspace }}/scripts/check_wheel.py"
+      - name: Verify commercial baseline evidence
+        working-directory: ${{ runner.temp }}
+        run: python "${{ github.workspace }}/scripts/verify_commercial_baseline.py"
       - name: Test installed wheel outside the checkout
         working-directory: ${{ runner.temp }}
         run: python -m pytest "${{ github.workspace }}/tests" -q --import-mode=importlib

@@ -170,3 +170,47 @@ def test_format_output_verifier_rejects_tampered_or_missing_evidence(tmp_path, t
         report["reports"]["save_current"]["records"][0]["files"][0]["name"] = "missing.bin"
     with pytest.raises((AssertionError, KeyError)):
         check(report, archive)
+
+
+def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary_change(tmp_path):
+    from shutil import copyfile
+
+    root = Path(__file__).parents[1]
+    verify = runpy.run_path(str(root / "scripts" / "verify_commercial_baseline.py"))["verify"]
+    source = root / "docs" / "benchmarks"
+    names = ["commercial-26.9-api.json", "commercial-26.9-capabilities.json", "commercial-26.9-all-enums.json",
+             "commercial-26.9-baseline.json", "commercial-26.9-doc-registry.json", "commercial-26.9-format-behavior.json",
+             "commercial-26.9-literal-text.json", "corpus/commercial-26.9-dom.docx",
+             "corpus/commercial-26.9-format-outputs.zip", "corpus/commercial-26.9-literal-text.zip",
+             "corpus/commercial-26.9-literal-outputs.zip"]
+    for name in names:
+        target = tmp_path / name
+        target.parent.mkdir(exist_ok=True)
+        if target.suffix == ".json":
+            target.write_bytes((source / name).read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
+        else:
+            copyfile(source / name, target)
+    result = verify(tmp_path)
+    assert result["checked_format_outputs"] == 100 and result["behavioral_acceptance"] is False
+    archive = tmp_path / "corpus" / "commercial-26.9-literal-outputs.zip"
+    archive.write_bytes(archive.read_bytes() + b"corruption")
+    with pytest.raises(AssertionError):
+        verify(tmp_path)
+
+
+def test_format_ledger_identifies_refusal_return_contract_and_load_error_gaps():
+    format_records = runpy.run_path(str(Path(__file__).parents[1] / "scripts" / "build_alignment_ledger.py"))["format_records"]
+    baseline_saved = [{"name": name, "value": value, "outcome": {"status": "returned", "return_type": "SaveOutputParameters"}}
+                      for name, value in [("DOC", 10), ("DOCX", 20)]]
+    current_saved = [{"name": "DOC", "value": 10, "outcome": {"status": "raised", "exception_type": "ValueError"}},
+                     {"name": "DOCX", "value": 20, "outcome": {"status": "returned", "return_type": "NoneType"}}]
+    baseline_loaded = [{"name": "PDF", "value": 40, "status": "returned", "loaded": True}]
+    current_loaded = [{"name": "PDF", "value": 40, "status": "raised", "loaded": False,
+                       "phase": "load", "exception_type": "UnicodeDecodeError"}]
+    reports = {key: {"records": rows} for key, rows in [("save_commercial", baseline_saved),
+               ("save_current", current_saved), ("load_commercial", baseline_loaded), ("load_current", current_loaded)]}
+    rows = format_records({"reports": reports, "independent_docx_checks": {"load_current": []}})
+    assert "rejects or fails" in rows[0]["gap"]
+    assert "return contract differs" in rows[1]["gap"]
+    assert rows[2]["implementation"]["exception_type"] == "UnicodeDecodeError"
+    assert rows[2]["implementation"]["phase"] == "load" and "roundtrip fails" in rows[2]["gap"]

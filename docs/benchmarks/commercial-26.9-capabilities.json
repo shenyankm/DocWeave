@@ -303572,7 +303572,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 53. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303605,7 +303605,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 102. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303638,7 +303638,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 10. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303671,7 +303671,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 81. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303704,7 +303704,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 21. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303736,7 +303736,7 @@
         "status": "returned",
         "return_type": "NoneType"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save return contract differs; format fidelity/options remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303769,7 +303769,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 11. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303802,7 +303802,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 23. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303835,7 +303835,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 22. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303868,7 +303868,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 103. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303901,7 +303901,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 106. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303934,7 +303934,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 52. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303966,7 +303966,7 @@
         "status": "returned",
         "return_type": "NoneType"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save return contract differs; format fidelity/options remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -303998,7 +303998,7 @@
         "status": "returned",
         "return_type": "NoneType"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save return contract differs; format fidelity/options remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304030,7 +304030,7 @@
         "status": "returned",
         "return_type": "NoneType"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save return contract differs; format fidelity/options remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304062,7 +304062,7 @@
         "status": "returned",
         "return_type": "NoneType"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save return contract differs; format fidelity/options remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304095,7 +304095,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 105. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304128,7 +304128,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 50. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304161,7 +304161,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 45. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304194,7 +304194,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 104. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304226,7 +304226,7 @@
         "status": "returned",
         "return_type": "NoneType"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save return contract differs; format fidelity/options remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304259,7 +304259,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 51. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304292,7 +304292,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 54. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304325,7 +304325,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 60. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304358,7 +304358,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 46. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304391,7 +304391,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 61. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304424,7 +304424,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 48. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304456,7 +304456,7 @@
         "status": "returned",
         "return_type": "NoneType"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save return contract differs; format fidelity/options remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304489,7 +304489,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 101. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304522,7 +304522,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 47. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304555,7 +304555,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 30. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304588,7 +304588,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 44. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304620,7 +304620,7 @@
         "status": "returned",
         "return_type": "NoneType"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save return contract differs; format fidelity/options remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304653,7 +304653,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 100. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304687,7 +304687,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 0. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "save exception type differs; other error semantics remain unverified",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304720,7 +304720,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 107. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304753,7 +304753,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 31. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304786,7 +304786,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 42. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304819,7 +304819,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 71. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304852,7 +304852,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 72. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304885,7 +304885,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 80. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304918,7 +304918,7 @@
         "exception_type": "ValueError",
         "message": "Unsupported save format: 41. Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "baseline save returns an output; current save rejects or fails",
       "dependencies": [
         "aspose.words.Document.save"
       ],
@@ -304992,9 +304992,11 @@
       },
       "implementation": {
         "status": "raised",
-        "loaded": false
+        "loaded": false,
+        "phase": "load",
+        "exception_type": "UnicodeDecodeError"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "current loading or roundtrip fails for the baseline-produced sample",
       "dependencies": [
         "aspose.words.Document.__init__"
       ],
@@ -305352,9 +305354,11 @@
       },
       "implementation": {
         "status": "raised",
-        "loaded": false
+        "loaded": false,
+        "phase": "load",
+        "exception_type": "KeyError"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "current loading or roundtrip fails for the baseline-produced sample",
       "dependencies": [
         "aspose.words.Document.__init__"
       ],
@@ -305692,9 +305696,11 @@
       },
       "implementation": {
         "status": "raised",
-        "loaded": false
+        "loaded": false,
+        "phase": "load",
+        "exception_type": "UnicodeDecodeError"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "current loading or roundtrip fails for the baseline-produced sample",
       "dependencies": [
         "aspose.words.Document.__init__"
       ],
@@ -305756,9 +305762,11 @@
       },
       "implementation": {
         "status": "raised",
-        "loaded": false
+        "loaded": false,
+        "phase": "load",
+        "exception_type": "KeyError"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "current loading or roundtrip fails for the baseline-produced sample",
       "dependencies": [
         "aspose.words.Document.__init__"
       ],
@@ -305788,9 +305796,11 @@
       },
       "implementation": {
         "status": "raised",
-        "loaded": false
+        "loaded": false,
+        "phase": "load",
+        "exception_type": "KeyError"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "current loading or roundtrip fails for the baseline-produced sample",
       "dependencies": [
         "aspose.words.Document.__init__"
       ],
@@ -305820,9 +305830,11 @@
       },
       "implementation": {
         "status": "raised",
-        "loaded": false
+        "loaded": false,
+        "phase": "load",
+        "exception_type": "UnicodeDecodeError"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "current loading or roundtrip fails for the baseline-produced sample",
       "dependencies": [
         "aspose.words.Document.__init__"
       ],
@@ -305852,9 +305864,11 @@
       },
       "implementation": {
         "status": "raised",
-        "loaded": false
+        "loaded": false,
+        "phase": "load",
+        "exception_type": "ValueError"
       },
-      "gap": "format fidelity and all options/overloads remain unverified",
+      "gap": "current loading or roundtrip fails for the baseline-produced sample",
       "dependencies": [
         "aspose.words.Document.__init__"
       ],

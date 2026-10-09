@@ -94,11 +94,19 @@
       "status": "completed",
       "conclusion": "success",
       "scope": "published Flat OPC loading; inventory is separately incomplete"
+    },
+    {
+      "commit": "dd52d3d3f5e328a7bcbd06a5d2dd683e0be99d96",
+      "run": "https://github.com/shenyankm/DocWeave/actions/runs/37913934934",
+      "status": "completed",
+      "conclusion": "success",
+      "scope": "published Flat OPC saving and VBA omission diagnostics; full alignment remains incomplete"
     }
   ],
   "documentation_registry": {
     "path": "commercial-26.9-doc-registry.json",
-    "sha256": "d9aa950299d05894a917abbb5af9101301fe667e42a3c4b041e08d6db8c05d02"
+    "sha256": "d9aa950299d05894a917abbb5af9101301fe667e42a3c4b041e08d6db8c05d02",
+    "hash_rule": "UTF-8 JSON source with LF line endings; archive and output hashes remain raw bytes"
   },
   "current_snapshot_commit": "dd52d3d3f5e328a7bcbd06a5d2dd683e0be99d96"
 }

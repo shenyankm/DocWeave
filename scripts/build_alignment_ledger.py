@@ -34,6 +34,18 @@ def format_records(formats):
                    "validation": ["bounded actual output/error observation"],
                    "exit_criteria": "all applicable structures/options/overloads/errors, DOM roundtrip and rendering verified",
                    "limits": ["one small input; evaluation watermark; no broad fidelity acceptance"], "delivery": "baseline_observation_only"}
+            observed = current[name]
+            if direction == "save":
+                baseline_result, current_result = sample["outcome"], observed["outcome"]
+                if baseline_result["status"] == "returned" and current_result["status"] == "raised":
+                    row["gap"] = "baseline save returns an output; current save rejects or fails"
+                elif baseline_result["status"] == current_result["status"] == "returned" and baseline_result.get("return_type") != current_result.get("return_type"):
+                    row["gap"] = "save return contract differs; format fidelity/options remain unverified"
+                elif baseline_result["status"] == current_result["status"] == "raised" and baseline_result.get("exception_type") != current_result.get("exception_type"):
+                    row["gap"] = "save exception type differs; other error semantics remain unverified"
+            elif observed.get("status") == "raised":
+                row["gap"] = "current loading or roundtrip fails for the baseline-produced sample"
+                row["implementation"].update({key: observed[key] for key in ("phase", "exception_type") if key in observed})
             if direction == "load" and sample.get("status") == "missing_legal_sample_not_verified":
                 row["gap"] = "legal input sample missing; capability remains unverified"
             if direction == "load" and name in checks:
