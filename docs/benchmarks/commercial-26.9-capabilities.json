@@ -30459,6 +30459,15 @@
           "first-paragraph page_break_before normalization unresolved; see first-paragraph-page-break-26.9.json",
           "direct paragraph format uses explicit/unset semantics and permits None; differs from native resolved interface"
         ]
+      },
+      "trial_first_paragraph_evidence": {
+        "file": "first-paragraph-trial-26.9.json",
+        "scope": "18 controlled unlicensed observations; 15 load positions and 3 builder/save cases",
+        "finding": "builder first paragraph True changes to False when save inserts trial banner; paragraph prefix preserves True; section type does not change load finding",
+        "validation": "owned corpus/output hashes, independent python-docx reading, and original-package preservation tests",
+        "tests": "tests/test_first_paragraph_trial.py",
+        "limits": "licensed behavior and final rendering remain unverified; first-paragraph difference remains unresolved",
+        "implementation": "retain explicit source flag; do not imitate unlicensed watermark effects"
       }
     },
     {

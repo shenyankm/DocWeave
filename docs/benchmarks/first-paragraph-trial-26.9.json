@@ -1,0 +1,465 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "licensed_behavior_confirmed": false,
+  "rendering_acceptance": false,
+  "status": "trial_confounded_first_paragraph_behavior; licensed control still required",
+  "corpus": "corpus/first-paragraph-trial-26.9.zip",
+  "outputs": "corpus/first-paragraph-trial-26.9-outputs.zip",
+  "corpus_sha256": "71a2c2706fef83684752c6a4bb966e9a17d8f965d669cf49d4fb6204a3e1f60e",
+  "outputs_sha256": "2d1e9e9a8d365109a94501078fe5e8d7e755237c879ea0ad7fcaaece72ba5e6a",
+  "records": [
+    {
+      "mode": "load",
+      "input": "none-absent.docx",
+      "input_sha256": "10d07c80e3bbfb26ef983ccc43f466bd1ceb412509a518950650b01b868b56f5",
+      "before_save": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "00.docx",
+      "output_sha256": "a4cdc5a283899a8a0946878eb4dc52037d8b832d3fb0458e6dce8a4b7fdacaa8"
+    },
+    {
+      "mode": "load",
+      "input": "none-continuous.docx",
+      "input_sha256": "d3053b746e1f7de94ee7eb0b193cce5662b51473bed56d9be10afb73bd722501",
+      "before_save": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "01.docx",
+      "output_sha256": "fe9049aae439cadbc1742a63df10f9c7ee5e9b0e790ec398f9d5cbc04cfae660"
+    },
+    {
+      "mode": "load",
+      "input": "none-nextPage.docx",
+      "input_sha256": "df1bc12954401457f41e4277566448c67b65a8f4221165a39685e34e56bb7d1b",
+      "before_save": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "02.docx",
+      "output_sha256": "8c358f8d3658c581a60953201f227d8a128304864a7ec5a9f63718896e3ff7a2"
+    },
+    {
+      "mode": "load",
+      "input": "empty-absent.docx",
+      "input_sha256": "5a96a190394899928e8c7d562f0203931c4cbab885fa9e82273a72b8412356ba",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "03.docx",
+      "output_sha256": "35e2297a43ea122a7a5d62c9dc829932aebbb0e8cc8f6b69dd9bc6d83ba5a594"
+    },
+    {
+      "mode": "load",
+      "input": "empty-continuous.docx",
+      "input_sha256": "f230c45c70c6b2ab7c7f58a1b4979c4c4329c72d0a1e74cef14546ab9b97f927",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "04.docx",
+      "output_sha256": "9d8382753c6af044d57e9ea31605625f02615ced69c3b2d5e906788d9987a07a"
+    },
+    {
+      "mode": "load",
+      "input": "empty-nextPage.docx",
+      "input_sha256": "ae3c2428a4c3ac8a10260393e9052aab0c2de02dfaf424a6a9a2a118c71dcab2",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "05.docx",
+      "output_sha256": "fa63a43f59411f7c7c72805ac7c2f666641630b52e6ea4d51176ffbb58c6f8b0"
+    },
+    {
+      "mode": "load",
+      "input": "text-absent.docx",
+      "input_sha256": "6269a829176cb2e830015d0926a888c0a8794068e2ea614e02e31f7f96e0e05c",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "06.docx",
+      "output_sha256": "7b3536be44cf895f94ad99cdd995b909ec5656fa7d1bac8c0c2b3f177f1bdb39"
+    },
+    {
+      "mode": "load",
+      "input": "text-continuous.docx",
+      "input_sha256": "baa549a5b1e47c3d7b081f9de286049146128222abfeaf90cf517c9616f9d09c",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "07.docx",
+      "output_sha256": "6801aa8150a40e568636db7f42b25cf4f02da55cb463f878cf969af2a4ef2cee"
+    },
+    {
+      "mode": "load",
+      "input": "text-nextPage.docx",
+      "input_sha256": "ca00fab758fc1d15a076aab7bd8dc56bdc6c52a60123c208cb642c873b63cde8",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "08.docx",
+      "output_sha256": "d5855bf06cbb96bbe3c2b12eef06a8a0788b2830c64a9aa2803d98905de7e208"
+    },
+    {
+      "mode": "load",
+      "input": "table-absent.docx",
+      "input_sha256": "1779191792f7bbb1520ddf547640a4a4cf36f100bac6c6ac6e53526a297690f2",
+      "before_save": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "09.docx",
+      "output_sha256": "dd6e552e64efca53ad2fac3b98f9f124fb9b3e9e620559b024593d6eeda90889"
+    },
+    {
+      "mode": "load",
+      "input": "table-continuous.docx",
+      "input_sha256": "44e7e20d5dcb66fd7ecfa713226cd1c26545a06f817b09fbbbd587cf82999f23",
+      "before_save": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "10.docx",
+      "output_sha256": "591f6b7fa95baa5d4632c5df483c8a4323978db58e60f1dc431122ffd52ce928"
+    },
+    {
+      "mode": "load",
+      "input": "table-nextPage.docx",
+      "input_sha256": "1947cfc623132be9c6ff65e94a8dcc8854db2cf15b07c6f12c3148f259501528",
+      "before_save": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "11.docx",
+      "output_sha256": "8787ae84f2bc28df5d9cdf01f49758d76c3f8ebec442422cb4dd6843bd3dd2a2"
+    },
+    {
+      "mode": "load",
+      "input": "section-absent.docx",
+      "input_sha256": "3b7e7ea6e8145323fa5ea2f3d111bf3c4bb7ab5d683c511f99cf92bd065214d2",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "12.docx",
+      "output_sha256": "d7d54d4df5007012030c285fbc0ac6faf0ecccc8313dda8f48e1b66e8a8065b2"
+    },
+    {
+      "mode": "load",
+      "input": "section-continuous.docx",
+      "input_sha256": "353fadd644fed4abae6c1ad20e3b5512419a358e297f448e1e3bdfbf23597a38",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "13.docx",
+      "output_sha256": "967d01b29e38495cee47f78ac8eb6841d70f89f02ba5a6beaaf9f348f140da68"
+    },
+    {
+      "mode": "load",
+      "input": "section-nextPage.docx",
+      "input_sha256": "d54bccebd65e71581f149996003f47dc43e5db7903b968dda48f83be6b0f1dec",
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "14.docx",
+      "output_sha256": "fa7b23b7a07875ec22ea4c971f39dbd7d26bb69971f4fae382dd9e2670ec2d16"
+    },
+    {
+      "mode": "builder",
+      "input": "none",
+      "input_sha256": null,
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 0
+      },
+      "saved_live": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          false
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "15.docx",
+      "output_sha256": "2be8e07865905c0d0faabc6059c2d5dbe5a43ca671ca34fc6638a6d9cecae64c"
+    },
+    {
+      "mode": "builder",
+      "input": "empty",
+      "input_sha256": null,
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 0
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "16.docx",
+      "output_sha256": "1747c95dcdca32e910444366a5d7bcbfeb35f2f1dbdff6fb051012fd5bd1197f"
+    },
+    {
+      "mode": "builder",
+      "input": "text",
+      "input_sha256": null,
+      "before_save": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 0
+      },
+      "saved_live": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "reopened": {
+        "owned": [
+          true
+        ],
+        "trial_banner_count": 1
+      },
+      "output": "17.docx",
+      "output_sha256": "859778b3aae37cfbfb5ffe08843310356b99084f77f40eda24d7e11d387f147f"
+    }
+  ]
+}

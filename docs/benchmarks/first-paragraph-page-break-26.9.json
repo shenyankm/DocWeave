@@ -126,5 +126,10 @@
       "output_sha256": "e1c4aeaa9ebcb795ca596d2ed2a45a2eaadc5394d13cff9639c4f71da6db8e4d"
     }
   ],
-  "status": "unresolved_first_paragraph_load_normalization_or_trial_interference; DocWeave preserves original explicit flag"
+  "status": "unresolved_first_paragraph_load_normalization_or_trial_interference; DocWeave preserves original explicit flag",
+  "controlled_trial_evidence": {
+    "file": "first-paragraph-trial-26.9.json",
+    "scope": "15 owned load contexts and 3 builder/save controls; trial banner presence and flag mutation observed together",
+    "status": "trial_confounded; licensed control required; do not normalize preserved source XML"
+  }
 }

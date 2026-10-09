@@ -66,7 +66,9 @@ def verify_paragraph_pagination(root):
         for row in rows:
             data = inputs.read(row["input"])
             prop, expected = generated[row["input"]]
-            assert prop == row["property"] and data == expected and digest(data) == row["input_sha256"]
+            assert prop == row["property"] and digest(data) == row["input_sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(expected)) as generated_package:
+                assert {key: actual.read(key) for key in actual.namelist()} == {key: generated_package.read(key) for key in generated_package.namelist()}
             assert saved_pagination(data, prop) == row["before"]
             assert row["edited"]["derived" if row["target"] == "style" else "paragraph"] == row["value"]
             assert row["edited"] == row["saved_live"] == row["reopened"]
@@ -99,6 +101,49 @@ def verify_first_paragraph_page_break(root):
             assert saved_pagination(data, row["property"]) == {"base": False, "derived": False, "paragraph": True}
             assert row["before"] == {"base": False, "derived": False, "paragraph": False}
             assert row["edited"] == row["saved_live"] == row["reopened"] == saved_pagination(saved, row["property"])
+    return len(rows)
+
+
+def trial_pagination_snapshot(data):
+    from docx import Document
+
+    paragraphs = Document(BytesIO(data)).paragraphs
+    return {"owned": [p.paragraph_format.page_break_before or False for p in paragraphs if "IMPORT" in p.text],
+            "trial_banner_count": sum("Created with an evaluation copy" in p.text for p in paragraphs)}
+
+
+def verify_first_paragraph_trial(root):
+    report = json.loads((root / "first-paragraph-trial-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["licensed_behavior_confirmed"] is report["rendering_acceptance"] is False
+    assert report["status"].startswith("trial_confounded_")
+    source, raw = ((root / report[key]).read_bytes() for key in ("corpus", "outputs"))
+    assert digest(source) == report["corpus_sha256"] and digest(raw) == report["outputs_sha256"]
+    generated = dict(runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/first_paragraph_trial.py"))["inputs"]())
+    rows = report["records"]
+    assert len(rows) == 18 and len(generated) == 15
+    assert {(r["mode"], r["input"]) for r in rows} == {
+        *(('load', name) for name in generated), *(('builder', name) for name in ("none", "empty", "text"))}
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        assert set(inputs.namelist()) == set(generated)
+        assert set(outputs.namelist()) == {r["output"] for r in rows}
+        for row in rows:
+            name = row["input"]
+            retained = name.split("-")[0] not in {"none", "table"}
+            if row["mode"] == "load":
+                data = inputs.read(name)
+                assert digest(data) == row["input_sha256"]
+                with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[name])) as expected:
+                    assert {key: actual.read(key) for key in actual.namelist()} == {key: expected.read(key) for key in expected.namelist()}
+                assert trial_pagination_snapshot(data) == {"owned": [True], "trial_banner_count": 0}
+                assert row["before_save"] == {"owned": [retained], "trial_banner_count": 1}
+            else:
+                assert row["input_sha256"] is None
+                assert row["before_save"] == {"owned": [True], "trial_banner_count": 0}
+            assert row["saved_live"] == row["reopened"] == {"owned": [retained], "trial_banner_count": 1}
+            saved = outputs.read(row["output"])
+            assert digest(saved) == row["output_sha256"]
+            assert trial_pagination_snapshot(saved) == row["reopened"]
     return len(rows)
 
 
@@ -664,6 +709,7 @@ def verify(root):
     paragraph_edits = verify_style_paragraph_formats(root)
     pagination = verify_paragraph_pagination(root)
     first_paragraph = verify_first_paragraph_page_break(root)
+    first_trial = verify_first_paragraph_trial(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -679,6 +725,7 @@ def verify(root):
             "checked_style_paragraph_edit_outputs": paragraph_edits,
             "checked_paragraph_pagination_outputs": pagination,
             "checked_unresolved_first_paragraph_outputs": first_paragraph,
+            "checked_trial_first_paragraph_outputs": first_trial,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 
