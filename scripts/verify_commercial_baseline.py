@@ -231,6 +231,14 @@ def verify_style_imports(root, name="style-import-conflicts-26.9.json"):
             assert mismatches == sorted(report["story_mismatches"][phase])
         assert not report["story_mismatches"]["candidate"]
     assert report["validation"]["full_import_acceptance"] is False and report["validation"]["rendering_acceptance"] is False
+    if "style_state_baseline" in report:
+        raw = (root / report["style_state_baseline"]["file"]).read_bytes()
+        assert digest(raw.replace(b"\r\n", b"\n")) == report["style_state_baseline"]["sha256"]
+        native_styles = {row["case"]: row["after_reopen"]["styles"] for row in json.loads(raw)["reports"][0]["records"]}
+        with ZipFile(BytesIO(raw_outputs)) as outputs:
+            for key, row in phases["candidate"].items():
+                if row["outcome"] == "returned":
+                    assert saved_style_fonts(outputs.read("candidate/" + row["output"])) == native_styles[key], "saved style font mismatch"
     return checked
 
 
@@ -304,13 +312,14 @@ def saved_style_fonts(data):
     return result
 
 
-def verify_style_save_state(root):
-    report = json.loads((root / "style-save-state-26.9.json").read_text())
+def verify_style_save_state(root, name="style-save-state-26.9.json"):
+    counts = {"style-save-state-26.9.json": (247, 132), "character-style-save-state-26.9.json": (108,)}
+    report = json.loads((root / name).read_text())
     raw = (root / report["outputs"]["archive"]).read_bytes()
     assert digest(raw) == report["outputs"]["sha256"]
     changes, members = [], set()
     with ZipFile(BytesIO(raw)) as outputs:
-        for expected, observed in zip((247, 132), report["reports"], strict=True):
+        for expected, observed in zip(counts[name], report["reports"], strict=True):
             assert observed["version"] == "26.9.0" and observed["licensed"] is False
             corpus = (root / observed["corpus"]).read_bytes()
             assert digest(corpus) == observed["corpus_sha256"]
@@ -335,6 +344,22 @@ def verify_style_save_state(root):
     assert sorted(changes) == report["reopen_paragraph_changes"]
     assert report["live_changes"] == report["reopen_style_changes"] == []
     assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    if "candidate" in report:
+        native = {row["case"]: row for row in report["reports"][0]["records"]}
+        candidate = {row["case"]: row for row in report["candidate"]["records"]}
+        reread = report["candidate_official_rereads"]
+        assert reread["version"] == "26.9.0" and reread["licensed"] is False
+        actual = {row["case"]: row for row in reread["records"]}
+        assert len(actual) == len(reread["records"]) == len(candidate) == len(report["candidate"]["records"]) == 108
+        assert set(native) == set(candidate) == set(actual)
+        assert report["candidate"]["corpus_sha256"] == report["reports"][0]["corpus_sha256"]
+        for key, row in candidate.items():
+            assert row["inputs"] == native[key]["inputs"]
+            assert row["output_sha256"] == actual[key]["output_sha256"]
+            if row["outcome"] == "returned":
+                assert actual[key]["formats"] == native[key]["after_reopen"]["paragraphs"]
+            else:
+                assert row["outcome"] == "raised" and row["destination_unchanged"] is True
     return len(members)
 
 
@@ -381,9 +406,11 @@ def verify(root):
     style_imports = verify_style_imports(root)
     style_imports += verify_style_imports(root, "style-import-translated.json")
     style_imports += verify_style_imports(root, "style-import-default-on.json")
+    style_imports += verify_style_imports(root, "style-import-character-default-on.json")
     style_imports += verify_style_imports(root, "paragraph-style-defaults-26.9.json")
     roundtrips = verify_style_roundtrips(root)
     save_states = verify_style_save_state(root)
+    save_states += verify_style_save_state(root, "character-style-save-state-26.9.json")
     defaults = verify_font_defaults(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,

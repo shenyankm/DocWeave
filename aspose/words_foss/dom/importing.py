@@ -129,13 +129,15 @@ def _translate_style(imported, source_chain, source_bases, target_bases, source,
     default = source._defaults("rPr")
     default_on = any(_onoff(_child(default, name)) for name in ("b", "i"))
     character_context = default_on and any(resolver._kind(style) == "character" for resolver in (source, target) for style in resolver.styles.values())
-    if kind not in {"paragraph", "character"} or default_on and (kind == "character" or character_context):
+    if kind not in {"paragraph", "character"} or default_on and character_context and kind == "paragraph":
         # shortcut: default-on character contexts need native existing-story normalization calibrated before migration.
         if _format_layers(source_bases) != _format_layers(target_bases):
             raise NotImplementedError("Importing a new style over a conflicting base requires effective-format translation")
         if kind in {"paragraph", "character"} and character_context and any(_onoff(_child(default, name)) and _style_toggle(target_bases, name) is True for name in ("b", "i")):
             raise NotImplementedError("Default-on bases in character contexts require saved destination-story normalization")
         return
+    if kind == "character" and any(_onoff(_child(default, name)) and _style_toggle(target_bases, name) is True for name in ("b", "i")):
+        raise NotImplementedError("Default-on bases in character contexts require saved destination-story normalization")
     a, b = _other_format_layers(source_bases), _other_format_layers(target_bases)
     if (any(a) or any(b)) and a != b:
         raise NotImplementedError("Importing other conflicting style properties requires effective-format translation")
@@ -152,6 +154,8 @@ def _translate_style(imported, source_chain, source_bases, target_bases, source,
                 if kind == "paragraph":
                     value = _onoff(_child(default, name)) if value is None else value
                     base = _onoff(_child(default, name)) if base is None else base
+                elif value is not None:
+                    value ^= _onoff(_child(default, name))
                 value = None if value is None else "1" if value else "0"
                 base = None if base is None else "1" if base else "0"
             else:

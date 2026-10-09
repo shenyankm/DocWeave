@@ -190,10 +190,13 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
              "corpus/style-import-conflict-outputs.zip", "style-import-translated.json",
              "corpus/style-import-translated.zip", "font-defaults-26.9.json", "corpus/font-defaults-26.9.zip",
              "style-import-default-on.json", "corpus/style-import-default-on.zip",
+             "style-import-character-default-on.json", "corpus/style-import-character-default-on.zip",
              "paragraph-style-defaults-26.9.json", "corpus/paragraph-style-defaults-26.9.zip",
              "corpus/paragraph-style-default-outputs.zip", "corpus/paragraph-default-repeat-outputs.zip",
              "style-save-roundtrips-26.9.json", "corpus/style-save-roundtrips-26.9.zip",
              "style-save-state-26.9.json", "corpus/style-save-state-26.9.zip"]
+    names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
+              "corpus/character-style-defaults-26.9.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -205,9 +208,9 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_format_outputs"] == 100 and result["behavioral_acceptance"] is False
     assert result["checked_import_outputs"] == 168
     assert result["checked_style_inputs"] == 745
-    assert result["checked_style_import_outputs"] == 1631
+    assert result["checked_style_import_outputs"] == 1878
     assert result["checked_style_roundtrip_outputs"] == 494
-    assert result["checked_style_save_states"] == 379
+    assert result["checked_style_save_states"] == 487
     assert result["checked_font_default_inputs"] == 5
     font_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                  if row["id"] in {"aspose.words.Font.bold", "aspose.words.Font.italic"}]
@@ -217,8 +220,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     import_rows = [row for row in json.loads((tmp_path / "commercial-26.9-capabilities.json").read_text())["records"]
                    if row["id"] in {"aspose.words.Document.import_node", "aspose.words.DocumentBase.import_node"}]
     assert len(import_rows) == 2
-    assert all(row["style_conflict_evidence"]["file"] == "style-import-default-on.json" for row in import_rows)
-    assert all("23 cases remain unsupported" in row["style_conflict_evidence"]["delivery"] for row in import_rows)
+    assert all(row["style_conflict_evidence"]["file"] == "style-import-character-default-on.json" for row in import_rows)
+    assert all("11 cases remain unsupported" in row["style_conflict_evidence"]["delivery"] for row in import_rows)
     archive = tmp_path / "corpus" / "commercial-26.9-literal-outputs.zip"
     archive.write_bytes(archive.read_bytes() + b"corruption")
     with pytest.raises(AssertionError):
