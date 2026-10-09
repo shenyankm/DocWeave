@@ -2,8 +2,8 @@
 
 本页描述本 fork 的 `26.7.0.post2`，不是官方 Aspose 的功能保证。
 新增内存输出、结构化内容、原包定点替换和塑形的用法见 [升级说明](upgrade-notes.md)；
-此前测试及性能结果见 [优化核验报告](optimization-report.md)；本次资源/内容完整性重构见
-[生态借鉴优化验证](ecosystem-optimization-validation.md)。
+同类项目的参考方向见 [生态对比](ecosystem-adoption.md)，固定商业基准、差距和复验材料见
+[商业对齐计划](commercial-alignment-plan.md)。
 
 ## 保存选项与实际格式
 

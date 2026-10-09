@@ -502,10 +502,9 @@ CI 精简为 **4 个组合**：Linux Python **3.10/3.14**、Windows **3.14**、m
 每组构建并安装 wheel，检查导入/字体/许可证/typing 资源，再在**源码目录外**各跑一次完整回归与示例。
 中间版本不在每次提交中运行；已配置任务不代表已通过跨平台验证。
 
-最新本地安装包验收环境为 macOS/Python 3.13.15：**1,602 项回归测试、31 项 API 示例通过**，
-并验证安装后的 wheel、docxtpl 及已安装 LibreOffice 的真实渲染。
-环境和边界见 [当前核验报告](docs/ecosystem-adoption.md)。
-这些结果不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。
+测试结果与提交及环境绑定；当前 CI 见 [GitHub Actions](https://github.com/shenyankm/DocWeave/actions)，
+行为范围和复验材料见 [商业对齐计划](docs/commercial-alignment-plan.md)。
+测试通过不证明 Microsoft Word 视觉一致性或全部 OS/Python 组合兼容。
 
 ```bash
 python -m build --wheel --outdir wheelhouse
@@ -515,7 +514,7 @@ python scripts/benchmark.py --repeat 3 > benchmark.json
 wheel 核验应在独立环境安装后，离开源码目录运行 `scripts/check_wheel.py`，并使用
 `--import-mode=importlib` 跑 pytest；参见 [升级说明](docs/upgrade-notes.md)。
 基准在新进程中记录导入/解析/布局/序列化/写文件耗时、RSS、PDF 字节数和页数。
-最新小样本对照**不能证明整体提速**，个别中位数增加约 10%。
+历史测量仅适用于记录的环境与输入；当前提交的提速结论需要重新实测。
 
 ## 文档与资源
 
@@ -525,9 +524,8 @@ wheel 核验应在独立环境安装后，离开源码目录运行 `scripts/chec
 | [DOCX DOM 指南](docs/docx-dom.md) | 文本范围、格式继承、资源、合并与原包保留规则 |
 | [转换与安全说明](docs/enhanced-conversion.md) | 字体、诊断、限制、CLI 与 LibreOffice |
 | [升级说明](docs/upgrade-notes.md) | 结构化输出、API、模板与打包 |
-| [当前核验报告](docs/ecosystem-adoption.md) | 最新阶段验收、安装包检查、基准数据与剩余边界 |
-| [早期优化报告](docs/optimization-report.md) | 历史 post2 核验与性能测量 |
-| [早期核验报告](docs/verification-report.md) | 历史 post1 验证，不代表当前覆盖范围 |
+| [生态对比与借鉴](docs/ecosystem-adoption.md) | Python 同类产品、吸收方向与证据入口 |
+| [商业对齐计划](docs/commercial-alignment-plan.md) | 固定基准、完整范围、差距及复验 |
 | [Issues](https://github.com/shenyankm/DocWeave/issues) | 增强分支的问题与需求 |
 
 [上游源码](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python)、
@@ -554,4 +552,4 @@ run 字体读取时先应用字符样式继承，再应用直接格式；写出�
 不导入参考正文、图片、页眉页脚和页面设置。样式经过现有 LDM reader/writer，未支持的 OOXML 属性
 不会原样保留；这不是原包模板复制或无损样式导入。
 
-本轮生态吸收、实测结果及待办见 [验收台账](docs/ecosystem-adoption.md)。
+Python 同类产品与吸收方向见 [生态对比与借鉴](docs/ecosystem-adoption.md)。

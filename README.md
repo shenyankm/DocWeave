@@ -525,10 +525,9 @@ and installs the wheel, checks imports/fonts/license/typing resources, then runs
 suite and examples once **outside the checkout**. Intermediate versions are not run on every push;
 configured jobs are not proof of successful cross-platform execution.
 
-Latest installed-wheel verification on macOS/Python 3.13.15: **1,602 regression tests and 31 API examples passed**;
-installed-wheel tests, docxtpl, and available LibreOffice rendering were also exercised.
-See the [current validation report](docs/ecosystem-adoption.md) for environment and boundaries.
-These results do not establish Microsoft Word visual equivalence or all OS/Python combinations.
+Run results are tied to their commit and environment; check [GitHub Actions](https://github.com/shenyankm/DocWeave/actions)
+for current CI and the [alignment evidence](docs/commercial-alignment-plan.md) for behavioral scope.
+Passing tests do not establish Microsoft Word visual equivalence or all OS/Python combinations.
 
 ```bash
 python -m build --wheel --outdir wheelhouse
@@ -538,7 +537,7 @@ python scripts/benchmark.py --repeat 3 > benchmark.json
 For wheel verification, install it in a separate environment and run `scripts/check_wheel.py` and pytest
 with `--import-mode=importlib` from outside this checkout; see [upgrade notes](docs/upgrade-notes.md).
 Benchmarks record import/parse/layout/serialization/write time, RSS, PDF bytes, and pages in cold workers.
-The latest small comparison does **not** demonstrate an overall speedup; some medians increased about 10%.
+Historical measurements apply to their recorded environment and inputs; measure the current commit before claiming a speedup.
 
 ## Documentation & Resources
 
@@ -548,9 +547,8 @@ The latest small comparison does **not** demonstrate an overall speedup; some me
 | [DOCX DOM guide](docs/docx-dom.md) | Ranges, formatting inheritance, resources, merges, and preservation rules |
 | [Conversion and safety](docs/enhanced-conversion.md) | Fonts, diagnostics, limits, CLI, and LibreOffice |
 | [Upgrade notes](docs/upgrade-notes.md) | Structured output, APIs, templates, and packaging |
-| [Current validation](docs/ecosystem-adoption.md) | Latest phase acceptance, installed-wheel checks, benchmark data and remaining boundaries |
-| [Earlier optimization report](docs/optimization-report.md) | Historical post2 checks and performance measurements |
-| [Earlier verification report](docs/verification-report.md) | Historical post1 validation, not current coverage |
+| [Ecosystem comparison](docs/ecosystem-adoption.md) | Python alternatives, adopted ideas, and evidence pointers |
+| [Commercial alignment](docs/commercial-alignment-plan.md) | Fixed baseline, complete scope, gaps, and verification |
 | [Issues](https://github.com/shenyankm/DocWeave/issues) | Fork-specific bugs and requests |
 
 [Upstream source](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python),
@@ -581,4 +579,4 @@ and may follow a replacement reference style. Complete Word toggle semantics are
 DOCX paragraphs without an explicit style use the XML-marked default paragraph style, including
 custom defaults and their base chains. LDM `Style.is_default` preserves the marker; older models remain accepted.
 
-Current ecosystem adoption, validation results, and remaining work: [acceptance ledger](docs/ecosystem-adoption.md).
+Python alternatives and adopted ideas: [ecosystem comparison](docs/ecosystem-adoption.md).
