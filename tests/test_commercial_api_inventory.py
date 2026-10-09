@@ -342,6 +342,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     names += ["font-size-loading-26.9.json", "corpus/font-size-loading-26.9.zip",
               "corpus/font-size-loading-26.9-outputs.zip", "corpus/font-size-loading-current.zip"]
     names += ["font-default-presence-26.9.json", "corpus/font-default-presence-current.zip"]
+    names += ["font-json-origin-26.9.json", "corpus/font-json-origin-current.zip",
+              "corpus/font-json-origin-before-cascade-fix.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -1011,6 +1013,37 @@ def test_font_default_presence_evidence_checks_independent_outputs(tmp_path, cha
     check = runpy.run_path(str(root / 'scripts/verify_commercial_baseline.py'))['verify_font_default_presence']
     if change is None:
         assert check(tmp_path) == 348
+    else:
+        with pytest.raises(AssertionError):
+            check(tmp_path)
+
+
+@pytest.mark.parametrize('change', [None, 'native', 'digest', 'coverage', 'before'])
+def test_font_json_origin_evidence_rejects_forged_results(tmp_path, change):
+    import json
+    import shutil
+
+    root = Path(__file__).parents[1]
+    source = root / 'docs/benchmarks'
+    report = json.loads((source / 'font-json-origin-26.9.json').read_text())
+    (tmp_path / 'corpus').mkdir()
+    shutil.copyfile(source / report['source_report'], tmp_path / report['source_report'])
+    shutil.copyfile(source / 'corpus/style-toggles-26.9.zip', tmp_path / 'corpus/style-toggles-26.9.zip')
+    for phase in (report, report['before_cascade_fix']):
+        shutil.copyfile(source / phase['outputs'], tmp_path / phase['outputs'])
+    if change == 'native':
+        row = report['native_reread']['records'][0]
+        row['bold'] = not row['bold']
+    elif change == 'digest':
+        report['outputs_sha256'] = 'forged'
+    elif change == 'coverage':
+        report['records'][0] = report['records'][1]
+    elif change == 'before':
+        report['before_cascade_fix']['mismatched_outputs'].pop()
+    (tmp_path / 'font-json-origin-26.9.json').write_text(json.dumps(report))
+    check = runpy.run_path(str(root / 'scripts/verify_commercial_baseline.py'))['verify_font_json_origin']
+    if change is None:
+        assert check(tmp_path) == 1490
     else:
         with pytest.raises(AssertionError):
             check(tmp_path)

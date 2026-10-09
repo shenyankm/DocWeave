@@ -28,6 +28,7 @@ from aspose.words_foss.docx_writer.paragraphs import _resolve_style_id
 # <w:outlineLvl> here would leak the value into descendants on round-trip.
 _HEADING_NAME_RE = re.compile(r"[Hh]eading\s*(\d+)")
 CHARACTER_FONT_PREFIX = "\0character:"
+DEFAULT_FONT_KEY = "\0defaults"
 
 
 def _effective_default_font(doc: ldm.Document) -> ldm.Font:
@@ -41,14 +42,31 @@ def _effective_default_font(doc: ldm.Document) -> ldm.Font:
 def build_style_font_map(doc: ldm.Document) -> dict[str, ldm.Font]:
     """Paragraph fonts plus sparse character chains for diff-based rPr emission."""
     out: dict[str, ldm.Font] = {}
+    out[DEFAULT_FONT_KEY] = _effective_default_font(doc)
+    paragraphs = {style.name: style for style in doc.styles if style.type == 1}
     for style in doc.styles:
         if style.type != 1 or style.font is None:
             continue
         canonical = style.name.replace(" ", "").lower()
         if canonical:
-            out[canonical] = style.font
+            font = style.font.model_copy(deep=True)
+            for field in ("bold", "italic"):
+                current, seen, declared = style.name, set(), False
+                while current in paragraphs and current not in seen:
+                    seen.add(current)
+                    layer = paragraphs[current]
+                    if layer.font is not None:
+                        explicit = getattr(layer.font, field + "_explicit")
+                        if explicit is True or (explicit is None and field in layer.font.model_fields_set):
+                            declared = True
+                            break
+                    current = layer.base_style_name
+                if not declared:
+                    font.__pydantic_fields_set__.discard(field)
+            out[canonical] = font
     if doc.doc_defaults_rpr_present is not None and "normal" not in out:
         out["normal"] = _effective_default_font(doc)
+        out["normal"].__pydantic_fields_set__.difference_update({"bold", "italic"})
     characters = {style.name: style for style in doc.styles if style.type == 2}
     for name in characters:
         chain = []

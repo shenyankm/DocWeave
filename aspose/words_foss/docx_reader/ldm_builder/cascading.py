@@ -9,7 +9,7 @@ import re
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.utils.xml_helpers import parse_font_size
+from aspose.words_foss.utils.xml_helpers import combine_style_toggle, parse_font_size
 from aspose.words_foss.docx_reader.constants import (
     COLOR_EMPTY,
     W_NS,
@@ -38,6 +38,7 @@ from aspose.words_foss.docx_reader.utils import (
     _empty_borders,
     _hex_to_ldm_color,
     apply_onoff_attrs,
+    parse_onoff,
 )
 from aspose.words_foss.model.style_identifiers import resolve_style_identifier
 
@@ -106,6 +107,8 @@ class FontBuilder:
         """Translate one ``<w:rPr>`` into a value-only :class:`ldm.Font`."""
         font = ldm.Font()
         font.size_explicit = False
+        font.bold_explicit = rPr.find(f"{W_NS}b") is not None
+        font.italic_explicit = rPr.find(f"{W_NS}i") is not None
         self._apply_name(rPr, font)
         self._apply_size(rPr, font)
         apply_onoff_attrs(font, rPr, RUN_ONOFF_FLAGS)
@@ -455,6 +458,8 @@ class FontResolver:
         if not base.highlight_color:
             base.highlight_color = COLOR_EMPTY
         base.size_explicit = rPr is not None and rPr.find(f"{W_NS}sz") is not None
+        base.bold_explicit = rPr is not None and rPr.find(f"{W_NS}b") is not None
+        base.italic_explicit = rPr is not None and rPr.find(f"{W_NS}i") is not None
         return base
 
     def _inherited_font(self, table_id: str, style_id: str, character_id: str) -> ldm.Font:
@@ -473,10 +478,24 @@ class FontResolver:
                        ctx._styles_xml.find(f"{W_NS}docDefaults/{W_NS}rPrDefault") is not None)
             base.size = 10.0 if present else 11.0
 
-        for inherited in (table_id, style_id, character_id):
+        if table_id:
+            self._merge_style_chain(base, table_id)
+        initial = {tag: getattr(base, field) for tag, field in (("b", "bold"), ("i", "italic"))}
+        for inherited in (style_id, character_id):
             if inherited:
                 self._merge_style_chain(base, inherited)
+        for tag, field in (("b", "bold"), ("i", "italic")):
+            setattr(base, field, combine_style_toggle(initial[tag], self._style_toggle(style_id, tag),
+                                                      self._style_toggle(character_id, tag)))
         return base
+
+    def _style_toggle(self, style_id: str, tag: str) -> bool | None:
+        for sid in reversed(self._chains.chain(style_id)):
+            style = self._ctx._style_elem_cache.get(sid)
+            element = style.find(f"{W_NS}rPr/{W_NS}{tag}") if style is not None else None
+            if element is not None:
+                return parse_onoff(element)
+        return None
 
     def _merge_style_chain(self, base: ldm.Font, style_id: str) -> None:
         for sid in self._chains.chain(style_id):

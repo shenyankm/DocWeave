@@ -194,7 +194,9 @@ def render_rPr(
         ("w:vanish", "hidden"),
     ):
         val = getattr(font, field)
-        if preserve_explicit_off and field in font.model_fields_set and not val:
+        if field in ("bold", "italic") and getattr(font, field + "_explicit") is True:
+            toggle = el(tag, {"w:val": "1" if val else "0"})
+        elif preserve_explicit_off and field in font.model_fields_set and not val:
             toggle = el(tag, {"w:val": "0"})
         else:
             toggle = _bool_toggle(tag, val, getattr(base, field))

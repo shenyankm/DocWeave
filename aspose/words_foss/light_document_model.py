@@ -284,6 +284,8 @@ class Font(BaseModel):
     size_explicit: bool | None = None
     bold: bool = False
     italic: bool = False
+    bold_explicit: bool | None = None
+    italic_explicit: bool | None = None
     underline: int = 0
     color: str = ""
     strike_through: bool = False
@@ -319,6 +321,29 @@ class Font(BaseModel):
     locale_id_far_east: int = 0
     # REMOVED: size_bi, double_strike_through, underline_color, scaling,
     #          spacing, position, complex_script, border
+
+    @model_validator(mode="wrap")
+    @classmethod
+    def _restore_fields_set(cls, data: Any, handler) -> Font:
+        explicit = None
+        if isinstance(data, dict) and "_fields_set" in data:
+            data = data.copy()
+            explicit = data.pop("_fields_set")
+            if (not isinstance(explicit, list) or
+                    any(not isinstance(name, str) or name not in cls.model_fields or name not in data
+                        for name in explicit)):
+                raise ValueError("Invalid font field-origin metadata")
+        instance = handler(data)
+        if explicit is not None:
+            instance.__pydantic_fields_set__ = set(explicit)
+        return instance
+
+    @model_serializer(mode="wrap")
+    def _emit_fields_set(self, handler) -> dict[str, Any]:
+        data = handler(self)
+        # Full JSON includes defaults; keep sparse declarations distinguishable.
+        data["_fields_set"] = sorted(name for name in self.model_fields_set if name in data)
+        return data
 
 
 # ─────────────────────────────────────────────

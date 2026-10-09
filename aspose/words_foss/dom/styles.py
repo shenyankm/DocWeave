@@ -19,6 +19,7 @@ from aspose.words_foss.dom.nodes import (
     _read_dimension,
     _read_size,
 )
+from aspose.words_foss.utils.xml_helpers import combine_style_toggle
 
 
 class StyleCollection:
@@ -380,11 +381,7 @@ def _effective_toggle(default, paragraph_styles, character_styles, direct, name)
     # 26.9 getters combine style categories, rather than toggling every basedOn ancestor.
     paragraph = _style_toggle(paragraph_styles, name)
     character = _style_toggle(character_styles, name)
-    value = _onoff(_child(default, name))
-    if paragraph is not None and character is not None:
-        value = value or (paragraph ^ character)
-    elif paragraph is not None or character is not None:
-        value = paragraph if paragraph is not None else character
+    value = combine_style_toggle(_onoff(_child(default, name)), paragraph, character)
     element = _child(direct, name)
     return _onoff(element) if element is not None else value
 

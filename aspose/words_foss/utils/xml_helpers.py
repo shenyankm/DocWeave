@@ -8,6 +8,13 @@ from xml.etree import ElementTree as ET
 W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 
+def combine_style_toggle(default: bool, paragraph: bool | None, character: bool | None) -> bool:
+    """Combine nearest style-category values observed in the fixed 26.9 corpus."""
+    if paragraph is not None and character is not None:
+        return default or (paragraph ^ character)
+    return paragraph if paragraph is not None else character if character is not None else default
+
+
 def parse_font_size(value: str) -> float:
     """Read positive ordinary OOXML sizes, quantized to whole half-points."""
     try:

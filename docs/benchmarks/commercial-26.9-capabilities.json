@@ -16123,11 +16123,20 @@
         "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
       },
       "model_json_origin_gap": {
-        "status": "open",
-        "evidence": "font-default-presence-26.9.json outputs; eight character-style inputs with JSON enabled emit w:b/w:i val=0 where source had no declaration",
-        "cause": "full model JSON validation populates model_fields_set; sparse Boolean source origin is not retained",
-        "impact": "direct false can change later basedOn inheritance; effective-value checks alone do not establish origin preservation",
-        "full_acceptance": false
+        "status": "implemented_local_checks_passed_remote_ci_pending",
+        "evidence": "font-json-origin-26.9.json",
+        "scope": "745 owned input b/i getters; 1490 JSON to DOCX/Flat OPC outputs independently parsed and native cold-reread; before-fix 194 mismatches now zero; direct Run and character-style declarations retained",
+        "implementation": "Font JSON retains model_fields_set; ordinary bold_explicit/italic_explicit retain same-value declarations; shared nearest-category combination used by DOM and conversion reader",
+        "tests": [
+          "tests/test_font_json_origin.py",
+          "tests/test_character_style_toggles.py",
+          "tests/test_commercial_api_inventory.py"
+        ],
+        "full_acceptance": false,
+        "limits": [
+          "legacy full JSON has no source field-origin metadata",
+          "complete font editing, table contexts, complex script and rendering not accepted"
+        ]
       }
     },
     {
@@ -16295,11 +16304,20 @@
         "delivery": "implemented for declared b/i/half-point size; full canonical API, implicit defaults, errors and rendering remain incomplete"
       },
       "model_json_origin_gap": {
-        "status": "open",
-        "evidence": "font-default-presence-26.9.json outputs; eight character-style inputs with JSON enabled emit w:b/w:i val=0 where source had no declaration",
-        "cause": "full model JSON validation populates model_fields_set; sparse Boolean source origin is not retained",
-        "impact": "direct false can change later basedOn inheritance; effective-value checks alone do not establish origin preservation",
-        "full_acceptance": false
+        "status": "implemented_local_checks_passed_remote_ci_pending",
+        "evidence": "font-json-origin-26.9.json",
+        "scope": "745 owned input b/i getters; 1490 JSON to DOCX/Flat OPC outputs independently parsed and native cold-reread; before-fix 194 mismatches now zero; direct Run and character-style declarations retained",
+        "implementation": "Font JSON retains model_fields_set; ordinary bold_explicit/italic_explicit retain same-value declarations; shared nearest-category combination used by DOM and conversion reader",
+        "tests": [
+          "tests/test_font_json_origin.py",
+          "tests/test_character_style_toggles.py",
+          "tests/test_commercial_api_inventory.py"
+        ],
+        "full_acceptance": false,
+        "limits": [
+          "legacy full JSON has no source field-origin metadata",
+          "complete font editing, table contexts, complex script and rendering not accepted"
+        ]
       }
     },
     {

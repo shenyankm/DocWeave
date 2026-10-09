@@ -813,6 +813,102 @@ def saved_font_sizes(raw):
     return style_size, resolved
 
 
+def saved_font_toggles(raw):
+    w = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    document, styles = font_size_parts(raw)
+    paragraph = next(p for p in document.iter(w + "p") if "".join(t.text or "" for t in p.iter(w + "t")) == "IMPORT")
+    run = next(r for r in paragraph.iter(w + "r") if "".join(t.text or "" for t in r.iter(w + "t")) == "IMPORT")
+    by_id = {s.get(w + "styleId"): s for s in styles.findall(w + "style")}
+    def onoff(element):
+        return None if element is None else element.get(w + "val", "1") not in ("0", "false", "off")
+    def nearest(identifier, tag):
+        visited = set()
+        while identifier:
+            assert identifier not in visited and identifier in by_id
+            visited.add(identifier)
+            style = by_id[identifier]
+            value = onoff(style.find(w + "rPr/" + w + tag))
+            if value is not None:
+                return value
+            parent = style.find(w + "basedOn")
+            identifier = parent.get(w + "val") if parent is not None else None
+        return None
+    pstyle = paragraph.find(w + "pPr/" + w + "pStyle")
+    rstyle = run.find(w + "rPr/" + w + "rStyle")
+    paragraph_id = pstyle.get(w + "val") if pstyle is not None else next(
+        (s.get(w + "styleId") for s in reversed(list(by_id.values()))
+         if s.get(w + "type") == "paragraph" and s.get(w + "default") == "1"), None)
+    result = {}
+    for tag, field in (("b", "bold"), ("i", "italic")):
+        default = onoff(styles.find(w + "docDefaults/" + w + "rPrDefault/" + w + "rPr/" + w + tag)) or False
+        para = nearest(paragraph_id, tag)
+        char = nearest(rstyle.get(w + "val") if rstyle is not None else None, tag)
+        value = default or (para != char) if para is not None and char is not None else (
+            para if para is not None else char if char is not None else default)
+        direct = onoff(run.find(w + "rPr/" + w + tag))
+        result[field] = value if direct is None else direct
+    return result
+
+
+def font_toggle_declarations(raw):
+    w = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    document, styles = font_size_parts(raw)
+    run = next(r for r in document.iter(w + "r") if "".join(t.text or "" for t in r.iter(w + "t")) == "IMPORT")
+    def flags(element):
+        return tuple(None if (value := element.find(w + "rPr/" + w + tag)) is None
+                     else value.get(w + "val", "1") not in ("0", "false", "off") for tag in ("b", "i"))
+    return flags(run), {s.get(w + "styleId"): flags(s) for s in styles.findall(w + "style")
+                        if s.get(w + "type") == "character"}
+
+
+def verify_font_json_origin(root):
+    report = json.loads((root / "font-json-origin-26.9.json").read_text())
+    source = json.loads((root / report["source_report"]).read_text())
+    assert report["source_corpus_sha256"] == source["corpus_sha256"]
+    original = {r["input"]: r for r in source["records"]}
+    assert len(original) == len(source["records"]) == 745
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
+    source_raw = (root / "corpus/style-toggles-26.9.zip").read_bytes()
+    assert digest(source_raw) == source["corpus_sha256"]
+    with ZipFile(BytesIO(source_raw)) as corpus:
+        declarations = {}
+        for name, row in original.items():
+            data = corpus.read(name)
+            assert digest(data) == row["sha256"]
+            declarations[name] = font_toggle_declarations(data)
+    for phase in (report["before_cascade_fix"], report):
+        rows = {(r["input"], r["format"]): r for r in phase["records"]}
+        assert len(rows) == len(phase["records"]) == 1490
+        assert set(rows) == {(name, fmt) for name in original for fmt in ("docx", "flat_opc")}
+        native = phase["native_reread"]
+        assert native["version"] == "26.9.0" and native["licensed"] is False
+        observed = {r["output"]: r for r in native["records"]}
+        assert len(observed) == len(native["records"]) == 1490
+        raw = (root / phase["outputs"]).read_bytes()
+        assert digest(raw) == phase["outputs_sha256"]
+        mismatches = []
+        with ZipFile(BytesIO(raw)) as archive:
+            assert len(archive.namelist()) == 1490 and set(archive.namelist()) == set(observed) == {r["output"] for r in rows.values()}
+            for (name, fmt), row in rows.items():
+                assert row["source_sha256"] == original[name]["sha256"]
+                assert row["output"] == name.removesuffix(".docx") + "/" + fmt + (".docx" if fmt == "docx" else ".xml")
+                data = archive.read(row["output"])
+                assert digest(data) == row["output_sha256"] and data.startswith(b"PK") is (fmt == "docx")
+                actual = saved_font_toggles(data)
+                if phase is report:
+                    assert font_toggle_declarations(data) == declarations[name]
+                assert all(type(actual[field]) is bool and actual[field] == observed[row["output"]][field]
+                           for field in ("bold", "italic"))
+                assert all(row["expected_" + field] is original[name][field] for field in ("bold", "italic"))
+                if any(actual[field] is not original[name][field] for field in ("bold", "italic")):
+                    mismatches.append(row["output"])
+        if phase is report:
+            assert mismatches == []
+        else:
+            assert len(mismatches) == 194 and sorted(mismatches) == sorted(phase["mismatched_outputs"])
+    return len(rows)
+
+
 def verify_font_default_presence(root):
     report = json.loads((root / "font-default-presence-26.9.json").read_text())
     assert report["full_format_acceptance"] is report["rendering_acceptance"] is False
@@ -1409,6 +1505,7 @@ def verify(root):
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     font_sizes = verify_font_size_loading(root)
     default_presence = verify_font_default_presence(root)
+    font_origins = verify_font_json_origin(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -1417,6 +1514,7 @@ def verify(root):
             "checked_style_import_outputs": style_imports,
             "checked_font_size_loading_inputs": font_sizes,
             "checked_font_default_presence_outputs": default_presence,
+            "checked_font_json_origin_outputs": font_origins,
             "checked_font_default_inputs": defaults,
             "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,

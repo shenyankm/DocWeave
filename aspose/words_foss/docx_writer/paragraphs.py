@@ -735,11 +735,20 @@ def render_paragraph(
         if isinstance(node, ldm.Run):
             run_base = base_font
             if style_font_map is not None:
-                from aspose.words_foss.docx_writer.styles_part import CHARACTER_FONT_PREFIX
+                from aspose.words_foss.docx_writer.styles_part import CHARACTER_FONT_PREFIX, DEFAULT_FONT_KEY
+                from aspose.words_foss.utils.xml_helpers import combine_style_toggle
                 character_font = style_font_map.get(CHARACTER_FONT_PREFIX + node.font.style_name)
                 if character_font is not None:
                     run_base = base_font.model_copy(deep=True) if base_font is not None else ldm.Font()
                     FontResolver.merge(run_base, character_font)
+                    default_font = style_font_map.get(DEFAULT_FONT_KEY, ldm.Font())
+                    for field in ("bold", "italic"):
+                        paragraph_value = (getattr(base_font, field) if base_font is not None and
+                                           field in base_font.model_fields_set else None)
+                        character_value = (getattr(character_font, field)
+                                           if field in character_font.model_fields_set else None)
+                        setattr(run_base, field, combine_style_toggle(getattr(default_font, field),
+                                                                     paragraph_value, character_value))
             rendered_run = render_run(
                 node, rels, base_font=run_base, instr=field_code_depth() > 0,
                 style_id_map=style_id_map,
