@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_character_indent_roundtrips"])
+@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_character_indent_roundtrips"])
 def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, name):
     from zipfile import ZipInfo
 
@@ -19,7 +19,7 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     monkeypatch.setattr(ZipInfo, "__init__", windows_info)
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))[name]
-    assert check(root / "docs/benchmarks") in {10, 18, 61, 122, 360, 1296}
+    assert check(root / "docs/benchmarks") in {10, 18, 61, 122, 144, 360, 1296}
 
 
 
@@ -314,6 +314,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     names += ["character-style-save-state-26.9.json", "corpus/character-style-save-state-26.9.zip",
               "corpus/character-style-defaults-26.9.zip"]
     names += ["paragraph-character-indents-current.json", "corpus/paragraph-character-indents-current.zip"]
+    names += ["paragraph-character-setters-26.9.json", "corpus/paragraph-character-setters-26.9.zip"]
     names += ["paragraph-character-indents-26.9.json", "corpus/paragraph-character-indents-26.9.zip",
               "corpus/paragraph-character-indents-26.9-outputs.zip"]
     names += ["paragraph-logical-indents-26.9.json", "corpus/paragraph-logical-indents-26.9.zip",
@@ -363,6 +364,7 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_paragraph_indent_limits"] == 54
     assert result["checked_paragraph_logical_indents"] == 168
     assert result["checked_paragraph_character_indents"] == 61
+    assert result["checked_paragraph_character_setters"] == 144
     assert result["checked_character_indent_roundtrips"] == 122
     assert result["checked_paragraph_dimension_rendering_pairs"] == 10
     assert result["checked_font_default_inputs"] == 5
@@ -710,6 +712,72 @@ def test_character_indent_evidence_checks_xml_after_digests_are_updated(tmp_path
             archive.writestr(name, data)
     report["outputs_sha256"] = sha256(archive_path.read_bytes()).hexdigest()
     (tmp_path / "paragraph-character-indents-26.9.json").write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+@pytest.mark.parametrize("tamper", ["loaded", "after_edit", "after_save_live", "after_reopen", "coverage", "setter_error", "acceptance"])
+def test_character_setter_context_evidence_rejects_forged_state(tmp_path, tamper):
+    import json
+    import shutil
+
+    root = Path(__file__).parents[1]
+    source = root / "docs/benchmarks"
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_paragraph_character_setters"]
+    report = json.loads((source / "paragraph-character-setters-26.9.json").read_text())
+    (tmp_path / "corpus").mkdir()
+    for key in ("corpus", "outputs"):
+        shutil.copyfile(source / report[key], tmp_path / report[key])
+    shutil.copyfile(source / "paragraph-character-indents-26.9.json", tmp_path / "paragraph-character-indents-26.9.json")
+    if tamper == "coverage":
+        report["records"][-1] = report["records"][-2]
+    elif tamper == "setter_error":
+        report["setter_errors"][0]["error"] = "returned"
+    elif tamper == "acceptance":
+        report["sdk_acceptance"] = True
+    else:
+        report["records"][0][tamper]["target"]["left_indent"] += 1
+    (tmp_path / "paragraph-character-setters-26.9.json").write_text(json.dumps(report))
+    with pytest.raises(AssertionError):
+        check(tmp_path)
+
+
+@pytest.mark.parametrize("target,attribute", [("paragraph", "left"), ("paragraph", "leftChars"),
+                                             ("style", "left"), ("style", "leftChars")])
+def test_character_setter_context_evidence_checks_xml_after_updated_digests(tmp_path, target, attribute):
+    import json
+    import shutil
+    from hashlib import sha256
+    from io import BytesIO
+    from zipfile import ZipFile
+
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    root = Path(__file__).parents[1]
+    source = root / "docs/benchmarks"
+    check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))["verify_paragraph_character_setters"]
+    report = json.loads((source / "paragraph-character-setters-26.9.json").read_text())
+    (tmp_path / "corpus").mkdir()
+    shutil.copyfile(source / report["corpus"], tmp_path / report["corpus"])
+    shutil.copyfile(source / "paragraph-character-indents-26.9.json", tmp_path / "paragraph-character-indents-26.9.json")
+    row = next(row for row in report["records"] if row["target"] == target and row["value"] == 1.235)
+    with ZipFile(source / report["outputs"]) as archive:
+        entries = {name: archive.read(name) for name in archive.namelist()}
+    document = Document(BytesIO(entries[row["output"]]))
+    element = (next(p for p in document.paragraphs if "IMPORT" in p.text)._p
+               if target == "paragraph" else document.styles["P"].element)
+    element.find(qn("w:pPr") + "/" + qn("w:ind")).set(qn("w:" + attribute), "12345")
+    stream = BytesIO()
+    document.save(stream)
+    entries[row["output"]] = stream.getvalue()
+    row["output_sha256"] = sha256(stream.getvalue()).hexdigest()
+    archive_path = tmp_path / report["outputs"]
+    with ZipFile(archive_path, "w") as archive:
+        for name, data in entries.items():
+            archive.writestr(name, data)
+    report["outputs_sha256"] = sha256(archive_path.read_bytes()).hexdigest()
+    (tmp_path / "paragraph-character-setters-26.9.json").write_text(json.dumps(report))
     with pytest.raises(AssertionError):
         check(tmp_path)
 

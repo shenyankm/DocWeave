@@ -30227,6 +30227,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
         "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
+      },
+      "character_indent_setter_context_evidence": {
+        "report": "docs/benchmarks/paragraph-character-setters-26.9.json",
+        "probe": "docs/probes/paragraph_character_setters.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_setters",
+        "scope": "144 native paragraph/style edits across 8 font contexts, 144 TypeError observations; loaded, after edit, live save and cold reread; independent XML for points and character units",
+        "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30261,6 +30270,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
         "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
+      },
+      "character_indent_setter_context_evidence": {
+        "report": "docs/benchmarks/paragraph-character-setters-26.9.json",
+        "probe": "docs/probes/paragraph_character_setters.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_setters",
+        "scope": "144 native paragraph/style edits across 8 font contexts, 144 TypeError observations; loaded, after edit, live save and cold reread; independent XML for points and character units",
+        "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30295,6 +30313,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
         "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
+      },
+      "character_indent_setter_context_evidence": {
+        "report": "docs/benchmarks/paragraph-character-setters-26.9.json",
+        "probe": "docs/probes/paragraph_character_setters.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_setters",
+        "scope": "144 native paragraph/style edits across 8 font contexts, 144 TypeError observations; loaded, after edit, live save and cold reread; independent XML for points and character units",
+        "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30400,6 +30427,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
         "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
+      },
+      "character_indent_setter_context_evidence": {
+        "report": "docs/benchmarks/paragraph-character-setters-26.9.json",
+        "probe": "docs/probes/paragraph_character_setters.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_setters",
+        "scope": "144 native paragraph/style edits across 8 font contexts, 144 TypeError observations; loaded, after edit, live save and cold reread; independent XML for points and character units",
+        "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30593,6 +30629,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
         "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
+      },
+      "character_indent_setter_context_evidence": {
+        "report": "docs/benchmarks/paragraph-character-setters-26.9.json",
+        "probe": "docs/probes/paragraph_character_setters.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_setters",
+        "scope": "144 native paragraph/style edits across 8 font contexts, 144 TypeError observations; loaded, after edit, live save and cold reread; independent XML for points and character units",
+        "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {
@@ -30796,6 +30841,15 @@
         "validation": "scripts/verify_commercial_baseline.py:verify_character_indent_roundtrips",
         "limits": "unit preservation only; native DOM setters, coupled point values, implicit-font context and rendering remain unimplemented; load/PDF strict diagnostics continue",
         "full_acceptance": false
+      },
+      "character_indent_setter_context_evidence": {
+        "report": "docs/benchmarks/paragraph-character-setters-26.9.json",
+        "probe": "docs/probes/paragraph_character_setters.py",
+        "validation": "scripts/verify_commercial_baseline.py:verify_paragraph_character_setters",
+        "scope": "144 native paragraph/style edits across 8 font contexts, 144 TypeError observations; loaded, after edit, live save and cold reread; independent XML for points and character units",
+        "limits": "Native behavior evidence only; SDK native DOM setters, font resolution, inheritance-only inputs, complex scripts and rendered geometry remain unaccepted",
+        "sdk_acceptance": false,
+        "rendering_acceptance": false
       }
     },
     {

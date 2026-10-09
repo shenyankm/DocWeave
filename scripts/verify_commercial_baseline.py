@@ -271,6 +271,95 @@ def verify_paragraph_character_indents(root):
     return len(rows)
 
 
+def verify_paragraph_character_setters(root):
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    probe = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_character_indents.py"))
+    edits = runpy.run_path(str(Path(__file__).parents[1] / "docs/probes/paragraph_character_setters.py"))
+    report = json.loads((root / "paragraph-character-setters-26.9.json").read_text())
+    baseline = json.loads((root / "paragraph-character-indents-26.9.json").read_text())
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["python"].startswith("3.13.") and report["platform"].startswith("macOS-")
+    assert report["full_format_acceptance"] is report["rendering_acceptance"] is report["sdk_acceptance"] is False
+    assert report["corpus"] == baseline["corpus"] and report["corpus_sha256"] == baseline["corpus_sha256"]
+    generated = {name: raw for name, raw in probe["nonfirst_inputs"]() if name.startswith("fonts/")}
+    properties = probe["PROPERTIES"]
+    rows = report["records"]
+    expected = {(name, target, prop, value) for name in generated for target in edits["TARGETS"]
+                for prop in properties[3:] for value in edits["VALUES"]}
+    assert len(rows) == len(expected) == 144
+    assert {(row["input"], row["target"], row["property"], row["value"]) for row in rows} == expected
+    initial = {row["input"]: row["loaded"] for row in baseline["records"] if row["property"] is None and not row["layout"]}
+    attributes = ("left", "right", "firstLine", "leftChars", "rightChars", "firstLineChars")
+
+    def saved(element):
+        ind = element.find(qn("w:pPr") + "/" + qn("w:ind"))
+        result = {}
+        for prop, attr in zip(properties, attributes):
+            value = ind.get(qn("w:" + attr)) if ind is not None else None
+            if value is None and attr in {"firstLine", "firstLineChars"} and ind is not None:
+                value = ind.get(qn("w:hanging" if attr == "firstLine" else "w:hangingChars"))
+                value = str(-int(value)) if value is not None else None
+            result[prop] = int(value or "0") / (100 if attr.endswith("Chars") else 20)
+        return result
+
+    source, raw = ((root / report[key]).read_bytes() for key in ("corpus", "outputs"))
+    assert digest(source) == report["corpus_sha256"] and digest(raw) == report["outputs_sha256"]
+    with ZipFile(BytesIO(source)) as inputs, ZipFile(BytesIO(raw)) as outputs:
+        assert len(outputs.namelist()) == len(rows) and set(outputs.namelist()) == {row["output"] for row in rows}
+        for row in rows:
+            data = inputs.read(row["input"])
+            assert digest(data) == row["input_sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[row["input"]])) as original:
+                assert {name: actual.read(name) for name in actual.namelist()} == {name: original.read(name) for name in original.namelist()}
+            for phase in ("loaded", "after_edit", "after_save_live", "after_reopen"):
+                assert set(row[phase]) == {"target", "paragraph"}
+                assert all(set(values) == set(properties) for values in row[phase].values())
+            paragraph_target = row["target"] == "paragraph"
+            loaded = initial[row["input"]] if paragraph_target else dict.fromkeys(properties, 0.0)
+            assert row["loaded"] == {"target": loaded, "paragraph": initial[row["input"]]}
+            quantized = {0.0: 0.0, 1.235: 1.23, -1.235: -1.23}[row["value"]]
+            for prop in properties[3:]:
+                assert row["after_edit"]["target"][prop] == (quantized if prop == row["property"] else loaded[prop])
+            # These assertions describe the eight owned fixtures, not a general font/layout algorithm.
+            default, style, _, run = probe["FONT_CONTEXTS"][int(Path(row["input"]).stem)]
+            default = default or 10
+            point = properties[properties.index(row["property"]) - 3]
+            if paragraph_target:
+                assert row["after_edit"] == row["after_save_live"]
+                assert row["after_edit"]["target"] == row["after_edit"]["paragraph"]
+                expected_points = dict(loaded, left_indent=default, right_indent=default * 2)
+                expected_points[row["property"]] = quantized
+                size = (run or style or default) if point == "first_line_indent" else default
+                expected_points[point] = round(quantized * size * 20) / 20 if quantized else loaded[point]
+                if point == "first_line_indent" and quantized < 0:
+                    expected_points["left_indent"] -= expected_points[point]
+                assert row["after_edit"]["target"] == expected_points
+            else:
+                assert all(row["after_edit"]["target"][prop] == 0 for prop in properties[:3])
+                assert row["after_edit"]["paragraph"] == row["loaded"]["paragraph"]
+                expected_points = dict(row["after_edit"]["target"])
+                size = (style or default) if point == "first_line_indent" else 5
+                expected_points[point] = round(quantized * size * 20) / 20
+                assert row["after_reopen"]["target"] == expected_points
+            assert row["after_save_live"] == row["after_reopen"]
+            output = outputs.read(row["output"])
+            assert digest(output) == row["output_sha256"]
+            document = Document(BytesIO(output))
+            paragraph = next(p for p in document.paragraphs if "IMPORT" in p.text)
+            assert saved(paragraph._p) == row["after_reopen"]["paragraph"]
+            target = paragraph._p if paragraph_target else document.styles["P"].element
+            assert saved(target) == row["after_reopen"]["target"]
+    errors = report["setter_errors"]
+    assert len(errors) == 144
+    assert {(row["input"], row["target"], row["property"], repr(row["value"])) for row in errors} == {
+        (name, target, prop, repr(value)) for name in generated for target in edits["TARGETS"]
+        for prop in properties[3:] for value in (None, True, "bad")}
+    assert all(row["error"] == "TypeError" for row in errors)
+    return len(rows)
+
+
 def verify_character_indent_roundtrips(root):
     from xml.etree import ElementTree as ET
 
@@ -1032,6 +1121,7 @@ def verify(root):
     indent_limits = verify_paragraph_dimensions(root, "paragraph-indent-limits-26.9.json")
     logical_indents = verify_paragraph_dimensions(root, "paragraph-logical-indents-26.9.json")
     character_indents = verify_paragraph_character_indents(root)
+    character_setters = verify_paragraph_character_setters(root)
     character_roundtrips = verify_character_indent_roundtrips(root)
     dimension_rendering = verify_pagination_rendering(root, "paragraph-dimensions-rendering-26.9.json")
     defaults = verify_font_defaults(root)
@@ -1056,6 +1146,7 @@ def verify(root):
             "checked_paragraph_indent_limits": indent_limits,
             "checked_paragraph_logical_indents": logical_indents,
             "checked_paragraph_character_indents": character_indents,
+            "checked_paragraph_character_setters": character_setters,
             "checked_character_indent_roundtrips": character_roundtrips,
             "checked_paragraph_dimension_rendering_pairs": dimension_rendering,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
