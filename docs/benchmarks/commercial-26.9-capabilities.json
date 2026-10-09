@@ -10524,10 +10524,10 @@
       },
       "baseline_behavior": "partially_observed; see bounded behavior evidence",
       "style_conflict_evidence": {
-        "file": "style-import-conflicts-26.9.json",
+        "file": "style-import-translated.json",
         "scope": "247 default-mode deep paragraph import cases; seven native source changes and two native roundtrip changes",
         "current_alternative_entrypoint": "DocxDocument.import_node",
-        "delivery": "ancestor safety guard fixed; 166 cases remain unsupported; full import and rendering unverified"
+        "delivery": "bounded b/i/size/alignment translation implemented; 38 cases remain unsupported; full import and rendering unverified"
       }
     },
     {
@@ -12004,10 +12004,10 @@
       },
       "baseline_behavior": "partially_observed; see bounded behavior evidence",
       "style_conflict_evidence": {
-        "file": "style-import-conflicts-26.9.json",
+        "file": "style-import-translated.json",
         "scope": "247 default-mode deep paragraph import cases; seven native source changes and two native roundtrip changes",
         "current_alternative_entrypoint": "DocxDocument.import_node",
-        "delivery": "ancestor safety guard fixed; 166 cases remain unsupported; full import and rendering unverified"
+        "delivery": "bounded b/i/size/alignment translation implemented; 38 cases remain unsupported; full import and rendering unverified"
       }
     },
     {
@@ -16406,7 +16406,12 @@
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
       "gap": "public_surface_and_behavior_not_aligned",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "default_format_evidence": {
+        "file": "font-defaults-26.9.json",
+        "scope": "five owned implicit-size Run/Style getter observations; full default-font semantics unverified",
+        "delivery": "implicit size migration guarded; canonical default-font mapping remains incomplete"
+      }
     },
     {
       "id": "aspose.words.Font.size_bi",

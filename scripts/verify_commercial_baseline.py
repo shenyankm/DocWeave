@@ -103,8 +103,29 @@ def verify_style_toggles(root):
     return len(report["records"])
 
 
-def verify_style_imports(root):
-    report = json.loads((root / "style-import-conflicts-26.9.json").read_text())
+def verify_font_defaults(root):
+    report = json.loads((root / "font-defaults-26.9.json").read_text())
+    raw = (root / report["corpus"]).read_bytes()
+    assert report["version"] == "26.9.0" and report["licensed"] is False
+    assert report["full_format_acceptance"] is False and digest(raw) == report["corpus_sha256"]
+    generated = dict(runpy.run_path(str(Path(__file__).parents[1] / "docs" / "probes" / "font_defaults.py"))["inputs"]())
+    rows = {row["input"]: row for row in report["records"]}
+    assert len(rows) == len(report["records"]) == len(generated) == 5 and set(rows) == set(generated)
+    with ZipFile(BytesIO(raw)) as archive:
+        assert len(archive.namelist()) == 5 and set(archive.namelist()) == set(rows)
+        for name, row in rows.items():
+            data = archive.read(name)
+            assert digest(data) == row["sha256"]
+            with ZipFile(BytesIO(data)) as actual, ZipFile(BytesIO(generated[name])) as expected:
+                assert {key: actual.read(key) for key in actual.namelist()} == {key: expected.read(key) for key in expected.namelist()}
+            assert row["run_size"] == row["style_size"] == (10.0 if name.startswith("rpr_") else 11.0)
+    return len(rows)
+
+
+def verify_style_imports(root, name="style-import-conflicts-26.9.json"):
+    report = json.loads((root / name).read_text())
+    assert set(report["reports"]) in ({"commercial", "before", "candidate"}, {"candidate"})
+    assert set(report["official_candidate_rereads"]) == set(report["reports"]) - {"commercial"}
     corpus = (root / report["corpus"]["archive"]).read_bytes()
     raw_outputs = (root / report["outputs"]["archive"]).read_bytes()
     assert digest(corpus) == report["corpus"]["sha256"], "style import corpus digest mismatch"
@@ -118,8 +139,8 @@ def verify_style_imports(root):
     checked, phases = 0, {}
     with ZipFile(BytesIO(corpus)) as inputs, ZipFile(BytesIO(raw_outputs)) as outputs:
         assert len(inputs.namelist()) == len(expected) and set(inputs.namelist()) == expected
-        assert len(outputs.namelist()) == report["outputs"]["files"] == 741
-        for phase in ("commercial", "before", "candidate"):
+        assert len(outputs.namelist()) == report["outputs"]["files"] == 247 * len(report["reports"])
+        for phase in report["reports"]:
             observed = report["reports"][phase]
             assert observed["corpus_sha256"] == report["corpus"]["sha256"]
             rows = {row["case"]: row for row in observed["records"]}
@@ -139,8 +160,13 @@ def verify_style_imports(root):
                 else:
                     assert row["outcome"] == "returned" and "reopened_format" in row
                 checked += 1
-    native = phases["commercial"]
-    for phase in ("before", "candidate"):
+    if "commercial" in phases:
+        native = phases["commercial"]
+    else:
+        baseline = (root / report["baseline"]["file"]).read_bytes()
+        assert digest(baseline.replace(b"\r\n", b"\n")) == report["baseline"]["sha256"]
+        native = {row["case"]: row for row in json.loads(baseline)["reports"]["commercial"]["records"]}
+    for phase in report["official_candidate_rereads"]:
         read = report["official_candidate_rereads"][phase]
         assert read["version"] == "26.9.0" and read["licensed"] is False
         observed = {row["case"]: row for row in read["records"]}
@@ -204,10 +230,13 @@ def verify(root):
     imports = verify_import_outputs(root)
     toggles = verify_style_toggles(root)
     style_imports = verify_style_imports(root)
+    style_imports += verify_style_imports(root, "style-import-translated.json")
+    defaults = verify_font_defaults(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
             "checked_import_outputs": imports,
             "checked_style_inputs": toggles,
             "checked_style_import_outputs": style_imports,
+            "checked_font_default_inputs": defaults,
             "checked_format_outputs": checked, "behavioral_acceptance": False}
 
 

@@ -1,0 +1,43 @@
+{
+  "module": "aspose.words",
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "corpus": "corpus/font-defaults-26.9.zip",
+  "corpus_sha256": "586d8e9d575de3a19015df10c32639bd33839f0d56c0f6feab89e7e2a2602c60",
+  "records": [
+    {
+      "input": "absent.docx",
+      "sha256": "cc9b7251eeeea41753dfe22b8c3adf2e62903cd2e4245d400122997d3afd3e23",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "empty.docx",
+      "sha256": "8ed7922577f0224c786a8626420595b102ddd1708f08133bfb97f3b93c939abd",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "ppr_empty.docx",
+      "sha256": "8957743610020eb81734e65188ac4298a8c2dbeabc4e25ef9b446700f443e87c",
+      "run_size": 11.0,
+      "style_size": 11.0
+    },
+    {
+      "input": "rpr_bold.docx",
+      "sha256": "601466b7f30767c85436cf5321dde6592b0ed3639cb60e34706cbbbf75adcf8f",
+      "run_size": 10.0,
+      "style_size": 10.0
+    },
+    {
+      "input": "rpr_empty.docx",
+      "sha256": "753734bb1ee0d027c131b08e2f14d454be58b17dc6ed78dfd9c4aaa883e13f31",
+      "run_size": 10.0,
+      "style_size": 10.0
+    }
+  ],
+  "full_format_acceptance": false,
+  "scope": "five implicit-size getter observations; rendering unverified"
+}

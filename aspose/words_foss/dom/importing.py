@@ -5,15 +5,20 @@ from enum import IntEnum
 from aspose.words_foss._opc import resolve_target
 from aspose.words_foss.dom.nodes import (
     XMLNS,
+    Font,
     Node,
+    ParagraphFormat,
     W,
     _bind_namespace_context,
     _elements,
     _find,
     _is,
+    _new,
+    _onoff,
+    _read_size,
     _safe_structure,
 )
-from aspose.words_foss.dom.styles import StyleResolver
+from aspose.words_foss.dom.styles import StyleResolver, _child, _style_toggle
 
 
 class ImportFormatMode(IntEnum):
@@ -35,6 +40,124 @@ def _theme_payload(document):
     if len(links) > 1 or links and links[0].getAttribute("TargetMode") not in {"", "Internal"}:
         raise ValueError("Expected at most one internal theme relationship")
     return document._package.payload(resolve_target("word/document.xml", links[0].getAttribute("Target"))) if links else None
+
+
+def _format_layers(chain):
+    return [[item.toxml() for item in _elements(style)
+             if item.localName in {"pPr", "rPr", "tblPr", "tcPr", "trPr", "tblStylePr"}]
+            for style in chain]
+
+
+def _other_format_layers(chain):
+    result = []
+    for style in chain:
+        layers = []
+        for original in _elements(style):
+            if original.localName not in {"pPr", "rPr", "tblPr", "tcPr", "trPr", "tblStylePr"}:
+                continue
+            copied = original.cloneNode(deep=True)
+            for child in list(_elements(copied)):
+                if child.namespaceURI == W and child.localName in ({"b", "i", "sz"} if _is(copied, "rPr") else {"jc"} if _is(copied, "pPr") else set()):
+                    copied.removeChild(child)
+            attributes = [copied.attributes.item(i) for i in range(copied.attributes.length)
+                          if copied.attributes.item(i).namespaceURI != XMLNS]
+            content = [child for child in copied.childNodes
+                       if child.nodeType != child.TEXT_NODE or child.data.strip()]
+            if attributes or content:
+                layers.append(copied.toxml())
+        result.append(layers)
+    return result
+
+
+def _set_style_property(style, group, name, value):
+    properties = _find(style, group)
+    if properties is None:
+        if value is None:
+            return
+        properties = _new(style, group)
+        anchor = _find(style, "rPr") if group == "pPr" else None
+        style.insertBefore(properties, anchor)
+    for child in list(_elements(properties)):
+        if _is(child, name):
+            properties.removeChild(child)
+    if value is not None:
+        element = _new(properties, name)
+        _set_word_attribute(element, "val", value)
+        order = Font.order if group == "rPr" else ParagraphFormat.order
+        later = set(order[order.index(name) + 1:])
+        anchor = next((item for item in _elements(properties) if item.namespaceURI == W and item.localName in later), None)
+        properties.insertBefore(element, anchor)
+
+
+def _nearest_style_property(resolver, chain, kind, group, name):
+    element = _child(resolver._defaults(group), name) if kind == "paragraph" else None
+    for style in chain:
+        candidate = _child(_child(style, group), name)
+        if candidate is not None:
+            element = candidate
+    if name == "sz":
+        if element is not None:
+            _read_size(element)
+            return str(int(element.getAttributeNS(W, "val")))
+        return None
+    return element.getAttributeNS(W, "val") if element is not None else "left" if kind == "paragraph" else None
+
+
+def _validate_simple_style_properties(chain):
+    for style in chain:
+        for group, names in (("rPr", {"b", "i", "sz"}), ("pPr", {"jc"})):
+            groups = [node for node in _elements(style) if _is(node, group)]
+            if len(groups) > 1:
+                raise ValueError("Duplicate style property groups")
+            for properties in groups:
+                seen = set()
+                for element in _elements(properties):
+                    if element.namespaceURI != W or element.localName not in names:
+                        continue
+                    if element.localName in seen:
+                        raise ValueError("Duplicate style property")
+                    seen.add(element.localName)
+                    attributes = [element.attributes.item(i) for i in range(element.attributes.length)]
+                    if any(attribute.namespaceURI != XMLNS and (attribute.namespaceURI != W or attribute.localName != "val")
+                           for attribute in attributes) or element.childNodes:
+                        raise NotImplementedError("Migrating decorated style properties requires metadata preservation")
+
+
+def _translate_style(imported, source_chain, source_bases, target_bases, source, target, kind):
+    if any(not _safe_structure(base, properties=True) for base in source_bases + target_bases):
+        raise NotImplementedError("Importing complex base-style dependencies requires resource translation")
+    default = source._defaults("rPr")
+    if kind not in {"paragraph", "character"} or any(_onoff(_child(default, name)) for name in ("b", "i")):
+        # shortcut: default-on toggles need the observed native getter/save differences resolved before migration.
+        if _format_layers(source_bases) != _format_layers(target_bases):
+            raise NotImplementedError("Importing a new style over a conflicting base requires effective-format translation")
+        return
+    a, b = _other_format_layers(source_bases), _other_format_layers(target_bases)
+    if (any(a) or any(b)) and a != b:
+        raise NotImplementedError("Importing other conflicting style properties requires effective-format translation")
+    if any(style.getElementsByTagNameNS(W, "rStyle") for style in source_chain + target_bases):
+        raise NotImplementedError("Nested run-style dependencies require format translation")
+    _validate_simple_style_properties(source_chain + target_bases)
+    for group, names in (("rPr", ("b", "i", "sz")), ("pPr", ("jc",))):
+        if kind == "character" and group == "pPr":
+            continue
+        for name in names:
+            if name in {"b", "i"}:
+                value = _style_toggle(source_chain, name)
+                base = _style_toggle(target_bases, name)
+                if kind == "paragraph":
+                    value = False if value is None else value
+                    base = False if base is None else base
+                value = None if value is None else "1" if value else "0"
+                base = None if base is None else "1" if base else "0"
+            else:
+                value = _nearest_style_property(source, source_chain, kind, group, name)
+                base = _nearest_style_property(target, target_bases, kind, group, name)
+                if name == "sz" and kind == "paragraph" and value is None and base is not None:
+                    raise NotImplementedError("Migrating an implicit application font size requires default-format calibration")
+                if name == "jc" and value != base and any(item not in {"left", "right", "center", "both"} for item in (value, base)):
+                    raise NotImplementedError("Migrating complex paragraph alignment requires layout context")
+            _set_style_property(imported, group, name, None if kind == "paragraph" and value == base else value)
 
 
 def import_node(destination, node, deep, mode):
@@ -101,6 +224,8 @@ def import_node(destination, node, deep, mode):
         _set_word_attribute(imported, "styleId", result)
         if imported.hasAttributeNS(W, "default"):
             imported.removeAttributeNS(W, "default")
+        target_bases = []
+        source_bases = source_styles._chain(style_id, kind)[:-1]
         for relation in ("basedOn", "next", "link"):
             reference = _find(imported, relation)
             if reference is None:
@@ -111,19 +236,12 @@ def import_node(destination, node, deep, mode):
                 mapped = result
             else:
                 mapped = map_style(dependency, dependency_kind)
-            if relation == "basedOn" and mapped in target_styles.styles:
-                source_bases = source_styles._chain(dependency, kind)
+            if relation == "basedOn":
                 target_bases = target_styles._chain(mapped, kind)
-                if any(not _safe_structure(base, properties=True) for base in source_bases + target_bases):
-                    raise NotImplementedError("Importing complex base-style dependencies requires resource translation")
-                # shortcut: compare full ancestry XML until all effective style properties can be translated.
-                for properties in ("pPr", "rPr", "tblPr", "tcPr", "trPr", "tblStylePr"):
-                    a = [item.toxml() for base in source_bases for item in _elements(base) if _is(item, properties)]
-                    b = [item.toxml() for base in target_bases for item in _elements(base) if _is(item, properties)]
-                    if a != b:
-                        raise NotImplementedError("Importing a new style over a conflicting base requires effective-format translation")
             _set_word_attribute(reference, "val", mapped)
+        _translate_style(imported, chain, source_bases, target_bases, source_styles, target_styles, kind)
         root.appendChild(imported)
+        target_styles.styles[result] = imported
         return result
 
     for item in [element, *element.getElementsByTagNameNS(W, "*")]:

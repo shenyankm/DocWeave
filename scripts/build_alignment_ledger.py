@@ -92,10 +92,16 @@ def build(declarations, baseline, current, observations=None, formats=None):
             records[-1]["baseline_behavior"] = "partially_observed; canonical Font getter alignment remains incomplete"
         if name in {"aspose.words.Document.import_node", "aspose.words.DocumentBase.import_node"}:
             records[-1]["style_conflict_evidence"] = {
-                "file": "style-import-conflicts-26.9.json",
+                "file": "style-import-translated.json",
                 "scope": "247 default-mode deep paragraph import cases; seven native source changes and two native roundtrip changes",
                 "current_alternative_entrypoint": "DocxDocument.import_node",
-                "delivery": "ancestor safety guard fixed; 166 cases remain unsupported; full import and rendering unverified",
+                "delivery": "bounded b/i/size/alignment translation implemented; 38 cases remain unsupported; full import and rendering unverified",
+            }
+        if name == "aspose.words.Font.size":
+            records[-1]["default_format_evidence"] = {
+                "file": "font-defaults-26.9.json",
+                "scope": "five owned implicit-size Run/Style getter observations; full default-font semantics unverified",
+                "delivery": "implicit size migration guarded; canonical default-font mapping remains incomplete",
             }
     assert len({item["id"] for item in records}) == len(records)
     return {"schema": 1, "baseline_version": declarations["version"], "current_runtime_version": current["runtime_version"],

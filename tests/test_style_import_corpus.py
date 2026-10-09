@@ -15,7 +15,7 @@ from .test_docx_dom import payloads
 
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / "docs" / "benchmarks"
-REPORT = json.loads((BENCHMARKS / "style-import-conflicts-26.9.json").read_text())
+REPORT = json.loads((BENCHMARKS / "style-import-translated.json").read_text())
 INSPECT = runpy.run_path(str(ROOT / "docs" / "probes" / "inspect_style_imports.py"))["inspect_document"]
 CHECKS = {row["case"]: row for row in REPORT["independent_checks"]["candidate"]}
 

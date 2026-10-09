@@ -79,7 +79,23 @@ def test_unimplemented_format_modes_fail_before_destination_changes(mode):
     assert target.to_bytes() == before
 
 
-def test_conflicting_base_does_not_partially_commit_new_style():
+def test_implicit_source_font_size_is_refused_before_destination_changes():
+    import runpy
+    from pathlib import Path
+
+    helpers = runpy.run_path(str(Path(__file__).parents[1] / "docs" / "probes" / "import_style_conflicts.py"))
+    style, build = helpers["style"], helpers["document"]
+    source_data = build(style("Base", "paragraph", {}) + style("Derived", "paragraph", {}, "Base"),
+                        '<w:pStyle w:val="Derived"/>', "")
+    target_data = build(style("Base", "paragraph", {"sz": 36}), '<w:pStyle w:val="Base"/>', "")
+    source, target = aw.DocxDocument(BytesIO(source_data)), aw.DocxDocument(BytesIO(target_data))
+    before = target.to_bytes()
+    with pytest.raises(NotImplementedError, match="implicit application font size"):
+        target.import_node(source.body.paragraphs[0], True)
+    assert target.to_bytes() == before and source.to_bytes() == source_data
+
+
+def test_new_paragraph_style_preserves_source_font_over_conflicting_base():
     source, target = document(), document(bold=False)
     raw = Document(BytesIO(source.to_bytes()))
     style = raw.styles.add_style("Derived", WD_STYLE_TYPE.PARAGRAPH)
@@ -88,14 +104,20 @@ def test_conflicting_base_does_not_partially_commit_new_style():
     data = BytesIO()
     raw.save(data)
     source = aw.DocxDocument(BytesIO(data.getvalue()))
-    before = target.to_bytes()
-    with pytest.raises(NotImplementedError, match="conflicting base"):
-        target.import_node(source.body.paragraphs[0], True)
-    assert target.to_bytes() == before
+    before_source = source.to_bytes()
+    copied = target.import_node(source.body.paragraphs[0], True)
+    target.body.append_child(copied)
+    assert copied.runs[0].effective_font == source.body.paragraphs[0].runs[0].effective_font
+    reopened = aw.DocxDocument(BytesIO(target.to_bytes()))
+    assert reopened.body.paragraphs[-1].runs[0].effective_font == copied.runs[0].effective_font
+    saved = Document(BytesIO(target.to_bytes()))
+    assert saved.styles["Conflict"].font.bold is False and saved.styles["Conflict"].font.size.pt == 11
+    assert saved.styles["Derived"].font.bold is True and saved.styles["Derived"].font.size.pt == 18
+    assert source.to_bytes() == before_source
 
 
 @pytest.mark.parametrize("kind", [WD_STYLE_TYPE.PARAGRAPH, WD_STYLE_TYPE.CHARACTER])
-def test_identical_immediate_base_does_not_hide_conflicting_ancestor(kind):
+def test_import_resolves_conflicting_ancestor_with_identical_immediate_base(kind):
     def make(bold):
         raw = Document()
         ancestor = raw.styles.add_style("Ancestor", kind)
@@ -115,10 +137,13 @@ def test_identical_immediate_base_does_not_hide_conflicting_ancestor(kind):
         return aw.DocxDocument(BytesIO(stream.getvalue()))
 
     source, target = make(True), make(False)
-    before_source, before_target = source.to_bytes(), target.to_bytes()
-    with pytest.raises(NotImplementedError, match="conflicting base"):
-        target.import_node(source.body.paragraphs[0], True)
-    assert source.to_bytes() == before_source and target.to_bytes() == before_target
+    before_source = source.to_bytes()
+    copied = target.import_node(source.body.paragraphs[0], True)
+    target.body.append_child(copied)
+    assert copied.runs[0].effective_font.bold is True
+    assert aw.DocxDocument(BytesIO(target.to_bytes())).body.paragraphs[-1].runs[0].effective_font.bold is True
+    assert Document(BytesIO(target.to_bytes())).styles["Ancestor"].font.bold is False
+    assert source.to_bytes() == before_source
 
 
 def test_conflict_in_later_conditional_table_style_is_not_ignored():
@@ -151,6 +176,60 @@ def test_conflict_in_later_conditional_table_style_is_not_ignored():
     with pytest.raises(NotImplementedError, match="conflicting base"):
         target.import_node(source.body.tables[0], True)
     assert source.to_bytes() == before_source and target.to_bytes() == before_target
+
+
+@pytest.mark.parametrize("decoration", ["color", "duplicate", "comment", "attribute", "nested_style"])
+def test_unsupported_style_translation_is_atomic(decoration):
+    raw_source = Document(BytesIO(document().to_bytes()))
+    raw_target = Document(BytesIO(document(bold=False).to_bytes()))
+    derived = raw_source.styles.add_style("Derived", WD_STYLE_TYPE.PARAGRAPH)
+    derived.base_style = raw_source.styles["Conflict"]
+    raw_source.paragraphs[0].style = derived
+    if decoration == "color":
+        color = OxmlElement("w:color")
+        color.set(f"{{{W}}}val", "FF0000")
+        raw_source.styles["Conflict"].element.get_or_add_rPr().append(color)
+    elif decoration == "nested_style":
+        reference = OxmlElement("w:rStyle")
+        reference.set(f"{{{W}}}val", "DefaultParagraphFont")
+        derived.element.get_or_add_rPr().append(reference)
+    else:
+        bold = OxmlElement("w:b")
+        derived.element.get_or_add_rPr().append(bold)
+        if decoration == "duplicate":
+            derived.element.get_or_add_rPr().append(OxmlElement("w:b"))
+        elif decoration == "comment":
+            from lxml.etree import Comment
+
+            bold.append(Comment("retained metadata"))
+        else:
+            bold.set(f"{{{W}}}future", "retained metadata")
+    def load(raw):
+        stream = BytesIO()
+        raw.save(stream)
+        return aw.DocxDocument(BytesIO(stream.getvalue()))
+    source, target = load(raw_source), load(raw_target)
+    before_source, before_target = source.to_bytes(), target.to_bytes()
+    with pytest.raises(ValueError if decoration == "duplicate" else NotImplementedError):
+        target.import_node(source.body.paragraphs[0], True)
+    assert source.to_bytes() == before_source and target.to_bytes() == before_target
+
+
+def test_new_style_dependency_is_resolved_from_planned_destination_styles():
+    raw = Document()
+    parent = raw.styles.add_style("New Parent", WD_STYLE_TYPE.PARAGRAPH)
+    parent.font.bold, parent.font.size = True, Pt(16)
+    child = raw.styles.add_style("New Child", WD_STYLE_TYPE.PARAGRAPH)
+    child.base_style = parent
+    raw.add_paragraph("IMPORT", style=child)
+    stream = BytesIO()
+    raw.save(stream)
+    source, target = aw.DocxDocument(BytesIO(stream.getvalue())), document(bold=False)
+    copied = target.import_node(source.body.paragraphs[0], True)
+    target.body.append_child(copied)
+    saved = Document(BytesIO(target.to_bytes()))
+    assert saved.styles["New Child"].base_style.name == "New Parent"
+    assert copied.runs[0].effective_font.bold and copied.runs[0].effective_font.size == 16
 
 
 @pytest.mark.parametrize("value", [0, 1, None, "USE_DESTINATION_STYLES"])
