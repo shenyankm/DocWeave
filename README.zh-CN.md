@@ -411,7 +411,7 @@ render_report("template.docx", context, "report.docx", "report.pdf")
 
 | API | 契约 |
 |---|---|
-| `aw.Document(source, load_options=None)` | 路径或二进制流，构造时立即生成 LDM |
+| `aw.Document(source=None, load_options=None)` | 创建带默认字体登记的空白文档，或加载路径、二进制流；构造时立即生成 LDM |
 | `Document.save(path, format_or_options=None)` | 按扩展名推断格式或接受格式/保存选项对象；原子发布主文件 |
 | `Document.to_bytes(format_or_options)` | 显式 DOCX/Flat OPC/Markdown/PDF/TXT 内存输出 |
 | `Document.get_text()` / `to_dict()` | 正文文本 / 结构化内容提取 |

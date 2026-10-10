@@ -423,7 +423,7 @@ These are the main implemented entry points, not an exhaustive catalog of intern
 
 | API | Contract |
 |---|---|
-| `aw.Document(source, load_options=None)` | Path or binary stream; constructs the LDM immediately |
+| `aw.Document(source=None, load_options=None)` | Create a blank document with its default font registrations, or load a path or binary stream; constructs the LDM immediately |
 | `Document.save(path, format_or_options=None)` | Infers format from extension or accepts a format/save-options object; atomic main-file publication |
 | `Document.to_bytes(format_or_options)` | Explicit DOCX/Flat OPC/Markdown/PDF/TXT in-memory output |
 | `Document.get_text()` / `to_dict()` | Body text / structured content extraction |
