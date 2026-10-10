@@ -141,6 +141,14 @@ class PdfTextCompression(IntEnum):
     FLATE = 1
 
 
+class DmlEffectsRenderingMode(IntEnum):
+    """Effect omission policy; SIMPLIFIED and FINE painting remain unsupported."""
+
+    SIMPLIFIED = 0
+    NONE = 1
+    FINE = 2
+
+
 class PdfImageCompression(IntEnum):
     """Image compression in PDF."""
 
@@ -237,6 +245,16 @@ class PdfSaveOptions:
     memory_optimization = _BoolField(False)
     display_doc_title = _BoolField(False)
     text_shaping = _BoolField(False)
+
+    @property
+    def dml_effects_rendering_mode(self) -> DmlEffectsRenderingMode:
+        return getattr(self, "_dml_effects_rendering_mode", DmlEffectsRenderingMode.SIMPLIFIED)
+
+    @dml_effects_rendering_mode.setter
+    def dml_effects_rendering_mode(self, value: DmlEffectsRenderingMode) -> None:
+        if not isinstance(value, DmlEffectsRenderingMode):
+            raise TypeError("dml_effects_rendering_mode requires DmlEffectsRenderingMode")
+        self._dml_effects_rendering_mode = value
 
     def __setattr__(self, name, value):
         object.__setattr__(self, name, value)

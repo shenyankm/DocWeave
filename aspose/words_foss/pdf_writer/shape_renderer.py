@@ -25,7 +25,7 @@ from aspose.words_foss.pdf_writer.constants import (
     TEXTBOX_INNER_PAD_MM,
 )
 from aspose.words_foss.pdf_writer._context import PDFWriterContext
-from aspose.words_foss.saving import PdfImageCompression
+from aspose.words_foss.saving import DmlEffectsRenderingMode, PdfImageCompression
 
 try:
     from PIL import Image as _PILImage
@@ -249,7 +249,8 @@ class ShapeRenderer:
                                           y_override=y_override)
 
     def _render_positioned_shape(self, pdf, shape, *, line_y_override=None, y_override=None):
-        if shape.source_drawing_effects is not None:
+        if (shape.source_drawing_effects is not None
+                and self._writer.options.dml_effects_rendering_mode != DmlEffectsRenderingMode.NONE):
             from defusedxml.ElementTree import fromstring
             if len(fromstring(shape.source_drawing_effects.xml)):
                 warn("DrawingML shape effects are preserved but not rendered",
