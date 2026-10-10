@@ -424,6 +424,19 @@ class SourceFontNames(BaseModel):
 
 
 class Font(BaseModel):
+    _name_resolver: Any = PrivateAttr(default=None)
+    _name_context: tuple = PrivateAttr(default=("", "", "", ()))
+
+    def __getattribute__(self, name):
+        if name in {"name", "name_ascii", "name_other", "name_bi", "name_far_east"}:
+            private = object.__getattribute__(self, "__pydantic_private__")
+            resolver = private.get("_name_resolver") if private else None
+            if resolver is not None:
+                channel = {"name": "ascii", "name_ascii": "ascii", "name_other": "hAnsi",
+                           "name_bi": "cs", "name_far_east": "eastAsia"}[name]
+                return resolver(self)[channel]
+        return super().__getattribute__(name)
+
     name: str = ""
     size: float = 0.0
     size_explicit: bool | None = None
@@ -484,6 +497,14 @@ class Font(BaseModel):
     locale_id_far_east: int = 0
     # REMOVED: size_bi, double_strike_through, underline_color, scaling,
     #          spacing, position, complex_script, border
+
+    def __deepcopy__(self, memo=None):
+        result = super().__deepcopy__(memo)
+        if self._name_resolver is not None:
+            for field in ("name", "name_ascii", "name_other", "name_bi", "name_far_east"):
+                result.__dict__[field] = getattr(self, field)
+            result._name_resolver = None
+        return result
 
     @property
     def render_hidden(self) -> bool:
@@ -569,7 +590,13 @@ class Font(BaseModel):
             for field in (*FONT_BOOLEAN_FIELDS, 'color', 'size'):
                 if field in update and field + '_explicit' not in update:
                     update[field + '_explicit'] = True
-        return super().model_copy(update=update, deep=deep)
+        result = super().model_copy(update=update, deep=deep)
+        if self._name_resolver is not None:
+            for field in ("name", "name_ascii", "name_other", "name_bi", "name_far_east"):
+                if update is None or field not in update:
+                    result.__dict__[field] = getattr(self, field)
+            result._name_resolver = None
+        return result
 
     @model_validator(mode="wrap")
     @classmethod
@@ -797,6 +824,17 @@ class ImageData(BaseModel):
 
 
 class Run(BaseModel, NodeCastMixin):
+    _font_name_resolver: Any = PrivateAttr(default=None)
+
+    def __getattribute__(self, name):
+        value = super().__getattribute__(name)
+        if name == "font":
+            private = object.__getattribute__(self, "__pydantic_private__")
+            resolver = private.get("_font_name_resolver") if private else None
+            if resolver is not None:
+                value._name_resolver = resolver
+        return value
+
     type: str = Field(default="Run", alias="_type")
     text: str = ""
     is_hyperlink: bool = False
@@ -1400,6 +1438,20 @@ class TableStyleProperty(BaseModel):
 
 
 class Style(BaseModel):
+    _font_name_resolver: Any = PrivateAttr(default=None)
+
+    def __getattribute__(self, name):
+        value = super().__getattribute__(name)
+        if name == "font":
+            private = object.__getattribute__(self, "__pydantic_private__")
+            resolver = private.get("_font_name_resolver") if private else None
+            if resolver is not None:
+                if value is None:
+                    value = Font(font_names_explicit=False)
+                    self.__dict__["font"] = value
+                value._name_resolver = resolver
+        return value
+
     name: str = ""
     is_default: bool | None = None  # None keeps legacy built-in Normal inference.
     type: int = 0  # 1=paragraph, 2=character, 3=table
@@ -1508,6 +1560,15 @@ class SourceStory(BaseModel):
 
 class Document(BaseModel):
     theme_font_languages: ThemeFontLanguages | None = None
+    _font_name_theme_values: dict | None = PrivateAttr(default=None)
+
+    def model_copy(self, *, update=None, deep=False):
+        result = super().model_copy(update=update, deep=deep)
+        if deep and self._font_name_theme_values is not None:
+            from aspose.words_foss._font_names import bind_font_names
+            bind_font_names(result, self._font_name_theme_values)
+        return result
+
     type: str = Field(default="Document", alias="_type")
     default_tab_stop: float = 36.0
     do_not_expand_shift_return: bool = False

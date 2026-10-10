@@ -92,6 +92,8 @@ class LdmBuilderMixin:
 
         self._populate_source_stories(doc)
         self._populate_headers_footers(doc)
+        from aspose.words_foss._font_names import bind_font_names
+        bind_font_names(doc, self._theme_fonts)
         return doc
 
     # -- Reader-side state helpers ---------------------------------------------
