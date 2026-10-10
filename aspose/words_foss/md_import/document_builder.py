@@ -500,6 +500,37 @@ class MarkdownDocumentBuilder:
     def insert_html(self, html: str, options: int = HtmlInsertOptions.NONE) -> None:
         if not html:
             return
+        if re.search(r"<table\b", html, re.IGNORECASE):
+            from .html_tables import parse_html_tables
+
+            nodes = parse_html_tables(html, self._snapshot_font())
+            container = self._container_stack[-1]
+            state = self._table_stack[-1] if self._table_stack else None
+            if state is not None and state.in_cell:
+                cell = state.row.cells[-1]
+                children = [
+                    node for node in cell.children
+                    if node is not self.current_paragraph or node._children
+                ]
+                children.extend(nodes)
+                self.current_paragraph = ldm.Paragraph()
+                children.append(self.current_paragraph)
+                container[:] = [
+                    node for node in children if isinstance(node, ldm.Paragraph)
+                ]
+                cell.tables[:] = [node for node in children if isinstance(node, ldm.Table)]
+                cell.content_order[:] = [
+                    "paragraph" if isinstance(node, ldm.Paragraph) else "table"
+                    for node in children
+                ]
+            else:
+                if not self.current_paragraph._children:
+                    container[:] = [
+                        node for node in container if node is not self.current_paragraph
+                    ]
+                container.extend(nodes)
+                self.current_paragraph = self._append_new_paragraph()
+            return
         blocks = re.split(r"(?i)</?(?:p|div|table|tr|td|th|h[1-6]|br)\s*/?>", html)
         wrote_any = False
         for block in blocks:
