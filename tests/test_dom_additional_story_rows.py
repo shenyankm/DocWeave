@@ -1,7 +1,8 @@
 """Owned note/comment parts and real VML/DrawingML textbox row editing."""
 from io import BytesIO
 from zipfile import ZipFile
-from xml.etree.ElementTree import fromstring
+from xml.etree.ElementTree import fromstring, tostring
+from xml.dom import minidom
 
 import pytest
 
@@ -11,6 +12,45 @@ from .test_dom_story_row_height import W, R, story_package, row_format
 
 
 KINDS = ['footnotes', 'endnotes', 'comments', 'vml', 'dml']
+
+
+@pytest.mark.parametrize('kind', ['footnotes', 'endnotes', 'comments'])
+@pytest.mark.parametrize('inherited', [False, True])
+@pytest.mark.parametrize('flat', [False, True])
+def test_multiple_entries_keep_references_and_independent_heights(tmp_path, kind, inherited, flat):
+    source = tmp_path / 'input.docx'
+    name, parts = additional_story(source, kind, inherited=inherited)
+    tree = minidom.parseString(parts[name])
+    second = tree.documentElement.firstChild.cloneNode(True)
+    second.setAttributeNS(W, 'w:id', '2')
+    tree.documentElement.appendChild(second)
+    parts[name] = tree.toxml(encoding='utf-8')
+    body = minidom.parseString(parts['word/document.xml'])
+    marker = body.getElementsByTagNameNS(W, kind.removesuffix('s') + 'Reference')[0]
+    copied = marker.cloneNode(True)
+    copied.setAttributeNS(W, 'w:id', '2')
+    marker.parentNode.appendChild(copied)
+    parts['word/document.xml'] = body.toxml(encoding='utf-8')
+    with ZipFile(source, 'w') as archive:
+        for part, data in parts.items():
+            archive.writestr(part, data)
+    document = DocxDocument(source)
+    entries = document.story(name).child_nodes
+    formats = [entry.get_child_nodes(aw.NodeType.ROW, True)[0].row_format for entry in entries]
+    formats[0].height = 2000
+    if not inherited:
+        formats[1].height = 1440
+    output = tmp_path / 'output'
+    (document.save_flat_opc if flat else document.save)(output)
+    expected = [1584, 2000 if inherited else 1440]
+    assert [format.height for format in formats] == expected
+    cold = DocxDocument(output)
+    cold_entries = cold.story(name).child_nodes
+    assert [entry._element.getAttributeNS(W, 'id') for entry in cold_entries] == ['1', '2']
+    assert [entry.get_child_nodes(aw.NodeType.ROW, True)[0].row_format.height
+            for entry in cold_entries] == expected
+    assert tostring(fromstring(cold._package.payload('word/document.xml'))) == tostring(
+        fromstring(parts['word/document.xml']))
 
 
 def additional_story(path, kind, *, inherited=False, invalid=False, opaque=False):
