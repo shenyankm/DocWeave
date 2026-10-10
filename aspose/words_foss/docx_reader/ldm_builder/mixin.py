@@ -51,6 +51,7 @@ class LdmBuilderMixin:
             flags = {}
             for field, tag in [('embed_true_type_fonts', 'embedTrueTypeFonts'),
                                ('do_not_embed_system_fonts', 'doNotEmbedSystemFonts'),
+                               ('embed_system_fonts', 'embedSystemFonts'),
                                ('save_subset_fonts', 'saveSubsetFonts')]:
                 flag = self._settings_xml.find(W_NS + tag)
                 if flag is not None:

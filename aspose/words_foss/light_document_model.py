@@ -365,6 +365,17 @@ class SourceFontTable(SourceTheme):
 
     model_config = ConfigDict(frozen=True, hide_input_in_errors=True)
     part_name: str = 'word/fontTable.xml'
+    # Successful-save metadata view; the original resource snapshot remains separate.
+    current_registrations_data: bytes | None = None
+
+    @field_serializer('current_registrations_data', when_used='json')
+    def _encode_registration_view(self, value):
+        return self._encode_bytes(value)
+
+    @field_validator('current_registrations_data', mode='before')
+    @classmethod
+    def _decode_registration_view(cls, value):
+        return cls._decode_bytes(value)
 
 
 class FontEmbeddingSettings(BaseModel):
@@ -373,6 +384,7 @@ class FontEmbeddingSettings(BaseModel):
     model_config = ConfigDict(strict=True, validate_assignment=True, hide_input_in_errors=True)
     embed_true_type_fonts: bool | None = None
     do_not_embed_system_fonts: bool | None = None
+    embed_system_fonts: bool | None = None
     save_subset_fonts: bool | None = None
 
     def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False):

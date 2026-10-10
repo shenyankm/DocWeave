@@ -62,7 +62,9 @@ DocWeave 是独立维护的 [Aspose.Words FOSS for Python](https://github.com/as
 | TXT | 支持 | 支持 | 仅正文文本；输出为 UTF-8，不保留图片或原始排版 |
 | PDF | 不支持 | 支持 | 使用内置字体与渲染器，不承诺 Word 一致分页 |
 
-DOCX 和 Flat OPC 转换会保留已加载的字体表、元数据、关联包资源，以及原始 `embedTrueTypeFonts`、`doNotEmbedSystemFonts` 和 `saveSubsetFonts` 设置。这是源资源保留能力；尚未实现自动字体选择、重新嵌入及公开字体管理 API。
+DOCX 和 Flat OPC 转换会保留已加载的字体表、元数据、关联资源和原始嵌入设置。`Document.font_infos` 支持遍历、按名称查询、元数据编辑及三个嵌入选项，保存成功后才更新已持有的集合。
+
+这些编辑保留源资源；自动字体选择、重新嵌入、字体提取和字体来源 API 尚未实现。
 
 独立的 LibreOffice 后端可将原始 DOC/DOCX/RTF（包括标准文本 RTF）**转换为 PDF，不提供其他输出格式**。
 
