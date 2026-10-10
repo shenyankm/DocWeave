@@ -608,7 +608,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             u = rPr.find(f"{W_NS}u")
             if u is not None:
                 val = u.get(f"{W_NS}val")
-                data.underline = val is not None and val != "none"
+                data.underline = val not in (None, "", "none")
 
             # Strikethrough
             strike = rPr.find(f"{W_NS}strike")

@@ -221,7 +221,7 @@ def render_rPr(
         highlight = HIGHLIGHT_NAME_BY_COLOR.get(font.highlight_color, "none")
         children.append(el("w:highlight", {"w:val": highlight}))
     if font.underline != base.underline:
-        underline_val = UNDERLINE_VAL.get(font.underline, "none")
+        underline_val = UNDERLINE_VAL.get(font.underline, "none") or "none"
         children.append(el("w:u", {"w:val": underline_val}))
     if font.text_effect != base.text_effect:
         children.append(
