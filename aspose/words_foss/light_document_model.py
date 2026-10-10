@@ -690,6 +690,36 @@ class Run(BaseModel, NodeCastMixin):
     model_config = {"populate_by_name": True}
 
 
+class SourceDrawingFill(BaseModel):
+    """DrawingML rectangle fill declarations.
+
+    Raw XML retains direct colour transforms and theme references without
+    materializing them as a rendered colour.
+    """
+
+    model_config = ConfigDict(frozen=True)
+    direct_xml: str = ""
+    style_xml: str = ""
+    rotation: int = 0
+    flip_horizontal: bool = False
+    flip_vertical: bool = False
+
+    @field_validator("direct_xml", "style_xml")
+    @classmethod
+    def _validate_fill_xml(cls, value, info):
+        if not value:
+            return value
+        from defusedxml.ElementTree import fromstring
+        root = fromstring(value)
+        namespace = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+        allowed = {namespace + tag for tag in ("solidFill", "gradFill", "noFill")}
+        if info.field_name == "style_xml":
+            allowed = {"{http://schemas.microsoft.com/office/word/2010/wordprocessingShape}style"}
+        if root.tag not in allowed:
+            raise ValueError("Invalid DrawingML fill source element")
+        return value
+
+
 class Shape(BaseModel, NodeCastMixin):
     type: str = Field(default="Shape", alias="_type")
     shape_type: int | None = None
@@ -703,6 +733,8 @@ class Shape(BaseModel, NodeCastMixin):
     image_data: Optional[ImageData] = None
     text_box: dict[str, Any] | None = None  # textbox paragraph content
     fill_color: str = ""
+    source_drawing_fill: SourceDrawingFill | None = None
+    drawing_position_mm: tuple[float, float] | None = None
     stroke: Optional[Border] = None
     # Vertical anchor of the text-box content inside the shape's
     # bounding box: 0=Top (default), 1=Center, 2=Bottom.
@@ -732,6 +764,18 @@ class Shape(BaseModel, NodeCastMixin):
     _page_top_mm: float = PrivateAttr(default=0.0)
 
     model_config = {"populate_by_name": True}
+
+    @model_validator(mode="after")
+    def _restore_drawing_position(self):
+        if self.drawing_position_mm is not None:
+            self._is_positioned = True
+            self._page_left_mm, self._page_top_mm = self.drawing_position_mm
+        return self
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        super().__setattr__(name, value)
+        if name == "fill_color" and self.source_drawing_fill is not None:
+            super().__setattr__("source_drawing_fill", None)
 
     @model_validator(mode="before")
     @classmethod
