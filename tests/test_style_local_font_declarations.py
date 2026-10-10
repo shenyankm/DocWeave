@@ -101,3 +101,22 @@ def test_bound_style_saves_explicit_local_value_without_mutating_getter(field, v
     assert xml.find(W + 'rPr/' + W + 'rFonts') is None
     assert font.model_dump_json() == before
     assert font._name_resolver is not None
+
+
+@pytest.mark.parametrize('target', ['run', 'style'])
+@pytest.mark.parametrize('through_json', [False, True])
+@pytest.mark.parametrize('format', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+def test_explicit_zero_size_survives_model_edits_and_two_cold_saves(target, through_json, format):
+    model = aw.Document(BytesIO(owned_document())).light_document_model
+    font = (owned_run(model).font if target == 'run' else
+            next(s.font for s in model.styles if s.name == 'Owned Default'))
+    font.size = 0
+    assert font.size_explicit is True
+    if through_json:
+        model = ldm.Document.model_validate_json(model.model_dump_json())
+    for _ in range(2):
+        before = model.model_dump_json()
+        raw = LdmDocxWriter(OoxmlSaveOptions(format)).write_to_bytes(model)
+        assert model.model_dump_json() == before
+        model = aw.Document(BytesIO(raw)).light_document_model
+        assert owned_run(model).font.size == 0

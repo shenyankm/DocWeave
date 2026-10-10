@@ -60,7 +60,7 @@ def test_font_size_roundtrip_accepts_windows_zip_metadata(monkeypatch):
     test_positive_ordinary_sizes_match_native_and_roundtrip(ROWS[0])
 
 
-BAD = ('PRIVATE FONT VALUE', '', '0', '-2', '2_4', '٢٤', 'NaN', 'Infinity', '24hp', ' 24 ', '9' * 400)
+BAD = ('PRIVATE FONT VALUE', '', '-2', '2_4', '٢٤', 'NaN', 'Infinity', '24hp', ' 24 ', '9' * 400)
 
 
 @pytest.mark.parametrize('scope', ['run', 'style', 'default'])
@@ -150,3 +150,20 @@ def test_size_unit_conversion_does_not_depend_on_decimal_context():
         context.prec = 2
         assert parse_font_size('25.4mm') == parse_font_size('2.54cm') == 72
         assert parse_font_size('6.25pt') == 6
+
+
+@pytest.mark.parametrize('scope', ['run', 'style', 'default'])
+def test_explicit_zero_is_native_data_and_survives_model_saves(scope):
+    from aspose.words_foss import SaveFormat, light_document_model as ldm
+    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from aspose.words_foss.saving import OoxmlSaveOptions
+    inputs = runpy.run_path(str(ROOT / 'docs/probes/font_size_loading.py'))['inputs']
+    raw = next(data for _, kind, value, data in inputs() if kind == scope and value == '0')
+    assert DocxDocument(BytesIO(raw)).body.paragraphs[0].runs[0].effective_font.size == 0
+    for format in (SaveFormat.DOCX, SaveFormat.FLAT_OPC):
+        model = Document(BytesIO(raw)).light_document_model
+        model = ldm.Document.model_validate_json(model.model_dump_json())
+        for _ in range(2):
+            raw = LdmDocxWriter(OoxmlSaveOptions(format)).write_to_bytes(model)
+            model = Document(BytesIO(raw)).light_document_model
+            assert model.get_child_nodes(ldm.NodeType.RUN, True)[0].font.size == 0

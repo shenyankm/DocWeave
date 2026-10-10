@@ -527,7 +527,7 @@ class Font(BaseModel):
                     attrs[literal] = value
                 super().__setattr__('source_font_names', SourceFontNames(attributes=attrs))
             super().__setattr__('font_names_explicit', True)
-        if name in (*FONT_BOOLEAN_FIELDS, 'color'):
+        if name in (*FONT_BOOLEAN_FIELDS, 'color', 'size'):
             super().__setattr__(name + '_explicit', True)
         if name == 'hidden':
             super().__setattr__('hidden_rendering', None)
@@ -566,7 +566,7 @@ class Font(BaseModel):
             update.setdefault('source_color', None)
         if update is not None:
             update = dict(update)
-            for field in (*FONT_BOOLEAN_FIELDS, 'color'):
+            for field in (*FONT_BOOLEAN_FIELDS, 'color', 'size'):
                 if field in update and field + '_explicit' not in update:
                     update[field + '_explicit'] = True
         return super().model_copy(update=update, deep=deep)
