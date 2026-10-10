@@ -222,7 +222,7 @@ class ImageRenderState:
         has_fill = bool(shape.fill_color or shape.source_drawing_fill)
         has_outline = bool(shape.stroke and (shape.stroke.line_style != 0 or shape.stroke.line_width > 0))
         has_text_box = bool(shape.text_box and shape.text_box.get("paragraphs"))
-        if not (has_fill or has_outline or has_text_box):
+        if not (has_fill or has_outline or has_text_box or shape.source_drawing_effects):
             return None
         return _render_wsp_drawing_run(
             shape,
@@ -626,6 +626,10 @@ def _render_wsp_sp_pr(shape: ldm.Shape, cx: int, cy: int) -> str:
                 el("a:solidFill", None, el("a:srgbClr", {"val": line_hex}))
             )
         children.append(el("a:ln", line_attrs or None, ln_children))
+    if shape.source_drawing_effects is not None:
+        from defusedxml.ElementTree import fromstring
+        from xml.etree.ElementTree import tostring
+        children.append(tostring(fromstring(shape.source_drawing_effects.xml), encoding="unicode"))
     return el("wps:spPr", None, children)
 
 

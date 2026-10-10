@@ -595,10 +595,15 @@ class ShapeParserMixin:
         """
         fill_hex = ""
         source_fill = None
+        source_effects = None
         line_hex = ""
         line_width_pt = 0.0
         spPr = wsp.find(f"{WPS_NS}spPr")
         if spPr is not None:
+            effects = next((child for child in spPr if child.tag in
+                            {f"{A_NS}effectLst", f"{A_NS}effectDag"}), None)
+            if effects is not None:
+                source_effects = ldm.SourceDrawingEffects(xml=ET.tostring(effects, encoding="unicode"))
             fill_hex = self._resolve_drawingml_fill(spPr.find(f"{A_NS}solidFill"))
             geometry = spPr.find(f"{A_NS}prstGeom")
             style = wsp.find(f"{WPS_NS}style")
@@ -671,7 +676,8 @@ class ShapeParserMixin:
                     if element.tag == f"{W_NS}p":
                         textbox_paragraphs.append(self._build_ldm_paragraph(element))
 
-        if not fill_hex and not line_hex and not textbox_paragraphs and source_fill is None:
+        if (not fill_hex and not line_hex and not textbox_paragraphs and
+                source_fill is None and source_effects is None):
             return None
 
         shape = ldm.Shape()
@@ -696,7 +702,8 @@ class ShapeParserMixin:
                 "insets_mm": (ins_left_mm, ins_top_mm, ins_right_mm, ins_bottom_mm),
             }
         shape.source_drawing_fill = source_fill
-        if source_fill is not None:
+        shape.source_drawing_effects = source_effects
+        if source_fill is not None or source_effects is not None:
             shape.drawing_position_mm = (left, top)
         shape._is_positioned = True
         return shape

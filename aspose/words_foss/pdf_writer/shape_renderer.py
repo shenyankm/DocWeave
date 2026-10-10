@@ -249,6 +249,11 @@ class ShapeRenderer:
                                           y_override=y_override)
 
     def _render_positioned_shape(self, pdf, shape, *, line_y_override=None, y_override=None):
+        if shape.source_drawing_effects is not None:
+            from defusedxml.ElementTree import fromstring
+            if len(fromstring(shape.source_drawing_effects.xml)):
+                warn("DrawingML shape effects are preserved but not rendered",
+                     PdfContentLossWarning, code="pdf.drawing_effects_unsupported")
         x = shape._page_left_mm
         y = shape._page_top_mm if y_override is None else y_override
         w = shape.width or 0.0

@@ -438,6 +438,8 @@ These are the main implemented entry points, not an exhaustive catalog of intern
 
 ## Scope and Limitations
 
+- WPS shape `effectLst` / `effectDag` declarations survive LDM/JSON and DOCX/Flat OPC saves independently of fill edits.
+  PDF effect painting is unimplemented and emits `pdf.drawing_effects_unsupported`; group and image effects remain limited.
 - No built-in PDF reading, DOC/RTF writing, OCR, or complete Word layout/field-computation engine.
 - Conversion via LDM is not lossless. Notes are extracted separately; only opt-in Markdown exports visible anchored notes;
   comments, revisions, complex fields, content controls, math, floating content, and header/footer variants have limits.
