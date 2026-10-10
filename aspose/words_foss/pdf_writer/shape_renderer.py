@@ -474,6 +474,9 @@ class ShapeRenderer:
                              else nullcontext())
                     with scope:
                         writer._paragraph_renderer.render_paragraph(pdf, p)
+            if captured:
+                # Q restores the PDF text font; a following same-size run needs Tf.
+                pdf.current_font_is_set_on_page = False
             pdf.set_auto_page_break(auto=prev_auto, margin=prev_bottom)
             pdf.set_margins(saved_margin_left, writer._page_margin_bottom, saved_margin_right)
             writer._page_margin_left = saved_margin_left
