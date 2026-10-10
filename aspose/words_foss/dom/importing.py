@@ -10,6 +10,7 @@ from aspose.words_foss.dom.nodes import (
     ParagraphFormat,
     W,
     _bind_namespace_context,
+    _copy_row_warm,
     _elements,
     _find,
     _is,
@@ -181,6 +182,7 @@ def import_node(destination, node, deep, mode):
     target_tree = destination._package.tree("word/document.xml")
     element = target_tree.importNode(copied._element, deep=True)
     _bind_namespace_context(copied._element, element)
+    _copy_row_warm(copied._element, element)
     if source is destination:
         return destination._wrap("word/document.xml", element)
     source_styles, target_styles = StyleResolver(source), StyleResolver(destination)

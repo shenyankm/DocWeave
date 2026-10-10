@@ -142,6 +142,26 @@ def _safe_structure(node, properties=False):
     return all(_safe_structure(child, properties) for child in _elements(node))
 
 
+def _copy_row_warm(source, target):
+    """Retain setter-only row values while rebinding their cloned XML identity."""
+    pairs = [(source, target)]
+    mapping = {}
+    pending = []
+    while pairs:
+        old, new = pairs.pop()
+        mapping[old] = new
+        warm = getattr(old, "_row_format_warm", None)
+        if warm is not None:
+            pending.append((new, warm))
+        pairs.extend((left, right) for left, right in zip(old.childNodes, new.childNodes)
+                     if left.nodeType == right.nodeType and left.nodeName == right.nodeName)
+    for new, warm in pending:
+        height = mapping.get(warm[0])
+        if (height is not None and height.getAttributeNS(W, "val") == warm[1]
+                and height.getAttributeNS(W, "hRule") == warm[2]):
+            new._row_format_warm = (height, *warm[1:])
+
+
 class Node:
     node_type = -1
 
@@ -298,6 +318,7 @@ class Node:
                         child.localName not in _PROPERTY_ROOTS | {"tblGrid"}):
                     cloned.removeChild(child)
         _bind_namespace_context(self._element, cloned)
+        _copy_row_warm(self._element, cloned)
         return self._document._wrap(self.part_name, cloned)
 
 
