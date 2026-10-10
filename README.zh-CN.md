@@ -287,6 +287,11 @@ DOCX/PDF/TXT 与默认 Markdown 转换会报告 `*.notes_omitted`。Markdown 显
 `export_notes=True` 后，按正文锚点导出可见脚注/尾注及其定义；隐藏引用和未引用的注不输出。
 代码块中的引用移至块后，并发出诊断。Markdown 对合并单元格几何丢失和嵌套表格展平发出诊断。
 
+HTML-in-Markdown 导入支持基本表格、跨列/跨行合并、正文与嵌套表格顺序，
+以及 `th` 的粗体居中和 `thead` 的重复表头语义。解析限制输入、节点、嵌套和
+展开单元格规模，不执行脚本或加载外部资源。不支持的 CSS、列布局、标题样式
+和链接动作会发出诊断；这些结构行为不代表完整 HTML 排版保真已验收。
+
 `MarkdownSaveOptions.style_map` 将精确源样式名（含继承样式）映射为 `Heading 1` 至
 `Heading 6`、`Quote`、`Code` 或 `Normal`，不修改源模型。例如：
 `opts.style_map = {"业务标题": "Heading 2"}; opts.export_notes = True`。
