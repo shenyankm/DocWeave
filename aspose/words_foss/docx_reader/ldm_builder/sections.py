@@ -73,7 +73,8 @@ class PageSetupBuilder:
 
     def build(self, sect_pr: ET.Element) -> ldm.PageSetup:
         """Translate one ``<w:sectPr>`` into :class:`ldm.PageSetup`."""
-        ps = ldm.PageSetup()
+        ps = ldm.PageSetup(page_width=_LETTER_WIDTH_PT, page_height=_LETTER_HEIGHT_PT,
+                           paper_size=_PAPER_LETTER)
         self._apply_size(sect_pr, ps)
         self._apply_margins(sect_pr, ps)
         self._apply_section_type(sect_pr, ps)
@@ -200,9 +201,7 @@ class SectionBuilder:
                 current = []
 
         if current:
-            trailing = ldm.Section()
-            trailing.body = ldm.Body(children=current)
-            sections.append(trailing)
+            sections.append(self._make_section(ET.Element(f"{W_NS}sectPr"), current))
         return sections
 
     def _cache_first_section_page_setup(self, body: ET.Element) -> None:
