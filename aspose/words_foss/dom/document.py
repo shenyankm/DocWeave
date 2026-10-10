@@ -217,15 +217,20 @@ class DocxDocument:
             from aspose.words_foss._flat_opc import encode
             data = encode(data)
         commit_rows = prepare_row_commit(self)
-        return data, commit_notes, commit_rows
+        theme_parts = self._package._default_theme_parts(overrides)
+        self._package.validate_parts(theme_parts)
+        return data, commit_notes, commit_rows, theme_parts
 
     def _save(self, destination, *, flat=False):
         from aspose.words_foss._io import atomic_output
-        data, commit_notes, commit_rows = self._prepared_output(flat=flat)
+        data, commit_notes, commit_rows, theme_parts = self._prepared_output(flat=flat)
         with atomic_output(destination) as temporary:
             temporary.write_bytes(data)
         commit_notes()
         commit_rows()
+        self._package._commit_parts(theme_parts)
+        if theme_parts:
+            self._package._injected_default_theme = True
 
     def save(self, destination):
         """Atomically save supported projections, updating held objects only on success."""

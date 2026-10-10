@@ -49,6 +49,7 @@ class DocxPackage:
                 data = read_bounded(stream)
         self._trees = {}
         self._dirty = set()
+        self._injected_default_theme = False
         self._style_projection_part = None
         self._style_property_overrides = set()
         if is_flat_opc(data):
@@ -195,25 +196,65 @@ class DocxPackage:
             self._trees.pop(name, None)
             self._dirty.discard(name)
 
+    def _default_theme_parts(self, overrides=None):
+        from aspose.words_foss._theme import missing_theme_parts
+        from defusedxml.ElementTree import fromstring
+
+        overrides = overrides or {}
+        payloads = {name: overrides[name] if name in overrides else self.payload(name)
+                    for name in set(self._payloads) | set(overrides)}
+        ct = '{http://schemas.openxmlformats.org/package/2006/content-types}'
+        types = fromstring(payloads['[Content_Types].xml'], forbid_dtd=True)
+        if types.tag != ct + 'Types':
+            raise ValueError('Expected an OPC content types part')
+        declared = {resolve_target('', item.get('PartName', '')): item.get('ContentType', '')
+                    for item in types if item.tag == ct + 'Override'}
+        defaults = {item.get('Extension', '').lower(): item.get('ContentType', '')
+                    for item in types if item.tag == ct + 'Default'}
+        xml_parts = {name for name in payloads
+                     if (kind := declared.get(name, defaults.get(name.rsplit('.', 1)[-1].lower(), '')))
+                     in {'application/xml', 'text/xml'} or kind.endswith('+xml')}
+        # Content types, rather than filename suffixes, distinguish XML from opaque bytes.
+        # The package-preserving API adds defaults when an actual theme reference needs them.
+        theme_attributes = {f'{{{W}}}{name}' for name in ('asciiTheme', 'hAnsiTheme', 'cstheme', 'eastAsiaTheme')}
+        drawing = '{http://schemas.openxmlformats.org/drawingml/2006/main}'
+        referenced = any(theme_attributes.intersection(node.attrib) or
+                         (node.tag == f'{{{W}}}color' and f'{{{W}}}themeColor' in node.attrib) or
+                         (node.tag == drawing + 'fillRef' and node.get('idx', '0') not in ('0', '1000'))
+                         for name, data in payloads.items()
+                         if name.startswith('word/') and name in xml_parts
+                         for node in fromstring(data).iter()
+                         if node.tag in {f'{{{W}}}rFonts', f'{{{W}}}color', drawing + 'fillRef'})
+        return missing_theme_parts(payloads) if referenced else {}
+
     def to_bytes(self, overrides=None):
         overrides = overrides or {}
+        theme_parts = self._default_theme_parts(overrides)
+        entries = list(self._entries)
+        for name in theme_parts:
+            if name not in self._payloads:
+                entry = ZipInfo(name)
+                entry.compress_type = ZIP_DEFLATED
+                entries.append(entry)
         if set(overrides) - set(self.part_names):
             self.validate_parts(overrides)
-        if len(set(self.part_names) | set(overrides)) > _io.MAX_ZIP_ENTRIES:
+        if len(set(self.part_names) | set(theme_parts) | set(overrides)) > _io.MAX_ZIP_ENTRIES:
             raise ValueError("DOCX has too many ZIP entries")
         stream = BytesIO()
         expanded = 0
         with ZipFile(stream, "w") as output:
             output.comment = self._comment
-            for entry in self._entries:
-                data = overrides[entry.filename] if entry.filename in overrides else self.payload(entry.filename)
+            for entry in entries:
+                data = (theme_parts[entry.filename] if entry.filename in theme_parts else
+                        overrides[entry.filename] if entry.filename in overrides
+                        else self.payload(entry.filename))
                 if len(data) > _io.MAX_PART_BYTES:
                     raise ValueError("DOCX part exceeds the safety limit")
                 expanded += len(data)
                 if expanded > _io.MAX_EXPANDED_BYTES:
                     raise ValueError("DOCX expanded size exceeds the safety limit")
                 output.writestr(entry, data)
-            for name in sorted(set(overrides) - set(self.part_names)):
+            for name in sorted(set(overrides) - {entry.filename for entry in entries}):
                 data = overrides[name]
                 if len(data) > _io.MAX_PART_BYTES:
                     raise ValueError("DOCX part exceeds the safety limit")
@@ -228,5 +269,11 @@ class DocxPackage:
         return data
 
     def save(self, destination):
+        theme_parts = self._default_theme_parts()
+        self.validate_parts(theme_parts)
+        data = self.to_bytes()
         with atomic_output(destination) as temporary:
-            temporary.write_bytes(self.to_bytes())
+            temporary.write_bytes(data)
+        self._commit_parts(theme_parts)
+        if theme_parts:
+            self._injected_default_theme = True
