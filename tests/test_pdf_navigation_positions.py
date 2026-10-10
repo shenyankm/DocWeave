@@ -22,6 +22,7 @@ def navigation_model(style, bands=False, columns=1, long=False):
                                outline_level=0, style_name=style, space_before=20))
     section = ldm.Section(page_setup=ldm.PageSetup(page_width=300, page_height=200,
         top_margin=20, bottom_margin=20, left_margin=20, right_margin=20,
+        header_distance=20,
         text_columns=ldm.TextColumns(count=columns, spacing=15)),
         body=ldm.Body(children=[prefix, target]))
     if bands:
