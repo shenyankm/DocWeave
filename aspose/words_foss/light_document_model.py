@@ -1192,12 +1192,12 @@ class PageSetup(BaseModel):
     # ``model.enums.Orientation``; unrelated to ``CellFormat.orientation``,
     # which is a text-direction enum.
     orientation: int = 1  # 1=Portrait, 2=Landscape
-    top_margin: float = 0.0
-    bottom_margin: float = 0.0
-    left_margin: float = 0.0
-    right_margin: float = 0.0
-    header_distance: float = 0.0
-    footer_distance: float = 0.0
+    top_margin: float = 70.85
+    bottom_margin: float = 70.85
+    left_margin: float = 70.85
+    right_margin: float = 70.85
+    header_distance: float = 35.4
+    footer_distance: float = 35.4
     gutter: float = 0.0  # Aspose.Words: PageSetup.Gutter — extra binding margin
     page_width: float = 612.0
     page_height: float = 792.0

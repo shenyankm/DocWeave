@@ -244,8 +244,8 @@ class ImageRenderState:
         Called once per section enter so subsequent anchor renderings
         (``_render_anchor``) emit the right column-relative offsets.
         """
-        self.section_left_margin_mm = pt_to_mm(page_setup.left_margin or 72.0)
-        self.section_top_margin_mm = pt_to_mm(page_setup.top_margin or 72.0)
+        self.section_left_margin_mm = pt_to_mm(page_setup.left_margin)
+        self.section_top_margin_mm = pt_to_mm(page_setup.top_margin)
 
 
 # ─────────────────────────────────────────────
