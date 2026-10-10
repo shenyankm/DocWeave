@@ -11,6 +11,7 @@ from defusedxml.minidom import parseString
 
 from aspose.words_foss import _io
 from aspose.words_foss._opc import bind_namespace_context, resolve_target
+from aspose.words_foss.diagnostics import ContentLossWarning, warn
 from aspose.words_foss.utils.xml_helpers import serialize_xml
 
 PKG = "http://schemas.microsoft.com/office/2006/xmlPackage"
@@ -152,6 +153,16 @@ def encode(data: bytes, main_content_type: str | None = None) -> bytes:
             if content_type in {"application/xml", "text/xml"} or content_type.endswith("+xml"):
                 payload = document.createElementNS(PKG, "pkg:xmlData")
                 xml = parseString(value, forbid_dtd=True)
+                omitted = False
+                # Native Flat OPC rejects processing instructions inside XML elements.
+                for element in xml.getElementsByTagName("*"):
+                    for child in list(element.childNodes):
+                        if child.nodeType == Node.PROCESSING_INSTRUCTION_NODE:
+                            element.removeChild(child)
+                            omitted = True
+                if omitted:
+                    warn("Internal XML processing instructions are omitted from Flat OPC output",
+                         ContentLossWarning, code="flat_opc.processing_instruction_omitted")
                 for child in xml.childNodes:
                     payload.appendChild(document.importNode(child, deep=True))
             else:
