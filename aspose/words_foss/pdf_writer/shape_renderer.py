@@ -332,15 +332,19 @@ class ShapeRenderer:
                 geometry_rotation=shape.source_drawing_fill.rotation / 60000)
 
         if (fill_rgb or draw_border) and w > 0 and h > 0:
-            style = ""
-            if fill_rgb:
-                pdf.set_fill_color(*fill_rgb)
-                style += "F"
-            if draw_border:
-                pdf.set_draw_color(*line_rgb)
-                pdf.set_line_width(max(border.line_width * PT_TO_MM, MIN_LINE_WIDTH_MM))
-                style = "D" + style  # "DF" if both, "D" if border only
-            pdf.rect(x, y, w, h, style)
+            from contextlib import nullcontext
+            opacity = fill_rgb[3] if fill_rgb and len(fill_rgb) == 4 else 1
+            context = pdf.local_context(fill_opacity=opacity, stroke_opacity=1) if opacity != 1 else nullcontext()
+            with context:
+                style = ""
+                if fill_rgb:
+                    pdf.set_fill_color(*fill_rgb[:3])
+                    style += "F"
+                if draw_border:
+                    pdf.set_draw_color(*line_rgb)
+                    pdf.set_line_width(max(border.line_width * PT_TO_MM, MIN_LINE_WIDTH_MM))
+                    style = "D" + style  # "DF" if both, "D" if border only
+                pdf.rect(x, y, w, h, style)
             pdf.set_fill_color(255, 255, 255)
             pdf.set_draw_color(0, 0, 0)
             pdf.set_line_width(DEFAULT_LINE_WIDTH_MM)

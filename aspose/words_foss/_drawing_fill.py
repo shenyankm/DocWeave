@@ -62,7 +62,7 @@ def _colour(node, scheme, placeholder=None, *, with_alpha=False):
 
 
 def resolve_drawing_fill(source, theme_data, *, with_transform=False):
-    """Return (solid RGB, gradient (angle, positions, RGBs)), preserving source.
+    """Return (solid RGB[A], gradient (angle, positions, RGB[A]s)), preserving source.
 
     With ``with_transform``, gradient is paired with its rotWithShape flag;
     the PDF caller rotates both geometry and page-space paint consistently.
@@ -103,7 +103,7 @@ def resolve_drawing_fill(source, theme_data, *, with_transform=False):
     if fill is None or fill.tag == A + 'noFill':
         return None, None
     if fill.tag == A + 'solidFill':
-        return _colour(fill, scheme, placeholder), None
+        return _colour(fill, scheme, placeholder, with_alpha=True), None
     if fill.tag != A + 'gradFill':
         raise NotImplementedError('DrawingML fill type')
     line = fill.find(A + 'lin')
