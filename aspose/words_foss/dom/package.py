@@ -128,6 +128,9 @@ class DocxPackage:
             validate_row_properties(original)
             projected = projected_row_tree(original)
             if projected is not original:
+                # Read-only logical annotation normalization must not rewrite source runs/content.
+                if name not in self._dirty and name in getattr(self, '_annotation_normalized_parts', ()):
+                    projected = projected_row_tree(parseString(self._payloads[name], forbid_dtd=True))
                 tree = projected
         if name in self._dirty or tree is not None:
             if tree is None:
@@ -141,23 +144,24 @@ class DocxPackage:
             return serialize_xml(tree)
         return self._payloads[name]
 
-    def preservation_report(self):
+    def preservation_report(self, overrides=None):
         """Compare uncompressed part bytes with the loaded package, including resources."""
+        overrides = overrides or {}
         report = {"added": [], "modified": [], "removed": [], "unchanged": []}
         for name in sorted(set(self._original_hashes) | set(self._payloads)):
             if name not in self._payloads:
                 state = "removed"
             elif name not in self._original_hashes:
                 state = "added"
-            elif sha256(self.payload(name)).digest() != self._original_hashes[name]:
+            elif sha256(overrides[name] if name in overrides else self.payload(name)).digest() != self._original_hashes[name]:
                 state = "modified"
             else:
                 state = "unchanged"
             report[state].append(name)
         return report
 
-    def set_parts(self, parts):
-        """Commit prebuilt resource parts together, after checking output size limits."""
+    def validate_parts(self, parts):
+        """Validate a prospective complete part update without changing live XML."""
         for name, data in parts.items():
             if (not name or name.startswith("/") or ".." in name.split("/") or
                     "\\" in name or not isinstance(data, bytes)):
@@ -170,6 +174,13 @@ class DocxPackage:
         size = sum(len(parts[name] if name in parts else self.payload(name)) for name in names)
         if size > _io.MAX_EXPANDED_BYTES:
             raise ValueError("DOCX expanded size exceeds the safety limit")
+
+    def set_parts(self, parts):
+        """Commit prebuilt resource parts together, after checking output size limits."""
+        self.validate_parts(parts)
+        self._commit_parts(parts)
+
+    def _commit_parts(self, parts):
         for name, data in parts.items():
             if name not in self._payloads:
                 entry = ZipInfo(name)
@@ -179,7 +190,8 @@ class DocxPackage:
             self._trees.pop(name, None)
             self._dirty.discard(name)
 
-    def to_bytes(self):
+    def to_bytes(self, overrides=None):
+        overrides = overrides or {}
         if len(self._entries) > _io.MAX_ZIP_ENTRIES:
             raise ValueError("DOCX has too many ZIP entries")
         stream = BytesIO()
@@ -187,7 +199,7 @@ class DocxPackage:
         with ZipFile(stream, "w") as output:
             output.comment = self._comment
             for entry in self._entries:
-                data = self.payload(entry.filename)
+                data = overrides[entry.filename] if entry.filename in overrides else self.payload(entry.filename)
                 if len(data) > _io.MAX_PART_BYTES:
                     raise ValueError("DOCX part exceeds the safety limit")
                 expanded += len(data)

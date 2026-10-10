@@ -498,11 +498,35 @@ by this declaration path.
 
 通过内部关系和对应内容类型关联的脚注、尾注、批注，可用
 `document.story(original_part_name)` 遍历 `StoryPart` 和 `Footnote`/`Comment`
-内容，读取或编辑其中表格的 `Row.row_format`。原有 ID、作者、引用与资源保持；
-创建、删除、复制和重绑 note/comment 条目未实现，相关结构操作明确拒绝。
+内容，读取或编辑其中表格的 `Row.row_format`。未编辑时原有 ID、作者、引用与资源保持；
+条目的逻辑创建、复制和删除机制见下文，整份 story part 的结构操作仍明确拒绝。
 条目内部的简单表格可复制，或按现有目标样式导入另一文档；复杂资源和引用仍需显式支持。
 受支持的 VML 或 WordprocessingShape DrawingML 文本框内的行可从所属 story
 深遍历后编辑这三个行格式属性；其他图形角色与不支持的包装容器仍不可编辑。
 图形包装、尺寸与未知 XML 保留，未开放完整 Shape 或文本框 DOM 编辑接口。
 这些 story 沿用纯导出无副作用、成功保存更新 held 行高、失败原子性和直属/继承
 规则，不代表完整脚注、批注、图形渲染或旧 LDM 转换入口已验收。
+
+### 脚注、尾注和批注的逻辑节点
+
+`create_footnote(FootnoteType.FOOTNOTE/ENDNOTE)`、`create_comment(...)` 创建属于当前
+`DocxDocument` 的游离节点；`ensure_minimum()` 添加最小内容段落，可用已有段落、文本、
+表格接口编辑。将条目插入 `Paragraph` 后，它是正文的 inline 子节点，深遍历会进入
+关联内容，`parent_node` 与正文 `child_nodes` 一致。脚注的 `reference_mark`、`is_auto`
+和批注的 `id`、`author`、`initial` 可按已校准规则读取或编辑。
+
+`story(original_part_name)` 保留为显式 OPC 存储视图：其条目包装与逻辑节点不同，
+`canonical_node` 返回唯一逻辑节点，`parent_paragraph` 指向正文锚点。存储视图的物理
+ID/XML 与保存投影可不同；请通过逻辑节点属性读取暖态值。已有内容和行格式编辑接口保留。
+条目支持插入、移动、删除、深浅复制和目标样式导入；复制或导入整个简单段落/表格时，
+关联条目与批注范围一起迁移。整段复制/导入分配新的批注 ID，单独复制批注保留其暖态 ID。
+
+DOCX/Flat OPC 纯导出不改暖态对象；成功保存提交批注编号、孤立范围删除和最小段落。
+保存失败保留原输出和 held 对象。加载的条目补齐最小内容段落作为逻辑视图，
+单纯遍历不改变原始包的输出；混合 run 中的 XML comments/PI 保留。官方兼容规则会在成功保存时删除页眉/页脚或嵌套
+条目中的 note/comment 锚点。未知容器不参与该投影；原始包中未修改的未知部件仍保留。
+
+当前不是完整 `Footnote`/`Comment` API：批注回复、完成状态、完整日期/线程元数据、
+自动编号文本和布局未验收；引用冲突/缺失、特殊 separator 条目编辑与新增默认 separator
+策略仍需校准。跨文档复杂关系资源及不同主题/默认样式下的源格式保留尚未实现，会在
+修改目标前明确拒绝；整份 note/comment part 的复制或删除仍拒绝，避免遗漏正文引用。

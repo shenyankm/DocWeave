@@ -5,6 +5,8 @@ from aspose.words_foss.dom.nodes import (
     Body,
     Cell,
     Comment,
+    CommentRangeStart,
+    CommentRangeEnd,
     Footnote,
     StoryPart,
     Font,
@@ -33,7 +35,10 @@ __all__ = [
     "Body",
     "Cell",
     "Comment",
+    "CommentRangeStart",
+    "CommentRangeEnd",
     "Footnote",
+    "FootnoteType",
     "StoryPart",
     "DocxDocument",
     "EffectiveFont",
@@ -55,3 +60,5 @@ __all__ = [
     "TextRange",
     "UnknownNode",
 ]
+
+from aspose.words_foss.dom.notes import FootnoteType

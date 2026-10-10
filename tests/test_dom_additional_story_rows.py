@@ -188,14 +188,14 @@ def test_opaque_containers_are_neither_edited_nor_projected(tmp_path, kind):
 
 
 @pytest.mark.parametrize('kind', ['footnotes', 'endnotes', 'comments'])
-def test_note_identity_operations_are_rejected_without_changes(tmp_path, kind):
+def test_whole_note_part_identity_operations_remain_rejected(tmp_path, kind):
     source = tmp_path / 'input.docx'
     name, _ = additional_story(source, kind)
     document = DocxDocument(source)
     root = document.story(name)
     entry = root.child_nodes[0]
     before = document._package.tree(name).toxml()
-    for node in [root, entry]:
+    for node in [root]:
         with pytest.raises(NotImplementedError, match='reference updates'):
             node.remove()
         with pytest.raises(NotImplementedError, match='resource import'):

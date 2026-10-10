@@ -32,6 +32,7 @@ class DocxDocument:
     def __init__(self, source):
         self._package = DocxPackage(source)
         self._nodes = {}
+        self._note_graph = None
         root = self._package.tree("word/document.xml").documentElement
         if not _is(root, "document") or _find(root, "body") is None:
             raise ValueError("Expected a Transitional Word document with a body")
@@ -39,11 +40,20 @@ class DocxDocument:
         for name in self._package.story_part_names():
             validate_row_properties(self._package.tree(name))
 
-    def _wrap(self, part_name, element):
-        if element not in self._nodes:
+    def _annotations(self):
+        if self._note_graph is None:
+            from aspose.words_foss.dom.notes import NoteGraph
+            self._note_graph = NoteGraph(self)
+        return self._note_graph
+
+    def _wrap(self, part_name, element, *, storage=False):
+        storage = storage or element.namespaceURI == W and element.localName in {"footnotes", "endnotes", "comments"}
+        key = (element, True) if storage else element
+        if key not in self._nodes:
             cls = _NODE_CLASSES.get(element.localName, UnknownNode) if element.namespaceURI == W else UnknownNode
-            self._nodes[element] = cls(self, part_name, element)
-        return self._nodes[element]
+            self._nodes[key] = cls(self, part_name, element)
+            self._nodes[key]._storage_view = storage
+        return self._nodes[key]
 
     @property
     def body(self) -> Body:
@@ -66,7 +76,8 @@ class DocxDocument:
 
     def preservation_report(self):
         """List added/modified/removed/unchanged parts since loading (not sanitization)."""
-        return self._package.preservation_report()
+        overrides, _ = self._note_graph.prepare_projection() if self._note_graph is not None else ({}, None)
+        return self._package.preservation_report(overrides)
 
     def story(self, part_name):
         """Access a body, header/footer, or related note/comment part."""
@@ -83,9 +94,42 @@ class DocxDocument:
         """Traverse the main story; other stories are accessed explicitly."""
         return self.body.get_child_nodes(node_type, deep)
 
+    def create_footnote(self, footnote_type):
+        from aspose.words_foss.dom.notes import FootnoteType
+        if not isinstance(footnote_type, FootnoteType):
+            raise TypeError("footnote_type requires FootnoteType")
+        return self._annotations().create("footnotes" if footnote_type == FootnoteType.FOOTNOTE else "endnotes")
+
+    def create_comment(self, author="", initial="", date_time=None):
+        return self._annotations().create("comments", author=author, initial=initial, date_time=date_time)
+
+    def _create_comment_range(self, local_name, identifier):
+        if type(identifier) is not int:
+            raise TypeError("Comment range id requires int")
+        if not -(2**31) <= identifier < 2**31:
+            raise OverflowError("Comment range id exceeds INT32")
+        from aspose.words_foss.dom.importing import _set_word_attribute
+        element = _new(self.body._element, local_name)
+        _set_word_attribute(element, "id", str(identifier))
+        element._logical_comment_id = identifier
+        return self._wrap("word/document.xml", element)
+
+    def create_comment_range_start(self, identifier):
+        return self._create_comment_range("commentRangeStart", identifier)
+
+    def create_comment_range_end(self, identifier):
+        return self._create_comment_range("commentRangeEnd", identifier)
+
+    def _creation_context(self, part_name):
+        if self._note_graph is not None:
+            for name, tree in self._note_graph.pending_trees.values():
+                if name == part_name:
+                    return tree.documentElement
+        return self.story(part_name)._element
+
     def create_run(self, text="", *, part_name="word/document.xml") -> Run:
         _validate_text(text)
-        element = _new(self.story(part_name)._element, "r")
+        element = _new(self._creation_context(part_name), "r")
         run = self._wrap(part_name, element)
         run.text = text
         return run
@@ -99,7 +143,7 @@ class DocxDocument:
 
     def create_paragraph(self, text="", *, part_name="word/document.xml") -> Paragraph:
         _validate_text(text)
-        element = _new(self.story(part_name)._element, "p")
+        element = _new(self._creation_context(part_name), "p")
         paragraph = self._wrap(part_name, element)
         if text:
             paragraph.append_child(self.create_run(text, part_name=part_name))
@@ -110,7 +154,7 @@ class DocxDocument:
         if (type(rows) is not int or type(columns) is not int or rows < 1 or
                 not 1 <= columns <= MAX_TABLE_COLUMNS):
             raise ValueError("Table requires positive integer dimensions within the column limit")
-        element = _new(self.story(part_name)._element, "tbl")
+        element = _new(self._creation_context(part_name), "tbl")
         grid = _new(element, "tblGrid")
         element.appendChild(grid)
         for _ in range(columns):
@@ -154,32 +198,37 @@ class DocxDocument:
 
         return StyleResolver(self).has_style(style_id, style_type)
 
-    def save(self, destination):
-        """Atomically save edits and supported style/table serialization projections."""
+    def _prepared_output(self, *, flat=False):
         from aspose.words_foss.dom.row_format import prepare_row_commit
+        overrides, commit_notes = self._note_graph.prepare_projection() if self._note_graph is not None else ({}, lambda: None)
+        data = self._package.to_bytes(overrides) if overrides else self._package.to_bytes()
+        if flat:
+            from aspose.words_foss._flat_opc import encode
+            data = encode(data)
         commit_rows = prepare_row_commit(self)
-        self._package.save(destination)
-        commit_rows()
+        return data, commit_notes, commit_rows
 
-    def to_bytes(self):
-        return self._package.to_bytes()
-
-    def to_flat_opc(self):
-        """Return Flat OPC XML bytes, retaining part types and opaque binary resources."""
-        from aspose.words_foss._flat_opc import encode
-
-        return encode(self.to_bytes())
-
-    def save_flat_opc(self, destination):
-        """Atomically save Flat OPC XML; XML serialization is normalized."""
+    def _save(self, destination, *, flat=False):
         from aspose.words_foss._io import atomic_output
-        from aspose.words_foss.dom.row_format import prepare_row_commit
-
-        data = self.to_flat_opc()
-        commit_rows = prepare_row_commit(self)
+        data, commit_notes, commit_rows = self._prepared_output(flat=flat)
         with atomic_output(destination) as temporary:
             temporary.write_bytes(data)
+        commit_notes()
         commit_rows()
+
+    def save(self, destination):
+        """Atomically save supported projections, updating held objects only on success."""
+        self._save(destination)
+
+    def to_bytes(self):
+        return self._prepared_output()[0]
+
+    def to_flat_opc(self):
+        """Return Flat OPC bytes without committing any warm-object state."""
+        return self._prepared_output(flat=True)[0]
+
+    def save_flat_opc(self, destination):
+        self._save(destination, flat=True)
 
     def to_light_document(self):
         """Produce an independent, potentially lossy conversion snapshot of current edits.
