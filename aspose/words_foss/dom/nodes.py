@@ -5,8 +5,9 @@ from math import isfinite
 from xml.dom import Node as XmlNode
 
 from aspose.words_foss._opc import bind_namespace_context as _bind_namespace_context
-from aspose.words_foss.light_document_model import NodeType
-from aspose.words_foss.utils.xml_helpers import parse_font_size
+from aspose.words_foss.light_document_model import NodeType, ParagraphFormat as LdmParagraphFormat
+from aspose.words_foss.model.enums import LineSpacingRule
+from aspose.words_foss.utils.xml_helpers import parse_font_size, parse_line_spacing
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 XML = "http://www.w3.org/XML/1998/namespace"
@@ -783,6 +784,20 @@ def _read_dimension(element, prop):
     return value
 
 
+def _read_line_spacing(element):
+    if element is None:
+        return None, None
+    line = element.getAttributeNS(W, "line") if element.hasAttributeNS(W, "line") else None
+    rule = element.getAttributeNS(W, "lineRule") if element.hasAttributeNS(W, "lineRule") else "auto"
+    warm = getattr(element.parentNode.parentNode, '_line_spacing_warm', None)
+    if warm is not None and warm[0] == (line, rule):
+        return warm[1], warm[2]
+    if line is not None:
+        value, kind = parse_line_spacing(line, rule)
+        return value, LineSpacingRule(kind)
+    return None, LineSpacingRule({"auto": 2, "exact": 1, "atLeast": 0}.get(rule, 0)) if element.hasAttributeNS(W, "lineRule") else None
+
+
 class ParagraphFormat(_Format):
     __slots__ = ()
 
@@ -796,6 +811,42 @@ class ParagraphFormat(_Format):
 
     def _dimension(self, prop):
         return _read_dimension(self._get(DIMENSION_PROPERTIES[prop][0]), prop)
+
+    def _line_spacing(self):
+        return _read_line_spacing(self._get("spacing"))
+
+    def _effective_line_spacing(self):
+        from aspose.words_foss.dom.styles import StyleResolver
+        effective = StyleResolver(self._node.owner_document).paragraph_format(self._node)
+        return effective.line_spacing, effective.line_spacing_rule
+
+    def _set_line_spacing(self, value=None, rule=None, *, setting_rule=False):
+        if setting_rule:
+            if rule is not None and not isinstance(rule, LineSpacingRule):
+                raise TypeError("line_spacing_rule requires LineSpacingRule")
+        elif value is not None:
+            value = LdmParagraphFormat._coerce_line_spacing(value)
+        groups = [node for node in _elements(self._node._element) if _is(node, "pPr")]
+        if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, "spacing")]) > 1:
+            raise ValueError("Duplicate paragraph line-spacing properties")
+        if (setting_rule and rule is None) or (not setting_rule and value is None):
+            self._set("spacing", None, attribute="lineRule" if setting_rule else "line")
+            if hasattr(self._node._element, '_line_spacing_warm'):
+                del self._node._element._line_spacing_warm
+            return
+        direct_value, direct_rule = ParagraphFormat._line_spacing(self)
+        if setting_rule:
+            value = 12.0 if direct_value is None else direct_value
+        else:
+            rule = self._effective_line_spacing()[1] if direct_value is None else direct_rule
+        self._set("spacing", str(round(value * 20)), attribute="line")
+        token = {LineSpacingRule.AT_LEAST: "atLeast", LineSpacingRule.EXACTLY: "exact", LineSpacingRule.MULTIPLE: "auto"}[rule]
+        self._set("spacing", token, attribute="lineRule")
+        # Only setter-owned state is warm; inherited values are always resolved afresh.
+        self._node._element._line_spacing_warm = ((str(round(value * 20)), token), value, rule)
+
+    line_spacing = property(lambda self: self._line_spacing()[0], lambda self, value: self._set_line_spacing(value))
+    line_spacing_rule = property(lambda self: self._line_spacing()[1], lambda self, value: self._set_line_spacing(rule=value, setting_rule=True))
 
     def _character_indent(self, prop):
         return _read_character_indent(self._get("ind"), prop)

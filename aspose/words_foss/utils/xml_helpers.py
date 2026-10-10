@@ -8,6 +8,30 @@ from xml.etree import ElementTree as ET
 W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 
+def parse_line_spacing(line: str, rule: str = "auto") -> tuple[float, int]:
+    """Read 26.9's signed 16-bit cold line measure, preserving zero overrides."""
+    from aspose.words_foss.docx_reader.ldm_builder._helpers import parse_universal_measure
+
+    last_digit = next((i for i in range(len(line) - 1, -1, -1) if '0' <= line[i] <= '9'), -1)
+    unit = line[last_digit + 1:] if last_digit >= 0 else ''
+    if unit and unit not in {'mm', 'cm', 'in', 'pt', 'pc', 'pi'}:
+        if unit == '\n':
+            return 0.0, {"auto": 2, "exact": 0}.get(rule, 0)
+        raise RuntimeError("Invalid line-spacing measurement unit")
+    number = parse_universal_measure(line, 'pt' if unit else 'twip') if last_digit >= 0 else 0.0
+    if unit:
+        number *= 20
+    # The XML reader's numeric measure saturates at signed 64 bits before
+    # the legacy LSPD signed-16 projection; setters instead use signed 32 bits.
+    number = max(-9223372036854775808, min(9223372036854775807, number))
+    twips = round(number) if unit else int(number)
+    twips = (twips + 32768) % 65536 - 32768
+    kind = {"auto": 2, "exact": 1, "atLeast": 0}.get(rule, 0)
+    if twips < 0:
+        return -twips / 20, 1
+    return twips / 20, 0 if twips == 0 and kind == 1 else kind
+
+
 def serialize_xml(node) -> bytes:
     """Serialize DOM attributes with XML-safe characters and explicit whitespace references."""
     from io import StringIO
