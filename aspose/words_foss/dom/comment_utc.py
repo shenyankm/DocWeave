@@ -89,8 +89,8 @@ def paragraphs(entry):
 
 
 def source_link(entry, ids):
-    return next((ids[identifier] for p in paragraphs(entry)
-                 if (identifier := para_id(p.getAttributeNS(W14, 'paraId'))) in ids and identifier is not None), None)
+    identifiers = {para_id(p.getAttributeNS(W14, 'paraId')) for p in paragraphs(entry)} - {None}
+    return next((node for identifier, node in reversed(ids.items()) if identifier in identifiers), None)
 
 
 def typed_parts(package):
@@ -129,14 +129,9 @@ class CommentUtc:
     def __init__(self, package, entries):
         self.package = package
         self.entries = entries
+        self.source_comments = {entry for (role, _), entry in entries.items() if role == 'comments'}
         self.parts = typed_parts(package)
-        self.ids, self.ext = {}, {}
-        if 'commentsIds' in self.parts:
-            for node in elements(package.tree(self.parts['commentsIds']).documentElement, CID, 'commentId'):
-                self.ids.setdefault(para_id(node.getAttributeNS(CID, 'paraId')), node)
-        if 'commentsExtensible' in self.parts:
-            for node in elements(package.tree(self.parts['commentsExtensible']).documentElement, CEX, 'commentExtensible'):
-                self.ext.setdefault(hex_id(node.getAttributeNS(CEX, 'durableId')), node)
+        self.ids, self.ext = self._maps()
         for (role, _), entry in entries.items():
             if role != 'comments':
                 continue
@@ -146,13 +141,33 @@ class CommentUtc:
             if value is not None:
                 entry._comment_utc_source = (entry, entry.getAttributeNS(W, 'date'), value)
 
+    def _maps(self):
+        ids, ext = {}, {}
+        if 'commentsIds' in self.parts:
+            for node in elements(self.package.tree(self.parts['commentsIds']).documentElement, CID, 'commentId'):
+                identifier = para_id(node.getAttributeNS(CID, 'paraId'))
+                ids.pop(identifier, None)
+                ids[identifier] = node
+        if 'commentsExtensible' in self.parts:
+            for node in elements(self.package.tree(self.parts['commentsExtensible']).documentElement, CEX, 'commentExtensible'):
+                ext[hex_id(node.getAttributeNS(CEX, 'durableId'))] = node
+        return ids, ext
+
     def project(self, trees, mapping):
-        known = {entry for (role, _), entry in self.entries.items() if role == 'comments'}
+        known = self.source_comments | {entry for (role, _), entry in self.entries.items() if role == 'comments'}
         entries = [(source, target) for source, target in mapping.items()
                    if source.nodeType == source.ELEMENT_NODE and source.namespaceURI == W
                    and source.localName == 'comment' and source in known and target.parentNode is not None]
         if not self.parts and not any(getattr(s, '_comment_utc_source', None) for s, _ in entries):
             return lambda: None
+        ids, ext = self._maps()
+        owned_ids = {source_link(source, ids) for source in known} - {None}
+        owned_ext = {ext.get(hex_id(node.getAttributeNS(CID, 'durableId'))) for node in owned_ids} - {None}
+        reserved_para = set(ids)
+        reserved_durable = set(ext)
+        if 'commentsIds' in self.parts:
+            reserved_durable |= {hex_id(node.getAttributeNS(CID, 'durableId')) for node in
+                elements(self.package.tree(self.parts['commentsIds']).documentElement, CID, 'commentId')}
         names = dict(self.parts)
         for role, (ns, _, rel_type) in ROLES.items():
             name = names.get(role)
@@ -168,9 +183,9 @@ class CommentUtc:
                 for part_name in ['word/_rels/document.xml.rels', '[Content_Types].xml']:
                     if part_name not in trees:trees[part_name] = self.package.tree(part_name).cloneNode(True)
                 rels = trees['word/_rels/document.xml.rels'].documentElement
-                ids = {n.getAttribute('Id') for n in elements(rels, REL, 'Relationship')}
+                relationship_ids = {n.getAttribute('Id') for n in elements(rels, REL, 'Relationship')}
                 rid = 'comment-metadata-' + role
-                while rid in ids:rid += '-1'
+                while rid in relationship_ids:rid += '-1'
                 link = rels.ownerDocument.createElementNS(REL, 'Relationship')
                 link.setAttribute('xmlns', REL)
                 for key, value in [('Id', rid), ('Type', rel_type), ('Target', name.removeprefix('word/'))]:link.setAttribute(key, value)
@@ -181,9 +196,14 @@ class CommentUtc:
             elif name not in trees:
                 trees[name] = self.package.tree(name).cloneNode(True)
             root = trees[name].documentElement
-            for node in elements(root, ns, ROLES[role][1]):root.removeChild(node)
-        reserved = {hex_id(p.getAttributeNS(W14, 'paraId')) for _, t in entries for p in paragraphs(t)}
-        used_para = {hex_id(p.getAttributeNS(W14, 'paraId')) for _, t in entries for p in paragraphs(t)[:-1]}
+            if role in self.parts:
+                originals = elements(self.package.tree(name).documentElement, ns, ROLES[role][1])
+                copies = elements(root, ns, ROLES[role][1])
+                owned = owned_ids if role == 'commentsIds' else owned_ext
+                for original, copy in zip(originals, copies):
+                    if original in owned:root.removeChild(copy)
+        reserved = reserved_para | {hex_id(p.getAttributeNS(W14, 'paraId')) for _, t in entries for p in paragraphs(t)}
+        used_para = set()
         used_durable, edits = set(), []
         def allocate(value, used, forbidden=(), limit=0x100000000):
             if value is None or value == 0 or value in used or value >= limit:
@@ -194,14 +214,22 @@ class CommentUtc:
             target_paragraphs = paragraphs(target)
             if not target_paragraphs:continue
             old_paragraphs = paragraphs(source)
+            for index, paragraph in enumerate(target_paragraphs[:-1]):
+                value = para_id(paragraph.getAttributeNS(W14, 'paraId'))
+                if value is None:continue
+                assigned = allocate(value, used_para, reserved, 0x80000000)
+                if assigned != value:
+                    text = f'{assigned:08X}'
+                    set_attr(paragraph, W14, 'w14', 'paraId', text)
+                    if index < len(old_paragraphs):edits.append((old_paragraphs[index], text))
             old_pid = hex_id(target_paragraphs[-1].getAttributeNS(W14, 'paraId'))
             pid = allocate(old_pid, used_para, reserved, 0x80000000)
-            old_link = source_link(source, self.ids)
-            did = allocate(hex_id(old_link.getAttributeNS(CID, 'durableId')) if old_link is not None else None, used_durable)
+            old_link = source_link(source, ids)
+            did = allocate(hex_id(old_link.getAttributeNS(CID, 'durableId')) if old_link is not None else None, used_durable, reserved_durable)
             set_attr(target_paragraphs[-1], W14, 'w14', 'paraId', f'{pid:08X}')
             if old_paragraphs:edits.append((old_paragraphs[-1], f'{pid:08X}'))
             for role, ns, local, old_node in [('commentsIds', CID, 'commentId', old_link),
-                     ('commentsExtensible', CEX, 'commentExtensible', self.ext.get(hex_id(old_link.getAttributeNS(CID, 'durableId'))) if old_link is not None else None)]:
+                     ('commentsExtensible', CEX, 'commentExtensible', ext.get(hex_id(old_link.getAttributeNS(CID, 'durableId'))) if old_link is not None else None)]:
                 root = trees[names[role]].documentElement
                 node = root.ownerDocument.importNode(old_node, True) if old_node is not None else root.ownerDocument.createElementNS(ns, 'm:' + local)
                 set_attr(node, ns, 'm', 'durableId', f'{did:08X}')
@@ -218,5 +246,6 @@ class CommentUtc:
         def commit():
             self.package._commit_parts(payloads)
             self.parts = names
+            self.source_comments |= known
             for node, value in edits:set_attr(node, W14, 'w14', 'paraId', value)
         return commit

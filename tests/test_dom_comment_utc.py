@@ -202,7 +202,7 @@ def test_typed_utc_projection_retains_extension_list_after_entries(tmp_path):
 def test_invalid_paragraph_id_does_not_bind_modern_utc(tmp_path, value):
     doc = modern(tmp_path);entry = doc._package.tree('word/comments.xml').documentElement.getElementsByTagNameNS(W, 'p')[0]
     entry.setAttributeNS(W14, 'w14:paraId', value);entry.setAttribute('xmlns:w14', W14)
-    ids = doc._package.tree('word/commentsIds.xml');ids.documentElement.childNodes[0].setAttributeNS(CID, 'm:paraId', value)
+    ids = doc._package.tree('word/commentsIds.xml');ids.documentElement.childNodes[0].setAttributeNS(CID, 'm:paraId', value);ids.documentElement.childNodes[0].setAttribute('xmlns:m', CID)
     node = comment(doc)
     assert node.date_time_utc.year == 2026
     output = tmp_path / 'result.docx';doc.save(output)
@@ -239,3 +239,102 @@ def test_short_durable_id_matches_equivalent_eight_digit_value(tmp_path):
         output = tmp_path / ('short-id-' + str(flat))
         (doc.save_flat_opc if flat else doc.save)(output)
         assert comment(DocxDocument(output)).date_time_utc == node.date_time_utc
+
+
+@pytest.mark.parametrize('kind', ['orphan', 'duplicate-cid', 'duplicate-cex'])
+@pytest.mark.parametrize('flat', [False, True])
+def test_unassociated_records_survive_two_saves_and_date_edit(tmp_path, kind, flat):
+    doc = modern(tmp_path)
+    ids = doc._package.tree('word/commentsIds.xml').documentElement
+    ext = doc._package.tree('word/commentsExtensible.xml').documentElement
+    ns, local = (CEX, 'commentExtensible') if kind == 'duplicate-cex' else (CID, 'commentId')
+    parent = ext if ns == CEX else ids
+    node = parent.ownerDocument.createElementNS(ns, 'm:' + local)
+    node.setAttribute('xmlns:m', ns)
+    if ns == CID:
+        node.setAttributeNS(CID, 'm:paraId', '00000001' if kind == 'orphan' else '12345678')
+        node.setAttributeNS(CID, 'm:durableId', '00000001')
+    else:
+        node.setAttributeNS(CEX, 'm:durableId', '23456789')
+        node.setAttributeNS(CEX, 'm:dateUtc', '2044-01-02T03:04:05Z')
+    node.setAttribute('owned', kind);parent.appendChild(node)
+    if kind != 'duplicate-cex':
+        extra = ext.ownerDocument.createElementNS(CEX, 'm:commentExtensible')
+        extra.setAttribute('xmlns:m', CEX)
+        extra.setAttributeNS(CEX, 'm:durableId', '00000001')
+        extra.setAttributeNS(CEX, 'm:dateUtc', '2044-01-02T03:04:05Z')
+        extra.setAttribute('owned', 'extra');ext.appendChild(extra)
+    # Keep the orphan and the non-winning duplicate records, including their attributes.
+    unselected = ([node, extra] if kind == 'orphan' else
+                  ([ids.getElementsByTagNameNS(CID, 'commentId')[0], ext.getElementsByTagNameNS(CEX, 'commentExtensible')[0]]
+                   if kind == 'duplicate-cid' else [ext.getElementsByTagNameNS(CEX, 'commentExtensible')[0]]))
+    expected_raw = [n.toxml() for n in unselected]
+    held = comment(doc)
+    assert held.date_time_utc.year == (2030 if kind == 'orphan' else 2044)
+    if kind == 'orphan':
+        copied = held.clone(True);doc.body.paragraphs[1].append_child(copied)
+        assert copied.date_time_utc == held.date_time_utc
+    output = tmp_path / 'record-output'
+    for edit in [False, False, True]:
+        if edit:held.date_time = datetime(2040, 1, 2, tzinfo=UTC)
+        (doc.save_flat_opc if flat else doc.save)(output)
+        cold = DocxDocument(output)
+        records = [n.toxml() for p in ['word/commentsIds.xml', 'word/commentsExtensible.xml']
+                   for n in cold._package.tree(p).documentElement.childNodes if n.nodeType == n.ELEMENT_NODE]
+        assert all(raw in records for raw in expected_raw)
+        assert comment(cold).date_time_utc == held.date_time_utc.replace(microsecond=0)
+        if kind == 'orphan':
+            assert cold.get_child_nodes(NodeType.COMMENT, True)[1].date_time_utc == copied.date_time_utc
+    if kind == 'orphan':
+        copied.remove();(doc.save_flat_opc if flat else doc.save)(output)
+        cold = DocxDocument(output);assert len(cold.get_child_nodes(NodeType.COMMENT, True)) == 1
+        records = [n.toxml() for p in ['word/commentsIds.xml', 'word/commentsExtensible.xml']
+                   for n in cold._package.tree(p).documentElement.childNodes if n.nodeType == n.ELEMENT_NODE]
+        assert len(cold._package.tree('word/commentsIds.xml').getElementsByTagNameNS(CID, 'commentId')) == 2
+        assert all(raw in records for raw in expected_raw)
+
+
+@pytest.mark.parametrize('flat', [False, True])
+def test_modern_projection_failure_preserves_unassociated_records(tmp_path, monkeypatch, flat):
+    doc = modern(tmp_path);root = doc._package.tree('word/commentsExtensible.xml').documentElement
+    extra = root.getElementsByTagNameNS(CEX, 'commentExtensible')[0].cloneNode(True)
+    extra.setAttribute('xmlns:m', CEX);extra.setAttributeNS(CEX, 'm:durableId', '00000001');extra.setAttribute('owned', 'orphan');root.appendChild(extra)
+    held = comment(doc);snapshot = root.toxml();names = doc._package.part_names;value = held.date_time_utc
+    output = tmp_path / 'atomic-records';output.write_bytes(b'previous')
+    def fail(*args):raise OSError('owned failure')
+    monkeypatch.setattr('os.replace', fail)
+    with pytest.raises(OSError, match='owned failure'):(doc.save_flat_opc if flat else doc.save)(output)
+    assert output.read_bytes() == b'previous' and root.toxml() == snapshot
+    assert doc._package.part_names == names and held.date_time_utc == value
+
+
+@pytest.mark.parametrize('reverse_ids', [False, True])
+@pytest.mark.parametrize('reverse_paragraphs', [False, True])
+@pytest.mark.parametrize('flat', [False, True])
+def test_multiple_paragraphs_select_last_cid_record_and_keep_loser(tmp_path, reverse_ids, reverse_paragraphs, flat):
+    doc = modern(tmp_path)
+    entry = doc._package.tree('word/comments.xml').getElementsByTagNameNS(W, 'comment')[0]
+    extra_p = entry.ownerDocument.createElementNS(W, 'w:p');extra_p.setAttribute('xmlns:w', W)
+    extra_p.setAttribute('xmlns:w14', W14);extra_p.setAttributeNS(W14, 'w14:paraId', '34567890')
+    entry.insertBefore(extra_p, entry.firstChild) if reverse_paragraphs else entry.appendChild(extra_p)
+    ids = doc._package.tree('word/commentsIds.xml').documentElement
+    second = ids.firstChild.cloneNode(True);second.setAttribute('xmlns:m', CID)
+    second.setAttributeNS(CID, 'm:paraId', '34567890');second.setAttributeNS(CID, 'm:durableId', '45678901')
+    ids.insertBefore(second, ids.firstChild) if reverse_ids else ids.appendChild(second)
+    ext = doc._package.tree('word/commentsExtensible.xml').documentElement
+    extra = ext.firstChild.cloneNode(True);extra.setAttribute('xmlns:m', CEX)
+    extra.setAttributeNS(CEX, 'm:durableId', '45678901');extra.setAttributeNS(CEX, 'm:dateUtc', '2044-01-02T03:04:05Z');ext.appendChild(extra)
+    from defusedxml.minidom import parseString
+    for name in ['word/commentsIds.xml', 'word/commentsExtensible.xml']:
+        doc._package._trees[name] = parseString(doc._package.tree(name).toxml(encoding='utf-8'), forbid_dtd=True)
+    ids = doc._package.tree('word/commentsIds.xml').documentElement
+    loser = ids.firstChild.toxml()
+    held = comment(doc);assert held.date_time_utc.year == (2030 if reverse_ids else 2044)
+    copy = held.clone(True);doc.body.paragraphs[1].append_child(copy)
+    for _ in range(2):
+        output = tmp_path / 'multi';(doc.save_flat_opc if flat else doc.save)(output)
+        cold = DocxDocument(output);nodes = cold.get_child_nodes(NodeType.COMMENT, True)
+        assert [n.date_time_utc for n in nodes] == [held.date_time_utc, copy.date_time_utc]
+        identifiers = [p.getAttributeNS(W14, 'paraId') for p in cold._package.tree('word/comments.xml').getElementsByTagNameNS(W, 'p')]
+        assert len(identifiers) == len(set(identifiers))
+        assert loser in [n.toxml() for n in cold._package.tree('word/commentsIds.xml').documentElement.childNodes]
