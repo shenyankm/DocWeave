@@ -25,13 +25,23 @@ def _colour(node, scheme, placeholder=None, *, with_alpha=False):
     if not token or len(token) != 6:
         raise NotImplementedError('DrawingML fill colour reference')
     rgb = tuple(int(token[i:i + 2], 16) for i in (0, 2, 4))
-    alpha = 1.0
+    alpha = 255
     for mod in primitive:
         value = int(mod.get('val', '0')) / 100000
-        if mod.tag == A + 'alpha' and with_alpha:
-            if not 0 <= value <= 1:
+        if mod.tag in {A + 'alpha', A + 'alphaMod', A + 'alphaOff'} and with_alpha:
+            if ((mod.tag == A + 'alpha' and not 0 <= value <= 1) or
+                    (mod.tag == A + 'alphaMod' and value < 0) or
+                    (mod.tag == A + 'alphaOff' and not -1 <= value <= 1)):
                 raise NotImplementedError('DrawingML alpha outside supported range')
-            alpha = int(value * 255 + .5) / 255
+            if mod.tag == A + 'alphaMod':
+                alpha = round(alpha * value)
+            elif mod.tag == A + 'alphaOff':
+                alpha += round(value * 255)
+            else:
+                alpha = round(value * 255)
+            # The fixed 26.9 renderer transforms opacity in byte space, with
+            # ties-to-even rounding. Offsets are quantized before addition.
+            alpha = min(255, max(0, alpha))
         elif mod.tag in {A + 'shade', A + 'tint'}:
             # DrawingML shade/tint mixes in linear-light RGB, then quantizes
             # to sRGB before the next colour transform.
@@ -48,7 +58,7 @@ def _colour(node, scheme, placeholder=None, *, with_alpha=False):
         else:
             raise NotImplementedError('DrawingML fill colour transform ' + mod.tag)
     rgb = tuple(min(255, max(0, v)) for v in rgb)
-    return rgb + (alpha,) if alpha != 1 else rgb
+    return rgb + (alpha / 255,) if alpha != 255 else rgb
 
 
 def resolve_drawing_fill(source, theme_data, *, with_transform=False):
@@ -160,38 +170,9 @@ def paint_gradient(pdf, gradient, x, y, width, height, *, rotation=0, geometry_r
                              (center_y + dy * radius),
                              colours, bounds=positions[1:-1],
                              extend_before=True, extend_after=True)
-    if pattern.has_alpha() and any(alpha != alphas[0] for alpha in alphas):
+    if pattern.has_alpha():
         _paint_local_alpha_gradient(pdf, pattern, alphas, x, y, width, height,
                                     geometry_rotation=geometry_rotation)
-        return
-    if pattern.has_alpha():
-        from fpdf.drawing import GradientPaint
-        # Soft masks use the current user space, unlike bare PDF patterns.
-        # Cancel the enclosing shape rotation and paint the rotated polygon in
-        # page space so both the mask and colour ramp share the same coordinates.
-        from contextlib import nullcontext
-        context = pdf.rotation(geometry_rotation, center_x, center_y) if geometry_rotation else nullcontext()
-        with context, pdf.new_path() as path:
-            path.style.fill_color = GradientPaint(pattern)
-            path.style.stroke_color = None
-            theta = radians(geometry_rotation)
-            corners = [(x, y), (x + width, y), (x + width, y + height), (x, y + height)]
-            corners = [(center_x + (px - center_x) * cos(theta) - (py - center_y) * sin(theta),
-                        center_y + (px - center_x) * sin(theta) + (py - center_y) * cos(theta))
-                       for px, py in corners]
-            path.move_to(*corners[0])
-            for corner in corners[1:]:
-                path.line_to(*corner)
-            path.close()
-            if all(alpha == alphas[0] for alpha in alphas):
-                from copy import deepcopy
-                from fpdf.drawing import PaintSoftMask
-                from fpdf.drawing_primitives import DeviceGray
-                mask = deepcopy(path)
-                mask.style.fill_color = DeviceGray(alphas[0])
-                mask.style.fill_opacity = 1
-                path.style.soft_mask = PaintSoftMask(mask, use_luminosity=True)
-                path.style.fill_color.skip_alpha = True
     else:
         with pdf.use_pattern(pattern):
             pdf.rect(x, y, width, height, 'F')
@@ -213,8 +194,6 @@ def _paint_local_alpha_gradient(pdf, pattern, alphas, x, y, width, height, *, ge
                    for index, value in enumerate(pattern.coords))
     local_gradient = LinearGradient(*coords, pattern.colors, bounds=pattern.bounds,
                                     extend_before=True, extend_after=True)
-    alpha_gradient = LinearGradient(*coords, tuple(DeviceGray(alpha) for alpha in alphas),
-                                    bounds=pattern.bounds, extend_before=True, extend_after=True)
     center_x, center_y = width * k / 2, height * k / 2
     theta = radians(geometry_rotation)
     corners = [(0, 0), (width * k, 0), (width * k, height * k), (0, height * k)]
@@ -228,7 +207,12 @@ def _paint_local_alpha_gradient(pdf, pattern, alphas, x, y, width, height, *, ge
     path.style.paint_rule = PathPaintRule.FILL_NONZERO
     from copy import deepcopy
     mask = deepcopy(path)
-    mask.style.fill_color = GradientPaint(alpha_gradient, apply_page_ctm=False)
+    if all(alpha == alphas[0] for alpha in alphas):
+        mask.style.fill_color = DeviceGray(alphas[0])
+    else:
+        alpha_gradient = LinearGradient(*coords, tuple(DeviceGray(alpha) for alpha in alphas),
+                                        bounds=pattern.bounds, extend_before=True, extend_after=True)
+        mask.style.fill_color = GradientPaint(alpha_gradient, apply_page_ctm=False)
     mask.style.fill_opacity = 1
     path.style.soft_mask = PaintSoftMask(mask, use_luminosity=True)
     path.style.fill_color = GradientPaint(local_gradient, apply_page_ctm=False,
