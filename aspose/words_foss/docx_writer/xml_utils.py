@@ -21,6 +21,9 @@ _ATTR_ESCAPE = {
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
+    "\t": "&#9;",
+    "\n": "&#10;",
+    "\r": "&#13;",
 }
 
 
@@ -34,7 +37,8 @@ def _is_xml_char(c: str) -> bool:
     ``<w:lastRenderedPageBreak/>`` siblings carry the same semantics.
     """
     cp = ord(c)
-    return cp in (0x09, 0x0A, 0x0D) or 0x20 <= cp <= 0xD7FF or 0xE000 <= cp <= 0xFFFD
+    return (cp in (0x09, 0x0A, 0x0D) or 0x20 <= cp <= 0xD7FF
+            or 0xE000 <= cp <= 0xFFFD or 0x10000 <= cp <= 0x10FFFF)
 
 
 def escape_text(text: str) -> str:
@@ -43,7 +47,7 @@ def escape_text(text: str) -> str:
 
 
 def escape_attr(text: str) -> str:
-    """Escape characters illegal inside a double-quoted attribute value."""
+    """Escape attributes, preserving whitespace against XML normalization."""
     return "".join(_ATTR_ESCAPE.get(c, c) for c in text if _is_xml_char(c))
 
 
