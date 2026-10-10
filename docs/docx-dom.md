@@ -472,7 +472,8 @@ ramps and shape rotations against the current source theme. A missing theme uses
 a complete template derived from python-docx under its adjacent MIT license;
 this projection does not modify the document or its saved theme. Unsupported
 paints emit `PdfContentLossWarning`, including path gradients, full-span
-nonuniform two-stop or repeated-endpoint interpolation and transparent
-solid fills. Ordered `alpha`, `alphaMod` and `alphaOff` transformations use
+nonuniform two-stop or repeated-endpoint interpolation and unimplemented colour
+transforms. Solid-fill opacity affects the fill only; outlines and following
+content keep independent graphics state. Ordered `alpha`, `alphaMod` and `alphaOff` transformations use
 quantized byte opacity, round ties to even and clamp each step to its valid range.
 Other DrawingML geometry and effects are not covered by this path.
