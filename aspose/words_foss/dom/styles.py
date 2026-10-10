@@ -20,7 +20,37 @@ from aspose.words_foss.dom.nodes import (
     _read_dimension,
     _read_size,
 )
-from aspose.words_foss.utils.xml_helpers import combine_style_toggle
+from aspose.words_foss.utils.xml_helpers import combine_style_toggle, serialize_xml, normalize_font_names
+
+
+_STYLE_NAME_ATTRIBUTES = ("ascii", "hAnsi", "cs", "eastAsia", "asciiTheme", "hAnsiTheme",
+                          "cstheme", "eastAsiaTheme", "hint")
+
+def _style_name_layers(style):
+    """Local font-name layers in native source order, without changing XML."""
+    paragraph = (style.getAttributeNS(W, "type") or "paragraph") == "paragraph"
+    for group in _elements(style):
+        owner = _child(group, "rPr") if paragraph and _is(group, "pPr") else group
+        if owner is not None and _is(owner, "rPr"):
+            fonts = _child(owner, "rFonts")
+            if fonts is not None:
+                yield fonts
+
+
+def _canonical_style_names(style):
+    attrs = {}
+    for fonts in _style_name_layers(style):
+        local = {fonts.attributes.item(i).localName: fonts.attributes.item(i).value
+                 for i in range(fonts.attributes.length) if fonts.attributes.item(i).namespaceURI == W
+                 and fonts.attributes.item(i).localName in _STYLE_NAME_ATTRIBUTES}
+        local = normalize_font_names(local)
+        for literal, theme in (("ascii", "asciiTheme"), ("hAnsi", "hAnsiTheme"),
+                               ("cs", "cstheme"), ("eastAsia", "eastAsiaTheme")):
+            if literal in local or theme in local:
+                attrs.pop(literal, None)
+                attrs.pop(theme, None)
+        attrs.update(local)
+    return attrs
 
 
 class StyleCollection:
@@ -147,6 +177,58 @@ class StyleFont(Font):
         value = super()._toggle(name)
         return bool(value) if self._resolved else value
 
+    def _name(self, channel):
+        if not self._resolved:
+            return super()._name(channel)
+        resolver = StyleResolver(self._node.owner_document)
+        names = resolver.font_names([_child(resolver._defaults("rPr"), "rFonts"),
+                                     *(fonts for style in resolver._chain(self._node.style_id, self._node.type)
+                                       for fonts in _style_name_layers(style))])
+        return names[channel] if names[channel] is not None else names["name"]
+
+    def _set_name(self, channel, value):
+        # Validate before moving declarations so invalid edits leave the package intact.
+        if value is None or isinstance(value, str) and not value:
+            raise RuntimeError("Font name must not be null or empty")
+        if not isinstance(value, str):
+            raise TypeError("Font name requires str")
+        self._node._editable()
+        style = self._node._element
+        for name in ("pPr", "rPr"):
+            groups = [node for node in _elements(style) if _is(node, name)]
+            if len(groups) > 1:
+                raise ValueError("Duplicate style font properties")
+            if name == "pPr" and groups:
+                groups = [node for node in _elements(groups[0]) if _is(node, "rPr")]
+                if len(groups) > 1:
+                    raise ValueError("Duplicate style mark properties")
+            for group in groups:
+                if len([node for node in _elements(group) if _is(node, "rFonts")]) > 1:
+                    raise ValueError("Duplicate style font names")
+        attrs = _canonical_style_names(style)
+        layers = list(_style_name_layers(style))
+        if layers:
+            for fonts in layers:
+                for attribute in _STYLE_NAME_ATTRIBUTES:
+                    if fonts.hasAttributeNS(W, attribute):
+                        fonts.removeAttributeNS(W, attribute)
+                if not any(fonts.attributes.item(i).namespaceURI != XMLNS
+                           for i in range(fonts.attributes.length)) and not fonts.childNodes:
+                    fonts.parentNode.removeChild(fonts)
+            properties = _child(style, "rPr")
+            if properties is None:
+                properties = style.ownerDocument.createElementNS(W, "w:rPr")
+                properties.setAttributeNS(XMLNS, "xmlns:w", W)
+                style.appendChild(properties)
+            fonts = _child(properties, "rFonts")
+            if fonts is None:
+                fonts = style.ownerDocument.createElementNS(W, "w:rFonts")
+                fonts.setAttributeNS(XMLNS, "xmlns:w", W)
+                properties.insertBefore(fonts, properties.firstChild)
+            for name, text in attrs.items():
+                fonts.setAttributeNS(W, "w:" + name, text)
+        super()._set_name(channel, value)
+
     @property
     def size(self):
         value = super().size
@@ -156,7 +238,7 @@ class StyleFont(Font):
     def size(self, value):
         Font.size.fset(self, value)
 
-    def _set(self, name, value):
+    def _set(self, name, value, **kwargs):
         if name == "rStyle":
             raise NotImplementedError("Nested character references in styles require calibration")
         if value is None and self._resolved:
@@ -164,7 +246,7 @@ class StyleFont(Font):
         groups = [node for node in _elements(self._node._element) if _is(node, "rPr")]
         if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, name)]) > 1:
             raise ValueError("Duplicate style font properties")
-        super()._set(name, value)
+        super()._set(name, value, **kwargs)
         self._node.owner_document._package._style_property_overrides.add((self._node.style_id, name))
 
 
@@ -353,7 +435,7 @@ def serialized_style_payload(package, part_name, *, root=None, extra=None):
             changed = True
     if not changed:
         return None
-    data = tree.toxml(encoding="utf-8")
+    data = serialize_xml(tree)
     if len(data) > _io.MAX_PART_BYTES:
         raise ValueError("Projected styles part exceeds the safety limit")
     return data
@@ -409,6 +491,11 @@ class EffectiveFont:
     emboss: bool = False
     engrave: bool = False
     no_proofing: bool = False
+    name: str | None = None
+    name_ascii: str | None = None
+    name_other: str | None = None
+    name_bi: str | None = None
+    name_far_east: str | None = None
 
 
 @dataclass(frozen=True)
@@ -427,6 +514,7 @@ class EffectiveParagraphFormat:
 
 class StyleResolver:
     def __init__(self, document):
+        self.document = document
         self.root = document._styles_root()
         self.styles = {}
         if self.root is not None:
@@ -484,24 +572,149 @@ class StyleResolver:
             return value
         return 11.0 if _child(_child(self.root, "docDefaults"), "rPrDefault") is None else 10.0
 
-    def _paragraph_layers(self, paragraph):
+    def font_names(self, layers):
+        from xml.etree import ElementTree as ET
+        from aspose.words_foss.docx_reader import DocumentReader
+        from aspose.words_foss.utils.xml_helpers import resolve_font_names
+
+        layers = [layer for layer in layers if layer is not None]
+        reader = DocumentReader()
+        package = self.document._package
+        rels_name = "word/_rels/document.xml.rels"
+        related = {}
+        needs_theme = any(layer.hasAttributeNS(W, attr) for layer in layers
+                          for attr in ("asciiTheme", "hAnsiTheme", "cstheme", "eastAsiaTheme"))
+        if needs_theme and rels_name in package.part_names:
+            for link in _elements(package.tree(rels_name).documentElement):
+                if (link.namespaceURI != 'http://schemas.openxmlformats.org/package/2006/relationships'
+                        or link.localName != 'Relationship' or link.getAttribute('Type') not in {
+                            'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
+                            'http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings'}):
+                    continue
+                kind = link.getAttribute("Type").rsplit("/", 1)[-1]
+                if kind in related or link.getAttribute("TargetMode") not in {"", "Internal"}:
+                    raise ValueError("Expected unique internal theme/settings relationships")
+                target = resolve_target("word/document.xml", link.getAttribute("Target"))
+                if target not in package.part_names:
+                    raise ValueError("Missing theme/settings part")
+                related[kind] = ET.fromstring(package.tree(target).toxml())
+        # Native 26.9 first/second save preserves unresolved language-script names until cold load.
+        reader._settings_xml = None if getattr(package, "_injected_default_theme", False) else related.get("settings")
+        if "theme" in related:
+            reader._parse_theme(related["theme"])
+        values = dict.fromkeys(("ascii", "hAnsi", "cs", "eastAsia"))
+        for layer in layers:
+            attributes = {layer.attributes.item(index).localName: layer.attributes.item(index).value
+                          for index in range(layer.attributes.length)
+                          if layer.attributes.item(index).namespaceURI == W}
+            theme_fonts = reader._theme_fonts
+            parent = layer.parentNode
+            if ('theme' not in related and parent is not None and parent.parentNode is not None
+                    and _is(parent.parentNode, 'rPrDefault')):
+                from aspose.words_foss._theme import default_theme_latin_fonts
+                theme_fonts = dict(theme_fonts, **default_theme_latin_fonts())
+            values.update(resolve_font_names(attributes, theme_fonts))
+        values["name"] = next((values[channel] for channel in ("ascii", "hAnsi", "cs")
+                               if values[channel] is not None), None)
+        return values
+
+    def _paragraph_layers(self, paragraph, *, font=False):
         paragraph._editable()
         properties = _child(paragraph._element, "pPr")
         reference = _child(properties, "pStyle")
         style_id = reference.getAttributeNS(W, "val") if reference is not None else self._default("paragraph")
         styles = self._chain(style_id, "paragraph")
         layers = [self._defaults("pPr")] + [_child(style, "pPr") for style in styles] + [properties]
-        # ponytail: numbering and conditional table formatting need their own resolvers before claiming effective values.
-        if any(_child(layer, "numPr") is not None for layer in layers):
+        # Paragraph layout still requires numbering and conditional table resolvers.
+        if any(_child(layer, "numPr") is not None for layer in layers) and not (
+                font and self._numbered_body_font_supported(layers)):
             raise NotImplementedError("Effective formatting for numbered paragraphs is unsupported")
         ancestor = paragraph.parent_node
         while ancestor is not None:
             if _is(ancestor._element, "tbl"):
                 table_style = _child(_child(ancestor._element, "tblPr"), "tblStyle")
-                if table_style is not None or self._default("table") is not None:
+                if not font and (table_style is not None or self._default("table") is not None):
                     raise NotImplementedError("Effective formatting for styled tables is unsupported")
             ancestor = ancestor.parent_node
         return styles, layers
+
+    def _numbered_body_font_supported(self, layers):
+        """Resolve the resource reference, without applying label fonts to body runs."""
+        num_id, level_id = None, "0"
+        for layer in layers:
+            properties = _child(layer, "numPr")
+            if properties is not None:
+                identifier = _child(properties, "numId")
+                level = _child(properties, "ilvl")
+                if identifier is not None:
+                    num_id = identifier.getAttributeNS(W, "val")
+                if level is not None:
+                    level_id = level.getAttributeNS(W, "val")
+        if num_id is None:
+            return False
+        if num_id == "0":
+            return True
+        if not num_id.isascii() or not num_id.isdecimal():
+            return False
+        package = self.document._package
+        name = "word/_rels/document.xml.rels"
+        if name not in package.part_names:
+            return False
+        links = [node for node in _elements(package.tree(name).documentElement)
+                 if node.namespaceURI == "http://schemas.openxmlformats.org/package/2006/relationships"
+                 and node.localName == "Relationship" and node.getAttribute("Type") ==
+                 "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering"]
+        if len(links) != 1 or links[0].getAttribute("TargetMode") not in {"", "Internal"}:
+            return False
+        target = resolve_target("word/document.xml", links[0].getAttribute("Target"))
+        if target not in package.part_names:
+            return False
+        root = package.tree(target).documentElement
+        if not _is(root, "numbering"):
+            return False
+        nums = [node for node in _elements(root) if _is(node, "num")
+                and node.getAttributeNS(W, "numId") == num_id]
+        if len(nums) != 1:
+            return False
+        if any(not _is(node, "abstractNumId") for node in _elements(nums[0])):
+            return False
+        reference = _child(nums[0], "abstractNumId")
+        if reference is None:
+            return False
+        abstract = [node for node in _elements(root) if _is(node, "abstractNum")
+                    and node.getAttributeNS(W, "abstractNumId") == reference.getAttributeNS(W, "val")]
+        return (level_id.isascii() and level_id.isdecimal() and len(abstract) == 1
+                and _child(abstract[0], "numStyleLink") is None
+                and _child(abstract[0], "styleLink") is None
+                and sum(_is(node, "lvl") and node.getAttributeNS(W, "ilvl") == level_id
+                        for node in _elements(abstract[0])) == 1)
+
+    def _table_font_layers(self, paragraph):
+        ancestor = paragraph.parent_node
+        while ancestor is not None and not _is(ancestor._element, "tbl"):
+            ancestor = ancestor.parent_node
+        if ancestor is None:
+            return []
+        reference = _child(_child(ancestor._element, "tblPr"), "tblStyle")
+        identifier = reference.getAttributeNS(W, "val") if reference is not None else self._default("table")
+        outer = ancestor.parent_node
+        while outer is not None:
+            if _is(outer._element, "tbl") and (identifier is not None or
+                    _child(_child(outer._element, "tblPr"), "tblStyle") is not None):
+                raise NotImplementedError("Effective formatting for nested styled tables is unsupported")
+            outer = outer.parent_node
+        if identifier is None:
+            return []
+        if not self.has_style(identifier, "table"):
+            raise NotImplementedError("Effective formatting for unknown table styles is unsupported")
+        layers = []
+        for style in self._chain(identifier, "table"):
+            properties = _child(style, "rPr")
+            if (_child(style, "tblStylePr") is not None or
+                    any(not _is(node, "rFonts") for node in _elements(properties))):
+                raise NotImplementedError("Effective table font properties beyond whole-table names are unsupported")
+            layers.append(properties)
+        return layers
 
     def paragraph_format(self, paragraph):
         _, layers = self._paragraph_layers(paragraph)
@@ -529,7 +742,8 @@ class StyleResolver:
             paragraph = paragraph.parent_node
         if paragraph is None or not _is(paragraph._element, "p"):
             raise ValueError("Effective run formatting requires a direct paragraph parent")
-        paragraph_styles, _ = self._paragraph_layers(paragraph)
+        paragraph_styles, _ = self._paragraph_layers(paragraph, font=True)
+        table_layers = self._table_font_layers(paragraph)
         direct = _child(run._element, "rPr")
         reference = _child(direct, "rStyle")
         style_id = reference.getAttributeNS(W, "val") if reference is not None else None
@@ -548,4 +762,13 @@ class StyleResolver:
         element = _child(direct, "sz")
         if element is not None:
             size = _read_size(element)
-        return EffectiveFont(size=size, **flags)
+        names = self.font_names([_child(default, "rFonts"),
+                                 *(_child(layer, "rFonts") for layer in table_layers),
+                                 *(fonts for style in paragraph_styles + character_styles
+                                   for fonts in _style_name_layers(style)), _child(direct, "rFonts")])
+        primary = names["name"]
+        return EffectiveFont(size=size, **flags, name=primary,
+                             name_ascii=names["ascii"] if names["ascii"] is not None else primary,
+                             name_other=names["hAnsi"] if names["hAnsi"] is not None else primary,
+                             name_bi=names["cs"] if names["cs"] is not None else primary,
+                             name_far_east=names["eastAsia"] if names["eastAsia"] is not None else primary)
