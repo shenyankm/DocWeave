@@ -35,5 +35,12 @@ def render_settings_xml(doc: ldm.Document) -> str:
         tracked += el("w:doNotExpandShiftReturn")
     compat = (compat or "<w:compat></w:compat>").replace("</w:compat>", tracked + "</w:compat>")
     children.append(compat)
+    if doc.font_embedding is not None:
+        for field, tag in [('embed_true_type_fonts', 'embedTrueTypeFonts'),
+                           ('do_not_embed_system_fonts', 'doNotEmbedSystemFonts'),
+                           ('save_subset_fonts', 'saveSubsetFonts')]:
+            value = getattr(doc.font_embedding, field)
+            if value is not None:
+                children.append(el('w:' + tag, None if value else {'w:val': '0'}))
     root = el("w:settings", {"xmlns:w": W_URI}, children)
     return XML_DECL + root

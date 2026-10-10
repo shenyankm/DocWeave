@@ -81,6 +81,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         # colors can be resolved to concrete RGB values.
         self._theme_colors: dict[str, str] = {}
         self._source_theme: ldm.SourceTheme | None = None
+        self._source_font_table: ldm.SourceFontTable | None = None
         # Document defaults from styles.xml/docDefaults
         self._doc_default_rPr: Optional[ET.Element] = None
         self._doc_default_pPr: Optional[ET.Element] = None
@@ -142,7 +143,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 if kind == "hyperlink":
                     self._rels[rid] = target
                 continue
-            if kind not in {"theme", "styles", "settings", "numbering", "image",
+            if kind not in {"theme", "fontTable", "styles", "settings", "numbering", "image",
                             "header", "footer", "footnotes", "endnotes"}:
                 continue
             name = resolve_target("word/document.xml", target)
@@ -156,7 +157,8 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 targets[kind] = name
 
         for kind, fallback in (("theme", "word/theme/theme1.xml"), ("styles", "word/styles.xml"),
-                               ("settings", "word/settings.xml"), ("numbering", "word/numbering.xml")):
+                               ("settings", "word/settings.xml"), ("numbering", "word/numbering.xml"),
+                               ("fontTable", "word/fontTable.xml")):
             name = targets.get(kind, fallback)
             if name not in namelist:
                 continue
@@ -169,6 +171,14 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                     part_name=name, parts=tuple(ldm.SourceThemePart(name=part, content_type=content_type, data=data)
                                                for part, content_type, data in related_part_snapshot(zf, name)))
                 self._parse_theme(root)
+            elif kind == "fontTable":
+                if root.tag != W_NS + 'fonts':
+                    raise ValueError('Expected a WordprocessingML font table')
+                rels_name = relationships_path(name)
+                self._source_font_table = ldm.SourceFontTable(
+                    data=zf.read(name), relationships=zf.read(rels_name) if rels_name in namelist else None,
+                    part_name=name, parts=tuple(ldm.SourceThemePart(name=part, content_type=content_type, data=data)
+                                               for part, content_type, data in related_part_snapshot(zf, name)))
             elif kind == "styles":
                 self._styles_xml = root
                 self._build_style_id_map()

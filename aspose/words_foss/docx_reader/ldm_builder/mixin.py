@@ -43,10 +43,20 @@ class LdmBuilderMixin:
         """Build a :class:`ldm.Document` from the loaded DOCX."""
         doc = ldm.Document()
         doc.source_theme = self._source_theme
+        doc.source_font_table = self._source_font_table
         doc.page_color = self._get_page_color()
         doc.default_tab_stop = self._get_default_tab_stop()
         doc.compatibility_mode = 12
         if self._settings_xml is not None:
+            flags = {}
+            for field, tag in [('embed_true_type_fonts', 'embedTrueTypeFonts'),
+                               ('do_not_embed_system_fonts', 'doNotEmbedSystemFonts'),
+                               ('save_subset_fonts', 'saveSubsetFonts')]:
+                flag = self._settings_xml.find(W_NS + tag)
+                if flag is not None:
+                    flags[field] = parse_onoff(flag)
+            if flags:
+                doc.font_embedding = ldm.FontEmbeddingSettings(**flags)
             doc.do_not_expand_shift_return = parse_onoff(
                 self._settings_xml.find(f"{W_NS}compat/{W_NS}doNotExpandShiftReturn"))
             for setting in self._settings_xml.findall(f"{W_NS}compat/{W_NS}compatSetting"):
