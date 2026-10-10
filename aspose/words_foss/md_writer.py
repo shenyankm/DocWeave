@@ -1597,8 +1597,15 @@ class LdmMarkdownWriter:
         """Render a table as raw HTML."""
         grid = [list(ldm.iter_grid_cells(row)) for row in table.rows]
         covered = set()
+        # Fixed 26.9 exports only the contiguous leading repeat-header rows.
+        header_rows = next((i for i, row in enumerate(table.rows)
+                            if not row.row_format.heading_format), len(table.rows))
         lines: list[str] = ['<table dir="rtl">' if table.bidi else "<table>"]
+        if header_rows:
+            lines.append("<thead>")
         for i, row in enumerate(grid):
+            if header_rows and i == header_rows:
+                lines.extend(["</thead>", "<tbody>"])
             lines.append("<tr>")
             tag = "th" if i == 0 else "td"
             for cell, column, span in row:
@@ -1628,6 +1635,8 @@ class LdmMarkdownWriter:
                     attributes += f' style="text-align: {align}"'
                 lines.append(f"<{tag}{attributes}>{text}</{tag}>")
             lines.append("</tr>")
+        if header_rows:
+            lines.append("</thead>" if header_rows == len(grid) else "</tbody>")
         lines.append("</table>")
         return "\n".join(lines)
 

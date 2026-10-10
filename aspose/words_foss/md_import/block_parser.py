@@ -596,7 +596,16 @@ def _parse_html_block(lines: list[str], i: int, parent: Block) -> int:
     closing = f"</{tag_name}>"
     html_lines = [lines[i]]
     i += 1
-    if closing not in html_lines[0].lower():
+    if tag_name == "table":
+        from .html_tables import TableBlockBoundary
+
+        boundary = TableBlockBoundary()
+        boundary.feed(html_lines[0] + "\n")
+        while (boundary.depth or not boundary.seen) and i < len(lines):
+            html_lines.append(lines[i])
+            boundary.feed(lines[i] + "\n")
+            i += 1
+    elif closing not in html_lines[0].lower():
         while i < len(lines) and not _is_blank(lines[i]):
             html_lines.append(lines[i])
             found_close = closing in lines[i].lower()
@@ -605,6 +614,9 @@ def _parse_html_block(lines: list[str], i: int, parent: Block) -> int:
                 break
     raw_text = "\n".join(html_lines).strip()
     is_known = tag_name in HTML_BLOCK_TAG_NAMES
+    if tag_name == "table":
+        parent.add_child(HtmlTagBlock(tag_name, raw_text, is_self_contained=True))
+        return i
     if is_known and _SELF_CONTAINED_HTML_RE.match(raw_text):
         parent.add_child(HtmlTagBlock(tag_name, raw_text, is_self_contained=True))
         return i
