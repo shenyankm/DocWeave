@@ -531,7 +531,8 @@ def test_entry_copy_preserves_inline_anchor_direct_format(tmp_path, kind, operat
 @pytest.mark.parametrize('kind', ['footnote', 'endnote', 'comment'])
 @pytest.mark.parametrize('operation', ['move', 'clone'])
 @pytest.mark.parametrize('flat', [False, True])
-def test_detached_entry_keeps_marker_format_and_custom_mark(tmp_path, kind, operation, flat):
+@pytest.mark.parametrize('save_detach', [False, True])
+def test_detached_entry_keeps_marker_format_and_custom_mark(tmp_path, kind, operation, flat, save_detach, monkeypatch):
     from xml.etree.ElementTree import fromstring
     doc = document(tmp_path)
     note = create(doc, kind)
@@ -542,6 +543,11 @@ def test_detached_entry_keeps_marker_format_and_custom_mark(tmp_path, kind, oper
     parts['word/document.xml'] = parts['word/document.xml'].replace(
         ('<w:r><w:' + ref).encode(),
         ('<w:r><w:rPr><w:b/><w:sz w:val="36"/></w:rPr><w:' + ref).encode(), 1)
+    if save_detach:
+        parts['word/header1.xml'] = b'<w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p/></w:hdr>'
+        parts['word/document.xml'] = parts['word/document.xml'].replace(b'<w:sectPr/>', b'<w:sectPr><w:headerReference xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" w:type="default" r:id="owned-header"/></w:sectPr>')
+        parts['word/_rels/document.xml.rels'] = parts['word/_rels/document.xml.rels'].replace(b'</Relationships>', b'<Relationship Id="owned-header" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/></Relationships>')
+        parts['[Content_Types].xml'] = parts['[Content_Types].xml'].replace(b'</Types>', b'<Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/></Types>')
     source = tmp_path / 'marker.docx'
     with ZipFile(source, 'w') as package:
         for name, value in parts.items():
@@ -550,7 +556,25 @@ def test_detached_entry_keeps_marker_format_and_custom_mark(tmp_path, kind, oper
     note = doc.get_child_nodes(aw.NodeType.COMMENT if kind == 'comment' else aw.NodeType.FOOTNOTE, True)[0]
     if kind != 'comment':
         note.reference_mark = 'Owned*'
-    note.remove()
+    if save_detach:
+        from aspose.words_foss import _io
+        parent = doc.story('word/header1.xml').paragraphs[0]
+        parent.append_child(note)
+        output = tmp_path / 'outside'
+        output.write_bytes(b'Owned previous output')
+        snapshot = note.xml, parent.xml, dict(doc._annotations().templates)
+        def fail(*args):
+            raise OSError('Owned failed publish')
+        with monkeypatch.context() as patch:
+            patch.setattr(_io.os, 'replace', fail)
+            with pytest.raises(OSError):
+                (doc.save_flat_opc if flat else doc.save)(output)
+        assert note.parent_node is parent
+        assert (note.xml, parent.xml, doc._annotations().templates) == snapshot
+        assert output.read_bytes() == b'Owned previous output'
+        (doc.save_flat_opc if flat else doc.save)(output)
+    else:
+        note.remove()
     assert note.parent_node is None
     if kind != 'comment':
         assert note.reference_mark == 'Owned*'

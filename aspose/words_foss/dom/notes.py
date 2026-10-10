@@ -508,6 +508,12 @@ class NoteGraph:
         self.changed = True
         return node.canonical_node
 
+    def _detached_state(self, node, anchor):
+        from aspose.words_foss.dom.nodes import _bind_namespace_context
+        template = anchor.cloneNode(deep=True)
+        _bind_namespace_context(anchor, template)
+        return template, node.reference_mark if node._element.localName != 'comment' else None
+
     def remove(self, node):
         entry = node._element
         anchor = self.anchors.get(entry)
@@ -516,10 +522,7 @@ class NoteGraph:
         if not all(_safe_structure(child) for child in _elements(entry)):
             raise NotImplementedError('Annotation content requires resource/range translation')
         role = {'footnote': 'footnotes', 'endnote': 'endnotes', 'comment': 'comments'}[entry.localName]
-        from aspose.words_foss.dom.nodes import _bind_namespace_context
-        template = anchor.cloneNode(deep=True)
-        _bind_namespace_context(anchor, template)
-        mark = node.reference_mark if role != 'comments' else None
+        template, mark = self._detached_state(node, anchor)
         operations = [('remove', anchor)]
         if entry.parentNode is not None:
             operations.append(('remove', entry))
@@ -598,7 +601,9 @@ class NoteGraph:
             projected_entry = mapping.get(entry)
             if projected_entry is not None and projected_entry.parentNode is not None:
                 projected_entry.parentNode.removeChild(projected_entry)
-            commits.append(('outside', entry, anchor))
+            node = self.document._wrap(self.parts[entry.localName + 's'], entry)
+            template, mark = self._detached_state(node, anchor)
+            commits.append(('outside', entry, (anchor, template, mark)))
         active = []
         for paragraph in main.getElementsByTagNameNS(W, 'p'):
             if self._main_paragraph(paragraph):
@@ -687,9 +692,13 @@ class NoteGraph:
             self._next_comment_id = next_comment
             for action, entry, value in commits:
                 if action == 'outside':
+                    value, template, mark = value
                     value.parentNode.removeChild(value)
                     if entry.parentNode is not None:
                         entry.parentNode.removeChild(entry)
+                    self.templates[entry] = template
+                    if entry.localName != 'comment':
+                        entry._reference_mark = mark
                     self.anchors.pop(entry)
                     self.anchor_entries.pop(value)
                     self.pending[entry] = entry.localName + 's'
