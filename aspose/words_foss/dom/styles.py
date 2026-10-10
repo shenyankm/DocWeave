@@ -20,7 +20,37 @@ from aspose.words_foss.dom.nodes import (
     _read_dimension,
     _read_size,
 )
-from aspose.words_foss.utils.xml_helpers import combine_style_toggle, serialize_xml
+from aspose.words_foss.utils.xml_helpers import combine_style_toggle, serialize_xml, normalize_font_names
+
+
+_STYLE_NAME_ATTRIBUTES = ("ascii", "hAnsi", "cs", "eastAsia", "asciiTheme", "hAnsiTheme",
+                          "cstheme", "eastAsiaTheme", "hint")
+
+def _style_name_layers(style):
+    """Local font-name layers in native source order, without changing XML."""
+    paragraph = (style.getAttributeNS(W, "type") or "paragraph") == "paragraph"
+    for group in _elements(style):
+        owner = _child(group, "rPr") if paragraph and _is(group, "pPr") else group
+        if owner is not None and _is(owner, "rPr"):
+            fonts = _child(owner, "rFonts")
+            if fonts is not None:
+                yield fonts
+
+
+def _canonical_style_names(style):
+    attrs = {}
+    for fonts in _style_name_layers(style):
+        local = {fonts.attributes.item(i).localName: fonts.attributes.item(i).value
+                 for i in range(fonts.attributes.length) if fonts.attributes.item(i).namespaceURI == W
+                 and fonts.attributes.item(i).localName in _STYLE_NAME_ATTRIBUTES}
+        local = normalize_font_names(local)
+        for literal, theme in (("ascii", "asciiTheme"), ("hAnsi", "hAnsiTheme"),
+                               ("cs", "cstheme"), ("eastAsia", "eastAsiaTheme")):
+            if literal in local or theme in local:
+                attrs.pop(literal, None)
+                attrs.pop(theme, None)
+        attrs.update(local)
+    return attrs
 
 
 class StyleCollection:
@@ -151,10 +181,53 @@ class StyleFont(Font):
         if not self._resolved:
             return super()._name(channel)
         resolver = StyleResolver(self._node.owner_document)
-        layers = [resolver._defaults("rPr")] + [_child(style, "rPr") for style in
-                  resolver._chain(self._node.style_id, self._node.type)]
-        names = resolver.font_names([_child(layer, "rFonts") for layer in layers])
+        names = resolver.font_names([_child(resolver._defaults("rPr"), "rFonts"),
+                                     *(fonts for style in resolver._chain(self._node.style_id, self._node.type)
+                                       for fonts in _style_name_layers(style))])
         return names[channel] if names[channel] is not None else names["name"]
+
+    def _set_name(self, channel, value):
+        # Validate before moving declarations so invalid edits leave the package intact.
+        if value is None or isinstance(value, str) and not value:
+            raise RuntimeError("Font name must not be null or empty")
+        if not isinstance(value, str):
+            raise TypeError("Font name requires str")
+        self._node._editable()
+        style = self._node._element
+        for name in ("pPr", "rPr"):
+            groups = [node for node in _elements(style) if _is(node, name)]
+            if len(groups) > 1:
+                raise ValueError("Duplicate style font properties")
+            if name == "pPr" and groups:
+                groups = [node for node in _elements(groups[0]) if _is(node, "rPr")]
+                if len(groups) > 1:
+                    raise ValueError("Duplicate style mark properties")
+            for group in groups:
+                if len([node for node in _elements(group) if _is(node, "rFonts")]) > 1:
+                    raise ValueError("Duplicate style font names")
+        attrs = _canonical_style_names(style)
+        layers = list(_style_name_layers(style))
+        if layers:
+            for fonts in layers:
+                for attribute in _STYLE_NAME_ATTRIBUTES:
+                    if fonts.hasAttributeNS(W, attribute):
+                        fonts.removeAttributeNS(W, attribute)
+                if not any(fonts.attributes.item(i).namespaceURI != XMLNS
+                           for i in range(fonts.attributes.length)) and not fonts.childNodes:
+                    fonts.parentNode.removeChild(fonts)
+            properties = _child(style, "rPr")
+            if properties is None:
+                properties = style.ownerDocument.createElementNS(W, "w:rPr")
+                properties.setAttributeNS(XMLNS, "xmlns:w", W)
+                style.appendChild(properties)
+            fonts = _child(properties, "rFonts")
+            if fonts is None:
+                fonts = style.ownerDocument.createElementNS(W, "w:rFonts")
+                fonts.setAttributeNS(XMLNS, "xmlns:w", W)
+                properties.insertBefore(fonts, properties.firstChild)
+            for name, text in attrs.items():
+                fonts.setAttributeNS(W, "w:" + name, text)
+        super()._set_name(channel, value)
 
     @property
     def size(self):
@@ -689,8 +762,10 @@ class StyleResolver:
         element = _child(direct, "sz")
         if element is not None:
             size = _read_size(element)
-        layers = [default, *table_layers, *(_child(style, "rPr") for style in paragraph_styles + character_styles), direct]
-        names = self.font_names([_child(layer, "rFonts") for layer in layers])
+        names = self.font_names([_child(default, "rFonts"),
+                                 *(_child(layer, "rFonts") for layer in table_layers),
+                                 *(fonts for style in paragraph_styles + character_styles
+                                   for fonts in _style_name_layers(style)), _child(direct, "rFonts")])
         primary = names["name"]
         return EffectiveFont(size=size, **flags, name=primary,
                              name_ascii=names["ascii"] if names["ascii"] is not None else primary,
