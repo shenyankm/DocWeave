@@ -441,3 +441,11 @@ DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 M
 Letter（612×792pt），JSON、DOCX/Flat OPC 往返和 PDF 页框保留尺寸；显式 A4 尺寸保持原值。
 默认尺寸变化可能改变换行与分页。这不表示完整 PageSetup、PaperSize 公共枚举、
 构造重载、全部 DOM 创建操作或多节排版已对齐。
+
+## 缺失页面尺寸的加载默认值
+
+DOCX/Flat OPC 加载及 DOM 转换快照中，未设置的页面宽度和高度分别使用 Letter 的
+612pt 和 792pt。每个节独立应用这些默认值，不继承前一节的尺寸；显式尺寸和
+`orient` 保留。这修正了缺失尺寸文档此前按 A4 输出 PDF 的行为，可能改变分页。
+尺寸已验证读取、往返保存和 PDF 页框，不代表边距、完整 PageSetup、PaperSize 枚举值
+或多节分页均已对齐。

@@ -16,6 +16,7 @@ from aspose.words_foss._io import (
     validate_docx_archive,
 )
 from aspose.words_foss.dom.nodes import W, _elements, _is, _safe_structure
+from aspose.words_foss.utils.xml_helpers import serialize_xml
 
 
 def _empty_plain_table(element):
@@ -91,7 +92,7 @@ class DocxPackage:
                 for node in list(tree.getElementsByTagNameNS(W, "tbl")):
                     if _empty_plain_table(node):
                         node.parentNode.removeChild(node)
-            return tree.toxml(encoding="utf-8")
+            return serialize_xml(tree)
         return self._payloads[name]
 
     def preservation_report(self):

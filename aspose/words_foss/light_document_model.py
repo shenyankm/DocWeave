@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from base64 import b64decode, b64encode
 from collections.abc import Mapping
+from enum import IntEnum
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
@@ -24,7 +25,7 @@ from aspose.words_foss.model.enums.image import ImageType as _IT, _IMAGE_TYPE_TO
 from aspose.words_foss.model.enums.table import PreferredWidthType as _PWT
 
 
-class NodeType:
+class NodeType(IntEnum):
     """Node type discriminators, valued as in ``aspose.words``."""
 
     ANY = 0
@@ -38,11 +39,34 @@ class NodeType:
     PARAGRAPH = 8
     BOOKMARK_START = 9
     BOOKMARK_END = 10
+    EDITABLE_RANGE_START = 11
+    EDITABLE_RANGE_END = 12
+    MOVE_FROM_RANGE_START = 13
+    MOVE_FROM_RANGE_END = 14
+    MOVE_TO_RANGE_START = 15
+    MOVE_TO_RANGE_END = 16
+    GROUP_SHAPE = 17
     SHAPE = 18
+    COMMENT = 19
+    FOOTNOTE = 20
     RUN = 21
     FIELD_START = 22
     FIELD_SEPARATOR = 23
     FIELD_END = 24
+    FORM_FIELD = 25
+    SPECIAL_CHAR = 26
+    SMART_TAG = 27
+    STRUCTURED_DOCUMENT_TAG = 28
+    STRUCTURED_DOCUMENT_TAG_RANGE_START = 29
+    STRUCTURED_DOCUMENT_TAG_RANGE_END = 30
+    GLOSSARY_DOCUMENT = 31
+    BUILDING_BLOCK = 32
+    COMMENT_RANGE_START = 33
+    COMMENT_RANGE_END = 34
+    OFFICE_MATH = 35
+    SUB_DOCUMENT = 36
+    SYSTEM = 37
+    NULL = 38
 
 
 _NODE_TYPE_BY_CLASS = {

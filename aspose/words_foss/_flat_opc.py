@@ -11,6 +11,7 @@ from defusedxml.minidom import parseString
 
 from aspose.words_foss import _io
 from aspose.words_foss._opc import bind_namespace_context, resolve_target
+from aspose.words_foss.utils.xml_helpers import serialize_xml
 
 PKG = "http://schemas.microsoft.com/office/2006/xmlPackage"
 CT = "http://schemas.openxmlformats.org/package/2006/content-types"
@@ -82,8 +83,7 @@ def decode(data: bytes) -> bytes:
                    for child in payload.childNodes):
                 raise ValueError("XML payload has text outside its root")
             bind_namespace_context(elements[0], element)
-            decoded = b"".join(element.toxml(encoding="utf-8") if child is elements[0]
-                               else child.toxml(encoding="utf-8") for child in payload.childNodes)
+            decoded = b"".join(serialize_xml(element if child is elements[0] else child) for child in payload.childNodes)
         else:
             raise ValueError("Unknown Flat OPC payload")
         total += len(decoded)
@@ -95,7 +95,7 @@ def decode(data: bytes) -> bytes:
         override.setAttribute("ContentType", content_type)
         types.appendChild(override)
     stream = BytesIO()
-    manifest = types.toxml(encoding="utf-8")
+    manifest = serialize_xml(types)
     if len(manifest) > _io.MAX_PART_BYTES or total + len(manifest) > _io.MAX_EXPANDED_BYTES:
         raise ValueError("Flat OPC content types exceed size limits")
     with ZipFile(stream, "w", compression=ZIP_DEFLATED) as archive:
@@ -160,6 +160,6 @@ def encode(data: bytes, main_content_type: str | None = None) -> bytes:
                 payload.appendChild(document.createTextNode(base64.b64encode(value).decode("ascii")))
             part.appendChild(payload)
             root.appendChild(part)
-    output = document.toxml(encoding="utf-8")
+    output = serialize_xml(document)
     _io.check_input_size(len(output))
     return output
