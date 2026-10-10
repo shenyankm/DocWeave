@@ -414,6 +414,49 @@ def _import_source_resources(source: SourceTheme | SourceFontTable, text_parts, 
                           ContentType=content_type)
     text_parts[0] = ('[Content_Types].xml', ET.tostring(content_types, encoding='unicode'))
 
+def _strip_embedded_fonts(text_parts, binary_parts, start):
+    """Strip embedding only after the complete original resource graph was validated."""
+    parts = dict(binary_parts[start:])
+    root_name = 'word/fontTable.xml'
+    w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+    root = fromstring(parts[root_name], forbid_dtd=True)
+    for font in root.findall(w + 'font'):
+        for child in list(font):
+            if child.tag in {w + 'embedRegular', w + 'embedBold', w + 'embedItalic', w + 'embedBoldItalic'}:
+                font.remove(child)
+    parts[root_name] = ET.tostring(root, encoding='utf-8')
+    rels_name = relationships_path(root_name)
+    if rels_name in parts:
+        edges = fromstring(parts[rels_name], forbid_dtd=True)
+        for edge in list(edges):
+            if edge.get('Type') == 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/font':
+                edges.remove(edge)
+        if len(edges):
+            parts[rels_name] = ET.tostring(edges, encoding='utf-8')
+        else:
+            del parts[rels_name]
+    keep = set()
+    pending = [root_name]
+    while pending:
+        name = pending.pop()
+        if name in keep:
+            continue
+        keep.add(name)
+        rels = relationships_path(name)
+        if rels in parts:
+            keep.add(rels)
+            for edge in fromstring(parts[rels], forbid_dtd=True):
+                if edge.get('TargetMode') != 'External':
+                    pending.append(resolve_target(name, edge.get('Target')))
+    removed = {name for name, _ in binary_parts[start:]} - keep
+    binary_parts[start:] = [(name, parts[name]) for name, _ in binary_parts[start:] if name in keep]
+    types = fromstring(text_parts[0][1], forbid_dtd=True)
+    for item in list(types):
+        if item.tag == f'{{{CT_URI}}}Override' and resolve_target('', item.get('PartName')) in removed:
+            types.remove(item)
+    text_parts[0] = ('[Content_Types].xml', ET.tostring(types, encoding='unicode'))
+
+
 def _import_theme_resources(source: SourceTheme, text_parts, binary_parts):
     _import_source_resources(source, text_parts, binary_parts,
                              main_destination='word/theme/theme1.xml',
@@ -438,6 +481,7 @@ def _build_parts(
     theme_xml: bytes | None = None,
     source_theme: SourceTheme | None = None,
     source_font_table: SourceFontTable | None = None,
+    embed_fonts: bool = False,
 ) -> tuple[list[tuple[str, str]], list[tuple[str, bytes]]]:
     """Assemble ordered (text_parts, binary_parts) lists for the zip."""
     if source_theme is not None and source_theme.data != theme_xml:
@@ -511,10 +555,13 @@ def _build_parts(
                 raise ValueError('Expected a WordprocessingML font table')
             from aspose.words_foss.fonts import _root
             _root(source_font_table.data)
+            font_start = len(binary_parts)
             binary_parts.append(('word/fontTable.xml', source_font_table.data))
             _import_source_resources(source_font_table, text_parts, binary_parts,
                                      main_destination='word/fontTable.xml',
                                      resource_directory='word/fonts/resources')
+            if not embed_fonts:
+                _strip_embedded_fonts(text_parts, binary_parts, font_start)
         except (ET.ParseError, DefusedXmlException):
             raise ValueError('Invalid source font table resource XML') from None
     if theme_xml is not None:
@@ -537,6 +584,7 @@ def write_docx_package(
     theme_xml: bytes | None = None,
     source_theme: SourceTheme | None = None,
     source_font_table: SourceFontTable | None = None,
+    embed_fonts: bool = False,
     hyperlinks: dict[str, str],
     images: Optional[list[ImageEntry]] = None,
     header_xml: Optional[str] = None,
@@ -569,6 +617,7 @@ def write_docx_package(
         theme_xml=theme_xml,
         source_theme=source_theme,
         source_font_table=source_font_table,
+        embed_fonts=embed_fonts,
         document_xml=document_xml,
         styles_xml=styles_xml,
         numbering_xml=numbering_xml,

@@ -64,7 +64,7 @@ tests, and documentation describe this fork; upstream documentation is only back
 | TXT | Yes | Yes | Body text only; output is UTF-8, with no images or original layout |
 | PDF | No | Yes | Built-in renderer with bundled fonts; not Word-identical pagination |
 
-DOCX and Flat OPC conversion retains loaded font tables, metadata, related resources and declared embedding settings. `Document.font_infos` supports iteration, name lookup, editable font metadata, and the three embedding options. Successful saves refresh held collections only after atomic publication.
+DOCX and Flat OPC conversion retains loaded font tables, metadata and declared embedding settings. When font embedding is disabled, saved output removes embedding declarations and unreferenced font resources while keeping the original in-memory snapshot available. With embedding enabled, source resources are retained; native font selection and rebuilding remain incomplete. `Document.font_infos` supports iteration, name lookup, editable font metadata, and the three embedding options. Successful saves refresh held collections only after atomic publication.
 
 These edits preserve source resources; automatic font selection, re-embedding, font extraction and font-source APIs remain unimplemented.
 
