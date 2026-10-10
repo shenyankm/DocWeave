@@ -428,6 +428,8 @@ render_report("template.docx", context, "report.docx", "report.pdf")
 
 - WPS 形状的 `effectLst` / `effectDag` 声明独立于填充编辑，保留到 LDM/JSON 与 DOCX/Flat OPC 保存。
   PDF 尚未绘制这些效果，会发出 `pdf.drawing_effects_unsupported`；组和图片效果仍有限制。
+  设置 `PdfSaveOptions.dml_effects_rendering_mode = DmlEffectsRenderingMode.NONE` 可显式忽略形状效果，不产生该警告；
+  默认 `SIMPLIFIED` 和 `FINE` 保留诊断，尚未实现对应效果绘制。
 - 不提供内置 PDF 读取、DOC/RTF 写出、OCR 或完整 Word 排版/字段计算引擎。
 - LDM 转换不是无损往返。脚注/尾注单独提取，仅显式开启的 Markdown 输出可见锚点注；批注、修订、复杂字段、内容控件、
   数学公式、浮动内容及页眉页脚变体仍有限制。支持内联图片不等于任意形状/图片定位或完整 OOXML 保真。
