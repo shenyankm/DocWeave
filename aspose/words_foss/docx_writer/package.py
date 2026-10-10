@@ -509,6 +509,8 @@ def _build_parts(
             w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
             if fonts.tag != w + 'fonts':
                 raise ValueError('Expected a WordprocessingML font table')
+            from aspose.words_foss.fonts import _root
+            _root(source_font_table.data)
             binary_parts.append(('word/fontTable.xml', source_font_table.data))
             _import_source_resources(source_font_table, text_parts, binary_parts,
                                      main_destination='word/fontTable.xml',

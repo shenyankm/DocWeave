@@ -1,6 +1,8 @@
 """Editable document-owned font registration metadata."""
 from enum import IntEnum
 from io import BytesIO
+from itertools import islice
+import re
 from operator import index
 from xml.dom import Node
 from zipfile import ZipFile
@@ -37,11 +39,37 @@ def _children(node, name):
     ]
 
 
+def _charset(value):
+    if not value:
+        return 0
+    text = value.strip()
+    if re.fullmatch(r"(?:0[xX])?[0-9a-fA-F]+", text) is None:
+        raise RuntimeError("Font table contains an invalid charset")
+    digits = (text[2:] if text.lower().startswith("0x") else text).lstrip("0")
+    if len(digits) > 8:
+        raise RuntimeError("Font charset exceeds signed 32-bit storage")
+    number = int(digits or "0", 16)
+    return number - (1 << 32) if number >= 1 << 31 else number
+
+
+def _not_true_type(value):
+    if value in (None, "", "1", "true", "on"):
+        return True
+    if value in ("0", "false", "off"):
+        return False
+    raise RuntimeError("Font table contains an invalid TrueType declaration")
+
+
 def _root(data):
     check_input_size(len(data))
     root = parseString(data, forbid_dtd=True).documentElement
     if root.namespaceURI != W or root.localName != "fonts":
         raise ValueError("Expected a WordprocessingML font table")
+    for font in _children(root, "font"):
+        for child in _children(font, "charset"):
+            _charset(child.getAttributeNS(W, "val"))
+        for child in _children(font, "notTrueType"):
+            _not_true_type(child.getAttributeNS(W, "val"))
     return root
 
 
@@ -76,9 +104,16 @@ def _normalize_registrations(root):
                 default = False
                 if previous is not None and previous.namespaceURI == W:
                     value = previous.getAttributeNS(W, "val")
-                    default = value in {"altName": {""}, "family": {"auto"},
-                                        "pitch": {"default"}, "charset": {"0", "00"},
-                                        "notTrueType": {"0", "false", "off"}}.get(previous.localName, set())
+                    if previous.localName == "charset":
+                        default = _charset(value) == 0
+                    elif previous.localName == "notTrueType":
+                        default = not _not_true_type(value)
+                    elif previous.localName == "altName":
+                        default = value == ""
+                    elif previous.localName == "family":
+                        default = value not in {"roman", "swiss", "modern", "script", "decorative"}
+                    elif previous.localName == "pitch":
+                        default = value not in {"fixed", "variable"}
                 if previous is None or default:
                     if previous is not None:
                         first.removeChild(previous)
@@ -281,8 +316,7 @@ class FontInfo:
 
     @property
     def charset(self):
-        value = int(self._value("charset", "00"), 16)
-        return value - (1 << 32) if value >= 1 << 31 else value
+        return _charset(self._value("charset", "00"))
 
     @charset.setter
     def charset(self, value):
@@ -295,11 +329,9 @@ class FontInfo:
 
     @property
     def family(self):
-        return FontFamily(
-            ["auto", "roman", "swiss", "modern", "script", "decorative"].index(
-                self._value("family", "auto")
-            )
-        )
+        names = ["auto", "roman", "swiss", "modern", "script", "decorative"]
+        value = self._value("family", "auto")
+        return FontFamily(names.index(value) if value in names else 0)
 
     @family.setter
     def family(self, value):
@@ -312,9 +344,9 @@ class FontInfo:
 
     @property
     def pitch(self):
-        return FontPitch(
-            ["default", "fixed", "variable"].index(self._value("pitch", "default"))
-        )
+        names = ["default", "fixed", "variable"]
+        value = self._value("pitch", "default")
+        return FontPitch(names.index(value) if value in names else 0)
 
     @pitch.setter
     def pitch(self, value):
@@ -324,7 +356,7 @@ class FontInfo:
 
     @property
     def is_true_type(self):
-        return self._value("notTrueType", "0").lower() in ("0", "false", "off")
+        return not _not_true_type(self._value("notTrueType", "0"))
 
     @is_true_type.setter
     def is_true_type(self, value):
@@ -335,7 +367,11 @@ class FontInfo:
     @property
     def panose(self):
         value = self._value("panose1")
-        return None if value is None else bytearray.fromhex(value)
+        if not value:
+            return None
+        digits = "".join(islice((char for char in value if char in "0123456789abcdefABCDEF"), 20))
+        decoded = bytearray.fromhex(digits[:len(digits) // 2 * 2])
+        return decoded + bytearray(10 - len(decoded))
 
     @panose.setter
     def panose(self, value):
