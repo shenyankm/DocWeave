@@ -1164,7 +1164,7 @@ class TextColumns(BaseModel):
 
 
 class PageSetup(BaseModel):
-    paper_size: int = 0
+    paper_size: int = 1
     # ``model.enums.Orientation``; unrelated to ``CellFormat.orientation``,
     # which is a text-direction enum.
     orientation: int = 1  # 1=Portrait, 2=Landscape
@@ -1175,8 +1175,8 @@ class PageSetup(BaseModel):
     header_distance: float = 0.0
     footer_distance: float = 0.0
     gutter: float = 0.0  # Aspose.Words: PageSetup.Gutter — extra binding margin
-    page_width: float = 0.0
-    page_height: float = 0.0
+    page_width: float = 612.0
+    page_height: float = 792.0
     page_number_style: int = 0  # Roman, Arabic, letters...
     page_starting_number: int = 1  # section starts at page N
     restart_page_numbering: bool = False  # reset counter at section
