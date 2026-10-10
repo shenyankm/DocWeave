@@ -269,13 +269,13 @@ class LdmPdfWriter:
         margin_right = DEFAULT_MARGIN_MM
         if doc.sections:
             ps = doc.sections[0].page_setup
-            if ps.left_margin > 0:
+            if ps.left_margin >= 0:
                 margin_left = ps.left_margin * PT_TO_MM
-            if ps.right_margin > 0:
+            if ps.right_margin >= 0:
                 margin_right = ps.right_margin * PT_TO_MM
-            if ps.top_margin > 0:
+            if ps.top_margin >= 0:
                 margin_top = ps.top_margin * PT_TO_MM
-            if ps.bottom_margin > 0:
+            if ps.bottom_margin >= 0:
                 margin_bottom = ps.bottom_margin * PT_TO_MM
 
         pdf.set_margins(margin_left, margin_top, margin_right)

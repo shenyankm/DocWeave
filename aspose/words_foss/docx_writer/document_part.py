@@ -77,33 +77,16 @@ def _sectPr(
     if pg_size_attrs:
         children.append(el("w:pgSz", pg_size_attrs))
 
-    # ``CT_PageMar`` requires all seven attributes (top/right/bottom/left/
-    # header/footer/gutter); Word refuses to open the file when any are
-    # missing.  Emit zeros for fields the LDM doesn't carry — the reader
-    # only consumes whichever attributes are present so the round-trip
-    # is preserved.
-    has_margin_data = any(
-        v > 0 for v in (
-            page_setup.top_margin,
-            page_setup.right_margin,
-            page_setup.bottom_margin,
-            page_setup.left_margin,
-            page_setup.header_distance,
-            page_setup.footer_distance,
-            page_setup.gutter,
-        )
-    )
-    if has_margin_data:
-        margin_attrs: dict[str, object] = {
-            "w:top": pt_to_twips(page_setup.top_margin),
-            "w:right": pt_to_twips(page_setup.right_margin),
-            "w:bottom": pt_to_twips(page_setup.bottom_margin),
-            "w:left": pt_to_twips(page_setup.left_margin),
-            "w:header": pt_to_twips(page_setup.header_distance),
-            "w:footer": pt_to_twips(page_setup.footer_distance),
-            "w:gutter": pt_to_twips(page_setup.gutter),
-        }
-        children.append(el("w:pgMar", margin_attrs))
+    # Emit all required attributes, including explicit zero and negative margins.
+    children.append(el("w:pgMar", {
+        "w:top": pt_to_twips(page_setup.top_margin),
+        "w:right": pt_to_twips(page_setup.right_margin),
+        "w:bottom": pt_to_twips(page_setup.bottom_margin),
+        "w:left": pt_to_twips(page_setup.left_margin),
+        "w:header": pt_to_twips(page_setup.header_distance),
+        "w:footer": pt_to_twips(page_setup.footer_distance),
+        "w:gutter": pt_to_twips(page_setup.gutter),
+    }))
 
     # ``pgNumType`` precedes ``cols`` per CT_SectPr.  ``page_starting_number``
     # defaults to 0; only emit when the reader saw a real

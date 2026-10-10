@@ -104,9 +104,13 @@ class PageSetupBuilder:
         if pg_mar is None:
             return
         for attr, field_name in cls._MARGIN_FIELDS:
-            val = pg_mar.get(f"{W_NS}{attr}", "")
-            if val:
-                setattr(ps, field_name, int(val) / _TWIPS_PER_PT)
+            val = pg_mar.get(f"{W_NS}{attr}")
+            if val is not None:
+                try:
+                    value = int(val) / _TWIPS_PER_PT
+                except ValueError:
+                    value = 0.0
+                setattr(ps, field_name, value)
 
     @staticmethod
     def _apply_section_type(sect_pr: ET.Element, ps: ldm.PageSetup) -> None:
