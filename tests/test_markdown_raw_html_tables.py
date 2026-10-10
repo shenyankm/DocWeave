@@ -207,8 +207,7 @@ def test_header_semantics_and_exported_html_reload(save_format):
         cold_html = load(doc.to_bytes(options).decode())
     cold = Document(BytesIO(cold_html.to_bytes(save_format)))
     assert shape(tables(cold)[0]) == shape(tables(doc)[0])
-    # Existing HTML exporter writes bare rows, without thead provenance.
-    assert not tables(cold)[0].rows[0].row_format.heading_format
+    assert tables(cold)[0].rows[0].row_format.heading_format
     header = tables(cold)[0].rows[0].cells[0].paragraphs[0]
     assert header.paragraph_format.alignment == 1
     assert header._children[0].font.bold
