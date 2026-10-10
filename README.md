@@ -439,9 +439,10 @@ These are the main implemented entry points, not an exhaustive catalog of intern
 ## Scope and Limitations
 
 - WPS shape `effectLst` / `effectDag` declarations survive LDM/JSON and DOCX/Flat OPC saves independently of fill edits.
-  PDF effect painting is unimplemented and emits `pdf.drawing_effects_unsupported`; group and image effects remain limited.
+  Unsupported PDF effect painting emits `pdf.drawing_effects_unsupported`; group and image effects remain limited.
   `PdfSaveOptions.dml_effects_rendering_mode = DmlEffectsRenderingMode.NONE` explicitly omits shape effects without that warning;
-  `SIMPLIFIED` (the default) and `FINE` retain the diagnostic and do not implement those rendering modes.
+  `SIMPLIFIED` and `FINE` paint zero-blur outer shadows on opaque, unrotated rectangular fills without outlines.
+  Other effects, transparent fills, outlines, rotation, scale, skew and unsupported alignment retain loss diagnostics.
 - No built-in PDF reading, DOC/RTF writing, OCR, or complete Word layout/field-computation engine.
 - Conversion via LDM is not lossless. Notes are extracted separately; only opt-in Markdown exports visible anchored notes;
   comments, revisions, complex fields, content controls, math, floating content, and header/footer variants have limits.

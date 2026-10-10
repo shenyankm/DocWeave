@@ -249,12 +249,6 @@ class ShapeRenderer:
                                           y_override=y_override)
 
     def _render_positioned_shape(self, pdf, shape, *, line_y_override=None, y_override=None):
-        if (shape.source_drawing_effects is not None
-                and self._writer.options.dml_effects_rendering_mode != DmlEffectsRenderingMode.NONE):
-            from defusedxml.ElementTree import fromstring
-            if len(fromstring(shape.source_drawing_effects.xml)):
-                warn("DrawingML shape effects are preserved but not rendered",
-                     PdfContentLossWarning, code="pdf.drawing_effects_unsupported")
         x = shape._page_left_mm
         y = shape._page_top_mm if y_override is None else y_override
         w = shape.width or 0.0
@@ -305,6 +299,27 @@ class ShapeRenderer:
         border = shape.stroke
         line_rgb = parse_color(border.color) if border else None
         draw_border = bool(line_rgb) and bool(border) and border.line_width > 0
+
+        if (shape.source_drawing_effects is not None
+                and self._writer.options.dml_effects_rendering_mode != DmlEffectsRenderingMode.NONE):
+            from defusedxml.ElementTree import fromstring
+            if len(fromstring(shape.source_drawing_effects.xml)):
+                try:
+                    if (w <= 0 or h <= 0 or draw_border or shape.source_drawing_fill is None or rotated or shape.has_image or
+                            gradient is not None or not fill_rgb or
+                            (len(fill_rgb) == 4 and fill_rgb[3] != 1)):
+                        raise NotImplementedError('DrawingML outer shadow shape or fill')
+                    from aspose.words_foss._drawing_effects import resolve_outer_shadow
+                    theme = self._writer._doc.source_theme
+                    dx, dy, colour = resolve_outer_shadow(
+                        shape.source_drawing_effects, theme.data if theme else None)
+                    opacity = colour[3] if len(colour) == 4 else 1
+                    with pdf.local_context(fill_opacity=opacity):
+                        pdf.set_fill_color(*colour[:3])
+                        pdf.rect(x + dx, y + dy, w, h, 'F')
+                except NotImplementedError as error:
+                    warn("DrawingML shape effects are preserved but not rendered: " + str(error),
+                         PdfContentLossWarning, code="pdf.drawing_effects_unsupported")
 
         # Anchored picture
         if shape.has_image and shape.image_data is not None:
