@@ -59,7 +59,7 @@ def export(doc):
 def test_real_saved_header_metadata_exports_contiguous_head_only(
     flags, rtl, save_format
 ):
-    doc = Document()
+    doc = Document(BytesIO(b"fixture"), MarkdownLoadOptions())
     doc.light_document_model.sections[0].body.children[:] = [make_table(flags, rtl)]
     doc = Document(BytesIO(doc.to_bytes(SaveFormat.DOCX)))
     assert [row.row_format.heading_format for row in first_table(doc).rows] == list(
@@ -100,7 +100,7 @@ def test_nested_repeat_header_groups_are_independent(save_format):
             ldm.Paragraph(children=[ldm.Run(text="AFTER")]),
         ]
     )
-    doc = Document()
+    doc = Document(BytesIO(b"fixture"), MarkdownLoadOptions())
     doc.light_document_model.sections[0].body.children[:] = [outer]
     raw = export(doc)
     root = ET.fromstring(raw.decode().strip())
