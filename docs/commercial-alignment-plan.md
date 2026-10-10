@@ -166,7 +166,19 @@ IntEnum 的协议不同，不能只比较 16 个现有常量就判断类型兼�
 方法见 [开发与安装核验](../README.zh-CN.md#开发与测试)。具体提交的跨平台结果以
 [GitHub Actions](https://github.com/shenyankm/DocWeave/actions) 为准，不能用旧 SHA 的成功代替。
 
-下一阶段优先修复其余十个 Boolean 属性的保存来源：本地探索性官方冷回读在 3,240 个 DOCX／Flat OPC 输出中观察到 200 个 getter 差异，每个属性 20 个。该新增探索尚未冻结为复验语料，不计为格式验收通过；需保留直接声明、验证模型 JSON 往返并重新核对官方输出。
+其余十个 Boolean 属性的保存来源进入当前阶段：复用 810 个自有输入，
+[3,240 个直接／模型 JSON→DOCX／Flat OPC 输出](benchmarks/font-boolean-roundtrip-26.9.json)
+经官方 26.9.0 冷回读，getter 差异从 200 个降为零。前后原始输出与生成器已冻结；
+独立 XML 复验检查 getter、直接声明和段落样式引用。读取、赋值、模型复制及写出
+共享来源规则，源代码专项 4,083 项通过。最终安装包 Mac 全套（含示例）15,212 项通过、
+2 项跳过，Linux 专项 5,798 项通过。全套结束后，归档以 `storage` 复用逐字节相同的
+输出：总量从 21,256,900 字节降为 6,873,096 字节，6,480 个逻辑输出的原始字节不变；
+归档与新增别名检查另经最终安装包 3,411 项专项复验通过。本阶段本地验收通过，远端 CI 待完成。
+完整 Font API、动态样式编辑、其他格式与实际字体效果仍未验收。
+
+此前 Windows CI 的 ZIP 元数据和 CLI 平台断言已修正；提交 `2bcecca` 的
+[四个平台检查](https://github.com/shenyankm/DocWeave/actions/runs/38005138101)均通过。
+该结果不能代替后续字体阶段提交的远端检查。
 
 格式 getter/setter 的固定观察见上表，不能替代最终渲染验收。首段复验生成器为
 [`first_paragraph_trial.py`](probes/first_paragraph_trial.py)：15 个加载输入及 3 个新建/保存对照，

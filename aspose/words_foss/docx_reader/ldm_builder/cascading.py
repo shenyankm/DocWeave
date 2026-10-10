@@ -107,9 +107,8 @@ class FontBuilder:
         """Translate one ``<w:rPr>`` into a value-only :class:`ldm.Font`."""
         font = ldm.Font()
         font.size_explicit = False
-        font.bold_explicit = rPr.find(f"{W_NS}b") is not None
-        font.italic_explicit = rPr.find(f"{W_NS}i") is not None
-        font.hidden_explicit = rPr.find(f"{W_NS}vanish") is not None
+        for tag, field, _ in RUN_ONOFF_FLAGS:
+            setattr(font, field + "_explicit", rPr.find(f"{W_NS}{tag}") is not None)
         self._apply_name(rPr, font)
         self._apply_size(rPr, font)
         apply_onoff_attrs(font, rPr, RUN_ONOFF_FLAGS)
@@ -459,9 +458,8 @@ class FontResolver:
         if not base.highlight_color:
             base.highlight_color = COLOR_EMPTY
         base.size_explicit = rPr is not None and rPr.find(f"{W_NS}sz") is not None
-        base.bold_explicit = rPr is not None and rPr.find(f"{W_NS}b") is not None
-        base.italic_explicit = rPr is not None and rPr.find(f"{W_NS}i") is not None
-        base.hidden_explicit = rPr is not None and rPr.find(f"{W_NS}vanish") is not None
+        for tag, field, _ in RUN_ONOFF_FLAGS:
+            setattr(base, field + "_explicit", rPr is not None and rPr.find(f"{W_NS}{tag}") is not None)
         return base
 
     def _inherited_font(self, table_id: str, style_id: str, character_id: str,

@@ -66,7 +66,8 @@ def test_font_field_origin_survives_json_and_later_assignments():
     assert restored.model_fields_set == font.model_fields_set
     restored.italic = False
     again = ldm.Font.model_validate_json(restored.model_dump_json())
-    assert again.model_fields_set == {'bold', 'size', 'italic'}
+    assert again.model_fields_set == {'bold', 'size', 'italic', 'italic_explicit'}
+    assert again.italic_explicit is True
     assert again.bold is again.italic is False and again.size == 12
 
 

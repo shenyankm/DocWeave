@@ -16074,28 +16074,35 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
-        "table/basedOn/notes contexts and DOCX output origin not fully accepted"
+        "table/basedOn/notes contexts and DOCX output origin not fully accepted",
+        "DocxDocument DOM Font has no all_caps descriptor; installed-package preflight assigning run.font.all_caps=True leaves serialized DOCX unchanged; next DOM phase must implement real setters and effective getters"
       ]
     },
     {
@@ -16165,25 +16172,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16245,25 +16258,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16285,25 +16304,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16439,25 +16464,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16569,25 +16600,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16609,25 +16646,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16669,25 +16712,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16784,25 +16833,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"
@@ -16834,25 +16889,31 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_internal_LDM_category_getters; commercial Font public type incomplete",
-      "gap": "full_Font_API_and_format_roundtrips_not_aligned; exploratory_native_cold_reads_found_20_saved_getter_differences_per_property; evidence_not_yet_frozen",
+      "gap": "full_Font_API_dynamic_styles_other_formats_and_rendering_not_aligned",
       "dependencies": [
         "DOCX style categories",
         "LDM Font metadata",
         "PDF visibility and measurement"
       ],
       "scope_confirmation": "published_declaration",
-      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property",
+      "baseline_behavior": "26.9.0 trial macOS/Python 3.13: 81 owned category getter observations per property; 3240 owned direct/model JSON DOCX/Flat OPC native cold getters and independent direct declaration/reference checks, before 200 getter differences across ten properties, after zero",
       "samples": [
         "font-boolean-contexts-26.9.json",
-        "corpus/font-boolean-contexts-26.9.zip"
+        "corpus/font-boolean-contexts-26.9.zip",
+        "font-boolean-roundtrip-26.9.json",
+        "corpus/font-boolean-roundtrip-before-origin-fix.zip",
+        "corpus/font-boolean-roundtrip-current.zip"
       ],
       "validation": [
         "verify_font_boolean_contexts: package payloads, hashes, getters and native hidden PDF text",
         "tests/test_font_boolean_contexts.py: LDM getter and model JSON checks",
-        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests"
+        "installed Mac Python 3.14: 2608 focused and 11916 full/example checks passed, 2 skipped; Linux 2504 focused checks passed; added CI portability fixes separately checked in 830 tests",
+        "verify_font_boolean_roundtrip: 3240 saved getter/declaration/reference checks against native cold records and independent XML",
+        "tests/test_font_boolean_roundtrip.py: source JSON/save/read chains, same-value direct edits and explicit origin overrides",
+        "final installed Mac Python 3.14: 15212 full/example checks passed, 2 skipped; Linux 5798 focused checks passed; storage aliases preserve all 6480 logical saved output bytes"
       ],
       "approach": "independent mapping from owned native trial observations",
-      "delivery": "phase_getter_checks_passed; format_roundtrip_pending; remote_CI_pending; full_Font_acceptance_pending",
+      "delivery": "phase_saved_getter_and_origin_acceptance_passed; remote_CI_pending; full_Font_acceptance_pending",
       "limits": [
         "does not establish other font effects or full layout equivalence",
         "table/basedOn/notes contexts and DOCX output origin not fully accepted"

@@ -882,7 +882,8 @@ def font_size_parts(raw):
     return tuple(parts["/word/" + name + ".xml"].find(package + "xmlData")[0] for name in ("document", "styles"))
 
 
-def saved_hidden_state(raw):
+def saved_hidden_state(raw, tag="vanish"):
+    """Toggle getter/declarations; the visibility component is only valid for vanish."""
     w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
     document, styles = font_size_parts(raw)
     paragraph = next(p for p in document.iter(w + 'p') if ''.join(t.text or '' for t in p.iter(w + 't')) == 'IMPORT')
@@ -896,7 +897,7 @@ def saved_hidden_state(raw):
             assert identifier not in seen
             seen.add(identifier)
             style = by_id[identifier]
-            declared = value(style.find(w + 'rPr/' + w + 'vanish'))
+            declared = value(style.find(w + 'rPr/' + w + tag))
             if declared is not None:
                 return declared
             parent = style.find(w + 'basedOn')
@@ -909,11 +910,11 @@ def saved_hidden_state(raw):
     character = run.find(w + 'rPr/' + w + 'rStyle')
     p = nearest(identifier)
     c = nearest(character.get(w + 'val')) if character is not None else None
-    default = bool(value(styles.find(w + 'docDefaults/' + w + 'rPrDefault/' + w + 'rPr/' + w + 'vanish')))
+    default = bool(value(styles.find(w + 'docDefaults/' + w + 'rPrDefault/' + w + 'rPr/' + w + tag)))
     getter = default or p ^ c if p is not None and c is not None else p if p is not None else c if c is not None else default
     rendered = (c if c is not None else p if p is not None else default) if reference is None else (
         default ^ p ^ c if p is not None and c is not None else getter)
-    direct = value(run.find(w + 'rPr/' + w + 'vanish'))
+    direct = value(run.find(w + 'rPr/' + w + tag))
     if direct is not None:
         getter = rendered = direct
     return getter, not rendered, direct, reference.get(w + 'val') if reference is not None else None
@@ -954,6 +955,55 @@ def verify_hidden_font_roundtrip(root):
                     assert actual[2:] == saved_hidden_state(source)[2:]
         differences[phase] = (getter_errors, visible_errors)
     assert differences == {'before': (20, 52), 'after': (0, 0)}
+    return len(report['records'])
+
+
+def verify_font_boolean_roundtrip(root):
+    report = json.loads((root / 'font-boolean-roundtrip-26.9.json').read_text())
+    rows = json.loads((root / 'font-boolean-contexts-26.9.json').read_text())
+    sources = {row['input']: row for row in rows['records'] if row['field'] != 'hidden'}
+    tags = runpy.run_path(str(Path(__file__).parents[1] / 'docs/probes/font_boolean_contexts.py'))['FIELDS']
+    assert len(sources) == 810 and report['full_format_acceptance'] is report['rendering_acceptance'] is False
+    expected = {(name, phase, fmt) for name in sources for phase in ('direct', 'json') for fmt in ('docx', 'flat_opc')}
+    differences = {}
+    with ZipFile(root / rows['corpus']) as inputs:
+        for phase, current in (('before', report['before_origin_fix']), ('after', report)):
+            assert len(current['records']) == 3240
+            assert {(r['input'], r['phase'], r['format']) for r in current['records']} == expected
+            raw = (root / current['outputs']).read_bytes()
+            assert digest(raw) == current['outputs_sha256']
+            native = current['native_reread']
+            assert native['version'] == '26.9.0' and native['licensed'] is False
+            observed = {r['output']: r['value'] for r in native['records']}
+            assert len(observed) == len(native['records']) == 3240
+            errors = []
+            with ZipFile(BytesIO(raw)) as outputs:
+                assert set(observed) == {r['output'] for r in current['records']}
+                assert set(outputs.namelist()) == {r.get('storage', r['output']) for r in current['records']}
+                for row in current['records']:
+                    source = sources[row['input']]
+                    assert row['field'] == source['field'] and row['expected'] is source['value']
+                    original = inputs.read(row['input'])
+                    assert digest(original) == row['source_sha256'] == source['sha256']
+                    saved = outputs.read(row.get('storage', row['output']))
+                    assert digest(saved) == row['output_sha256']
+                    state = saved_hidden_state(saved, tags[row['field']])
+                    assert state[0] is observed[row['output']]
+                    if state[0] is not row['expected']:
+                        errors.append(row['field'])
+                    if phase == 'after':
+                        assert state[2:] == saved_hidden_state(original, tags[row['field']])[2:]
+            differences[phase] = {field: errors.count(field) for field in tags if field != 'hidden'}
+    assert differences == {'before': {f: 20 for f in tags if f != 'hidden'},
+                           'after': {f: 0 for f in tags if f != 'hidden'}}
+    optimization = report['storage_optimization']
+    assert len(optimization['records']) == 2
+    for metric, (phase, current) in zip(optimization['records'], (('before', report['before_origin_fix']), ('after', report))):
+        assert metric['phase'] == phase and metric['logical_outputs'] == len(current['records']) == 3240
+        assert metric['all_logical_output_bytes_unchanged'] is True
+        assert metric['after_archive_sha256'] == current['outputs_sha256']
+        assert metric['after_archive_bytes'] == (root / current['outputs']).stat().st_size < metric['before_archive_bytes']
+        assert metric['stored_outputs'] == len({r['storage'] for r in current['records']}) < 3240
     return len(report['records'])
 
 
@@ -1681,6 +1731,7 @@ def verify(root):
     font_booleans = verify_font_boolean_contexts(root)
     hidden_style_contexts = verify_hidden_style_contexts(root)
     hidden_roundtrips = verify_hidden_font_roundtrip(root)
+    font_boolean_roundtrips = verify_font_boolean_roundtrip(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -1693,6 +1744,7 @@ def verify(root):
             "checked_font_boolean_inputs": font_booleans,
             "checked_hidden_style_contexts": hidden_style_contexts,
             "checked_hidden_font_roundtrips": hidden_roundtrips,
+            "checked_font_boolean_roundtrips": font_boolean_roundtrips,
             "checked_font_default_inputs": defaults,
             "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,

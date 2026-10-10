@@ -279,6 +279,12 @@ class TabStopCollection(BaseModel):
 # ─────────────────────────────────────────────
 
 
+FONT_BOOLEAN_FIELDS = (
+    "bold", "italic", "hidden", "all_caps", "small_caps", "strike_through", "outline",
+    "shadow", "emboss", "engrave", "no_proofing", "bold_bi", "italic_bi",
+)
+
+
 class Font(BaseModel):
     name: str = ""
     size: float = 0.0
@@ -298,6 +304,16 @@ class Font(BaseModel):
     hidden: bool = False
     hidden_explicit: bool | None = None
     hidden_rendering: bool | None = None
+    all_caps_explicit: bool | None = None
+    small_caps_explicit: bool | None = None
+    strike_through_explicit: bool | None = None
+    outline_explicit: bool | None = None
+    shadow_explicit: bool | None = None
+    emboss_explicit: bool | None = None
+    engrave_explicit: bool | None = None
+    no_proofing_explicit: bool | None = None
+    bold_bi_explicit: bool | None = None
+    italic_bi_explicit: bool | None = None
     style_name: str = ""
     style_identifier: int = 0
     shading: Shading = Field(default_factory=Shading)
@@ -332,15 +348,19 @@ class Font(BaseModel):
 
     def __setattr__(self, name: str, value: Any) -> None:
         super().__setattr__(name, value)
+        if name in FONT_BOOLEAN_FIELDS:
+            super().__setattr__(name + '_explicit', True)
         if name == 'hidden':
             super().__setattr__('hidden_rendering', None)
-            super().__setattr__('hidden_explicit', True)
 
     def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False) -> Font:
         if update is not None and 'hidden' in update and 'hidden_rendering' not in update:
             update = dict(update, hidden_rendering=None)
-        if update is not None and 'hidden' in update and 'hidden_explicit' not in update:
-            update = dict(update, hidden_explicit=True)
+        if update is not None:
+            update = dict(update)
+            for field in FONT_BOOLEAN_FIELDS:
+                if field in update and field + '_explicit' not in update:
+                    update[field + '_explicit'] = True
         return super().model_copy(update=update, deep=deep)
 
     @model_validator(mode="wrap")
