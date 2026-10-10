@@ -384,7 +384,35 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                     if typeface:
                         self._theme_fonts[f"{prefix}HAnsi"] = typeface
                         self._theme_fonts[f"{prefix}Ascii"] = typeface
-                        self._theme_fonts[f"{prefix}Bidi"] = typeface
+                languages = self._settings_xml.find(f'{W_NS}themeFontLang') if self._settings_xml is not None else None
+                complex_script = group.find(f'{A_NS}cs')
+                typeface = complex_script.get('typeface', '') if complex_script is not None else ''
+                bidi_language = languages.get(f'{W_NS}bidi', '').lower() if languages is not None else ''
+                # shortcut: additional bidi language/script mappings need native calibration.
+                bidi_script = {'ar-sa': 'Arab', 'ar-eg': 'Arab', 'ar-ae': 'Arab', 'ar': 'Arab',
+                               'he-il': 'Hebr', 'he': 'Hebr', 'hi-in': 'Deva', 'hi': 'Deva',
+                               'th-th': 'Thai', 'th': 'Thai'}.get(bidi_language)
+                if bidi_script:
+                    supplemental = next((font for font in group.findall(f'{A_NS}font')
+                                         if font.get('script') == bidi_script), None)
+                    if supplemental is not None:
+                        typeface = supplemental.get('typeface') or typeface
+                self._theme_fonts[f'{prefix}Bidi'] = typeface or 'Times New Roman'
+                east_asian = group.find(f'{A_NS}ea')
+                typeface = east_asian.get('typeface', '') if east_asian is not None else ''
+                language = languages.get(f'{W_NS}eastAsia', '').lower() if languages is not None else ''
+                # shortcut: other theme language/script mappings need native validation before full acceptance.
+                # Native 26.9 resolves neutral zh-Hant to Hans; extended script-region tags remain unmapped.
+                script = {'ja-jp': 'Jpan', 'ja': 'Jpan', 'ko-kr': 'Hang', 'ko': 'Hang',
+                          'zh-cn': 'Hans', 'zh-sg': 'Hans', 'zh-hans': 'Hans', 'zh-hant': 'Hans',
+                          'zh-tw': 'Hant', 'zh-hk': 'Hant', 'zh-mo': 'Hant'}.get(language)
+                if script:
+                    supplemental = next((font for font in group.findall(f'{A_NS}font')
+                                         if font.get('script') == script), None)
+                    if supplemental is not None:
+                        typeface = supplemental.get('typeface') or typeface
+                if typeface:
+                    self._theme_fonts[f'{prefix}EastAsia'] = typeface
 
         clr_scheme = theme_elements.find(f"{A_NS}clrScheme")
         if clr_scheme is not None:

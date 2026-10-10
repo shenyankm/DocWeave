@@ -474,3 +474,22 @@ style reference. Assigning `Shape.fill_color` replaces the retained declaration.
 This preserves source declarations; the PDF renderer currently warns that their
 appearance is not resolved. Other DrawingML geometry and effects are not covered
 by this declaration path.
+## Font name channels
+
+`run.font` exposes direct `name`, `name_ascii`, `name_other`, `name_bi`, and
+`name_far_east` declarations. An unset direct channel returns `None`; an explicit
+empty literal returns `""`. `run.effective_font` resolves document defaults,
+paragraph and character style inheritance, then direct formatting. Style fonts
+resolve their own `basedOn` chains and document defaults.
+
+Assigning `name` sets all four OOXML font channels. Assigning one channel preserves
+the others and removes only that channel's theme reference. Names require nonempty
+strings; invalid values and duplicate property groups fail before mutation.
+UTF-16 surrogate pairs are joined and isolated surrogates become U+FFFD. XML-invalid
+characters may be omitted during serialization without mutating the live value.
+
+Whole-table font name inheritance and numbered paragraph body fonts are supported
+when their references resolve. Conditional or nested styled tables, numbering
+overrides, label fonts, paragraph layout, and missing-theme save lifecycle remain
+outside this stage. These name operations do not establish full Font API or
+rendering equivalence.
