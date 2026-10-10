@@ -27,7 +27,7 @@ from typing import IO, Optional, Union
 
 from aspose.words_foss._opc import related_part_snapshot, relationships_path, resolve_target
 from aspose.words_foss._io import check_input_size
-from aspose.words_foss.light_document_model import SourceTheme
+from aspose.words_foss.light_document_model import SourceTheme, SourceFontTable
 
 from aspose.words_foss.docx_writer.constants import (
     CT_CORE_PROPS,
@@ -343,20 +343,22 @@ def _hf_part_rels(hyperlinks: dict[str, str], images: list[ImageEntry]) -> str:
     return XML_DECL + el("Relationships", {"xmlns": PKG_RELS_URI}, children)
 
 
-def _import_theme_resources(source: SourceTheme, text_parts, binary_parts):
-    """Validate the captured graph, then rebind it under an unused theme directory."""
+def _import_source_resources(source: SourceTheme | SourceFontTable, text_parts, binary_parts, *,
+                             main_destination, resource_directory):
+    """Validate the captured graph, then rebind it under an unused resource directory."""
+    check_input_size(max(sum(len(part.data) for part in source.parts),
+                         len(source.data) + len(source.relationships or b'')))
     if not source.parts:
         if source.relationships is not None:
             root = fromstring(source.relationships, forbid_dtd=True)
             if root.tag != f'{{{PKG_RELS_URI}}}Relationships':
-                raise ValueError('Expected OPC theme relationships')
+                raise ValueError('Expected OPC source relationships')
             if len(root):
-                raise ValueError('Theme relationship resources are missing from the source snapshot')
+                raise ValueError('Source relationship resources are missing from the source snapshot')
         if any(key.startswith('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}')
                for node in fromstring(source.data, forbid_dtd=True).iter() for key in node.attrib):
-            raise ValueError('Theme relationship resources are missing from the source snapshot')
+            raise ValueError('Source relationship resources are missing from the source snapshot')
         return
-    check_input_size(sum(len(part.data) for part in source.parts))
     parts = {}
     part_names = set()
     types = ET.Element(f'{{{CT_URI}}}Types')
@@ -364,13 +366,13 @@ def _import_theme_resources(source: SourceTheme, text_parts, binary_parts):
         if (resolve_target('', quote('/' + part.name, safe='/')) != part.name
                 or part.name.casefold() in part_names
                 or part.name == '[Content_Types].xml'):
-            raise ValueError('Invalid or duplicate source theme part name')
+            raise ValueError('Invalid or duplicate source resource part name')
         parts[part.name] = part.data
         part_names.add(part.name.casefold())
         ET.SubElement(types, f'{{{CT_URI}}}Override', PartName=quote('/' + part.name, safe='/'),
                       ContentType=part.content_type)
     if parts.get(source.part_name) != source.data or parts.get(relationships_path(source.part_name)) != source.relationships:
-        raise ValueError('Source theme snapshot declarations disagree')
+        raise ValueError('Source resource snapshot declarations disagree')
     stream = BytesIO()
     with zipfile.ZipFile(stream, 'w') as archive:
         archive.writestr('[Content_Types].xml', ET.tostring(types))
@@ -379,14 +381,14 @@ def _import_theme_resources(source: SourceTheme, text_parts, binary_parts):
     with zipfile.ZipFile(stream) as archive:
         graph = related_part_snapshot(archive, source.part_name)
     if {name for name, _, _ in graph} != set(parts):
-        raise ValueError('Unrelated parts in the source theme snapshot')
+        raise ValueError('Unrelated parts in the source resource snapshot')
     occupied = {name.casefold() for name, _ in text_parts + binary_parts}
     number = 1
-    while any(name.startswith(f'word/theme/resources{number}/') for name in occupied):
+    while any(name.startswith(f'{resource_directory}{number}/') for name in occupied):
         number += 1
-    prefix = f'word/theme/resources{number}/'
+    prefix = f'{resource_directory}{number}/'
     mapping = {name: prefix + name for name, _, _ in graph if not name.endswith('.rels')}
-    mapping[source.part_name] = 'word/theme/theme1.xml'
+    mapping[source.part_name] = main_destination
     content_types = fromstring(text_parts[0][1], forbid_dtd=True)
     for name, content_type, data in graph:
         if name.endswith('.rels'):
@@ -395,11 +397,11 @@ def _import_theme_resources(source: SourceTheme, text_parts, binary_parts):
         rels_name = relationships_path(name)
         root = fromstring(parts[rels_name], forbid_dtd=True) if rels_name in parts else None
         ids = {item.get('Id') for item in root} if root is not None else set()
-        if content_type.endswith('+xml') or content_type in {'application/xml', 'text/xml'}:
+        if name == source.part_name or content_type.endswith('+xml') or content_type in {'application/xml', 'text/xml'}:
             xml = fromstring(data, forbid_dtd=True)
             if any(value not in ids for node in xml.iter() for key, value in node.attrib.items()
                    if key.startswith('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}')):
-                raise ValueError('Missing theme resource relationship ID')
+                raise ValueError('Missing source resource relationship ID')
         if root is not None:
             for item in root:
                 if item.get('TargetMode') != 'External':
@@ -411,6 +413,12 @@ def _import_theme_resources(source: SourceTheme, text_parts, binary_parts):
             ET.SubElement(content_types, f'{{{CT_URI}}}Override', PartName=quote('/' + destination, safe='/'),
                           ContentType=content_type)
     text_parts[0] = ('[Content_Types].xml', ET.tostring(content_types, encoding='unicode'))
+
+def _import_theme_resources(source: SourceTheme, text_parts, binary_parts):
+    _import_source_resources(source, text_parts, binary_parts,
+                             main_destination='word/theme/theme1.xml',
+                             resource_directory='word/theme/resources')
+
 
 
 def _build_parts(
@@ -429,6 +437,7 @@ def _build_parts(
     images: list[ImageEntry],
     theme_xml: bytes | None = None,
     source_theme: SourceTheme | None = None,
+    source_font_table: SourceFontTable | None = None,
 ) -> tuple[list[tuple[str, str]], list[tuple[str, bytes]]]:
     """Assemble ordered (text_parts, binary_parts) lists for the zip."""
     if source_theme is not None and source_theme.data != theme_xml:
@@ -467,7 +476,8 @@ def _build_parts(
     if has_settings and settings_xml:
         text_parts.append(("word/settings.xml", settings_xml))
     # Ancillary parts (always emitted) — see ``doc_props_part`` for why.
-    text_parts.append(("word/fontTable.xml", render_font_table_xml()))
+    if source_font_table is None:
+        text_parts.append(("word/fontTable.xml", render_font_table_xml()))
     text_parts.append(("docProps/core.xml", render_core_xml()))
     text_parts.append(("docProps/app.xml", render_app_xml()))
     if has_header and header_xml:
@@ -491,6 +501,20 @@ def _build_parts(
     binary_parts: list[tuple[str, bytes]] = [
         (image.media_path, image.image_bytes) for image in all_images
     ]
+    if source_font_table is not None:
+        try:
+            check_input_size(max(sum(len(part.data) for part in source_font_table.parts),
+                                 len(source_font_table.data) + len(source_font_table.relationships or b'')))
+            fonts = fromstring(source_font_table.data, forbid_dtd=True)
+            w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+            if fonts.tag != w + 'fonts':
+                raise ValueError('Expected a WordprocessingML font table')
+            binary_parts.append(('word/fontTable.xml', source_font_table.data))
+            _import_source_resources(source_font_table, text_parts, binary_parts,
+                                     main_destination='word/fontTable.xml',
+                                     resource_directory='word/fonts/resources')
+        except (ET.ParseError, DefusedXmlException):
+            raise ValueError('Invalid source font table resource XML') from None
     if theme_xml is not None:
         binary_parts.append(('word/theme/theme1.xml', theme_xml))
         if source_theme is not None:
@@ -510,6 +534,7 @@ def write_docx_package(
     settings_xml: Optional[str] = None,
     theme_xml: bytes | None = None,
     source_theme: SourceTheme | None = None,
+    source_font_table: SourceFontTable | None = None,
     hyperlinks: dict[str, str],
     images: Optional[list[ImageEntry]] = None,
     header_xml: Optional[str] = None,
@@ -541,6 +566,7 @@ def write_docx_package(
     text_parts, binary_parts = _build_parts(
         theme_xml=theme_xml,
         source_theme=source_theme,
+        source_font_table=source_font_table,
         document_xml=document_xml,
         styles_xml=styles_xml,
         numbering_xml=numbering_xml,

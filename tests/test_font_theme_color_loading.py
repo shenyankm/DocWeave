@@ -111,7 +111,7 @@ def test_theme_relationship_resources_fail_explicitly_before_output(tmp_path):
     model.source_theme = ldm.SourceTheme(data=model.source_theme.data, relationships=relationships)
     output = tmp_path / 'existing.docx'
     output.write_bytes(b'existing')
-    with pytest.raises(ValueError, match='Theme relationship resources'):
+    with pytest.raises(ValueError, match='Source relationship resources'):
         LdmDocxWriter().write(model, output)
     assert output.read_bytes() == b'existing'
 

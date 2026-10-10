@@ -360,6 +360,28 @@ class SourceTheme(BaseModel):
         return value
 
 
+class SourceFontTable(SourceTheme):
+    """Original font registrations and reachable package resources."""
+
+    model_config = ConfigDict(frozen=True, hide_input_in_errors=True)
+    part_name: str = 'word/fontTable.xml'
+
+
+class FontEmbeddingSettings(BaseModel):
+    """Declared embedding flags; None means the source element was absent."""
+
+    model_config = ConfigDict(strict=True, validate_assignment=True, hide_input_in_errors=True)
+    embed_true_type_fonts: bool | None = None
+    do_not_embed_system_fonts: bool | None = None
+    save_subset_fonts: bool | None = None
+
+    def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False):
+        for field, value in (update or {}).items():
+            if field in type(self).model_fields and value is not None and not isinstance(value, bool):
+                raise TypeError('Font embedding flag requires bool or None')
+        return super().model_copy(update=update, deep=deep)
+
+
 class Font(BaseModel):
     name: str = ""
     size: float = 0.0
@@ -1399,6 +1421,8 @@ class Document(BaseModel):
     page_color: str = ""
     page_count: int = 0
     source_theme: SourceTheme | None = None
+    source_font_table: SourceFontTable | None = None
+    font_embedding: FontEmbeddingSettings | None = None
     doc_defaults_font: Optional[Font] = None
     doc_defaults_rpr_present: bool | None = None
 
