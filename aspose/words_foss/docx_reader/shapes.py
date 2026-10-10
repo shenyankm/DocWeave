@@ -594,11 +594,28 @@ class ShapeParserMixin:
         ``None`` for empty shapes that carry nothing worth rendering.
         """
         fill_hex = ""
+        source_fill = None
         line_hex = ""
         line_width_pt = 0.0
         spPr = wsp.find(f"{WPS_NS}spPr")
         if spPr is not None:
             fill_hex = self._resolve_drawingml_fill(spPr.find(f"{A_NS}solidFill"))
+            geometry = spPr.find(f"{A_NS}prstGeom")
+            style = wsp.find(f"{WPS_NS}style")
+            direct = next((child for child in spPr if child.tag in
+                           {f"{A_NS}gradFill", f"{A_NS}solidFill", f"{A_NS}noFill"}), None)
+            if (geometry is not None and geometry.get("prst") == "rect" and
+                    (direct is not None or
+                     style is not None and style.find(f"{A_NS}fillRef") is not None)):
+                source_fill = ldm.SourceDrawingFill(
+                    direct_xml=ET.tostring(direct, encoding="unicode") if direct is not None else "",
+                    style_xml=ET.tostring(style, encoding="unicode") if style is not None else "",
+                    rotation=int(spPr.find(f"{A_NS}xfrm").get("rot", "0"))
+                    if spPr.find(f"{A_NS}xfrm") is not None else 0,
+                    flip_horizontal=spPr.find(f"{A_NS}xfrm") is not None and
+                    spPr.find(f"{A_NS}xfrm").get("flipH", "0") in ("1", "true"),
+                    flip_vertical=spPr.find(f"{A_NS}xfrm") is not None and
+                    spPr.find(f"{A_NS}xfrm").get("flipV", "0") in ("1", "true"))
             ln = spPr.find(f"{A_NS}ln")
             if ln is not None and ln.find(f"{A_NS}noFill") is None:
                 # ``a:noFill`` explicitly suppresses the outline and
@@ -654,7 +671,7 @@ class ShapeParserMixin:
                     if element.tag == f"{W_NS}p":
                         textbox_paragraphs.append(self._build_ldm_paragraph(element))
 
-        if not fill_hex and not line_hex and not textbox_paragraphs:
+        if not fill_hex and not line_hex and not textbox_paragraphs and source_fill is None:
             return None
 
         shape = ldm.Shape()
@@ -678,6 +695,9 @@ class ShapeParserMixin:
                 "paragraphs": textbox_paragraphs,
                 "insets_mm": (ins_left_mm, ins_top_mm, ins_right_mm, ins_bottom_mm),
             }
+        shape.source_drawing_fill = source_fill
+        if source_fill is not None:
+            shape.drawing_position_mm = (left, top)
         shape._is_positioned = True
         return shape
 

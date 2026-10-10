@@ -260,6 +260,10 @@ class ShapeRenderer:
             y = 0.0
             h = bottom
 
+        if shape.source_drawing_fill is not None:
+            warn("PDF DrawingML source fills are not yet resolved; fill appearance may differ",
+                 PdfContentLossWarning, code="pdf.drawingml_fill_lost")
+
         # Rectangle fill and/or border.
         fill_rgb = parse_color(shape.fill_color)
         border = shape.stroke

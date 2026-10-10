@@ -462,3 +462,11 @@ PDF 正文投影使用显式零边距，不再将其替换为 20mm。默认值�
 正文宽度、换行和分页。当前检查包括默认与零左边距的实际文字起点变化，
 不代表整页排版等价；负边距渲染、页眉页脚零距离定位、gutter 布局及多节边距
 尚未通过完整验收。
+
+The lightweight model retains anchored DrawingML rectangle `solidFill`, `gradFill`,
+`noFill`, and `fillRef` declarations, including colour transforms, rotation and
+flip flags, through JSON, DOCX and Flat OPC saving. Direct fills do not require a
+style reference. Assigning `Shape.fill_color` replaces the retained declaration.
+This preserves source declarations; the PDF renderer currently warns that their
+appearance is not resolved. Other DrawingML geometry and effects are not covered
+by this declaration path.

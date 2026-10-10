@@ -219,7 +219,7 @@ class ImageRenderState:
         # entirely (cover-page bars / floating text-boxes are gone).
         if not self.emit_wps_shapes:
             return None
-        has_fill = bool(shape.fill_color)
+        has_fill = bool(shape.fill_color or shape.source_drawing_fill)
         has_outline = bool(shape.stroke and (shape.stroke.line_style != 0 or shape.stroke.line_width > 0))
         has_text_box = bool(shape.text_box and shape.text_box.get("paragraphs"))
         if not (has_fill or has_outline or has_text_box):
@@ -588,16 +588,29 @@ def _color_to_srgb_hex(color: str) -> Optional[str]:
 
 def _render_wsp_sp_pr(shape: ldm.Shape, cx: int, cy: int) -> str:
     """Build the ``<wps:spPr>`` block: xfrm + prstGeom + optional fill / outline."""
+    transform = {}
+    source = shape.source_drawing_fill
+    if source is not None:
+        if source.rotation:
+            transform["rot"] = source.rotation
+        if source.flip_horizontal:
+            transform["flipH"] = "1"
+        if source.flip_vertical:
+            transform["flipV"] = "1"
     children: list[str] = [
         el(
             "a:xfrm",
-            None,
+            transform or None,
             [el("a:off", {"x": 0, "y": 0}), el("a:ext", {"cx": cx, "cy": cy})],
         ),
         el("a:prstGeom", {"prst": "rect"}, el("a:avLst")),
     ]
     fill_hex = _color_to_srgb_hex(shape.fill_color)
-    if fill_hex:
+    if shape.source_drawing_fill and shape.source_drawing_fill.direct_xml:
+        from defusedxml.ElementTree import fromstring
+        from xml.etree.ElementTree import tostring
+        children.append(tostring(fromstring(shape.source_drawing_fill.direct_xml), encoding="unicode"))
+    elif fill_hex:
         children.append(
             el("a:solidFill", None, el("a:srgbClr", {"val": fill_hex}))
         )
@@ -765,6 +778,10 @@ def _render_wsp_drawing_run(
         )
         if txbx_body:
             wsp_children.append(el("wps:txbx", None, txbx_body))
+    if shape.source_drawing_fill and shape.source_drawing_fill.style_xml:
+        from defusedxml.ElementTree import fromstring
+        from xml.etree.ElementTree import tostring
+        wsp_children.append(tostring(fromstring(shape.source_drawing_fill.style_xml), encoding="unicode"))
     wsp_children.append(_render_wsp_body_pr(shape))
 
     # Namespaces ``a``, ``wps`` are declared at the document root.
