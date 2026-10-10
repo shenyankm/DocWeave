@@ -346,6 +346,15 @@ class Document:
         return self._document
 
     @property
+    def font_infos(self):
+        """Live document-owned font registrations and embedding declarations."""
+        from aspose.words_foss.fonts import FontInfoCollection
+        model = self.light_document_model
+        if not hasattr(self, '_font_infos') or self._font_infos._document is not model:
+            self._font_infos = FontInfoCollection(model)
+        return self._font_infos
+
+    @property
     def sections(self) -> "list[ldm.Section]":
         """All document sections."""
         return self.light_document_model.sections
@@ -581,5 +590,11 @@ class Document:
         """Convert the loaded LDM to DOCX and save."""
         from aspose.words_foss.docx_writer import LdmDocxWriter
 
+        from aspose.words_foss.fonts import prepare_font_table_commit
+
         writer = LdmDocxWriter(options)
-        writer.write(doc, output_path)
+        data = writer.write_to_bytes(doc)
+        commit_fonts = prepare_font_table_commit(doc, data)
+        with atomic_output(output_path) as temporary:
+            temporary.write_bytes(data)
+        commit_fonts()

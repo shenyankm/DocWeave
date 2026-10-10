@@ -108,7 +108,7 @@ def test_metadata_and_embedded_graph_survive_two_cold_saves(format, flag):
         font = next(part for part in snapshot.parts if part.content_type.endswith('obfuscatedFont'))
         assert font.data == parts[FONT]
         assert model.font_embedding.model_dump() == {'embed_true_type_fonts': flag,
-            'do_not_embed_system_fonts': False, 'save_subset_fonts': True}
+            'do_not_embed_system_fonts': False, 'embed_system_fonts': None, 'save_subset_fonts': True}
         captured = {part.name for part in snapshot.parts}
         for part in snapshot.parts:
             if part.name.endswith('.rels'):
