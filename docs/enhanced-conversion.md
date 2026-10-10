@@ -5,6 +5,15 @@
 同类项目的参考方向见 [生态对比](ecosystem-adoption.md)，固定商业基准、差距和复验材料见
 [商业对齐计划](commercial-alignment-plan.md)。
 
+## DOCX 设置部件的加载
+
+转换模型通过文档的 settings 关系读取设置，支持包内自定义路径；仅名为
+`word/settings.xml`、没有该关系的部件不改变默认制表位、兼容模式或字体设置。
+源包编辑需要保留未关联部件时，使用 `DocxDocument`。
+标为 `External` 但指向包内现存 settings 部件的关系按已观测的基准恢复行为读取；
+真正的外部 URL 不读取。关联设置的损坏 XML 和 DTD 仍明确报错。
+有效设置映射到 `Document.light_document_model`；这不表示完整商业设置 API 已实现。
+
 ## 保存选项与实际格式
 
 `OoxmlSaveOptions.save_format` 支持 DOCX 和四种 Flat OPC 变体，`MarkdownSaveOptions.save_format` 只接受 Markdown。
