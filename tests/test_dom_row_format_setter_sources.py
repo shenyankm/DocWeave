@@ -50,3 +50,21 @@ def test_setters_use_direct_values_while_getters_inherit(tmp_path, default, loca
             assert held._node._element is cold._node._element
             assert values(DocxDocument(output).body.tables[0].rows[0].row_format) == (
                 expected[0], 2 if expected[0] == 0 else expected[1], True)
+
+
+@pytest.mark.parametrize('kind', ['header', 'footer'])
+@pytest.mark.parametrize('flat', [False, True])
+def test_inherited_story_height_edit_uses_local_rule(tmp_path, kind, flat):
+    from .test_dom_story_row_height import story_package, row_format
+    source = tmp_path / 'input.docx'
+    name, _ = story_package(source, kind, custom=True, inherited=True)
+    document = DocxDocument(source)
+    held = row_format(document, name)
+    assert values(held) == (2000, 1, True)
+    held.height = 2000
+    assert values(held) == (2000, 0, True)
+    output = tmp_path / 'result'
+    for _ in range(2):
+        (document.save_flat_opc if flat else document.save)(output)
+        assert values(held) == (1584, 0, True)
+        assert values(row_format(DocxDocument(output), name)) == (1584, 0, True)
