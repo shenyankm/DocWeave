@@ -104,7 +104,7 @@ def install_page_header(
         body_start_y = pdf.t_margin
         try:
             pdf.set_auto_page_break(auto=False, margin=0)
-            pdf.set_xy(writer._page_margin_left, max(header_y_mm, MIN_HEADER_FOOTER_Y_MM))
+            pdf.set_xy(writer._page_margin_left, header_y_mm)
             with baseline_scope(pdf, None), writer._artifact(pdf, 'Header'):
                 _render_hf_children(pdf, writer, children, render_positioned=True)
             final_y = max(pdf.get_y(), body_start_y)
@@ -143,10 +143,7 @@ def install_page_footer(
         prev_bottom = pdf.b_margin
         try:
             pdf.set_auto_page_break(auto=False, margin=0)
-            band_bottom = max(
-                writer._page_height - max(footer_y_mm, MIN_HEADER_FOOTER_Y_MM),
-                writer._page_height - writer._page_margin_bottom,
-            )
+            band_bottom = writer._page_height - footer_y_mm
             band_top = max(band_bottom - content_h_mm, MIN_HEADER_FOOTER_Y_MM)
             pdf.set_xy(writer._page_margin_left, band_top)
             with baseline_scope(pdf, None), writer._artifact(pdf, 'Footer'):
