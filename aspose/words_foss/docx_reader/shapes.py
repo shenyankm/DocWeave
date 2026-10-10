@@ -598,6 +598,7 @@ class ShapeParserMixin:
         source_effects = None
         line_hex = ""
         line_width_pt = 0.0
+        source_join = None
         spPr = wsp.find(f"{WPS_NS}spPr")
         if spPr is not None:
             effects = next((child for child in spPr if child.tag in
@@ -626,6 +627,17 @@ class ShapeParserMixin:
                 # ``a:noFill`` explicitly suppresses the outline and
                 # wins over any accompanying ``a:solidFill`` sibling.
                 line_hex = self._resolve_drawingml_fill(ln.find(f"{A_NS}solidFill"))
+                joins = [child for child in ln if child.tag in
+                         {f"{A_NS}round", f"{A_NS}bevel", f"{A_NS}miter"}]
+                known = {f"{A_NS}{tag}" for tag in (
+                    "noFill", "solidFill", "gradFill", "pattFill", "grpFill",
+                    "prstDash", "custDash", "round", "bevel", "miter",
+                    "headEnd", "tailEnd", "extLst")}
+                if len(joins) > 1 or any(child.tag.startswith(A_NS) and child.tag not in known
+                                         for child in ln):
+                    raise ValueError("Invalid DrawingML line join declarations")
+                source_join = ldm.SourceDrawingLineJoin(
+                    xml=ET.tostring(joins[0], encoding="unicode") if joins else "")
                 w_emu = ln.get("w")
                 if w_emu:
                     try:
@@ -691,6 +703,7 @@ class ShapeParserMixin:
             shape.fill_color = _hex_to_ldm_color(fill_hex)
         if line_hex or line_width_pt > 0:
             shape.stroke = ldm.Border(
+                source_drawing_join=source_join,
                 line_style=1 if line_hex and line_width_pt > 0 else 0,
                 line_width=line_width_pt,
                 color=_hex_to_ldm_color(line_hex) if line_hex else COLOR_EMPTY,

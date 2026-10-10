@@ -239,16 +239,31 @@ class ShapeRenderer:
         rotation = shape.source_drawing_fill.rotation / 60000 if shape.source_drawing_fill else 0
         x = shape._page_left_mm
         y = shape._page_top_mm if y_override is None else y_override
-        if rotation:
+        page_space_outline = False
+        if (shape.stroke is not None and shape.stroke.source_drawing_join is not None
+                and shape.source_drawing_fill is not None and not shape.has_image
+                and (shape.width or 0) > 0 and (shape.height or 0) > 0):
+            from aspose.words_foss._drawing_fill import resolve_drawing_fill
+            from aspose.words_foss._drawing_effects import resolve_drawing_line_join
+            try:
+                resolve_drawing_line_join(shape.stroke.source_drawing_join)
+                theme = self._writer._doc.source_theme
+                _, gradient = resolve_drawing_fill(shape.source_drawing_fill,
+                    theme.data if theme else None, with_transform=True)
+                page_space_outline = gradient is None
+            except NotImplementedError:
+                pass  # The normal renderer emits the existing precise loss diagnostic.
+        if rotation and not page_space_outline:
             with pdf.rotation(-rotation, x + (shape.width or 0) / 2,
                               y + (shape.height or 0) / 2):
                 self._render_positioned_shape(pdf, shape, line_y_override=line_y_override,
                                               y_override=y_override)
         else:
             self._render_positioned_shape(pdf, shape, line_y_override=line_y_override,
-                                          y_override=y_override)
+                y_override=y_override, page_space_outline=page_space_outline)
 
-    def _render_positioned_shape(self, pdf, shape, *, line_y_override=None, y_override=None):
+    def _render_positioned_shape(self, pdf, shape, *, line_y_override=None, y_override=None,
+                                 page_space_outline=False):
         x = shape._page_left_mm
         y = shape._page_top_mm if y_override is None else y_override
         w = shape.width or 0.0
@@ -355,7 +370,21 @@ class ShapeRenderer:
         if (fill_rgb or draw_border) and w > 0 and h > 0:
             from contextlib import nullcontext
             opacity = fill_rgb[3] if fill_rgb and len(fill_rgb) == 4 else 1
-            context = pdf.local_context(fill_opacity=opacity, stroke_opacity=1) if opacity != 1 else nullcontext()
+            join_style = None
+            if draw_border and border.source_drawing_join is not None:
+                from aspose.words_foss._drawing_effects import resolve_drawing_line_join
+                try:
+                    if shape.source_drawing_fill is None:
+                        raise NotImplementedError('DrawingML line join geometry not calibrated')
+                    if rotated and not page_space_outline:
+                        raise NotImplementedError('DrawingML rotated non-solid line join geometry not calibrated')
+                    join_style = resolve_drawing_line_join(border.source_drawing_join)
+                except NotImplementedError as error:
+                    warn(str(error), PdfContentLossWarning, code="pdf.drawing_stroke_unsupported")
+            settings = {"fill_opacity": opacity, "stroke_opacity": 1}
+            if join_style is not None:
+                settings["stroke_join_style"] = join_style
+            context = pdf.local_context(**settings) if opacity != 1 or join_style is not None else nullcontext()
             with context:
                 style = ""
                 if fill_rgb:
@@ -365,11 +394,25 @@ class ShapeRenderer:
                     pdf.set_draw_color(*line_rgb)
                     pdf.set_line_width(max(border.line_width * PT_TO_MM, MIN_LINE_WIDTH_MM))
                     style = "D" + style  # "DF" if both, "D" if border only
-                pdf.rect(x, y, w, h, style)
+                if join_style is not None:
+                    from aspose.words_foss._drawing_effects import paint_drawing_line_rect
+                    paint_drawing_line_rect(pdf, x, y, w, h, style,
+                        rotation=shape.source_drawing_fill.rotation / 60000
+                        if shape.source_drawing_fill else 0, page_space=page_space_outline)
+                else:
+                    pdf.rect(x, y, w, h, style)
             pdf.set_fill_color(255, 255, 255)
             pdf.set_draw_color(0, 0, 0)
             pdf.set_line_width(DEFAULT_LINE_WIDTH_MM)
 
+        if page_space_outline and rotated:
+            rotation = shape.source_drawing_fill.rotation / 60000
+            with pdf.rotation(-rotation, x + w / 2, y + h / 2):
+                self._render_positioned_text_box(pdf, shape, x, y, w, h)
+        else:
+            self._render_positioned_text_box(pdf, shape, x, y, w, h)
+
+    def _render_positioned_text_box(self, pdf, shape, x, y, w, h):
         # Overlaid text box
         text_box = shape.text_box or {}
         paragraphs = text_box.get("paragraphs", []) or []

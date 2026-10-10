@@ -443,6 +443,9 @@ These are the main implemented entry points, not an exhaustive catalog of intern
   `PdfSaveOptions.dml_effects_rendering_mode = DmlEffectsRenderingMode.NONE` explicitly omits shape effects without that warning;
   `SIMPLIFIED` and `FINE` paint zero-blur outer shadows on opaque, unrotated rectangular fills without outlines.
   Other effects, transparent fills, outlines, rotation, scale, skew and unsupported alignment retain loss diagnostics.
+  Captured rectangular DrawingML outlines retain default/round/bevel/miter joins through JSON and saves;
+  solid rectangular outlines use local point geometry and graphics state without cancelling rounded rotation matrices.
+  Rotated gradient/image outlines and general shape/miter-limit semantics remain uncalibrated.
 - No built-in PDF reading, DOC/RTF writing, OCR, or complete Word layout/field-computation engine.
 - Conversion via LDM is not lossless. Notes are extracted separately; only opt-in Markdown exports visible anchored notes;
   comments, revisions, complex fields, content controls, math, floating content, and header/footer variants have limits.

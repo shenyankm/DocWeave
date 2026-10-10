@@ -169,7 +169,27 @@ def _collect_child_nodes(node: object, node_type: int, deep: bool) -> list:
 # ─────────────────────────────────────────────
 
 
+class SourceDrawingLineJoin(BaseModel):
+    """A DrawingML line's join declaration; empty XML records a source default."""
+
+    model_config = ConfigDict(frozen=True)
+    xml: str = ""
+
+    @field_validator("xml")
+    @classmethod
+    def _validate_join_xml(cls, value):
+        if not value:
+            return value
+        from defusedxml.ElementTree import fromstring
+        root = fromstring(value, forbid_dtd=True)
+        namespace = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+        if root.tag not in {namespace + name for name in ("round", "bevel", "miter")}:
+            raise ValueError("Invalid DrawingML line join source element")
+        return value
+
+
 class Border(BaseModel):
+    source_drawing_join: SourceDrawingLineJoin | None = None
     line_style: int = 0
     line_width: float = 0.0
     is_visible: bool = True

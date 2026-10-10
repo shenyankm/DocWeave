@@ -47,3 +47,78 @@ def resolve_outer_shadow(source, theme_data):
         raise NotImplementedError('DrawingML outer shadow colour') from error
     angle = radians(direction / 60000)
     return distance / 36000 * cos(angle), distance / 36000 * sin(angle), colour
+
+
+def resolve_drawing_line_join(source):
+    """Resolve the captured rectangular outline join, keeping legacy borders separate."""
+    if not source.xml:
+        return 'round'
+    join = fromstring(source.xml, forbid_dtd=True)
+    name = join.tag.removeprefix(A)
+    if len(join) or set(join.attrib) - ({'lim'} if name == 'miter' else set()):
+        raise NotImplementedError('DrawingML line join attributes or children')
+    if name == 'miter' and 'lim' in join.attrib:
+        try:
+            if int(join.get('lim')) < 0:
+                raise ValueError
+        except ValueError as error:
+            raise NotImplementedError('DrawingML miter join limit') from error
+    # Native 26.9 rectangular paths retain lim in XML, but use PDF's existing
+    # miter limit for both omitted and explicitly low limits. Do not invent an M
+    # operator from general non-rectangular DrawingML semantics.
+    return name
+
+
+def paint_drawing_line_rect(pdf, x, y, width, height, style, *, rotation=0, page_space=False):
+    """Keep captured EMU geometry precise through PDF point and rotation conversion."""
+    if page_space:
+        _paint_page_space_line_rect(pdf, x, y, width, height, style, rotation)
+        return
+    operator = {"F": "f", "D": "S", "DF": "B"}[style]
+    rectangle = (f"{x * pdf.k:.6f} {(pdf.h - y) * pdf.k:.6f} "
+                 f"{width * pdf.k:.6f} {-height * pdf.k:.6f} re {operator}")
+    if not rotation:
+        pdf._out(rectangle)
+        return
+    from fpdf.drawing_primitives import Transform
+    user_to_pdf = Transform.scaling(pdf.k, -pdf.k).translate(0, pdf.h_pt)
+    outer = Transform.rotation_d(rotation).about(x + width / 2, y + height / 2)
+    exact = user_to_pdf.inverse() @ outer @ user_to_pdf
+    command, _ = exact.render(None)
+    actual = Transform(*(float(value) for value in command.split()[:6]))
+    inverse = actual.inverse()
+    def matrix(value):
+        return ' '.join(f'{v:.12f}' for v in
+                        (value.a, value.b, value.c, value.d, value.e, value.f)) + ' cm'
+    # Cancel the matrix actually emitted by FPDF, then apply the exact rotation
+    # in this path's private graphics state. Following text/shape CTMs stay intact.
+    pdf._out('q ' + matrix(inverse) + ' ' + matrix(exact) + ' ' + rectangle + ' Q')
+
+
+def _paint_page_space_line_rect(pdf, x, y, width, height, style, rotation):
+    """Project captured solid geometry once, without cancelling a rounded outer CTM."""
+    from struct import pack, unpack
+    def single(value):
+        return unpack('f', pack('f', value))[0]
+    w, h = single(width * pdf.k), single(height * pdf.k)
+    cx, cy = single(w / 2), single(h / 2)
+    angle = radians((rotation + 180) % 360 - 180)
+    c, s = single(cos(angle)), single(sin(angle))
+    tx = single(cx - single(single(c * cx) - single(s * cy)))
+    ty = single(cy - single(single(s * cx) + single(c * cy)))
+    points = [(single(single(single(c * u) - single(s * v)) + tx),
+               single(single(single(s * u) + single(c * v)) + ty))
+              for u, v in ((0, 0), (w, 0), (w, h), (0, h))]
+    # Native layout rounds the page position and rotated figure origin in points.
+    # Independent EMU controls on either side of .001pt boundaries establish both
+    # steps. Keep the resulting origin and local points separate in the PDF: a
+    # flattened path or rounded rotation/inverse pair changes rasterizer precision.
+    left = min(u for u, _ in points)
+    top = min(v for _, v in points)
+    px = single(round(round(x * pdf.k, 3) + left, 3) - left)
+    py = single(round(round(y * pdf.k, 3) + top, 3) - top)
+    path = ' '.join(f'{u:.8f} {v:.8f} ' + ('m' if i == 0 else 'l')
+                    for i, (u, v) in enumerate(points))
+    operator = {'F': 'f*', 'D': 'S', 'DF': 'B*'}[style]
+    pdf._out(f'q 1 0 0 -1 0 {pdf.h_pt:.8f} cm '
+             f'1 0 0 1 {px:.8f} {py:.8f} cm {path} h {operator} Q')

@@ -625,6 +625,10 @@ def _render_wsp_sp_pr(shape: ldm.Shape, cx: int, cy: int) -> str:
             ln_children.append(
                 el("a:solidFill", None, el("a:srgbClr", {"val": line_hex}))
             )
+        if border.source_drawing_join is not None and border.source_drawing_join.xml:
+            from defusedxml.ElementTree import fromstring
+            from xml.etree.ElementTree import tostring
+            ln_children.append(tostring(fromstring(border.source_drawing_join.xml), encoding="unicode"))
         children.append(el("a:ln", line_attrs or None, ln_children))
     if shape.source_drawing_effects is not None:
         from defusedxml.ElementTree import fromstring
