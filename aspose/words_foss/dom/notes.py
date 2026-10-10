@@ -516,10 +516,17 @@ class NoteGraph:
         if not all(_safe_structure(child) for child in _elements(entry)):
             raise NotImplementedError('Annotation content requires resource/range translation')
         role = {'footnote': 'footnotes', 'endnote': 'endnotes', 'comment': 'comments'}[entry.localName]
+        from aspose.words_foss.dom.nodes import _bind_namespace_context
+        template = anchor.cloneNode(deep=True)
+        _bind_namespace_context(anchor, template)
+        mark = node.reference_mark if role != 'comments' else None
         operations = [('remove', anchor)]
         if entry.parentNode is not None:
             operations.append(('remove', entry))
         self._transaction(operations)
+        self.templates[entry] = template
+        if role != 'comments':
+            entry._reference_mark = mark
         self.anchors.pop(entry)
         self.anchor_entries.pop(anchor)
         self.entries.pop((role, str(annotation_id(entry.getAttributeNS(W, 'id')))), None)

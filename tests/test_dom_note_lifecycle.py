@@ -526,3 +526,44 @@ def test_entry_copy_preserves_inline_anchor_direct_format(tmp_path, kind, operat
     for run in anchors:
         assert run.find(w+'rPr/'+w+'b')is not None
         assert run.find(w+'rPr/'+w+'sz').get(w+'val')=='36'
+
+
+@pytest.mark.parametrize('kind', ['footnote', 'endnote', 'comment'])
+@pytest.mark.parametrize('operation', ['move', 'clone'])
+@pytest.mark.parametrize('flat', [False, True])
+def test_detached_entry_keeps_marker_format_and_custom_mark(tmp_path, kind, operation, flat):
+    from xml.etree.ElementTree import fromstring
+    doc = document(tmp_path)
+    note = create(doc, kind)
+    doc.body.paragraphs[0].append_child(note)
+    ref = {'footnote': 'footnoteReference', 'endnote': 'endnoteReference', 'comment': 'commentReference'}[kind]
+    with ZipFile(BytesIO(doc.to_bytes())) as package:
+        parts = {name: package.read(name) for name in package.namelist()}
+    parts['word/document.xml'] = parts['word/document.xml'].replace(
+        ('<w:r><w:' + ref).encode(),
+        ('<w:r><w:rPr><w:b/><w:sz w:val="36"/></w:rPr><w:' + ref).encode(), 1)
+    source = tmp_path / 'marker.docx'
+    with ZipFile(source, 'w') as package:
+        for name, value in parts.items():
+            package.writestr(name, value)
+    doc = DocxDocument(source)
+    note = doc.get_child_nodes(aw.NodeType.COMMENT if kind == 'comment' else aw.NodeType.FOOTNOTE, True)[0]
+    if kind != 'comment':
+        note.reference_mark = 'Owned*'
+    note.remove()
+    assert note.parent_node is None
+    if kind != 'comment':
+        assert note.reference_mark == 'Owned*'
+    moved = note.clone(True) if operation == 'clone' else note
+    doc.body.paragraphs[1].append_child(moved)
+    output = tmp_path / 'result'
+    (doc.save_flat_opc if flat else doc.save)(output)
+    cold = DocxDocument(output)
+    root = fromstring(cold.part_xml('word/document.xml'))
+    w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+    anchors = [run for run in root.iter(w + 'r') if run.find(w + ref) is not None]
+    assert len(anchors) == 1
+    assert anchors[0].find(w + 'rPr/' + w + 'b') is not None
+    assert anchors[0].find(w + 'rPr/' + w + 'sz').get(w + 'val') == '36'
+    if kind != 'comment':
+        assert cold.get_child_nodes(aw.NodeType.FOOTNOTE, True)[0].reference_mark == 'Owned*'
