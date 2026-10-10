@@ -467,6 +467,10 @@ The lightweight model retains anchored DrawingML rectangle `solidFill`, `gradFil
 `noFill`, and `fillRef` declarations, including colour transforms, rotation and
 flip flags, through JSON, DOCX and Flat OPC saving. Direct fills do not require a
 style reference. Assigning `Shape.fill_color` replaces the retained declaration.
-This preserves source declarations; the PDF renderer currently warns that their
-appearance is not resolved. Other DrawingML geometry and effects are not covered
-by this declaration path.
+The PDF projection resolves supported rectangle linear gradients, transparency
+ramps and shape rotations against the current source theme. A missing theme uses
+a complete template derived from python-docx under its adjacent MIT license;
+this projection does not modify the document or its saved theme. Unsupported
+paints emit `PdfContentLossWarning`, including path gradients, full-span
+nonuniform two-stop or repeated-endpoint interpolation, ordered `alphaMod`/`alphaOff` and transparent
+solid fills. Other DrawingML geometry and effects are not covered by this path.

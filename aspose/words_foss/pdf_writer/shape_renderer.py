@@ -236,6 +236,19 @@ class ShapeRenderer:
         ``relative_vertical_position`` is *Paragraph* (the anchor Y
         depends on where the host paragraph lands at render time).
         """
+        rotation = shape.source_drawing_fill.rotation / 60000 if shape.source_drawing_fill else 0
+        x = shape._page_left_mm
+        y = shape._page_top_mm if y_override is None else y_override
+        if rotation:
+            with pdf.rotation(-rotation, x + (shape.width or 0) / 2,
+                              y + (shape.height or 0) / 2):
+                self._render_positioned_shape(pdf, shape, line_y_override=line_y_override,
+                                              y_override=y_override)
+        else:
+            self._render_positioned_shape(pdf, shape, line_y_override=line_y_override,
+                                          y_override=y_override)
+
+    def _render_positioned_shape(self, pdf, shape, *, line_y_override=None, y_override=None):
         x = shape._page_left_mm
         y = shape._page_top_mm if y_override is None else y_override
         w = shape.width or 0.0
@@ -251,21 +264,38 @@ class ShapeRenderer:
         page_w = self._writer._page_width
         page_h = self._writer._page_height
         edge_eps_mm = 0.5
-        if 0.0 < x < edge_eps_mm and x + w >= page_w - edge_eps_mm:
+        rotated = shape.source_drawing_fill is not None and shape.source_drawing_fill.rotation != 0
+        if not rotated and 0.0 < x < edge_eps_mm and x + w >= page_w - edge_eps_mm:
             right = max(x + w, page_w)
             x = 0.0
             w = right
-        if 0.0 < y < edge_eps_mm and y + h >= page_h - edge_eps_mm:
+        if not rotated and 0.0 < y < edge_eps_mm and y + h >= page_h - edge_eps_mm:
             bottom = max(y + h, page_h)
             y = 0.0
             h = bottom
 
-        if shape.source_drawing_fill is not None:
-            warn("PDF DrawingML source fills are not yet resolved; fill appearance may differ",
-                 PdfContentLossWarning, code="pdf.drawingml_fill_lost")
-
         # Rectangle fill and/or border.
         fill_rgb = parse_color(shape.fill_color)
+        gradient = None
+        fill_follows_shape = True
+        if shape.source_drawing_fill is not None:
+            from aspose.words_foss._drawing_fill import resolve_drawing_fill
+            source_theme = self._writer._doc.source_theme
+            try:
+                fill_rgb, gradient = resolve_drawing_fill(
+                    shape.source_drawing_fill, source_theme.data if source_theme else None,
+                    with_transform=True)
+                if gradient is not None:
+                    gradient, fill_follows_shape = gradient
+            except NotImplementedError as error:
+                warn(str(error), PdfContentLossWarning, code="pdf.drawing_fill_unsupported")
+                # Keep the existing literal-solid projection when an unsupported
+                # modifier was already decoded by the legacy reader. Gradients
+                # must never silently become an unrelated solid colour.
+                from defusedxml.ElementTree import fromstring
+                direct = shape.source_drawing_fill.direct_xml
+                if not direct or fromstring(direct).tag != "{http://schemas.openxmlformats.org/drawingml/2006/main}solidFill":
+                    fill_rgb = None
         border = shape.stroke
         line_rgb = parse_color(border.color) if border else None
         draw_border = bool(line_rgb) and bool(border) and border.line_width > 0
@@ -294,6 +324,12 @@ class ShapeRenderer:
             pdf.set_draw_color(0, 0, 0)
             pdf.set_line_width(DEFAULT_LINE_WIDTH_MM)
             return
+
+        if gradient is not None and w > 0 and h > 0:
+            from aspose.words_foss._drawing_fill import paint_gradient
+            paint_gradient(pdf, gradient, x, y, w, h, rotation=(
+                shape.source_drawing_fill.rotation / 60000 if fill_follows_shape else 0),
+                geometry_rotation=shape.source_drawing_fill.rotation / 60000)
 
         if (fill_rgb or draw_border) and w > 0 and h > 0:
             style = ""

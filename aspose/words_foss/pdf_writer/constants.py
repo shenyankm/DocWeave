@@ -27,8 +27,8 @@ DEFAULT_MARGIN_MM = 20.0
 DEFAULT_FONT_NAME = "DocumentSansSC"
 DEFAULT_FONT_SIZE_PT = 11.0
 
-# Points to mm conversion factor
-PT_TO_MM = 0.352778
+# PDF points are exactly 1/72 inch; do not round intermediate layout units.
+PT_TO_MM = 25.4 / 72
 
 # Line-height multiplier for natural leading (size_pt * PT_TO_MM * this).
 LINE_HEIGHT_FACTOR = 1.4
