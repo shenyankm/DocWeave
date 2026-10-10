@@ -27,6 +27,7 @@ class NoteGraph:
         self.document = document
         self.parts = {}
         self.entries = {}
+        self.duplicate_entries = []
         self.anchors = {}
         self.comment_ids = {}
         self.anchor_entries = {}
@@ -49,7 +50,9 @@ class NoteGraph:
                 identifier = str(annotation_id(entry.getAttributeNS(W, "id")))
                 key = role, identifier
                 if key in self.entries:
-                    raise ValueError("Duplicate annotation identifier")
+                    self.duplicate_entries.append(entry)
+                    self.changed = True
+                    continue
                 self.entries[key] = entry
                 children = _elements(entry)
                 if not children or not _is(children[-1], 'p'):
@@ -586,6 +589,11 @@ class NoteGraph:
                 pairs.extend(zip(old.childNodes, new.childNodes))
         main = package.tree('word/document.xml')
         commits = []
+        # Keep source storage intact until successful IO; the logical graph uses the first ID.
+        for entry in self.duplicate_entries:
+            projected = mapping[entry]
+            projected.parentNode.removeChild(projected)
+            commits.append(('duplicate', entry, None))
         # Native removes note/comment anchors outside the main story after successful IO.
         for entry, anchor in self.anchors.items():
             if (self.anchor_part(anchor) == 'word/document.xml'
@@ -691,7 +699,12 @@ class NoteGraph:
         def commit():
             self._next_comment_id = next_comment
             for action, entry, value in commits:
-                if action == 'outside':
+                if action == 'duplicate':
+                    if entry.parentNode is not None:
+                        entry.parentNode.removeChild(entry)
+                    self.duplicate_entries.remove(entry)
+                    package._dirty.add(self.parts[entry.localName + 's'])
+                elif action == 'outside':
                     value, template, mark = value
                     value.parentNode.removeChild(value)
                     if entry.parentNode is not None:
