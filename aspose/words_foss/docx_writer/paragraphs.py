@@ -215,8 +215,11 @@ def _spacing_attrs(pf: ldm.ParagraphFormat, base: ldm.ParagraphFormat) -> dict[s
         attrs["w:beforeAutospacing"] = "1" if pf.space_before_auto else "0"
     if pf.space_after_auto != base.space_after_auto:
         attrs["w:afterAutospacing"] = "1" if pf.space_after_auto else "0"
-    if pf.line_spacing != base.line_spacing or pf.line_spacing_rule != base.line_spacing_rule:
-        attrs["w:line"] = pt_to_twips(pf.line_spacing)
+    explicit_zero = pf.line_spacing == 0 and "line_spacing" in pf.model_fields_set
+    base_zero = base.line_spacing == 0 and "line_spacing" in base.model_fields_set
+    if pf.line_spacing != base.line_spacing or pf.line_spacing_rule != base.line_spacing_rule or (explicit_zero and not base_zero):
+        if not (pf.line_spacing == 0 and pf.line_spacing_rule == 2 and "line_spacing" not in pf.model_fields_set):
+            attrs["w:line"] = pt_to_twips(pf.line_spacing)
         attrs["w:lineRule"] = _LINE_RULE_TOKEN.get(pf.line_spacing_rule, "auto")
     return attrs
 

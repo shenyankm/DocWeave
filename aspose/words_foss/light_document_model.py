@@ -13,6 +13,7 @@ from __future__ import annotations
 from base64 import b64decode, b64encode
 from collections.abc import Mapping
 from enum import IntEnum
+from math import isfinite
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
@@ -555,16 +556,58 @@ class ParagraphFormat(BaseModel):
     #          far_east_line_break_control, word_wrap, hanging_punctuation,
     #          mirror_indents
 
+    @staticmethod
+    def _coerce_line_spacing(value: Any) -> float:
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise TypeError("line_spacing requires a number")
+        scaled = float(value) * 20
+        # Native stores the nearest signed 32-bit twip value, ties to even.
+        if not isfinite(scaled):
+            return -2147483648 / 20
+        return min(2147483647, max(-2147483648, round(scaled))) / 20
+
+    @field_validator("line_spacing")
+    @classmethod
+    def _normalize_line_spacing(cls, value: float) -> float:
+        return cls._coerce_line_spacing(value)
+
     def __setattr__(self, name: str, value: Any) -> None:
+        if name == 'line_spacing':
+            value = self._coerce_line_spacing(value)
         super().__setattr__(name, value)
         if name in ('style_name', 'style_identifier'):
             super().__setattr__('style_explicit', None)
 
     def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False) -> ParagraphFormat:
+        if update is not None and 'line_spacing' in update:
+            update = dict(update, line_spacing=self._coerce_line_spacing(update['line_spacing']))
         if update is not None and 'style_explicit' not in update and any(
                 name in update for name in ('style_name', 'style_identifier')):
             update = dict(update, style_explicit=None)
         return super().model_copy(update=update, deep=deep)
+
+    @model_validator(mode="wrap")
+    @classmethod
+    def _restore_line_spacing_origin(cls, data: Any, handler) -> ParagraphFormat:
+        origin = None
+        if isinstance(data, dict) and "_line_spacing_set" in data:
+            data = data.copy()
+            origin = data.pop("_line_spacing_set")
+            if type(origin) is not bool or (origin and "line_spacing" not in data):
+                raise ValueError("Invalid line-spacing origin metadata")
+        instance = handler(data)
+        if origin is False:
+            instance.__pydantic_fields_set__.discard("line_spacing")
+        elif origin is True:
+            instance.__pydantic_fields_set__.add("line_spacing")
+        return instance
+
+    @model_serializer(mode="wrap")
+    def _emit_line_spacing_origin(self, handler) -> dict[str, Any]:
+        data = handler(self)
+        if "line_spacing" in data:
+            data["_line_spacing_set"] = "line_spacing" in self.model_fields_set
+        return data
 
     @model_validator(mode="before")
     @classmethod

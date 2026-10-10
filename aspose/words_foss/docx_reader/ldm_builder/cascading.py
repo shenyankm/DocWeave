@@ -347,6 +347,17 @@ class ParagraphFormatBuilder:
         line_rule = spacing.get(f"{W_NS}lineRule", "")
         if line_rule:
             pf.line_spacing_rule = _LINE_RULE_MAP.get(line_rule, 0)
+            if line_rule == "exact" and pf.line_spacing == 0:
+                pf.line_spacing_rule = 0
+        if pf.line_spacing < 0:
+            if pf.line_spacing == -2147483648 / 20:
+                pf.line_spacing = 0
+                if pf.line_spacing_rule == 1:
+                    pf.line_spacing_rule = 0
+            else:
+                # Negative OOXML line values are exact heights on native cold load.
+                pf.line_spacing = -pf.line_spacing
+                pf.line_spacing_rule = 1
         if is_truthy_onoff(spacing.get(f"{W_NS}beforeAutospacing", "")):
             pf.space_before_auto = True
         if is_truthy_onoff(spacing.get(f"{W_NS}afterAutospacing", "")):
