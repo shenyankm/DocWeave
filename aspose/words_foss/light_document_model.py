@@ -720,6 +720,23 @@ class SourceDrawingFill(BaseModel):
         return value
 
 
+class SourceDrawingEffects(BaseModel):
+    """Independent shape effect declarations, including their container order."""
+
+    model_config = ConfigDict(frozen=True)
+    xml: str
+
+    @field_validator("xml")
+    @classmethod
+    def _validate_effect_xml(cls, value):
+        from defusedxml.ElementTree import fromstring
+        root = fromstring(value, forbid_dtd=True)
+        namespace = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+        if root.tag not in {namespace + "effectLst", namespace + "effectDag"}:
+            raise ValueError("Invalid DrawingML effect source element")
+        return value
+
+
 class Shape(BaseModel, NodeCastMixin):
     type: str = Field(default="Shape", alias="_type")
     shape_type: int | None = None
@@ -734,6 +751,7 @@ class Shape(BaseModel, NodeCastMixin):
     text_box: dict[str, Any] | None = None  # textbox paragraph content
     fill_color: str = ""
     source_drawing_fill: SourceDrawingFill | None = None
+    source_drawing_effects: SourceDrawingEffects | None = None
     drawing_position_mm: tuple[float, float] | None = None
     stroke: Optional[Border] = None
     # Vertical anchor of the text-box content inside the shape's
@@ -767,6 +785,10 @@ class Shape(BaseModel, NodeCastMixin):
 
     @model_validator(mode="after")
     def _restore_drawing_position(self):
+        if self.text_box and self.text_box.get("paragraphs") is not None:
+            self.text_box["paragraphs"] = [
+                Paragraph.model_validate(p) if isinstance(p, dict) else p
+                for p in self.text_box["paragraphs"]]
         if self.drawing_position_mm is not None:
             self._is_positioned = True
             self._page_left_mm, self._page_top_mm = self.drawing_position_mm
