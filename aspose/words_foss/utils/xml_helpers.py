@@ -8,6 +8,38 @@ from xml.etree import ElementTree as ET
 W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 
+def serialize_xml(node) -> bytes:
+    """Serialize DOM attributes with XML-safe characters and explicit whitespace references."""
+    from io import StringIO
+    from xml.dom import Node
+    from aspose.words_foss.docx_writer.xml_utils import escape_attr
+
+    output = StringIO()
+
+    def write(current):
+        if current.nodeType == Node.DOCUMENT_NODE:
+            output.write('<?xml version="1.0" encoding="utf-8"?>')
+            for child in current.childNodes:
+                write(child)
+        elif current.nodeType == Node.ELEMENT_NODE:
+            output.write('<' + current.tagName)
+            for index in range(current.attributes.length):
+                attr = current.attributes.item(index)
+                output.write(' ' + attr.name + '="' + escape_attr(attr.value or '') + '"')
+            if current.childNodes:
+                output.write('>')
+                for child in current.childNodes:
+                    write(child)
+                output.write('</' + current.tagName + '>')
+            else:
+                output.write('/>')
+        else:
+            current.writexml(output)
+
+    write(node)
+    return output.getvalue().encode('utf-8')
+
+
 def combine_style_toggle(default: bool, paragraph: bool | None, character: bool | None) -> bool:
     """Combine nearest style-category values observed in the fixed 26.9 corpus."""
     if paragraph is not None and character is not None:
