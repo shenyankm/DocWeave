@@ -407,6 +407,8 @@ DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 M
 `DocxDocument.body.tables[0].rows[0].row_format` 提供活的 `height`（pt）、
 `height_rule`（`aw.HeightRule`）和 `allow_break_across_pages`（bool）。读取包含
 表格样式及 basedOn 的直属行属性；条件区域的行属性保留，但不参与这三个属性的继承。
+赋值使用直属行格式的本地值，而非 getter 的有效继承值：未设直属高度时，
+设置非零 height 采用 AtLeast；单独设置 height_rule 使用本地高度 0。
 赋值写入直属格式，保留原包其他资源；转换快照和 JSON 区分直属与继承来源。
 这是 canonical DOM 入口；旧 `aw.Document` 的 LDM 行格式仍接受内部整数规则，
 不能据此认为旧入口或整个 RowFormat 已实现商业 API 类型契约。

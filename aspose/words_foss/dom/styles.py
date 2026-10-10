@@ -503,7 +503,7 @@ class StyleResolver:
             ancestor = ancestor.parent_node
         return styles, layers
 
-    def row_format(self, row):
+    def row_format(self, row, *, direct_only=False):
         from aspose.words_foss.dom.row_format import last_row_property
         from aspose.words_foss.model.enums import HeightRule
         from aspose.words_foss.utils.table_row import parse_row_height, parse_row_split
@@ -513,7 +513,7 @@ class StyleResolver:
         properties = _child(table._element, "tblPr") if table is not None else None
         reference = _child(properties, "tblStyle")
         style_id = reference.getAttributeNS(W, "val") if reference is not None else self._default("table")
-        layers = [_child(style, "trPr") for style in self._chain(style_id, "table")]
+        layers = [] if direct_only else [_child(style, "trPr") for style in self._chain(style_id, "table")]
         direct = _child(row._element, "trPr")
         layers.append(direct)
         height, rule, split = 0.0, HeightRule.AUTO, True

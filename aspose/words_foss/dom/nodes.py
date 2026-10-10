@@ -681,9 +681,9 @@ class RowFormat(_Format):
                 properties.removeChild(item)
         super()._set(name, value, **kwargs)
 
-    def _values(self):
+    def _values(self, *, direct_only=False):
         from aspose.words_foss.dom.styles import StyleResolver
-        return StyleResolver(self._node.owner_document).row_format(self._node)
+        return StyleResolver(self._node.owner_document).row_format(self._node, direct_only=direct_only)
 
     def _set_height(self, value=None, rule=None, *, setting_rule=False):
         from aspose.words_foss.utils.table_row import coerce_row_height
@@ -692,7 +692,7 @@ class RowFormat(_Format):
                 raise TypeError("height_rule requires HeightRule")
         else:
             value = coerce_row_height(value)
-        current_height, current_rule, _ = self._values()
+        current_height, current_rule, _ = self._values(direct_only=True)
         if setting_rule:
             value = 0.0 if rule == HeightRule.AUTO else current_height
         else:
