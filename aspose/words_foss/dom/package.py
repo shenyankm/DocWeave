@@ -8,6 +8,7 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 from defusedxml.minidom import parseString
 
 from aspose.words_foss import _io
+from aspose.words_foss._opc import resolve_target
 from aspose.words_foss._flat_opc import decode, is_flat_opc
 from aspose.words_foss._io import (
     atomic_output,
@@ -72,6 +73,38 @@ class DocxPackage:
     def part_names(self):
         return tuple(self._payloads)
 
+    def story_part_names(self):
+        """Discover editable stories through internal relationships and part types."""
+        names = {"word/document.xml"}
+        rels_name = "word/_rels/document.xml.rels"
+        if rels_name not in self.part_names:
+            return names
+        rel_ns = "http://schemas.openxmlformats.org/package/2006/relationships"
+        rel_type = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/"
+        ct_ns = "http://schemas.openxmlformats.org/package/2006/content-types"
+        types = self.tree("[Content_Types].xml")
+        overrides = {resolve_target("", node.getAttribute("PartName")): node.getAttribute("ContentType")
+                     for node in types.getElementsByTagNameNS(ct_ns, "Override")}
+        defaults = {node.getAttribute("Extension").lower(): node.getAttribute("ContentType")
+                    for node in types.getElementsByTagNameNS(ct_ns, "Default")}
+        for link in self.tree(rels_name).getElementsByTagNameNS(rel_ns, "Relationship"):
+            relation = link.getAttribute("Type")
+            if relation not in {rel_type + "header", rel_type + "footer"} or link.getAttribute("TargetMode") == "External":
+                continue
+            kind = relation.removeprefix(rel_type)
+            if link.getAttribute("TargetMode") not in {"", "Internal"}:
+                raise ValueError("Expected an internal header/footer relationship")
+            name = resolve_target("word/document.xml", link.getAttribute("Target"))
+            if name not in self.part_names:
+                raise ValueError("Header/footer relationship points to a missing part")
+            content_type = overrides.get(name, defaults.get(name.rsplit(".", 1)[-1].lower()))
+            if content_type != f"application/vnd.openxmlformats-officedocument.wordprocessingml.{kind}+xml":
+                raise ValueError("Expected a Word header/footer content type")
+            if not _is(self.tree(name).documentElement, "hdr" if kind == "header" else "ftr"):
+                raise ValueError("Expected a Word header/footer part")
+            names.add(name)
+        return names
+
     def tree(self, name):
         if name not in self._trees:
             self._trees[name] = parseString(self._payloads[name], forbid_dtd=True)
@@ -85,9 +118,10 @@ class DocxPackage:
             if data is not None:
                 return data
         tree = None
-        if name == "word/document.xml":
-            from aspose.words_foss.dom.row_format import projected_row_tree
+        if name in self.story_part_names():
+            from aspose.words_foss.dom.row_format import projected_row_tree, validate_row_properties
             original = self.tree(name)
+            validate_row_properties(original)
             projected = projected_row_tree(original)
             if projected is not original:
                 tree = projected

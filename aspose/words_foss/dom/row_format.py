@@ -42,17 +42,20 @@ def projected_row_tree(tree):
 
 def prepare_row_commit(document):
     package = document._package
-    plan = list(_oversized_rows(package.tree("word/document.xml")))
+    plan = []
+    for name in sorted(package.story_part_names()):
+        tree = package.tree(name)
+        validate_row_properties(tree)
+        plan.extend((name, row, element) for row, element in _oversized_rows(tree))
 
     def commit():
-        for row, element in plan:
+        for name, row, element in plan:
             prefix = element.prefix or "w"
             element.setAttributeNS(W, f"{prefix}:val", str(round(MAX_SAVED_ROW_HEIGHT * 20)))
             warm = getattr(row, "_row_format_warm", None)
             if warm is not None and warm[0] is element:
                 row._row_format_warm = (element, element.getAttributeNS(W, "val"),
                     element.getAttributeNS(W, "hRule"), MAX_SAVED_ROW_HEIGHT, warm[4])
-        if plan:
-            package._dirty.add("word/document.xml")
+            package._dirty.add(name)
 
     return commit

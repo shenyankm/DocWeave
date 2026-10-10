@@ -36,7 +36,8 @@ class DocxDocument:
         if not _is(root, "document") or _find(root, "body") is None:
             raise ValueError("Expected a Transitional Word document with a body")
         from aspose.words_foss.dom.row_format import validate_row_properties
-        validate_row_properties(root)
+        for name in self._package.story_part_names():
+            validate_row_properties(self._package.tree(name))
 
     def _wrap(self, part_name, element):
         if element not in self._nodes:
