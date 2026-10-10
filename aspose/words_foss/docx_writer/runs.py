@@ -7,6 +7,7 @@ The reader flattens hyperlinks into runs whose text reads
 
 
 import re
+from copy import copy
 from typing import Mapping, Optional
 
 from aspose.words_foss import light_document_model as ldm
@@ -142,6 +143,13 @@ def render_rPr(
     should only wrap this in an outer element when the result is
     non-empty.
     """
+    if for_style:
+        # Public Font getters resolve inheritance. Style XML must retain only
+        # local declarations; model_copy/deepcopy intentionally snapshot those
+        # effective getters, so use a shallow raw copy without its live binding.
+        font = copy(font)
+        font._name_resolver = None
+        font._name_write_owner = None
     if base is None:
         base = _default_font()
     children: list[str] = []
