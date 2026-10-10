@@ -18,14 +18,21 @@ def _colour(node, scheme, placeholder=None, *, with_alpha=False):
     if primitive is None:
         raise NotImplementedError('DrawingML fill colour primitive')
     token = primitive.get('val', '')
-    if primitive.tag == A + 'schemeClr':
-        token = placeholder if token == 'phClr' else scheme.get(token)
-    elif primitive.tag == A + 'sysClr':
-        token = primitive.get('lastClr')
-    if not token or len(token) != 6:
-        raise NotImplementedError('DrawingML fill colour reference')
-    rgb = tuple(int(token[i:i + 2], 16) for i in (0, 2, 4))
     alpha = 255
+    if primitive.tag == A + 'schemeClr' and token == 'phClr':
+        if placeholder is None:
+            raise NotImplementedError('DrawingML fill colour reference')
+        rgb = placeholder[:3]
+        if with_alpha and len(placeholder) == 4:
+            alpha = round(placeholder[3] * 255)
+    else:
+        if primitive.tag == A + 'schemeClr':
+            token = scheme.get(token)
+        elif primitive.tag == A + 'sysClr':
+            token = primitive.get('lastClr')
+        if not token or len(token) != 6:
+            raise NotImplementedError('DrawingML fill colour reference')
+        rgb = tuple(int(token[i:i + 2], 16) for i in (0, 2, 4))
     for mod in primitive:
         value = int(mod.get('val', '0')) / 100000
         if mod.tag in {A + 'alpha', A + 'alphaMod', A + 'alphaOff'} and with_alpha:
@@ -93,7 +100,7 @@ def resolve_drawing_fill(source, theme_data, *, with_transform=False):
         index = int(ref.get('idx', '0'))
         if index in (0, 1000):
             return None, None
-        placeholder = ''.join(f'{v:02X}' for v in _colour(ref, scheme))
+        placeholder = _colour(ref, scheme, with_alpha=True)
         group = 'fillStyleLst' if index < 1000 else 'bgFillStyleLst'
         index -= 1 if index < 1000 else 1001
         fills = theme.find(A + 'themeElements/' + A + 'fmtScheme/' + A + group)

@@ -477,3 +477,7 @@ transforms. Solid-fill opacity affects the fill only; outlines and following
 content keep independent graphics state. Ordered `alpha`, `alphaMod` and `alphaOff` transformations use
 quantized byte opacity, round ties to even and clamp each step to its valid range.
 Other DrawingML geometry and effects are not covered by this path.
+
+Theme `fillRef` placeholder colours retain opacity before each fill or gradient
+stop applies its own colour transforms. A fixed literal colour does not inherit
+the reference opacity; these retained source declarations remain editable.
