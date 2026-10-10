@@ -9,14 +9,13 @@ import re
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.utils.xml_helpers import combine_style_toggle, parse_font_size
+from aspose.words_foss.utils.xml_helpers import combine_style_toggle, parse_font_size, parse_line_spacing
 from aspose.words_foss.docx_reader.constants import (
     COLOR_EMPTY,
     W_NS,
     _ALIGNMENT_MAP,
     _HALF_PT_DIVISOR,
     _HIGHLIGHT_COLOR_MAP,
-    _LINE_RULE_MAP,
     _OUTLINE_LEVEL_BODY,
     _TAB_ALIGNMENT_MAP,
     _TAB_LEADER_MAP,
@@ -339,14 +338,14 @@ class ParagraphFormatBuilder:
         for attr, target in (
             ("before", "space_before"),
             ("after", "space_after"),
-            ("line", "line_spacing"),
         ):
             value = read_twip(spacing, attr)
             if value is not None:
                 setattr(pf, target, value)
-        line_rule = spacing.get(f"{W_NS}lineRule", "")
-        if line_rule:
-            pf.line_spacing_rule = _LINE_RULE_MAP.get(line_rule, 0)
+        line = spacing.get(f"{W_NS}line")
+        if line is not None:
+            pf.line_spacing, pf.line_spacing_rule = parse_line_spacing(
+                line, spacing.get(f"{W_NS}lineRule", "auto"))
         if is_truthy_onoff(spacing.get(f"{W_NS}beforeAutospacing", "")):
             pf.space_before_auto = True
         if is_truthy_onoff(spacing.get(f"{W_NS}afterAutospacing", "")):
@@ -555,6 +554,12 @@ class ParagraphFormatResolver:
         base = ldm.ParagraphFormat(borders=_empty_borders())
         if ctx._doc_default_pPr is not None:
             base = self._pfs.build(ctx._doc_default_pPr)
+        if 'line_spacing' not in base.model_fields_set:
+            present = (ctx._styles_xml is not None and
+                       ctx._styles_xml.find(f"{W_NS}docDefaults/{W_NS}pPrDefault") is not None)
+            # These are resolved defaults, not an explicit source declaration.
+            base.__dict__['line_spacing'] = 12.0 if present else 12.95
+            base.__dict__['line_spacing_rule'] = 2
 
         table_style_id = getattr(ctx, "_current_table_style_id", "")
         if table_style_id:

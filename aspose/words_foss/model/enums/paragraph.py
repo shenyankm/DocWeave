@@ -1,5 +1,7 @@
 """Paragraph-related enums."""
 
+from enum import IntEnum
+
 
 class ParagraphAlignment:
     """Specifies text alignment in a paragraph.
@@ -17,7 +19,7 @@ class ParagraphAlignment:
     MATH_ELEMENT_CENTER_AS_GROUP = 10
 
 
-class LineSpacingRule:
+class LineSpacingRule(IntEnum):
     """Specifies values for line spacing.
     """
 

@@ -105,6 +105,17 @@ paragraph.paragraph_format.alignment = None
 character style，`paragraph.paragraph_format.style_id` 只接受 paragraph style；两者支持 `None` 移除引用。
 不把样式继承结果物化为直接格式，也不自动创建样式。
 
+段落和段落样式的 `line_spacing` 使用点数，`line_spacing_rule` 使用
+`aw.LineSpacingRule` 枚举；有效继承值由 `effective_paragraph_format` 读取。
+直接值未设置时返回 `None`；赋 `None` 清除当前层沿用本项目 DOM 约定，属于扩展，
+官方 setter 拒绝 `None`。只设置规则而当前层没有行距时会写入 12pt。
+赋值采用有符号 32 位 twip，冷读采用官方实测的有符号 16 位度量；负值和精确零
+因此可能在保存后冷读变为正值/精确或零/最小行距。成功保存不改写持有句柄的 warm 值。
+`to_light_document()` 与其 JSON 导出是重新读取当前包的独立 cold 投影，不能保留 warm 差异。
+大间距分页和短 exact 表格行的渲染尚未验收。
+行距读取采用原生度量恢复规则：分数与指数按 twip 解析，无效数字（含数字下划线）
+恢复为零，溢出度量按上述冷读规则投影；其他缩进、段前后间距仍拒绝非法整数 twip。
+
 内置字体和段落格式句柄只允许赋值已声明的可写属性。未实现属性（如当前的
 `font.color`）、拼写错误及覆盖方法/内部排序常量会抛出 `AttributeError`，不会修改文档。
 这些句柄不再允许附加任意 Python 属性；调用方的自定义信息应单独存储。
