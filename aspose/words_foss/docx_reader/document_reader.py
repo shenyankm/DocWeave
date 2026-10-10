@@ -174,6 +174,8 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             elif kind == "fontTable":
                 if root.tag != W_NS + 'fonts':
                     raise ValueError('Expected a WordprocessingML font table')
+                from aspose.words_foss.fonts import _root
+                _root(zf.read(name))
                 rels_name = relationships_path(name)
                 self._source_font_table = ldm.SourceFontTable(
                     data=zf.read(name), relationships=zf.read(rels_name) if rels_name in namelist else None,
