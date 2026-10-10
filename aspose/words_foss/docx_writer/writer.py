@@ -243,6 +243,7 @@ class LdmDocxWriter:
             theme_xml=doc.source_theme.data if doc.source_theme is not None else None,
             source_theme=doc.source_theme,
             source_font_table=doc.source_font_table,
+            embed_fonts=bool(doc.font_embedding and doc.font_embedding.embed_true_type_fonts),
             document_xml=document_xml,
             styles_xml=styles_xml,
             numbering_xml=numbering_xml,
@@ -305,6 +306,7 @@ class _RenderedParts:
     theme_xml: bytes | None
     source_theme: ldm.SourceTheme | None
     source_font_table: ldm.SourceFontTable | None
+    embed_fonts: bool
     document_xml: str
     styles_xml: str
     numbering_xml: Optional[str]
@@ -324,6 +326,7 @@ class _RenderedParts:
             "theme_xml": self.theme_xml,
             "source_theme": self.source_theme,
             "source_font_table": self.source_font_table,
+            "embed_fonts": self.embed_fonts,
             "document_xml": self.document_xml,
             "styles_xml": self.styles_xml,
             "numbering_xml": self.numbering_xml,
