@@ -156,11 +156,28 @@ def test_invalid_default_styles_fail_without_mutation(tmp_path, styles):
     assert payloads(doc.to_bytes()) == original
 
 
-@pytest.mark.parametrize("rpr", ['<w:b w:val="invalid"/>', '<w:sz w:val="invalid"/>', '<w:sz w:val="0"/>'])
+@pytest.mark.parametrize("rpr", ['<w:b w:val="invalid"/>', '<w:sz w:val="invalid"/>'])
 def test_invalid_direct_values_are_not_reported_as_valid_effective_values(tmp_path, rpr):
     doc = style_doc(tmp_path, rpr=rpr)
     with pytest.raises(ValueError):
         _ = doc.body.paragraphs[0].runs[0].effective_font
+
+
+@pytest.mark.parametrize("format", ["docx", "flat"])
+def test_explicit_zero_font_size_is_valid_and_survives_package_save(tmp_path, format):
+    from aspose.words_foss._flat_opc import decode
+    from docx import Document as WordDocument
+    from docx.shared import Pt
+    source = WordDocument()
+    source.add_paragraph().add_run("ZERO").font.size = Pt(0)
+    stream = BytesIO()
+    source.save(stream)
+    doc = aw.DocxDocument(BytesIO(stream.getvalue()))
+    run = doc.body.paragraphs[0].runs[0]
+    assert run.font.size == run.effective_font.size == 0
+    raw = doc.to_bytes() if format == "docx" else decode(doc.to_flat_opc())
+    restored = aw.DocxDocument(BytesIO(raw)).body.paragraphs[0].runs[0]
+    assert restored.font.size == restored.effective_font.size == 0
 
 
 @pytest.mark.parametrize("style,ppr,body", [
