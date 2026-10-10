@@ -262,6 +262,10 @@ class Document:
             elif data is not None:
                 self._load_from_bytes(data, load_options)
 
+        if self._document is None:
+            self._document = ldm.Document(sections=[ldm.Section(
+                body=ldm.Body(children=[ldm.Paragraph()]))])
+
     @staticmethod
     def _apply_load_options(reader: object, load_options: Optional[LoadOptions]) -> None:
         if load_options and hasattr(reader, "allow_local_images"):

@@ -99,7 +99,8 @@ def test_chinese_columns_keep_content_and_header_footer(tmp_path):
         text = "".join(page.get_text() for page in pdf).replace("\n", "")
         for i in range(18):
             assert f"段落{i}：" in text
-        assert text.count("中文内容") == 360
+        body_text = text.replace("中文页眉", "").replace("中文页脚", "")
+        assert body_text.count("中文内容") == 360
         for page in pdf:
             assert "中文页眉" in page.get_text()
             assert "中文页脚" in page.get_text()
