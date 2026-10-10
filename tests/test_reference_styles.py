@@ -204,3 +204,17 @@ def test_character_inheritance_reaches_pdf_and_direct_overrides_win():
         assert actual['DIRECT']['size'] == pytest.approx(21)
         assert actual['INHERITED']['color'] == 0x0000FF
         assert actual['DIRECT']['color'] == 0x0000FF
+
+
+
+def test_reference_theme_colors_resolve_without_mutating_source_snapshots():
+    font = ldm.Font(color='Color [Empty]', source_color=ldm.SourceColor(value='auto', theme_color='accent1'),
+                    color_rendering='Color [A=255, R=18, G=52, B=86]')
+    reference = ldm.Document(styles=[ldm.Style(name='Brand', font=font)])
+    before = reference.model_dump()
+    generated = render_styles_xml(ldm.Document())
+    output = ET.fromstring(apply_reference_styles(generated, reference))
+    brand = next(s for s in output.findall(W + 'style') if s.find(W + 'name').get(W + 'val') == 'Brand')
+    color = brand.find(W + 'rPr/' + W + 'color')
+    assert color.get(W + 'val') == '123456' and color.get(W + 'themeColor') is None
+    assert reference.model_dump() == before

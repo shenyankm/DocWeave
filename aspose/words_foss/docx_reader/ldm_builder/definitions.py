@@ -55,8 +55,10 @@ def _tsp_build_font(rPr: ET.Element) -> ldm.Font:
     font.color_explicit = color_el is not None
     if color_el is not None:
         val = color_el.get(f"{W_NS}val", "")
-        if val:
-            font.color = _hex_to_ldm_color(val)
+        font.color = _hex_to_ldm_color(val)
+        font.source_color = ldm.SourceColor(
+            value=color_el.get(f"{W_NS}val"), theme_color=color_el.get(f"{W_NS}themeColor"),
+            theme_tint=color_el.get(f"{W_NS}themeTint"), theme_shade=color_el.get(f"{W_NS}themeShade"))
     size = rPr.find(f"{W_NS}sz")
     if size is not None:
         font.size = parse_font_size(size.get(f"{W_NS}val", ""))

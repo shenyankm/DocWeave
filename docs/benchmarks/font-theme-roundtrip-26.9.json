@@ -1,0 +1,2064 @@
+{
+  "version": "26.9.0",
+  "python": "3.13.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "licensed": false,
+  "records": [
+    {
+      "input": "00.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "000.docx",
+      "output_sha256": "8186a20a5f8c9eefbdef4115e19befb78cd5421c2330e8ff1ae010fea0b4ee1f",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "00.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "001.xml",
+      "output_sha256": "28843e978ecad4c46758bac3fa43f43e27f2bb05cf2368e296ef56879e026e3d",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "00.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "002.docx",
+      "output_sha256": "8186a20a5f8c9eefbdef4115e19befb78cd5421c2330e8ff1ae010fea0b4ee1f",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "00.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "003.xml",
+      "output_sha256": "28843e978ecad4c46758bac3fa43f43e27f2bb05cf2368e296ef56879e026e3d",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "01.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "004.docx",
+      "output_sha256": "1b54579e4415bf58b46546dcfff0d21636a49eda49ea6720171a4fd8717c54b4",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "01.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "005.xml",
+      "output_sha256": "55889411de73c881f9bac5649959558f681797b5b1d2c1e839c7a3d03642c802",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "01.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "006.docx",
+      "output_sha256": "1b54579e4415bf58b46546dcfff0d21636a49eda49ea6720171a4fd8717c54b4",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "01.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "007.xml",
+      "output_sha256": "55889411de73c881f9bac5649959558f681797b5b1d2c1e839c7a3d03642c802",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "02.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "008.docx",
+      "output_sha256": "4ac3c3b8ef5a79103a9476baf7e51ec8221f62a20dbc6bb423cb7ab55818e693",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "02.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "009.xml",
+      "output_sha256": "6a508a5c3de3f945d57655cf2bda9f4b711499f1a0d7573331d65c9a1c42d4ea",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "02.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "010.docx",
+      "output_sha256": "4ac3c3b8ef5a79103a9476baf7e51ec8221f62a20dbc6bb423cb7ab55818e693",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "02.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "011.xml",
+      "output_sha256": "6a508a5c3de3f945d57655cf2bda9f4b711499f1a0d7573331d65c9a1c42d4ea",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "03.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "012.docx",
+      "output_sha256": "b49edc3e3fa7223b0242b106b4c3396b0bebcedf8209b376c1a329979743b003",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "03.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "013.xml",
+      "output_sha256": "64378ec0389fb4fcaa70e67ec418d2dfbb9a21fb3dfc8784bd556909b9343ddb",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "03.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "014.docx",
+      "output_sha256": "b49edc3e3fa7223b0242b106b4c3396b0bebcedf8209b376c1a329979743b003",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "03.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "015.xml",
+      "output_sha256": "64378ec0389fb4fcaa70e67ec418d2dfbb9a21fb3dfc8784bd556909b9343ddb",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "04.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "016.docx",
+      "output_sha256": "825d6451e8af89d834e3e947c0ebd412d37e653e60a9f957a3849d918055581a",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "04.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "017.xml",
+      "output_sha256": "b779b7b9e8420baff872a374da4d98d7243f68f157215806c44f205883913b86",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "04.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "018.docx",
+      "output_sha256": "825d6451e8af89d834e3e947c0ebd412d37e653e60a9f957a3849d918055581a",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "04.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "019.xml",
+      "output_sha256": "b779b7b9e8420baff872a374da4d98d7243f68f157215806c44f205883913b86",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "05.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "020.docx",
+      "output_sha256": "77bd9db97949cc6db0d957696bad10f8bae9505eff336bdffa70c825ae43dfc7",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "05.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "021.xml",
+      "output_sha256": "ccb38237cd0a0e47698224bfba9d4730e574713634888816c4d278b396f1ae18",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "05.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "022.docx",
+      "output_sha256": "77bd9db97949cc6db0d957696bad10f8bae9505eff336bdffa70c825ae43dfc7",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "05.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "023.xml",
+      "output_sha256": "ccb38237cd0a0e47698224bfba9d4730e574713634888816c4d278b396f1ae18",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "06.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "024.docx",
+      "output_sha256": "59de91b441f385653da314e2507366ec9e829bf4d67dea102cb74529b40c740a",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "06.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "025.xml",
+      "output_sha256": "43591b643eda9d6a47eda9e1e0fc9c034da2d7de68917a4f6ae58bc1d163d4cd",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "06.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "026.docx",
+      "output_sha256": "59de91b441f385653da314e2507366ec9e829bf4d67dea102cb74529b40c740a",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "06.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "027.xml",
+      "output_sha256": "43591b643eda9d6a47eda9e1e0fc9c034da2d7de68917a4f6ae58bc1d163d4cd",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "07.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "028.docx",
+      "output_sha256": "7910a603242736d3791783a7b0b04bbdc884d2fdd413dab5807aa766e136e543",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "07.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "029.xml",
+      "output_sha256": "63a255ff57d91d27257b1714f364904ca5a3304af80704365cfe7c0685779c5f",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "07.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "030.docx",
+      "output_sha256": "7910a603242736d3791783a7b0b04bbdc884d2fdd413dab5807aa766e136e543",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "07.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "031.xml",
+      "output_sha256": "63a255ff57d91d27257b1714f364904ca5a3304af80704365cfe7c0685779c5f",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "08.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "032.docx",
+      "output_sha256": "0e5efa41c1304314d98715a7d5412c2ce6c9491b9409d0014cac625d8d0bc190",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "08.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "033.xml",
+      "output_sha256": "f790baef79ad6826baab815305ed18fdf9d80b6a09bfdb808eaf6f7940e5726c",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "08.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "034.docx",
+      "output_sha256": "0e5efa41c1304314d98715a7d5412c2ce6c9491b9409d0014cac625d8d0bc190",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "08.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "035.xml",
+      "output_sha256": "f790baef79ad6826baab815305ed18fdf9d80b6a09bfdb808eaf6f7940e5726c",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "09.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "036.docx",
+      "output_sha256": "e05783afd8b7035462692bd711dafe02544a99d104ccec525a031711735447c0",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "09.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "037.xml",
+      "output_sha256": "ba0771971b77a6c99e51c3145b3ec242f4747cd13edd0729caba8b82804f89f6",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "09.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "038.docx",
+      "output_sha256": "e05783afd8b7035462692bd711dafe02544a99d104ccec525a031711735447c0",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "09.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "039.xml",
+      "output_sha256": "ba0771971b77a6c99e51c3145b3ec242f4747cd13edd0729caba8b82804f89f6",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "10.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "040.docx",
+      "output_sha256": "cbde0c1b1256ada357022062b54685475463be2e430d03d113703c5fae495a15",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "10.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "041.xml",
+      "output_sha256": "82dc1b5957a61f4c89a5414f38c2213eaeb6ad993dfb8edc651bd4a32f0f67b7",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "10.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "042.docx",
+      "output_sha256": "cbde0c1b1256ada357022062b54685475463be2e430d03d113703c5fae495a15",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "10.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "043.xml",
+      "output_sha256": "82dc1b5957a61f4c89a5414f38c2213eaeb6ad993dfb8edc651bd4a32f0f67b7",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "11.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "044.docx",
+      "output_sha256": "3e39a8f7b14a440e51900f0c2d514429ed6dc61892f23f06f82ffbe927bb0c38",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "11.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "045.xml",
+      "output_sha256": "66046043b652d8458d1110688bc962ee908875019ae3ad03be758f5c3b0ce92d",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "11.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "046.docx",
+      "output_sha256": "3e39a8f7b14a440e51900f0c2d514429ed6dc61892f23f06f82ffbe927bb0c38",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "11.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "047.xml",
+      "output_sha256": "66046043b652d8458d1110688bc962ee908875019ae3ad03be758f5c3b0ce92d",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "12.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "048.docx",
+      "output_sha256": "08d18f03771cefa04c98ab126c58f83b7703ff5a8a9425f764027adb717d88bc",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "12.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "049.xml",
+      "output_sha256": "c57a649e9c2aa59eff2825511b89a8ed762898e098a7f5171329daf21ba198bd",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "12.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "050.docx",
+      "output_sha256": "08d18f03771cefa04c98ab126c58f83b7703ff5a8a9425f764027adb717d88bc",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "12.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "051.xml",
+      "output_sha256": "c57a649e9c2aa59eff2825511b89a8ed762898e098a7f5171329daf21ba198bd",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "13.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "052.docx",
+      "output_sha256": "7cb7d5e914bd05a459b6a40d7c6f9558fa6c663a91ee671fb471264455cddbba",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "13.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "053.xml",
+      "output_sha256": "6f1c9dbc26eca927d716e82ffa8a0e2b654e8101c1d1cea99c66b41ac44030ac",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "13.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "054.docx",
+      "output_sha256": "7cb7d5e914bd05a459b6a40d7c6f9558fa6c663a91ee671fb471264455cddbba",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "13.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "055.xml",
+      "output_sha256": "6f1c9dbc26eca927d716e82ffa8a0e2b654e8101c1d1cea99c66b41ac44030ac",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "14.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "056.docx",
+      "output_sha256": "44c70fbdc3251a5b74d21693ff8c929cab18d1bedecf1f98f7b7983f396e614d",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "14.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "057.xml",
+      "output_sha256": "5c676a527d6484e6b73e276ebb2f7f67f6a9072929de6bcb678d7dc33fdf5018",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "14.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "058.docx",
+      "output_sha256": "44c70fbdc3251a5b74d21693ff8c929cab18d1bedecf1f98f7b7983f396e614d",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "14.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "059.xml",
+      "output_sha256": "5c676a527d6484e6b73e276ebb2f7f67f6a9072929de6bcb678d7dc33fdf5018",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "15.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "060.docx",
+      "output_sha256": "92513c65c9d48ee5c951c99edf988d901002bef1fa36aef67f92ed6f191186d2",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "15.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "061.xml",
+      "output_sha256": "b2373804acb3c26848381112bf723516f405e5662de5f006c29bc439351918cd",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "15.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "062.docx",
+      "output_sha256": "92513c65c9d48ee5c951c99edf988d901002bef1fa36aef67f92ed6f191186d2",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "15.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "063.xml",
+      "output_sha256": "b2373804acb3c26848381112bf723516f405e5662de5f006c29bc439351918cd",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "16.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "064.docx",
+      "output_sha256": "34817457da6ab4d8dd0656373fcb0b56825a7e14ec6ff713fc1c862c8c111773",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "16.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "065.xml",
+      "output_sha256": "1848c03e533581826db6787c6078af22b6dd080e5c31b080fbe89ba4c7869223",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "16.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "066.docx",
+      "output_sha256": "34817457da6ab4d8dd0656373fcb0b56825a7e14ec6ff713fc1c862c8c111773",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "16.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "067.xml",
+      "output_sha256": "1848c03e533581826db6787c6078af22b6dd080e5c31b080fbe89ba4c7869223",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "17.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "068.docx",
+      "output_sha256": "e49c48987fc1009f19c5c34aabcbe263214835ee0a7afa26b3952a1011b86850",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "17.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "069.xml",
+      "output_sha256": "63e77e1e9a83d7da1ece629e9b50563e0d8cd1ba8c06e9f487ab99109ceef640",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "17.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "070.docx",
+      "output_sha256": "e49c48987fc1009f19c5c34aabcbe263214835ee0a7afa26b3952a1011b86850",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "17.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "071.xml",
+      "output_sha256": "63e77e1e9a83d7da1ece629e9b50563e0d8cd1ba8c06e9f487ab99109ceef640",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "18.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "072.docx",
+      "output_sha256": "f556c12e74528e2de77634f553c10839aa9c6bacc35e98b847f9f891a08ceaa2",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "18.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "073.xml",
+      "output_sha256": "0c3c309377068736ff374cef7e06cfc9010abe357b449cbadbf4cc359fb6475a",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "18.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "074.docx",
+      "output_sha256": "f556c12e74528e2de77634f553c10839aa9c6bacc35e98b847f9f891a08ceaa2",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "18.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "075.xml",
+      "output_sha256": "0c3c309377068736ff374cef7e06cfc9010abe357b449cbadbf4cc359fb6475a",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "19.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "076.docx",
+      "output_sha256": "816c7cd36266a3e865eec68c490b893e77e7ee47be3cb3176fcc7f7f96aafaaf",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "19.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "077.xml",
+      "output_sha256": "f75e1debf913bd71a7b2b152a537237a076938b7d05f39069b125cbe031a7e18",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "19.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "078.docx",
+      "output_sha256": "816c7cd36266a3e865eec68c490b893e77e7ee47be3cb3176fcc7f7f96aafaaf",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "19.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "079.xml",
+      "output_sha256": "f75e1debf913bd71a7b2b152a537237a076938b7d05f39069b125cbe031a7e18",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "20.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "080.docx",
+      "output_sha256": "9e7847a83a07d129d750ba4199e9e5425cb282f7944815ea8c60346f7c0bdcd7",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "20.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "081.xml",
+      "output_sha256": "48814df43e0d87b928d246206fa2da79131c18a9f0991b4f443ffaeba3fbd558",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "20.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "082.docx",
+      "output_sha256": "9e7847a83a07d129d750ba4199e9e5425cb282f7944815ea8c60346f7c0bdcd7",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "20.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "083.xml",
+      "output_sha256": "48814df43e0d87b928d246206fa2da79131c18a9f0991b4f443ffaeba3fbd558",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "21.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "084.docx",
+      "output_sha256": "a8d24a3884272f21518b0ccdb2a447e6c688a888bcc9a71e850f675c6a0f6ed8",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "21.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "085.xml",
+      "output_sha256": "aefa28e1d37bd8b66bdb5f935adc83e69f630a44b03447de640284074bb6b7a1",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "21.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "086.docx",
+      "output_sha256": "a8d24a3884272f21518b0ccdb2a447e6c688a888bcc9a71e850f675c6a0f6ed8",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "21.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "087.xml",
+      "output_sha256": "aefa28e1d37bd8b66bdb5f935adc83e69f630a44b03447de640284074bb6b7a1",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "22.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "088.docx",
+      "output_sha256": "5ea8bbb4e86aa4e583a9a9017b585aad38755f9e81d0e6b91b816101c80b77c9",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "22.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "089.xml",
+      "output_sha256": "0312e85507f0f173ab564e2d30b477251c32feea5bf86c5f56b6e1119a3219f4",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "22.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "090.docx",
+      "output_sha256": "5ea8bbb4e86aa4e583a9a9017b585aad38755f9e81d0e6b91b816101c80b77c9",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "22.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "091.xml",
+      "output_sha256": "0312e85507f0f173ab564e2d30b477251c32feea5bf86c5f56b6e1119a3219f4",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "23.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "092.docx",
+      "output_sha256": "de3086ebc8c9ad8fa4506d3ee21113d6950457d6ecf522622a6f4e53db8cbadd",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "23.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "093.xml",
+      "output_sha256": "ff8943db20a06fb4fc878391eea0ac04efd33d779e3fb6546e8d15d92b411801",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "23.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "094.docx",
+      "output_sha256": "de3086ebc8c9ad8fa4506d3ee21113d6950457d6ecf522622a6f4e53db8cbadd",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "23.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "095.xml",
+      "output_sha256": "ff8943db20a06fb4fc878391eea0ac04efd33d779e3fb6546e8d15d92b411801",
+      "getter": {
+        "a": 0,
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "is_empty": true
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "24.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "096.docx",
+      "output_sha256": "de43d87e394f8a7bf7eca4c04f5b61534012b79cfeef879ca040d0dd9b01f595",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "24.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "097.xml",
+      "output_sha256": "f05bf0e790382c8c33fd43f7d494af6c674d790519b6fb2acf9a7a4db75c55bc",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "24.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "098.docx",
+      "output_sha256": "de43d87e394f8a7bf7eca4c04f5b61534012b79cfeef879ca040d0dd9b01f595",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "24.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "099.xml",
+      "output_sha256": "f05bf0e790382c8c33fd43f7d494af6c674d790519b6fb2acf9a7a4db75c55bc",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "25.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "100.docx",
+      "output_sha256": "0cc810054a21869359ffd84e7ff3e50ec3072617a7c781e08d0b85767a86402f",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "25.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "101.xml",
+      "output_sha256": "b94b211b2b51068363b3f091c0f0ca3104128760d14123a433ab3b4a2ac4ba92",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "25.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "102.docx",
+      "output_sha256": "0cc810054a21869359ffd84e7ff3e50ec3072617a7c781e08d0b85767a86402f",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "25.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "103.xml",
+      "output_sha256": "b94b211b2b51068363b3f091c0f0ca3104128760d14123a433ab3b4a2ac4ba92",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "26.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "104.docx",
+      "output_sha256": "cc61364402638470a91f81d31944c3c4f300914d1db94351738977d4fd36572e",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "26.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "105.xml",
+      "output_sha256": "eefe35cb13dd4a34950aea2424953c9173e43602757ee88ca4d1c97e10e3e3b0",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "26.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "106.docx",
+      "output_sha256": "cc61364402638470a91f81d31944c3c4f300914d1db94351738977d4fd36572e",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "26.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "107.xml",
+      "output_sha256": "eefe35cb13dd4a34950aea2424953c9173e43602757ee88ca4d1c97e10e3e3b0",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -0.4980392156862745
+    },
+    {
+      "input": "27.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "108.docx",
+      "output_sha256": "c089c4c9bca4c6ecb0409358c862df5f9c2f292ba1979384c7d06efbc173e06d",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "27.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "109.xml",
+      "output_sha256": "84cd96dc994ecb36355924585e6d7a302811592d5ffaddefa1c8b0b30c440f94",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "27.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "110.docx",
+      "output_sha256": "c089c4c9bca4c6ecb0409358c862df5f9c2f292ba1979384c7d06efbc173e06d",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "27.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "111.xml",
+      "output_sha256": "84cd96dc994ecb36355924585e6d7a302811592d5ffaddefa1c8b0b30c440f94",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 1.0
+    },
+    {
+      "input": "28.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "112.docx",
+      "output_sha256": "2c5ed37f9c359f702d3a5332f0f62541ad3164a255a4f765f39a0b40be566fdb",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "28.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "113.xml",
+      "output_sha256": "a27dfdad43ba9048acb3d5004b949d06b498fe621976bdaf76ce6786f37fbab2",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "28.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "114.docx",
+      "output_sha256": "2c5ed37f9c359f702d3a5332f0f62541ad3164a255a4f765f39a0b40be566fdb",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "28.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "115.xml",
+      "output_sha256": "a27dfdad43ba9048acb3d5004b949d06b498fe621976bdaf76ce6786f37fbab2",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "29.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "116.docx",
+      "output_sha256": "35fc404ac35b33f3eae77544f5b99df4e64d89c8b68e3648f435ca6a6b1a1a07",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "29.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "117.xml",
+      "output_sha256": "90db6ad344f45db55ad76d673ec2e7ca6aa75a90925bd539acd33cd57149c4d5",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "29.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "118.docx",
+      "output_sha256": "35fc404ac35b33f3eae77544f5b99df4e64d89c8b68e3648f435ca6a6b1a1a07",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "29.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "119.xml",
+      "output_sha256": "90db6ad344f45db55ad76d673ec2e7ca6aa75a90925bd539acd33cd57149c4d5",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": -1.0
+    },
+    {
+      "input": "30.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "120.docx",
+      "output_sha256": "f6097d11d3ab50044ee58ea5479ec2b5de71bbe9b465367aa9118c3f3c739241",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "30.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "121.xml",
+      "output_sha256": "c322508b757379e7f157226d66fba1796f8c1da72943a55e442b3f6ea6eb8518",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "30.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "122.docx",
+      "output_sha256": "f6097d11d3ab50044ee58ea5479ec2b5de71bbe9b465367aa9118c3f3c739241",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "30.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "123.xml",
+      "output_sha256": "c322508b757379e7f157226d66fba1796f8c1da72943a55e442b3f6ea6eb8518",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.0
+    },
+    {
+      "input": "31.docx",
+      "json_roundtrip": false,
+      "format": "docx",
+      "output": "124.docx",
+      "output_sha256": "ee3f670fefb57b0b6c7d7d04ac28edabc2ca8379a06f44c855e80eea77bb0d1e",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "31.docx",
+      "json_roundtrip": false,
+      "format": "flat_opc",
+      "output": "125.xml",
+      "output_sha256": "9b407dd22b71fb064b6411ca5fa8293e815f15014aa9523649a8f32b30e764ec",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "31.docx",
+      "json_roundtrip": true,
+      "format": "docx",
+      "output": "126.docx",
+      "output_sha256": "ee3f670fefb57b0b6c7d7d04ac28edabc2ca8379a06f44c855e80eea77bb0d1e",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    },
+    {
+      "input": "31.docx",
+      "json_roundtrip": true,
+      "format": "flat_opc",
+      "output": "127.xml",
+      "output_sha256": "9b407dd22b71fb064b6411ca5fa8293e815f15014aa9523649a8f32b30e764ec",
+      "getter": {
+        "a": 255,
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "is_empty": false
+      },
+      "theme_color": 4,
+      "tint_and_shade": 0.4980392156862745
+    }
+  ],
+  "full_Font_acceptance": false,
+  "rendering_acceptance": false,
+  "corpus": "corpus/font-theme-corpus-26.9.zip",
+  "corpus_sha256": "7ea74f0371b46fa383b2dcd46f731b44743d80ba434bf2c563851cf7830dca00",
+  "outputs": "corpus/font-theme-current-roundtrip-26.9.zip",
+  "outputs_sha256": "551912cbb6e08a36630d33c1bf86560f50946eeb4cd9aea70ef05f131cb15c4c",
+  "scope": "32 owned direct accent1 source declarations x JSON/plain x DOCX/Flat OPC; native cold color/theme/tint getters; no cold PDF acceptance",
+  "delivery": "source_declaration_preservation_checked; combined_modifiers_related_theme_resources_full_Font_installed_platform_and_rendering_acceptance_pending"
+}

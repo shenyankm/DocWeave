@@ -16120,18 +16120,30 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_conversion_RGB_auto_origin_getter_and_save; DOM_and_canonical_Color_API_missing",
-      "gap": "themes_contrast_DOM_color_editing_canonical_Color_and_full_rendering_unaccepted",
+      "gap": "canonical_DOM_color_and_theme_API_related_theme_resources_all_theme_categories_background_contrast_and_full_fidelity_unaccepted",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
       "samples": [
         "font-color-categories-26.9.json",
         "corpus/font-color-categories-26.9.zip",
-        "corpus/font-color-current.zip"
+        "corpus/font-color-current.zip",
+        "font-theme-colors-26.9.json",
+        "font-theme-roundtrip-26.9.json",
+        "corpus/font-theme-current-roundtrip-26.9.zip",
+        "font-theme-combined-contexts-26.9.json",
+        "font-theme-resources-26.9.json"
       ],
       "validation": [
         "256 owned native category getter observations: differences 70 before, zero after; 1024 direct/model JSON DOCX/Flat OPC native cold getters, zero differences",
         "verify_font_color_categories: owned package payloads/hashes, nearest color and direct declaration XML; source related tests 1823 passed",
-        "installed Mac Python 3.14 full tests and ApiExamples: 21959 passed, 2 skipped, 219 warnings, 847.81 seconds; Linux amd64 targeted wheel: 5237 passed; additional Windows ZIP metadata simulation and theme evidence check: 1 passed each; full independent evidence verifier passed"
+        "installed Mac Python 3.14 full tests and ApiExamples: 21959 passed, 2 skipped, 219 warnings, 847.81 seconds; Linux amd64 targeted wheel: 5237 passed; additional Windows ZIP metadata simulation and theme evidence check: 1 passed each; full independent evidence verifier passed",
+        "source in-progress theme declarations: 184 source preservation checks; 128 native cold color/theme/tint getters match with independent XML/theme/relationship/hash replay; 5134 source model/cascade/Boolean/color/reference integrations passed; no installed/platform/full_Font acceptance",
+        "source combined modifier fix: 32 direct theme extraction colors now match; modal target painted RGB within 1 channel unit; 16 defaults/paragraph/character/direct contexts match native getters/extraction/pixels; 200 theme source tests passed; no installed/platform/full_Font acceptance",
+        "source theme resource graph: 231 source theme/reference tests passed, plus 24 resource/frozen evidence tests; native 26.9.0 Mac Python 3.13.15 cold loads input and current DOCX/Flat OPC then saves; all six relationship-reachable theme PNG hashes match; no theme-image rendering or installed/platform acceptance",
+        "source-shadowed pytest (not wheel acceptance), Mac Python 3.14.7: 236 theme/resource/reference/frozen evidence tests passed, 1 font substitution warning; modified wheel/source modules equal; cross-platform and broader installed integration pending",
+        "source-shadowed pytest (not wheel acceptance): Mac Python 3.14.7 346 specialized tests passed; Linux Python 3.14 143 source resource/privacy/baseline inventory tests passed after freezing owned PNG encoder-independent bytes; all 16 changed source/wheel modules equal; broader integrations running and remote CI pending",
+        "corrected installed validation is running: --import-mode=importlib and installed imports asserted within pytest process; encoded names fixed, 29 source resource tests passed; old wheel reproduces percent-name rejection in DOCX and Flat OPC",
+        "release wheel importlib with package path asserted inside pytest process: Mac full tests plus ApiExamples 22197 passed, 2 skipped, 219 warnings; Linux integrations 5505 passed, 1 warning; 16 modified production modules equal wheel/source; scoped source preservation accepted locally, full Font/theme API and remote CI unaccepted"
       ],
       "delivery": "conversion_RGB_auto_origin_stage_accepted; theme_DOM_canonical_Color_full_Font_acceptance_and_remote_CI_pending"
     },
@@ -16258,20 +16270,32 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "partial_conversion_RGB_auto_origin_getter_and_save; DOM_and_canonical_Color_API_missing",
-      "gap": "themes_contrast_DOM_color_editing_canonical_Color_and_full_rendering_unaccepted",
+      "gap": "canonical_DOM_color_and_theme_API_related_theme_resources_all_theme_categories_background_contrast_and_full_fidelity_unaccepted",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
       "samples": [
         "font-color-categories-26.9.json",
         "corpus/font-color-categories-26.9.zip",
-        "corpus/font-color-current.zip"
+        "corpus/font-color-current.zip",
+        "font-theme-colors-26.9.json",
+        "font-theme-roundtrip-26.9.json",
+        "corpus/font-theme-current-roundtrip-26.9.zip",
+        "font-theme-combined-contexts-26.9.json",
+        "font-theme-resources-26.9.json"
       ],
       "validation": [
         "tests/test_format_attribute_safety.py: 31 negative/positive direct/style handle checks; source formatting integration 8015 passed",
         "installed Mac Python 3.14 and Linux amd64 wheel: 8748 affected-path/integration checks each passed; modified production modules identical to source; wheel resources checked",
         "256 owned native category getter observations: differences 70 before, zero after; 1024 direct/model JSON DOCX/Flat OPC native cold getters, zero differences",
         "verify_font_color_categories: owned package payloads/hashes, nearest color and direct declaration XML; source related tests 1823 passed",
-        "installed Mac Python 3.14 full tests and ApiExamples: 21959 passed, 2 skipped, 219 warnings, 847.81 seconds; Linux amd64 targeted wheel: 5237 passed; additional Windows ZIP metadata simulation and theme evidence check: 1 passed each; full independent evidence verifier passed"
+        "installed Mac Python 3.14 full tests and ApiExamples: 21959 passed, 2 skipped, 219 warnings, 847.81 seconds; Linux amd64 targeted wheel: 5237 passed; additional Windows ZIP metadata simulation and theme evidence check: 1 passed each; full independent evidence verifier passed",
+        "source in-progress theme declarations: 184 source preservation checks; 128 native cold color/theme/tint getters match with independent XML/theme/relationship/hash replay; 5134 source model/cascade/Boolean/color/reference integrations passed; no installed/platform/full_Font acceptance",
+        "source combined modifier fix: 32 direct theme extraction colors now match; modal target painted RGB within 1 channel unit; 16 defaults/paragraph/character/direct contexts match native getters/extraction/pixels; 200 theme source tests passed; no installed/platform/full_Font acceptance",
+        "source theme resource graph: 231 source theme/reference tests passed, plus 24 resource/frozen evidence tests; native 26.9.0 Mac Python 3.13.15 cold loads input and current DOCX/Flat OPC then saves; all six relationship-reachable theme PNG hashes match; no theme-image rendering or installed/platform acceptance",
+        "source-shadowed pytest (not wheel acceptance), Mac Python 3.14.7: 236 theme/resource/reference/frozen evidence tests passed, 1 font substitution warning; modified wheel/source modules equal; cross-platform and broader installed integration pending",
+        "source-shadowed pytest (not wheel acceptance): Mac Python 3.14.7 346 specialized tests passed; Linux Python 3.14 143 source resource/privacy/baseline inventory tests passed after freezing owned PNG encoder-independent bytes; all 16 changed source/wheel modules equal; broader integrations running and remote CI pending",
+        "corrected installed validation is running: --import-mode=importlib and installed imports asserted within pytest process; encoded names fixed, 29 source resource tests passed; old wheel reproduces percent-name rejection in DOCX and Flat OPC",
+        "release wheel importlib with package path asserted inside pytest process: Mac full tests plus ApiExamples 22197 passed, 2 skipped, 219 warnings; Linux integrations 5505 passed, 1 warning; 16 modified production modules equal wheel/source; scoped source preservation accepted locally, full Font/theme API and remote CI unaccepted"
       ],
       "delivery": "conversion_RGB_auto_origin_stage_accepted; theme_DOM_canonical_Color_full_Font_acceptance_and_remote_CI_pending",
       "limits": [
@@ -17121,9 +17145,25 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
+      "gap": "canonical_DOM_color_and_theme_API_related_theme_resources_all_theme_categories_background_contrast_and_full_fidelity_unaccepted",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "samples": [
+        "font-theme-colors-26.9.json",
+        "font-theme-roundtrip-26.9.json",
+        "corpus/font-theme-current-roundtrip-26.9.zip",
+        "font-theme-combined-contexts-26.9.json",
+        "font-theme-resources-26.9.json"
+      ],
+      "validation": [
+        "source in-progress theme declarations: 184 source preservation checks; 128 native cold color/theme/tint getters match with independent XML/theme/relationship/hash replay; 5134 source model/cascade/Boolean/color/reference integrations passed; no installed/platform/full_Font acceptance",
+        "source combined modifier fix: 32 direct theme extraction colors now match; modal target painted RGB within 1 channel unit; 16 defaults/paragraph/character/direct contexts match native getters/extraction/pixels; 200 theme source tests passed; no installed/platform/full_Font acceptance",
+        "source theme resource graph: 231 source theme/reference tests passed, plus 24 resource/frozen evidence tests; native 26.9.0 Mac Python 3.13.15 cold loads input and current DOCX/Flat OPC then saves; all six relationship-reachable theme PNG hashes match; no theme-image rendering or installed/platform acceptance",
+        "source-shadowed pytest (not wheel acceptance), Mac Python 3.14.7: 236 theme/resource/reference/frozen evidence tests passed, 1 font substitution warning; modified wheel/source modules equal; cross-platform and broader installed integration pending",
+        "source-shadowed pytest (not wheel acceptance): Mac Python 3.14.7 346 specialized tests passed; Linux Python 3.14 143 source resource/privacy/baseline inventory tests passed after freezing owned PNG encoder-independent bytes; all 16 changed source/wheel modules equal; broader integrations running and remote CI pending",
+        "corrected installed validation is running: --import-mode=importlib and installed imports asserted within pytest process; encoded names fixed, 29 source resource tests passed; old wheel reproduces percent-name rejection in DOCX and Flat OPC",
+        "release wheel importlib with package path asserted inside pytest process: Mac full tests plus ApiExamples 22197 passed, 2 skipped, 219 warnings; Linux integrations 5505 passed, 1 warning; 16 modified production modules equal wheel/source; scoped source preservation accepted locally, full Font/theme API and remote CI unaccepted"
+      ]
     },
     {
       "id": "aspose.words.Font.theme_font",
@@ -17181,9 +17221,25 @@
       "runtime_observed": true,
       "current_entrypoint": null,
       "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
+      "gap": "canonical_DOM_color_and_theme_API_related_theme_resources_all_theme_categories_background_contrast_and_full_fidelity_unaccepted",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "samples": [
+        "font-theme-colors-26.9.json",
+        "font-theme-roundtrip-26.9.json",
+        "corpus/font-theme-current-roundtrip-26.9.zip",
+        "font-theme-combined-contexts-26.9.json",
+        "font-theme-resources-26.9.json"
+      ],
+      "validation": [
+        "source in-progress theme declarations: 184 source preservation checks; 128 native cold color/theme/tint getters match with independent XML/theme/relationship/hash replay; 5134 source model/cascade/Boolean/color/reference integrations passed; no installed/platform/full_Font acceptance",
+        "source combined modifier fix: 32 direct theme extraction colors now match; modal target painted RGB within 1 channel unit; 16 defaults/paragraph/character/direct contexts match native getters/extraction/pixels; 200 theme source tests passed; no installed/platform/full_Font acceptance",
+        "source theme resource graph: 231 source theme/reference tests passed, plus 24 resource/frozen evidence tests; native 26.9.0 Mac Python 3.13.15 cold loads input and current DOCX/Flat OPC then saves; all six relationship-reachable theme PNG hashes match; no theme-image rendering or installed/platform acceptance",
+        "source-shadowed pytest (not wheel acceptance), Mac Python 3.14.7: 236 theme/resource/reference/frozen evidence tests passed, 1 font substitution warning; modified wheel/source modules equal; cross-platform and broader installed integration pending",
+        "source-shadowed pytest (not wheel acceptance): Mac Python 3.14.7 346 specialized tests passed; Linux Python 3.14 143 source resource/privacy/baseline inventory tests passed after freezing owned PNG encoder-independent bytes; all 16 changed source/wheel modules equal; broader integrations running and remote CI pending",
+        "corrected installed validation is running: --import-mode=importlib and installed imports asserted within pytest process; encoded names fixed, 29 source resource tests passed; old wheel reproduces percent-name rejection in DOCX and Flat OPC",
+        "release wheel importlib with package path asserted inside pytest process: Mac full tests plus ApiExamples 22197 passed, 2 skipped, 219 warnings; Linux integrations 5505 passed, 1 warning; 16 modified production modules equal wheel/source; scoped source preservation accepted locally, full Font/theme API and remote CI unaccepted"
+      ]
     },
     {
       "id": "aspose.words.Font.underline",
@@ -307356,7 +307412,7 @@
           "CELL": true
         },
         "literal_markup_present": false,
-        "first_paragraph_prefix": "\ufeff"
+        "first_paragraph_prefix": "﻿"
       }
     },
     {

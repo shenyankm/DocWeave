@@ -53,3 +53,72 @@ def resolve_target(part_name: str, target: str) -> str:
     if name in {".", ".."} or name.startswith("../"):
         raise ValueError("Relationship target escapes the package")
     return name
+
+
+def related_part_snapshot(archive, part_name: str) -> tuple[tuple[str, str, bytes], ...]:
+    """Capture reachable OPC parts once, retaining external links without fetching."""
+    from xml.etree.ElementTree import ParseError
+
+    from defusedxml import DefusedXmlException
+    from defusedxml.ElementTree import fromstring
+
+    def parse_xml(data):
+        try:
+            return fromstring(data, forbid_dtd=True)
+        except (ParseError, DefusedXmlException):
+            raise ValueError("Invalid related OPC XML") from None
+
+    types_ns = "{http://schemas.openxmlformats.org/package/2006/content-types}"
+    rels_ns = "{http://schemas.openxmlformats.org/package/2006/relationships}"
+    types = parse_xml(archive.read("[Content_Types].xml"))
+    if types.tag != types_ns + "Types":
+        raise ValueError("Expected an OPC content types part")
+    overrides, defaults = {}, {}
+    for item in types:
+        if item.tag == types_ns + "Override":
+            key = resolve_target("", item.get("PartName", ""))
+            mapping = overrides
+        elif item.tag == types_ns + "Default":
+            key = item.get("Extension", "").lower()
+            mapping = defaults
+        else:
+            raise ValueError("Invalid OPC content type declaration")
+        value = item.get("ContentType", "")
+        if not key or not value or key in mapping:
+            raise ValueError("Empty or duplicate OPC content type declaration")
+        mapping[key] = value
+    names = set(archive.namelist())
+    pending, visited, result = [part_name], set(), []
+    while pending:
+        name = pending.pop()
+        if name in visited:
+            continue
+        visited.add(name)
+        if name not in names:
+            raise ValueError("Missing related OPC part")
+        content_type = overrides.get(name, defaults.get(name.rsplit(".", 1)[-1].lower()))
+        if content_type is None:
+            raise ValueError("Missing related OPC content type")
+        result.append((name, content_type, archive.read(name)))
+        rels_name = relationships_path(name)
+        if rels_name not in names:
+            continue
+        data = archive.read(rels_name)
+        root = parse_xml(data)
+        if root.tag != rels_ns + "Relationships":
+            raise ValueError("Expected an OPC relationships part")
+        result.append((rels_name, "application/vnd.openxmlformats-package.relationships+xml", data))
+        ids = set()
+        for item in root:
+            rid, target = item.get("Id", ""), item.get("Target", "")
+            mode = item.get("TargetMode", "")
+            if (item.tag != rels_ns + "Relationship" or not rid or rid in ids
+                    or not target or not item.get("Type") or mode not in {"", "Internal", "External"}):
+                raise ValueError("Invalid related OPC relationship")
+            ids.add(rid)
+            if mode != "External":
+                dependency = resolve_target(name, target)
+                if dependency.endswith(".rels") or dependency == "[Content_Types].xml":
+                    raise ValueError("Relationship targets an OPC infrastructure part")
+                pending.append(dependency)
+    return tuple(result)

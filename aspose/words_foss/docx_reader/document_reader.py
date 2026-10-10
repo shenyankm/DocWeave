@@ -7,7 +7,7 @@ and shape parsing are provided by the LdmBuilderMixin and
 ShapeParserMixin, respectively.
 """
 
-from aspose.words_foss._opc import relationships_path, resolve_target
+from aspose.words_foss._opc import related_part_snapshot, relationships_path, resolve_target
 from aspose.words_foss._flat_opc import decode, is_flat_opc
 from aspose.words_foss._links import format_link
 import zipfile
@@ -80,6 +80,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         # so ``a:schemeClr`` references in shape fills, borders and run
         # colors can be resolved to concrete RGB values.
         self._theme_colors: dict[str, str] = {}
+        self._source_theme: ldm.SourceTheme | None = None
         # Document defaults from styles.xml/docDefaults
         self._doc_default_rPr: Optional[ET.Element] = None
         self._doc_default_pPr: Optional[ET.Element] = None
@@ -162,6 +163,11 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             with zf.open(name) as stream:
                 root = parse(stream).getroot()
             if kind == "theme":
+                rels_name = relationships_path(name)
+                self._source_theme = ldm.SourceTheme(
+                    data=zf.read(name), relationships=zf.read(rels_name) if rels_name in namelist else None,
+                    part_name=name, parts=tuple(ldm.SourceThemePart(name=part, content_type=content_type, data=data)
+                                               for part, content_type, data in related_part_snapshot(zf, name)))
                 self._parse_theme(root)
             elif kind == "styles":
                 self._styles_xml = root

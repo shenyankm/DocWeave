@@ -1,0 +1,802 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "full_Font_acceptance": false,
+  "rendering_acceptance": false,
+  "pixel_channel_tolerance": 1,
+  "scope": "16 owned combined modifiers across defaults/paragraph/character/direct declarations; target pixel colors only, no layout equivalence",
+  "native": {
+    "version": "26.9.0",
+    "python": "3.13.15",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "licensed": false,
+    "records": [
+      {
+        "input": "07-default.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "default",
+        "sha256": "f9e3371f47092997b505d6c73f38ef71791e253d847d9170f4bc11491723233e",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 1679,
+        "output": "07-default.pdf",
+        "output_sha256": "750a00f04f6b4cc50e23e3239e4442f3180f6397c56c18a5505e30d4ebd7aa1a"
+      },
+      {
+        "input": "07-paragraph.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "paragraph",
+        "sha256": "916b41b4cba827acd2bebf68b2f3ef920efb2542cedaa6a93113b0aa8fa6c990",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "07-paragraph.pdf",
+        "output_sha256": "ba997ae4a87240bb937267fa73401c22363ef6b7ea9de322a871dfa6ad702ea1"
+      },
+      {
+        "input": "07-character.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "character",
+        "sha256": "fbc947aa4779e1be18a134688456e52f73d996fbcd230c1177f8452e6adbf637",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "07-character.pdf",
+        "output_sha256": "80b07bc66d4be10951e09577ac65026df90df5d556b043453c37a638124364ba"
+      },
+      {
+        "input": "07-direct.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "direct",
+        "sha256": "d9d17738e6048e7664958a6e8b13cc0d23b72d3f98a61ac23ba152e3cf528d3d",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "07-direct.pdf",
+        "output_sha256": "1a80e3b5ce0f04141d6eadcd47509d9d66fc2d77bf10785a4f78b814f6cb4d46"
+      },
+      {
+        "input": "15-default.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "default",
+        "sha256": "142cfdd49c4d2eb306268e8b99c52ff25f5d790a78a8f17059c6f7a6e851f828",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 1679,
+        "output": "15-default.pdf",
+        "output_sha256": "079ab43afdb4cebe34073c9a8605957aa56a8694cf9da2a3b4a797ac84c03646"
+      },
+      {
+        "input": "15-paragraph.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "paragraph",
+        "sha256": "3e9aeb97a37075efeeb143c49464eeaa8e51b10908de09faf3ff4930303487c5",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "15-paragraph.pdf",
+        "output_sha256": "480c1fd476ef2203a2606026b5908e5491998bf4285a29f75faf2cbcc2f97992"
+      },
+      {
+        "input": "15-character.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "character",
+        "sha256": "96e84d1f985411bd53d804133a8e6f0a6f6a5f8af49ad376f646661d385389a1",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "15-character.pdf",
+        "output_sha256": "0ec329e82af4cbb6b321bba90afc66d575b3c061821e07cb2ca3436cbfa3bb7c"
+      },
+      {
+        "input": "15-direct.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "direct",
+        "sha256": "8c12b4387eb4d97b53dc726d46453a2b986c799a96146ad40a43333281649362",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "15-direct.pdf",
+        "output_sha256": "8bd19b57aa257485a999ebe8562e80c9a245e2829ad3c800f1aa07712649b1e2"
+      },
+      {
+        "input": "23-default.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "default",
+        "sha256": "9209e14198b639af0f41651f1fd48607aeb5693b127290f0f1c00cf6bee83b60",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 1679,
+        "output": "23-default.pdf",
+        "output_sha256": "cb6150243938a106e1f05fb2998f47eac9929660c85074e8ddbb1b7b28150c96"
+      },
+      {
+        "input": "23-paragraph.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "paragraph",
+        "sha256": "1a59e707f8b736b269c7659327a4f28f6e8087e4e73cab3603b6b8639b94fc4f",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "23-paragraph.pdf",
+        "output_sha256": "51bad09bfdaca52ab8cf32432ba1af2a030fe1c80c175f887b6a9af7faf41167"
+      },
+      {
+        "input": "23-character.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "character",
+        "sha256": "0d6279164856a27335d981ade39aaeebf7e484340b32ffe52b188597f9b48797",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "23-character.pdf",
+        "output_sha256": "fb5bd45341c1145b6ed165a7358d9d791326cc9e86ac6d4130f5e39c57066543"
+      },
+      {
+        "input": "23-direct.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "direct",
+        "sha256": "c89820a74b9f28d4c0cdea30a0cb1daa38654d4601c9edfac54eef1bee4a2ddb",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "23-direct.pdf",
+        "output_sha256": "f1701301ecfd2ffd801f66db10e903a48b6422904d09f55d996d86d978e4c8e6"
+      },
+      {
+        "input": "31-default.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "default",
+        "sha256": "d744ec2c6f91be122bd4aa665a8f30730f11e085cadc7df8a917a029ac87adc2",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 1679,
+        "output": "31-default.pdf",
+        "output_sha256": "2d7749c049cf5713bff577a17801b2a12a13a3a34603b814901132a0a0babb04"
+      },
+      {
+        "input": "31-paragraph.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "paragraph",
+        "sha256": "8d28c270fa00b169fa961bc128b573d4515d2d13ce1dce726f14ab710b344197",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "31-paragraph.pdf",
+        "output_sha256": "14a7dfc3686c26972b1fa5139cba9e4fe2b0e93d34cec94ce52194436a2ff442"
+      },
+      {
+        "input": "31-character.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "character",
+        "sha256": "7ebfdaca3aa22a30296dc8aa093588f728481bbcce323d1a191a5ee6402932fc",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "31-character.pdf",
+        "output_sha256": "d9470da075cd7f147c85985b7c7464f6457ebf19e0c38ea0b4afb259d2045c7d"
+      },
+      {
+        "input": "31-direct.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "direct",
+        "sha256": "021473fa8f071a7553c07f37b6c13915a844f72e6afc321e70a94ae6d9ee24d9",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2356,
+        "output": "31-direct.pdf",
+        "output_sha256": "3c7a87de07501ebb012fe70721386920417dddf94133529658d1b3b3a5e20188"
+      }
+    ],
+    "full_Font_acceptance": false,
+    "rendering_acceptance": false
+  },
+  "current": {
+    "version": "26.7.0.post2",
+    "python": "3.14.7",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "licensed": null,
+    "records": [
+      {
+        "input": "07-default.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "default",
+        "sha256": "f9e3371f47092997b505d6c73f38ef71791e253d847d9170f4bc11491723233e",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 1749,
+        "output": "07-default.pdf",
+        "output_sha256": "21077ff093cfc0a3895e3f2994165900609ca11355721efa834660a9c0a48287"
+      },
+      {
+        "input": "07-paragraph.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "paragraph",
+        "sha256": "916b41b4cba827acd2bebf68b2f3ef920efb2542cedaa6a93113b0aa8fa6c990",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "07-paragraph.pdf",
+        "output_sha256": "11c6d4988614a9d331af078b972f119a581f51523401be198618bfcbcc201ce2"
+      },
+      {
+        "input": "07-character.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "character",
+        "sha256": "fbc947aa4779e1be18a134688456e52f73d996fbcd230c1177f8452e6adbf637",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "07-character.pdf",
+        "output_sha256": "11c6d4988614a9d331af078b972f119a581f51523401be198618bfcbcc201ce2"
+      },
+      {
+        "input": "07-direct.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "direct",
+        "sha256": "d9d17738e6048e7664958a6e8b13cc0d23b72d3f98a61ac23ba152e3cf528d3d",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "07-direct.pdf",
+        "output_sha256": "11c6d4988614a9d331af078b972f119a581f51523401be198618bfcbcc201ce2"
+      },
+      {
+        "input": "15-default.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "default",
+        "sha256": "142cfdd49c4d2eb306268e8b99c52ff25f5d790a78a8f17059c6f7a6e851f828",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 1749,
+        "output": "15-default.pdf",
+        "output_sha256": "01cc33dce5a7c2efe98cb089e28dfcbecc55277030a7f6681a32268befa6132c"
+      },
+      {
+        "input": "15-paragraph.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "paragraph",
+        "sha256": "3e9aeb97a37075efeeb143c49464eeaa8e51b10908de09faf3ff4930303487c5",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "15-paragraph.pdf",
+        "output_sha256": "4d981202362a7753c2ccb8962a7251cfdc7d837e14f78067ad7936e051584f43"
+      },
+      {
+        "input": "15-character.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "character",
+        "sha256": "96e84d1f985411bd53d804133a8e6f0a6f6a5f8af49ad376f646661d385389a1",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "15-character.pdf",
+        "output_sha256": "4d981202362a7753c2ccb8962a7251cfdc7d837e14f78067ad7936e051584f43"
+      },
+      {
+        "input": "15-direct.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "direct",
+        "sha256": "8c12b4387eb4d97b53dc726d46453a2b986c799a96146ad40a43333281649362",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "15-direct.pdf",
+        "output_sha256": "4d981202362a7753c2ccb8962a7251cfdc7d837e14f78067ad7936e051584f43"
+      },
+      {
+        "input": "23-default.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "default",
+        "sha256": "9209e14198b639af0f41651f1fd48607aeb5693b127290f0f1c00cf6bee83b60",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 1749,
+        "output": "23-default.pdf",
+        "output_sha256": "21077ff093cfc0a3895e3f2994165900609ca11355721efa834660a9c0a48287"
+      },
+      {
+        "input": "23-paragraph.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "paragraph",
+        "sha256": "1a59e707f8b736b269c7659327a4f28f6e8087e4e73cab3603b6b8639b94fc4f",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "23-paragraph.pdf",
+        "output_sha256": "11c6d4988614a9d331af078b972f119a581f51523401be198618bfcbcc201ce2"
+      },
+      {
+        "input": "23-character.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "character",
+        "sha256": "0d6279164856a27335d981ade39aaeebf7e484340b32ffe52b188597f9b48797",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "23-character.pdf",
+        "output_sha256": "2a93e32f0d1648db1e7e9fd96597ea20bb0bb0ad57b310dcdff8b66429023b7e"
+      },
+      {
+        "input": "23-direct.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "direct",
+        "sha256": "c89820a74b9f28d4c0cdea30a0cb1daa38654d4601c9edfac54eef1bee4a2ddb",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "painted_target_rgb": [
+          0,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "23-direct.pdf",
+        "output_sha256": "2a93e32f0d1648db1e7e9fd96597ea20bb0bb0ad57b310dcdff8b66429023b7e"
+      },
+      {
+        "input": "31-default.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "default",
+        "sha256": "d744ec2c6f91be122bd4aa665a8f30730f11e085cadc7df8a917a029ac87adc2",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 1749,
+        "output": "31-default.pdf",
+        "output_sha256": "fe82dd459cb4803da075214ac4487cad15c85796a6479bcd897658c1f04cd569"
+      },
+      {
+        "input": "31-paragraph.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "paragraph",
+        "sha256": "8d28c270fa00b169fa961bc128b573d4515d2d13ce1dce726f14ab710b344197",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "31-paragraph.pdf",
+        "output_sha256": "a88e7de37015466a9e2f2860627f2fd8582285d7b7637e0a38bb429adcafff2d"
+      },
+      {
+        "input": "31-character.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "character",
+        "sha256": "7ebfdaca3aa22a30296dc8aa093588f728481bbcce323d1a191a5ee6402932fc",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "31-character.pdf",
+        "output_sha256": "414da5c225a97b6acb43b66d49b17be970c7b7f8fefd476122127d63f2529868"
+      },
+      {
+        "input": "31-direct.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "layer": "direct",
+        "sha256": "021473fa8f071a7553c07f37b6c13915a844f72e6afc321e70a94ae6d9ee24d9",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "painted_target_rgb": [
+          255,
+          0,
+          0
+        ],
+        "nonwhite_target_pixels": 2162,
+        "output": "31-direct.pdf",
+        "output_sha256": "414da5c225a97b6acb43b66d49b17be970c7b7f8fefd476122127d63f2529868"
+      }
+    ],
+    "full_Font_acceptance": false,
+    "rendering_acceptance": false
+  },
+  "corpus": "corpus/font-theme-combined-corpus-26.9.zip",
+  "corpus_sha256": "1b8301e2b64c43b4008fa6f04577be10c85c78b2ae89f3f5094e2511683be659",
+  "native_outputs": "corpus/font-theme-combined-native-outputs-26.9.zip",
+  "native_outputs_sha256": "1c2eac43b1ea66aede4b5d73e4f38fc315eefabad0f7a6b857109282e109ac66",
+  "current_outputs": "corpus/font-theme-combined-current-outputs-26.9.zip",
+  "current_outputs_sha256": "75466d5fd4e280704c5cfaa58410a9ee73498d6ba594591e4c727198fb166462"
+}

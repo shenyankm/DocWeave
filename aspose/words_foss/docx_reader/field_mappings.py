@@ -179,7 +179,7 @@ LIST_TRAILING_CHARACTER_MAP: dict[str, int] = {
 #: doesn't wipe an explicit base colour (handled in the merge code).
 MERGE_FONT_FIELDS: tuple[str, ...] = (
     "name", "size", "bold", "bold_bi", "italic", "italic_bi",
-    "underline", "color",
+    "underline", "color", "source_color", "color_rendering",
     "strike_through", "superscript", "subscript", "highlight_color",
     "all_caps", "small_caps", "hidden", "no_proofing",
     "style_name", "style_identifier",

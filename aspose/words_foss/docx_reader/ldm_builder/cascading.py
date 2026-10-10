@@ -167,23 +167,17 @@ class FontBuilder:
         if color is None:
             return
         val = color.get(f"{W_NS}val", "")
-        if val and val.lower() != "auto":
-            font.color = _hex_to_ldm_color(val)
-            return
+        font.color = _hex_to_ldm_color(val)
+        font.source_color = ldm.SourceColor(
+            value=color.get(f"{W_NS}val"), theme_color=color.get(f"{W_NS}themeColor"),
+            theme_tint=color.get(f"{W_NS}themeTint"), theme_shade=color.get(f"{W_NS}themeShade"))
         theme_name = color.get(f"{W_NS}themeColor", "")
-        if not theme_name:
-            if val.lower() == "auto":
-                font.color = COLOR_EMPTY
-            return
-        resolved = self._ctx._resolve_theme_color(theme_name)
-        if not resolved:
-            return
-        resolved = _apply_theme_color_modifiers(
-            resolved,
-            tint=color.get(f"{W_NS}themeTint"),
-            shade=color.get(f"{W_NS}themeShade"),
-        )
-        font.color = _hex_to_ldm_color(resolved)
+        resolved = self._ctx._resolve_theme_color(theme_name) if theme_name else ""
+        tint, shade = color.get(f"{W_NS}themeTint"), color.get(f"{W_NS}themeShade")
+        # Native 26.9 paints the raw fallback when both modifiers are present.
+        if resolved and not (tint is not None and shade is not None):
+            font.color_rendering = _hex_to_ldm_color(_apply_theme_color_modifiers(
+                resolved, tint=tint, shade=shade))
 
     @staticmethod
     def _apply_vert_align(rPr: ET.Element, font: ldm.Font) -> None:

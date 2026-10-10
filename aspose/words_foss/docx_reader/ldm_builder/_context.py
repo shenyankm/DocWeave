@@ -38,6 +38,7 @@ class ReaderContext(Protocol):
     # Theme tables built from theme1.xml
     _theme_fonts: dict[str, str]
     _theme_colors: dict[str, str]
+    _source_theme: ldm.SourceTheme | None
 
     # Document-level defaults from styles.xml/docDefaults
     _doc_default_rPr: Optional[ET.Element]

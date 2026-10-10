@@ -76,7 +76,7 @@ def apply_run_font(pdf: FPDF, font: ldm.Font, default_size: float = DEFAULT_FONT
     # ponytail: one Unicode family replaces source fonts; add font matching for layout fidelity.
     pdf.char_vpos = CharVPos.SUP if font.superscript else CharVPos.SUB if font.subscript else CharVPos.LINE
     pdf.set_font(DEFAULT_FONT_NAME, style=style, size=size)
-    set_text_color(pdf, font.color)
+    set_text_color(pdf, font.render_color)
     return style
 
 

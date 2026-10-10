@@ -666,6 +666,17 @@ def apply_reference_styles(generated: str, reference: ldm.Document) -> str:
     """Overlay reference styles by display name without changing body style IDs."""
     from xml.etree import ElementTree as ET
 
+    # Reference styles retain their resolved colors under the destination theme.
+    styles = []
+    for style in reference.styles:
+        if style.font is not None and style.font.color_rendering is not None:
+            font = style.font.model_copy(update={'color': style.font.render_color})
+            style = style.model_copy(update={'font': font})
+        styles.append(style)
+    defaults = reference.doc_defaults_font
+    if defaults is not None and defaults.color_rendering is not None:
+        defaults = defaults.model_copy(update={'color': defaults.render_color})
+    reference = reference.model_copy(update={'styles': styles, 'doc_defaults_font': defaults})
     names = [s.name for s in reference.styles if s.name]
     if len(names) != len(set(names)):
         raise ValueError("Reference DOCX contains ambiguous style names")

@@ -957,6 +957,26 @@ def saved_color_observation(raw):
     return color_observation(value), declared.get(w + 'val') if declared is not None else None
 
 
+def verify_theme_colors(root):
+    check = runpy.run_path(str(Path(__file__).with_name("verify_font_themes.py")))["verify_theme_colors"]
+    return check(root)
+
+
+def verify_theme_contexts(root):
+    check = runpy.run_path(str(Path(__file__).with_name("verify_font_themes.py")))["verify_theme_contexts"]
+    return check(root)
+
+
+def verify_theme_roundtrips(root):
+    check = runpy.run_path(str(Path(__file__).with_name("verify_font_themes.py")))["verify_theme_roundtrips"]
+    return check(root)
+
+
+def verify_theme_resources(root):
+    check = runpy.run_path(str(Path(__file__).with_name("verify_font_themes.py")))["verify_theme_resources"]
+    return check(root)
+
+
 def verify_font_color_categories(root):
     report = json.loads((root / 'font-color-categories-26.9.json').read_text())
     assert report['version'] == '26.9.0' and report['licensed'] is False
@@ -1911,6 +1931,10 @@ def verify(root):
     dom_font_booleans = verify_dom_font_booleans(root)
     dom_font_boolean_errors = verify_dom_font_boolean_errors(root)
     font_colors = verify_font_color_categories(root)
+    theme_colors = verify_theme_colors(root)
+    theme_contexts = verify_theme_contexts(root)
+    theme_roundtrips = verify_theme_roundtrips(root)
+    theme_resources = verify_theme_resources(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -1927,6 +1951,10 @@ def verify(root):
             "checked_dom_font_boolean_outputs": dom_font_booleans,
             "checked_dom_font_boolean_errors": dom_font_boolean_errors,
             "checked_font_color_outputs": font_colors,
+            "checked_theme_colors": theme_colors,
+            "checked_theme_contexts": theme_contexts,
+            "checked_theme_roundtrips": theme_roundtrips,
+            "checked_theme_resources": theme_resources,
             "checked_font_default_inputs": defaults,
             "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,

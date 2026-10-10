@@ -15,8 +15,19 @@ later is a localised change.
 
 
 import zipfile
+from io import BytesIO
+from posixpath import dirname, relpath
+from urllib.parse import quote
+from xml.etree import ElementTree as ET
+
+from defusedxml import DefusedXmlException
+from defusedxml.ElementTree import fromstring
 from pathlib import Path
 from typing import IO, Optional, Union
+
+from aspose.words_foss._opc import related_part_snapshot, relationships_path, resolve_target
+from aspose.words_foss._io import check_input_size
+from aspose.words_foss.light_document_model import SourceTheme
 
 from aspose.words_foss.docx_writer.constants import (
     CT_CORE_PROPS,
@@ -66,6 +77,7 @@ def _content_types(
     has_footer: bool,
     has_settings: bool,
     image_extensions: set[str],
+    has_theme: bool = False,
 ) -> str:
     """Build ``[Content_Types].xml``.
 
@@ -101,6 +113,9 @@ def _content_types(
             ),
         ]
     )
+    if has_theme:
+        children.append(el('Override', {'PartName': '/word/theme/theme1.xml',
+                                       'ContentType': 'application/vnd.openxmlformats-officedocument.theme+xml'}))
     if has_numbering:
         children.append(
             el(
@@ -185,6 +200,7 @@ def _doc_rels(
     has_footer: bool,
     has_settings: bool,
     images: list[ImageEntry],
+    has_theme: bool = False,
 ) -> str:
     """Build ``word/_rels/document.xml.rels`` from accumulated relationships."""
     children = [
@@ -197,6 +213,10 @@ def _doc_rels(
             },
         ),
     ]
+    if has_theme:
+        children.append(el('Relationship', {'Id': 'rIdTheme',
+                                            'Type': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme',
+                                            'Target': 'theme/theme1.xml'}))
     if has_numbering:
         children.append(
             el(
@@ -323,6 +343,76 @@ def _hf_part_rels(hyperlinks: dict[str, str], images: list[ImageEntry]) -> str:
     return XML_DECL + el("Relationships", {"xmlns": PKG_RELS_URI}, children)
 
 
+def _import_theme_resources(source: SourceTheme, text_parts, binary_parts):
+    """Validate the captured graph, then rebind it under an unused theme directory."""
+    if not source.parts:
+        if source.relationships is not None:
+            root = fromstring(source.relationships, forbid_dtd=True)
+            if root.tag != f'{{{PKG_RELS_URI}}}Relationships':
+                raise ValueError('Expected OPC theme relationships')
+            if len(root):
+                raise ValueError('Theme relationship resources are missing from the source snapshot')
+        if any(key.startswith('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}')
+               for node in fromstring(source.data, forbid_dtd=True).iter() for key in node.attrib):
+            raise ValueError('Theme relationship resources are missing from the source snapshot')
+        return
+    check_input_size(sum(len(part.data) for part in source.parts))
+    parts = {}
+    part_names = set()
+    types = ET.Element(f'{{{CT_URI}}}Types')
+    for part in source.parts:
+        if (resolve_target('', quote('/' + part.name, safe='/')) != part.name
+                or part.name.casefold() in part_names
+                or part.name == '[Content_Types].xml'):
+            raise ValueError('Invalid or duplicate source theme part name')
+        parts[part.name] = part.data
+        part_names.add(part.name.casefold())
+        ET.SubElement(types, f'{{{CT_URI}}}Override', PartName=quote('/' + part.name, safe='/'),
+                      ContentType=part.content_type)
+    if parts.get(source.part_name) != source.data or parts.get(relationships_path(source.part_name)) != source.relationships:
+        raise ValueError('Source theme snapshot declarations disagree')
+    stream = BytesIO()
+    with zipfile.ZipFile(stream, 'w') as archive:
+        archive.writestr('[Content_Types].xml', ET.tostring(types))
+        for name, data in parts.items():
+            archive.writestr(name, data)
+    with zipfile.ZipFile(stream) as archive:
+        graph = related_part_snapshot(archive, source.part_name)
+    if {name for name, _, _ in graph} != set(parts):
+        raise ValueError('Unrelated parts in the source theme snapshot')
+    occupied = {name.casefold() for name, _ in text_parts + binary_parts}
+    number = 1
+    while any(name.startswith(f'word/theme/resources{number}/') for name in occupied):
+        number += 1
+    prefix = f'word/theme/resources{number}/'
+    mapping = {name: prefix + name for name, _, _ in graph if not name.endswith('.rels')}
+    mapping[source.part_name] = 'word/theme/theme1.xml'
+    content_types = fromstring(text_parts[0][1], forbid_dtd=True)
+    for name, content_type, data in graph:
+        if name.endswith('.rels'):
+            continue
+        destination = mapping[name]
+        rels_name = relationships_path(name)
+        root = fromstring(parts[rels_name], forbid_dtd=True) if rels_name in parts else None
+        ids = {item.get('Id') for item in root} if root is not None else set()
+        if content_type.endswith('+xml') or content_type in {'application/xml', 'text/xml'}:
+            xml = fromstring(data, forbid_dtd=True)
+            if any(value not in ids for node in xml.iter() for key, value in node.attrib.items()
+                   if key.startswith('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}')):
+                raise ValueError('Missing theme resource relationship ID')
+        if root is not None:
+            for item in root:
+                if item.get('TargetMode') != 'External':
+                    target = mapping[resolve_target(name, item.get('Target'))]
+                    item.set('Target', quote(relpath(target, dirname(destination)), safe='/'))
+            binary_parts.append((relationships_path(destination), ET.tostring(root, encoding='utf-8')))
+        if name != source.part_name:
+            binary_parts.append((destination, data))
+            ET.SubElement(content_types, f'{{{CT_URI}}}Override', PartName=quote('/' + destination, safe='/'),
+                          ContentType=content_type)
+    text_parts[0] = ('[Content_Types].xml', ET.tostring(content_types, encoding='unicode'))
+
+
 def _build_parts(
     *,
     document_xml: str,
@@ -337,8 +427,22 @@ def _build_parts(
     footer_images: list[ImageEntry],
     hyperlinks: dict[str, str],
     images: list[ImageEntry],
+    theme_xml: bytes | None = None,
+    source_theme: SourceTheme | None = None,
 ) -> tuple[list[tuple[str, str]], list[tuple[str, bytes]]]:
     """Assemble ordered (text_parts, binary_parts) lists for the zip."""
+    if source_theme is not None and source_theme.data != theme_xml:
+        raise ValueError('Source theme XML disagrees with its resource snapshot')
+    if theme_xml is not None:
+        try:
+            theme = fromstring(theme_xml, forbid_dtd=True)
+        except (ET.ParseError, DefusedXmlException):
+            raise ValueError('Invalid source theme XML') from None
+        if theme.tag != '{http://schemas.openxmlformats.org/drawingml/2006/main}theme':
+            raise ValueError('Expected a DrawingML theme')
+        if source_theme is None and any(key.startswith('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}')
+               for node in theme.iter() for key in node.attrib):
+            raise NotImplementedError('Theme relationship resources are not yet supported by conversion')
     has_numbering = bool(numbering_xml)
     has_header = bool(header_xml)
     has_footer = bool(footer_xml)
@@ -348,13 +452,13 @@ def _build_parts(
     text_parts: list[tuple[str, str]] = [
         (
             "[Content_Types].xml",
-            _content_types(has_numbering, has_header, has_footer, has_settings, image_extensions),
+            _content_types(has_numbering, has_header, has_footer, has_settings, image_extensions, has_theme=theme_xml is not None),
         ),
         ("_rels/.rels", _pkg_rels()),
         ("word/document.xml", document_xml),
         (
             "word/_rels/document.xml.rels",
-            _doc_rels(hyperlinks, has_numbering, has_header, has_footer, has_settings, images),
+            _doc_rels(hyperlinks, has_numbering, has_header, has_footer, has_settings, images, has_theme=theme_xml is not None),
         ),
         ("word/styles.xml", styles_xml),
     ]
@@ -387,6 +491,13 @@ def _build_parts(
     binary_parts: list[tuple[str, bytes]] = [
         (image.media_path, image.image_bytes) for image in all_images
     ]
+    if theme_xml is not None:
+        binary_parts.append(('word/theme/theme1.xml', theme_xml))
+        if source_theme is not None:
+            try:
+                _import_theme_resources(source_theme, text_parts, binary_parts)
+            except (ET.ParseError, DefusedXmlException):
+                raise ValueError('Invalid source theme resource XML') from None
     return text_parts, binary_parts
 
 
@@ -397,6 +508,8 @@ def write_docx_package(
     styles_xml: str,
     numbering_xml: Optional[str],
     settings_xml: Optional[str] = None,
+    theme_xml: bytes | None = None,
+    source_theme: SourceTheme | None = None,
     hyperlinks: dict[str, str],
     images: Optional[list[ImageEntry]] = None,
     header_xml: Optional[str] = None,
@@ -426,6 +539,8 @@ def write_docx_package(
     classic 4 GB / 65 535-entry ZIP limits.
     """
     text_parts, binary_parts = _build_parts(
+        theme_xml=theme_xml,
+        source_theme=source_theme,
         document_xml=document_xml,
         styles_xml=styles_xml,
         numbering_xml=numbering_xml,

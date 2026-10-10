@@ -42,6 +42,7 @@ class LdmBuilderMixin:
     def to_light_document(self) -> ldm.Document:
         """Build a :class:`ldm.Document` from the loaded DOCX."""
         doc = ldm.Document()
+        doc.source_theme = self._source_theme
         doc.page_color = self._get_page_color()
         doc.default_tab_stop = self._get_default_tab_stop()
         doc.compatibility_mode = 12

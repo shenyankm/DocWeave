@@ -202,12 +202,15 @@ def render_rPr(
             toggle = _bool_toggle(tag, val, getattr(base, field))
         if toggle is not None:
             children.append(toggle)
-    if font.color != base.color or font.color_explicit is True:
-        color_hex = color_to_hex(font.color)
-        if color_hex:
-            children.append(el("w:color", {"w:val": color_hex}))
+    if font.color != base.color or font.source_color != base.source_color or font.color_explicit is True:
+        if font.source_color is not None:
+            source = font.source_color
+            attrs = {key: value for key, value in (
+                ('w:val', source.value), ('w:themeColor', source.theme_color),
+                ('w:themeTint', source.theme_tint), ('w:themeShade', source.theme_shade)) if value is not None}
         else:
-            children.append(el("w:color", {"w:val": "auto"}))
+            attrs = {'w:val': color_to_hex(font.color) or 'auto'}
+        children.append(el('w:color', attrs))
     if font.kerning != base.kerning:
         children.append(el("w:kern", {"w:val": pt_to_half_pt(font.kerning)}))
     if font.size > 0 and (font.size != base.size or font.size_explicit is True):

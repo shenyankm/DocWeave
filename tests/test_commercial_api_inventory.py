@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_paragraph_character_reads", "verify_paragraph_character_inheritance_edits", "verify_character_indent_roundtrips", "verify_font_size_loading", "verify_font_boolean_contexts", "verify_hidden_style_contexts", "verify_hidden_font_roundtrip", "verify_font_boolean_roundtrip", "verify_font_color_categories"])
+@pytest.mark.parametrize("name", ["verify_paragraph_pagination", "verify_first_paragraph_trial", "verify_pagination_rendering", "verify_paragraph_dimensions", "verify_paragraph_character_indents", "verify_paragraph_character_setters", "verify_paragraph_character_reads", "verify_paragraph_character_inheritance_edits", "verify_character_indent_roundtrips", "verify_font_size_loading", "verify_font_boolean_contexts", "verify_hidden_style_contexts", "verify_hidden_font_roundtrip", "verify_font_boolean_roundtrip", "verify_font_color_categories", "verify_theme_colors", "verify_theme_contexts", "verify_theme_roundtrips", "verify_theme_resources"])
 def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, name):
     from zipfile import ZipInfo
 
@@ -19,7 +19,7 @@ def test_generated_packages_accept_windows_zip_creator_metadata(monkeypatch, nam
     monkeypatch.setattr(ZipInfo, "__init__", windows_info)
     root = Path(__file__).parents[1]
     check = runpy.run_path(str(root / "scripts/verify_commercial_baseline.py"))[name]
-    assert check(root / "docs/benchmarks") in {10, 18, 24, 32, 61, 122, 126, 144, 216, 360, 452, 891, 1024, 1296, 3240}
+    assert check(root / "docs/benchmarks") in {6, 10, 16, 18, 24, 32, 61, 128, 122, 126, 144, 216, 360, 452, 891, 1024, 1296, 3240}
 
 
 
@@ -355,6 +355,13 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     names += ["dom-font-booleans-26.9.json", "corpus/dom-font-boolean-observations-26.9.zip"]
     names += ["dom-font-boolean-errors-26.9.json"]
     names += ["font-color-categories-26.9.json", "corpus/font-color-categories-26.9.zip", "corpus/font-color-current.zip"]
+    names += ["font-theme-colors-26.9.json", "corpus/font-theme-corpus-26.9.zip",
+              "corpus/font-theme-native-outputs-26.9.zip", "corpus/font-theme-current-before-outputs-26.9.zip",
+              "corpus/font-theme-current-outputs-26.9.zip", "font-theme-combined-contexts-26.9.json",
+              "corpus/font-theme-combined-corpus-26.9.zip", "corpus/font-theme-combined-native-outputs-26.9.zip",
+              "corpus/font-theme-combined-current-outputs-26.9.zip", "font-theme-roundtrip-26.9.json",
+              "corpus/font-theme-current-roundtrip-26.9.zip", "font-theme-resources-26.9.json",
+              "corpus/font-theme-resources-26.9.zip"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -366,6 +373,10 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
     assert result["checked_dom_font_boolean_outputs"] == 10692
     assert result["checked_dom_font_boolean_errors"] == 297
     assert result["checked_font_color_outputs"] == 1024
+    assert result["checked_theme_colors"] == 32
+    assert result["checked_theme_contexts"] == 16
+    assert result["checked_theme_roundtrips"] == 128
+    assert result["checked_theme_resources"] == 6
     assert result["checked_format_outputs"] == 100 and result["behavioral_acceptance"] is False
     assert result["checked_import_outputs"] == 168
     assert result["checked_style_inputs"] == 745

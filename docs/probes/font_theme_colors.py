@@ -6,6 +6,7 @@ import itertools
 import json
 import platform
 import runpy
+from collections import Counter
 from importlib.metadata import version
 from io import BytesIO
 from pathlib import Path
@@ -49,7 +50,25 @@ def inputs():
         yield f'{index:02d}.docx', {'base': base, 'fallback': fallback, 'modifiers': modifier}, output.getvalue()
 
 
-def main():
+def pdf_observation(raw):
+    """Measure extraction color and modal painted RGB in the owned target box."""
+    import pymupdf
+    with pymupdf.open(stream=raw, filetype='pdf') as pdf:
+        page = next(p for p in pdf if any(w[4] == 'IMPORT' for w in p.get_text('words')))
+        word = next(w for w in page.get_text('words') if w[4] == 'IMPORT')
+        colors = [s['color'] for b in page.get_text('dict')['blocks'] for line in b.get('lines', [])
+                  for s in line['spans'] if s['text'] == 'IMPORT']
+        assert len(colors) == 1
+        pixels = page.get_pixmap(matrix=pymupdf.Matrix(4, 4), clip=pymupdf.Rect(word[:4]), alpha=False,
+                                colorspace=pymupdf.csRGB)
+        counts = Counter(zip(*(iter(pixels.samples),) * 3))
+        counts.pop((255, 255, 255), None)
+        rgb = counts.most_common(1)[0][0] if counts else (255, 255, 255)
+        return {'pdf_target_color': colors[0], 'painted_target_rgb': list(rgb),
+                'nonwhite_target_pixels': sum(counts.values())}
+
+
+def main(input_generator=inputs, expected_count=32):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', choices=('generate', 'commercial', 'current'))
     parser.add_argument('corpus', type=Path)
@@ -58,12 +77,11 @@ def main():
     args = parser.parse_args()
     if args.action == 'generate':
         with ZipFile(args.corpus, 'w', ZIP_DEFLATED) as archive:
-            for name, _, raw in inputs():
+            for name, _, raw in input_generator():
                 archive.writestr(name, raw)
         return
     if args.outputs is None:
         parser.error('observations require --outputs for raw PDFs')
-    import pymupdf
     native = args.action == 'commercial'
     if native:
         import aspose.words as aw
@@ -73,7 +91,7 @@ def main():
     observe = runpy.run_path(str(Path(__file__).with_name('font_color_categories.py')))['observed']
     records = []
     with ZipFile(args.corpus) as sources, ZipFile(args.outputs, 'w', ZIP_DEFLATED) as outputs:
-        for name, case, _ in inputs():
+        for name, case, _ in input_generator():
             raw = sources.read(name)
             doc = aw.Document(BytesIO(raw)) if native else Document(BytesIO(raw))
             getter = observe(doc, native)
@@ -83,19 +101,13 @@ def main():
                 pdf_raw = result.getvalue()
             else:
                 pdf_raw = doc.to_bytes(SaveFormat.PDF)
-            colors = []
-            with pymupdf.open(stream=pdf_raw, filetype='pdf') as pdf:
-                for page in pdf:
-                    for block in page.get_text('dict')['blocks']:
-                        for line in block.get('lines', []):
-                            colors.extend(s['color'] for s in line['spans'] if s['text'] == 'IMPORT')
-            assert len(colors) == 1
+            paint = pdf_observation(pdf_raw)
             output = name.replace('.docx', '.pdf')
             outputs.writestr(output, pdf_raw)
             records.append({'input': name, **case, 'sha256': hashlib.sha256(raw).hexdigest(),
-                            'getter': getter, 'pdf_target_color': colors[0], 'output': output,
+                            'getter': getter, **paint, 'output': output,
                             'output_sha256': hashlib.sha256(pdf_raw).hexdigest()})
-    assert len(records) == 32
+    assert len(records) == expected_count
     args.report.write_text(json.dumps({'version': version('aspose-words' if native else 'aspose-words-foss-enhanced'),
                                       'python': platform.python_version(), 'platform': platform.platform(),
                                       'licensed': False if native else None, 'records': records,

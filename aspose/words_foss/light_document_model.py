@@ -15,7 +15,7 @@ from collections.abc import Mapping
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
-    BaseModel, BeforeValidator, Field, PrivateAttr, field_serializer, field_validator,
+    BaseModel, BeforeValidator, ConfigDict, Field, PrivateAttr, field_serializer, field_validator,
     model_serializer, model_validator,
 )
 
@@ -285,6 +285,57 @@ FONT_BOOLEAN_FIELDS = (
 )
 
 
+class SourceColor(BaseModel):
+    """Immutable source declarations, cleared by direct color editing."""
+
+    model_config = ConfigDict(frozen=True)
+    value: str | None = None
+    theme_color: str | None = None
+    theme_tint: str | None = None
+    theme_shade: str | None = None
+
+
+class SourceThemePart(BaseModel):
+    """Immutable reachable part, including its original OPC content type."""
+
+    model_config = ConfigDict(frozen=True)
+    name: str
+    content_type: str
+    data: bytes
+
+    @field_serializer('data', when_used='json')
+    def _encode_bytes(self, value: bytes) -> dict[str, str]:
+        return {'encoding': 'base64', 'data': b64encode(value).decode('ascii')}
+
+    @field_validator('data', mode='before')
+    @classmethod
+    def _decode_bytes(cls, value: Any) -> Any:
+        if isinstance(value, dict) and value.get('encoding') == 'base64' and isinstance(value.get('data'), str):
+            return b64decode(value['data'], validate=True)
+        return value
+
+
+class SourceTheme(BaseModel):
+    """Original theme declarations and reachable package resources."""
+
+    model_config = ConfigDict(frozen=True)
+    data: bytes
+    relationships: bytes | None = None
+    part_name: str = 'word/theme/theme1.xml'
+    parts: tuple[SourceThemePart, ...] = ()
+
+    @field_serializer('data', 'relationships', when_used='json')
+    def _encode_bytes(self, value: bytes | None) -> dict[str, str] | None:
+        return None if value is None else {'encoding': 'base64', 'data': b64encode(value).decode('ascii')}
+
+    @field_validator('data', 'relationships', mode='before')
+    @classmethod
+    def _decode_bytes(cls, value: Any) -> Any:
+        if isinstance(value, dict) and value.get('encoding') == 'base64' and isinstance(value.get('data'), str):
+            return b64decode(value['data'], validate=True)
+        return value
+
+
 class Font(BaseModel):
     name: str = ""
     size: float = 0.0
@@ -296,6 +347,8 @@ class Font(BaseModel):
     underline: int = 0
     color: str = ""
     color_explicit: bool | None = None
+    color_rendering: str | None = None
+    source_color: SourceColor | None = None
     strike_through: bool = False
     superscript: bool = False
     subscript: bool = False
@@ -347,16 +400,31 @@ class Font(BaseModel):
         """Layout visibility can differ from the resolved property getter."""
         return self.hidden if self.hidden_rendering is None else self.hidden_rendering
 
+    @property
+    def render_color(self) -> str:
+        """Layout color can differ from the original RGB/automatic getter."""
+        return self.color if self.color_rendering is None else self.color_rendering
+
     def __setattr__(self, name: str, value: Any) -> None:
+        if name == 'source_color' and value is not None and not isinstance(value, SourceColor):
+            raise TypeError('source_color must be SourceColor or None')
         super().__setattr__(name, value)
         if name in (*FONT_BOOLEAN_FIELDS, 'color'):
             super().__setattr__(name + '_explicit', True)
         if name == 'hidden':
             super().__setattr__('hidden_rendering', None)
+        if name == 'color':
+            super().__setattr__('source_color', None)
+        if name in ('color', 'source_color'):
+            super().__setattr__('color_rendering', None)
 
     def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False) -> Font:
         if update is not None and 'hidden' in update and 'hidden_rendering' not in update:
             update = dict(update, hidden_rendering=None)
+        if update is not None and 'color' in update:
+            update = dict(update)
+            update.setdefault('color_rendering', None)
+            update.setdefault('source_color', None)
         if update is not None:
             update = dict(update)
             for field in (*FONT_BOOLEAN_FIELDS, 'color'):
@@ -1306,6 +1374,7 @@ class Document(BaseModel):
     compatibility_mode: int = Field(default=15, ge=0)
     page_color: str = ""
     page_count: int = 0
+    source_theme: SourceTheme | None = None
     doc_defaults_font: Optional[Font] = None
     doc_defaults_rpr_present: bool | None = None
 

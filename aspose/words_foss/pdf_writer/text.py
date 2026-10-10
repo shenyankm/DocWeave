@@ -115,7 +115,7 @@ def get_dominant_color(runs: list[ldm.Run]) -> Optional[Tuple[int, int, int]]:
     """Get the color from the first run that has a parseable color."""
 
     for run in runs:
-        rgb = parse_color(run.font.color)
+        rgb = parse_color(run.font.render_color)
         if rgb:
             return rgb
     return None

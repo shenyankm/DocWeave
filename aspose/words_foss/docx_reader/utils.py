@@ -5,6 +5,8 @@ Pure functions for color conversion, content-type detection,
 style name canonicalization, and XML element text collection.
 """
 
+from colorsys import hls_to_rgb, rgb_to_hls
+
 from aspose.words_foss import light_document_model as ldm
 from aspose.words_foss.docx_reader.constants import (
     COLOR_EMPTY,
@@ -235,38 +237,18 @@ def _apply_theme_color_modifiers(
     tint: str | None = None,
     shade: str | None = None,
 ) -> str:
-    """Apply ``w:themeTint`` / ``w:themeShade`` modifiers to a base RGB.
-
-    Both are hex strings in the 00–FF range.  ``themeTint`` mixes
-    toward white, ``themeShade`` mixes toward black.  At most one
-    should be present on a given ``w:color`` element; if both are
-    given, tint wins (matches Word's behaviour).
-    """
+    """Modify HSL luminance; tint takes precedence when both are supplied."""
+    if not tint and not shade:
+        return base_hex
     try:
-        r = int(base_hex[0:2], 16)
-        g = int(base_hex[2:4], 16)
-        b = int(base_hex[4:6], 16)
+        rgb = [int(base_hex[i:i + 2], 16) / _MAX_COLOR_CHANNEL for i in (0, 2, 4)]
+        hue, luminance, saturation = rgb_to_hls(*rgb)
+        factor = int(tint if tint else shade, 16) / _MAX_COLOR_CHANNEL
     except (ValueError, IndexError):
         return base_hex
-
     if tint:
-        try:
-            t = int(tint, 16) / float(_MAX_COLOR_CHANNEL)
-            # w:themeTint=0 -> fully white, 255 -> unchanged.
-            r = int(r + (_MAX_COLOR_CHANNEL - r) * (1.0 - t))
-            g = int(g + (_MAX_COLOR_CHANNEL - g) * (1.0 - t))
-            b = int(b + (_MAX_COLOR_CHANNEL - b) * (1.0 - t))
-        except ValueError:
-            pass
-    elif shade:
-        try:
-            s = int(shade, 16) / float(_MAX_COLOR_CHANNEL)
-            # w:themeShade=0 -> fully black, 255 -> unchanged.
-            r = int(r * s)
-            g = int(g * s)
-            b = int(b * s)
-        except ValueError:
-            pass
-
-    r, g, b = (max(0, min(_MAX_COLOR_CHANNEL, c)) for c in (r, g, b))
-    return f"{r:02X}{g:02X}{b:02X}"
+        luminance += (1 - luminance) * (1 - factor)
+    else:
+        luminance *= factor
+    rgb = hls_to_rgb(hue, max(0, min(1, luminance)), saturation)
+    return ''.join(f'{max(0, min(_MAX_COLOR_CHANNEL, int(c * _MAX_COLOR_CHANNEL))):02X}' for c in rgb)

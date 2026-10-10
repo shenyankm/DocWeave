@@ -407,7 +407,7 @@ class RunRenderer:
         y = pdf.y + line_h / 2 + 0.3 * baseline + shift * size
         # Vector decoration keeps leader characters out of text extraction.
         with self._writer._artifact(pdf), pdf.local_context(
-                line_width=width * size, draw_color=parse_color(run.font.color) or (0, 0, 0),
+                line_width=width * size, draw_color=parse_color(run.font.render_color) or (0, 0, 0),
                 stroke_cap_style=StrokeCapStyle.ROUND if leader in (1, 5) else StrokeCapStyle.BUTT,
                 dash_pattern={'dash': dash * size, 'gap': gap * size}):
             pdf.line(x1, y, x2, y)

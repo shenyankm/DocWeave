@@ -240,6 +240,8 @@ class LdmDocxWriter:
             )
 
         return _RenderedParts(
+            theme_xml=doc.source_theme.data if doc.source_theme is not None else None,
+            source_theme=doc.source_theme,
             document_xml=document_xml,
             styles_xml=styles_xml,
             numbering_xml=numbering_xml,
@@ -299,6 +301,8 @@ class LdmDocxWriter:
 class _RenderedParts:
     """Bundle of fully-rendered DOCX part payloads for the package writer."""
 
+    theme_xml: bytes | None
+    source_theme: ldm.SourceTheme | None
     document_xml: str
     styles_xml: str
     numbering_xml: Optional[str]
@@ -315,6 +319,8 @@ class _RenderedParts:
     def as_kwargs(self) -> dict[str, object]:
         """Return the kwargs ``write_docx_package`` accepts."""
         return {
+            "theme_xml": self.theme_xml,
+            "source_theme": self.source_theme,
             "document_xml": self.document_xml,
             "styles_xml": self.styles_xml,
             "numbering_xml": self.numbering_xml,

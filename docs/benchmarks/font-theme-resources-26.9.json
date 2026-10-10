@@ -1,0 +1,173 @@
+{
+  "baseline": "Aspose.Words for Python via .NET",
+  "version": "26.9.0",
+  "license": "official trial, no license",
+  "native_environment": {
+    "platform": "macOS",
+    "python": "3.13.15"
+  },
+  "current_environment": {
+    "platform": "macOS",
+    "python": "3.14.7",
+    "installation": "source"
+  },
+  "corpus": "corpus/font-theme-resources-26.9.zip",
+  "corpus_sha256": "54901a1428781d36fbf270efafa2f529330d840c5e085b6f3112d0a97ea2ee28",
+  "scope": "Owned DrawingML blipFill theme image: load/save and relationship-reachable image bytes; native cold load/save of DOCX and Flat OPC outputs.",
+  "records": [
+    {
+      "file": "input.docx",
+      "sha256": "f17f47b19cc78605afe69daf0c733a340c4819d79e53ef9d263e652f9788bad7",
+      "theme_part": "custom/themes/owned.xml",
+      "theme_images": [
+        {
+          "part": "custom/assets/theme.png",
+          "sha256": "de33ddc09a0ba9b83128b6b59461e3be59299575eb68ccf2c03984b504f9fa9c"
+        }
+      ]
+    },
+    {
+      "file": "current.docx",
+      "sha256": "84e3fadcc21f804cfd42884498d5c33195a621a6b7370f2af2397437d8554c62",
+      "theme_part": "word/theme/theme1.xml",
+      "theme_images": [
+        {
+          "part": "word/theme/resources1/custom/assets/theme.png",
+          "sha256": "de33ddc09a0ba9b83128b6b59461e3be59299575eb68ccf2c03984b504f9fa9c"
+        }
+      ]
+    },
+    {
+      "file": "current.xml",
+      "sha256": "c83857baf19a03ef7efcb54ef3cf9efd34bb12ae644bc5666a8063da2b73c38f",
+      "theme_part": "word/theme/theme1.xml",
+      "theme_images": [
+        {
+          "part": "word/theme/resources1/custom/assets/theme.png",
+          "sha256": "de33ddc09a0ba9b83128b6b59461e3be59299575eb68ccf2c03984b504f9fa9c"
+        }
+      ]
+    },
+    {
+      "file": "native-input.docx.docx",
+      "sha256": "15ab495f612908d68f4a3bba60704cc6ce3dd41daf742280a2e618593c030de3",
+      "theme_part": "word/theme/theme1.xml",
+      "theme_images": [
+        {
+          "part": "word/assets/theme.png",
+          "sha256": "de33ddc09a0ba9b83128b6b59461e3be59299575eb68ccf2c03984b504f9fa9c"
+        }
+      ]
+    },
+    {
+      "file": "native-current.docx.docx",
+      "sha256": "06005972f09a281d515c21011b2aff5ccae671a441854c45ba25b6725f69f63b",
+      "theme_part": "word/theme/theme1.xml",
+      "theme_images": [
+        {
+          "part": "word/theme/resources1/custom/assets/theme.png",
+          "sha256": "de33ddc09a0ba9b83128b6b59461e3be59299575eb68ccf2c03984b504f9fa9c"
+        }
+      ]
+    },
+    {
+      "file": "native-current.xml.docx",
+      "sha256": "2e51ee863fb0bf5bc168b995e403ddeb9eb57e5238b778a85791117349c6bee5",
+      "theme_part": "word/theme/theme1.xml",
+      "theme_images": [
+        {
+          "part": "word/theme/resources1/custom/assets/theme.png",
+          "sha256": "de33ddc09a0ba9b83128b6b59461e3be59299575eb68ccf2c03984b504f9fa9c"
+        }
+      ]
+    }
+  ],
+  "implementation_acceptance": false,
+  "rendering_acceptance": false,
+  "full_theme_api_acceptance": false,
+  "pending": [
+    "remote cross-platform CI",
+    "full theme and rendering acceptance"
+  ],
+  "generation": "Reproduce with docs/probes/font_theme_resources.py generate/current/commercial. Owned 2x2 red PNG bytes are frozen to avoid Pillow/zlib encoder drift.",
+  "broader_linux_validation": {
+    "installation": "source imported through default pytest path insertion; wheel import precheck was outside the pytest process",
+    "passed": 5498,
+    "failed": 1,
+    "seconds": 419.42,
+    "failure": "Owned PNG regeneration differed by encoder version; source generator now freezes the owned image bytes.",
+    "resolution": "Final wheel 143 resource/privacy/inventory tests passed, including the formerly failing frozen resource replay.",
+    "scope": "Font colors, cache/JSON/Boolean roundtrips, model image JSON, theme loading/saving/resources/reference styles and baseline inventory."
+  },
+  "source_shadowed_initial_validation": {
+    "platform": "macOS",
+    "python": "3.14.7",
+    "wheel_sha256": "d9c1cc47932c99637c241c80985ccfb01ab6c4dd3db283763aa81e9b282fedd8",
+    "passed": 236,
+    "warnings": 1,
+    "seconds": 24.94,
+    "source_wheel_equal_modules": 16,
+    "scope": "Theme resources, raw/render color, JSON and DOCX/Flat OPC roundtrip, reference styles and frozen theme evidence; run outside checkout.",
+    "import_warning": "Default pytest import mode added the checkout root; these results validate source, not the installed wheel."
+  },
+  "source_shadowed_extended_validation": {
+    "wheel_sha256": "f38ee7900fc4e3d4e6dc83396e042c3ecd9ad1c8504ed9d3917b72dd7decf006",
+    "source_wheel_equal_modules": 16,
+    "mac": {
+      "python": "3.14.7",
+      "passed": 346,
+      "seconds": 90.29,
+      "scope": "Theme resources, raw/render colors, JSON and DOCX/Flat OPC roundtrips, frozen evidence and full baseline inventory tests; outside checkout."
+    },
+    "linux": {
+      "python": "3.14",
+      "passed": 143,
+      "seconds": 195.58,
+      "scope": "Final wheel resource graph/privacy tests and baseline evidence inventory including Windows ZIP metadata and CRLF replay; outside checkout."
+    },
+    "scope_note": "Mac broader full tests still running. Linux broader suite had one encoder-dependent fixture failure, corrected and reverified in final-wheel resource/inventory tests. No full theme or rendering acceptance.",
+    "import_warning": "Default pytest import mode added the checkout root; these results validate source, not the installed wheel."
+  },
+  "release_wheel_validation": {
+    "wheel_sha256": "45a6c5b1cc20a82a2cb4abcff4a60137792ce628ded72de325a1044345b0c5fc",
+    "method": "Preimport and assert installed package path inside the pytest process, then --import-mode=importlib; run outside checkout.",
+    "mac_full": {
+      "passed": 22197,
+      "skipped": 2,
+      "warnings": 219,
+      "seconds": 881.3,
+      "import_mode": "importlib",
+      "package_path_asserted_inside_pytest_process": true,
+      "scope": "All tests plus ApiExamples against the release wheel outside checkout."
+    },
+    "linux_integration": {
+      "passed": 5505,
+      "warnings": 1,
+      "seconds": 353.9,
+      "import_mode": "importlib",
+      "package_path_asserted_inside_pytest_process": true,
+      "scope": "Resources, encoded names/privacy, theme raw/render colors and roundtrips, color origins, cascade/cache/JSON/Boolean integrations, image JSON, reference styles, frozen evidence and baseline inventory."
+    },
+    "source_encoded_resource_tests_passed": 29,
+    "earlier_wheel_reproduction": "importlib: literal percent-encoded filenames fail in both DOCX and Flat OPC (2 failed, 4 passed).",
+    "mac_resources": {
+      "passed": 29,
+      "seconds": 0.43,
+      "import_mode": "importlib",
+      "package_path_asserted_inside_pytest_process": true
+    }
+  },
+  "broader_mac_source_validation": {
+    "passed": 22189,
+    "skipped": 2,
+    "warnings": 219,
+    "seconds": 976.59,
+    "scope": "tests plus ApiExamples, default pytest import mode; source validation only, before the final encoded-name fix."
+  },
+  "delivery": {
+    "source_preservation_local_acceptance": true,
+    "full_theme_api_acceptance": false,
+    "remote_ci": "pending_push",
+    "state": "prepared_for_development_branch_delivery"
+  }
+}

@@ -83,6 +83,28 @@ JSON 保留来源，DOCX／Flat OPC 写出保留受测 RGB 和自动色声明。
 覆盖默认、段落样式、字符样式及 Run 的 RGB／自动色继承。
 主题色、背景对比、DOM 颜色编辑和完整颜色 API 仍未验收。
 
+主题色修复进行中：LDM 的 `Font.color` 改为保留源文件的 RGB／自动色 getter，
+`color_rendering` 保存主题解析后的绘制值，`render_color` 提供实际绘制颜色。
+此前读取主题色后使用 `font.color` 取得绘制 RGB 的调用方应改用 `font.render_color`。
+显式颜色赋值和 `model_copy(update={'color': ...})` 会清除旧的主题渲染值；模型 JSON 保留该状态。
+这是转换模型的区分方式，不表示规范 Font API 或 DOM 颜色编辑已实现。
+新增的不可变 `SourceColor`／`SourceTheme` 只保存来源快照，不是主题编辑 API。
+主题 XML、颜色属性及可达关联资源现在可经 JSON、DOCX 和 Flat OPC 保存；直接修改颜色会
+丢弃旧的颜色声明快照。旧 JSON 没有这些快照，不能恢复此前展开为 RGB 时丢失的主题引用。
+来源快照包含原部件名、内容类型及可达资源；内部关系在独立资源目录中重映射，保留共享资源和循环引用。
+外部关系仅保留链接，不访问网络；缺失资源、重复关系、越界路径和悬空引用在输出前拒绝。
+[专项用例](../tests/test_theme_resource_snapshot.py)检查加载、JSON、DOCX／Flat OPC 往返、资源重名和原输出保护。
+[官方冷读证据](benchmarks/font-theme-resources-26.9.json)保留输入、两种当前输出及官方再次保存结果；
+受测主题图片在六个文件中的可达资源 SHA256 一致，尚未验证主题图片的页面绘制。
+参考样式继续按原行为使用解析后的 RGB，避免目标主题改变引用样式的颜色，且不修改参考模型。
+组合 tint/shade 在受测上下文按固定基准使用原始回退色；目标框像素复验的通道容差为 1，
+不表示全页面或背景对比已验收。完整主题资源兼容、规范主题编辑 API 及平台验收尚未闭环。
+此前 pytest 默认导入模式会把仓库根目录加回搜索路径；原称安装包的专项结果已改记为源码验证。
+当前使用 `--import-mode=importlib`，在 pytest 同一进程内确认包路径，验证最终 wheel 的 Mac 全量及 Linux 集成。
+资源名中空格、字面百分号和中文均按 OPC URI 编码保留，最终 wheel 资源专项 29 项通过。
+Linux 安装包集成 5,505 项通过；Mac 安装包全量 22,197 项通过，2 项跳过。
+本次来源／资源保存修复已通过本地验收，交付开发分支；远端跨平台 CI 另行复验。
+
 ### Boolean 字体直接格式来源
 
 读取 DOCX 时，LDM 的 13 个 Boolean 字体字段各自保留 `*_explicit` 来源：
