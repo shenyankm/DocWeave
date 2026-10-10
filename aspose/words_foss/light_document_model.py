@@ -785,7 +785,7 @@ class Shape(BaseModel, NodeCastMixin):
 
     @model_validator(mode="after")
     def _restore_drawing_position(self):
-        if self.text_box and "paragraphs" in self.text_box:
+        if self.text_box and self.text_box.get("paragraphs") is not None:
             self.text_box["paragraphs"] = [
                 Paragraph.model_validate(p) if isinstance(p, dict) else p
                 for p in self.text_box["paragraphs"]]

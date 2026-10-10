@@ -126,3 +126,9 @@ def test_source_effect_rejects_even_an_entity_free_doctype():
     xml = f'<!DOCTYPE effectDag><a:effectDag xmlns:a="{A}"/>'
     with pytest.raises(ValidationError, match="DTDForbidden"):
         ldm.SourceDrawingEffects(xml=xml)
+
+
+def test_textbox_null_paragraphs_survive_json_restoration():
+    target = ldm.Shape(text_box={"paragraphs": None})
+    restored = ldm.Shape.model_validate_json(target.model_dump_json())
+    assert target.text_box == restored.text_box == {"paragraphs": None}
