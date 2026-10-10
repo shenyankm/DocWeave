@@ -503,6 +503,34 @@ class StyleResolver:
             ancestor = ancestor.parent_node
         return styles, layers
 
+    def row_format(self, row):
+        from aspose.words_foss.dom.row_format import last_row_property
+        from aspose.words_foss.model.enums import HeightRule
+        from aspose.words_foss.utils.table_row import parse_row_height, parse_row_split
+
+        row._editable()
+        table = row.parent_node
+        properties = _child(table._element, "tblPr") if table is not None else None
+        reference = _child(properties, "tblStyle")
+        style_id = reference.getAttributeNS(W, "val") if reference is not None else self._default("table")
+        layers = [_child(style, "trPr") for style in self._chain(style_id, "table")]
+        direct = _child(row._element, "trPr")
+        layers.append(direct)
+        height, rule, split = 0.0, HeightRule.AUTO, True
+        for layer in layers:
+            for element in _elements(layer) if layer is not None else ():
+                if _is(element, "trHeight"):
+                    height, kind = parse_row_height(element.getAttributeNS(W, "val"), element.getAttributeNS(W, "hRule"))
+                    rule = HeightRule(kind)
+                elif _is(element, "cantSplit"):
+                    split = parse_row_split(element.getAttributeNS(W, "val"))
+        element = last_row_property(direct, "trHeight")
+        warm = getattr(row._element, '_row_format_warm', None)
+        if warm is not None and element is warm[0] and (element.getAttributeNS(W, "val"),
+                element.getAttributeNS(W, "hRule")) == warm[1:3]:
+            height, rule = warm[3:5]
+        return height, rule, split
+
     def paragraph_format(self, paragraph):
         _, layers = self._paragraph_layers(paragraph)
         alignment = "left"

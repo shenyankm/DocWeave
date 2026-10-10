@@ -599,6 +599,9 @@ class Document:
         writer = LdmDocxWriter(options)
         data = writer.write_to_bytes(doc)
         commit_fonts = prepare_font_table_commit(doc, data)
+        from aspose.words_foss.utils.table_row import prepare_row_height_commit
+        commit_rows = prepare_row_height_commit(doc)
         with atomic_output(output_path) as temporary:
             temporary.write_bytes(data)
         commit_fonts()
+        commit_rows()

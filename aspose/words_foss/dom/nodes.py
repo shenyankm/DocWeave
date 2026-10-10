@@ -6,6 +6,7 @@ from xml.dom import Node as XmlNode
 
 from aspose.words_foss._opc import bind_namespace_context as _bind_namespace_context
 from aspose.words_foss.light_document_model import NodeType
+from aspose.words_foss.model.enums import HeightRule
 from aspose.words_foss.utils.xml_helpers import parse_font_size
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -586,6 +587,10 @@ class Row(Node):
     node_type = NodeType.ROW
 
     @property
+    def row_format(self):
+        return RowFormat(self)
+
+    @property
     def cells(self):
         return tuple(node for node in self.child_nodes if isinstance(node, Cell))
 
@@ -657,6 +662,56 @@ class _Format:
                 element.removeAttributeNS(W, attr)
         element.setAttributeNS(W, f"{prefix}:{attribute}", value)
         node._changed()
+
+
+class RowFormat(_Format):
+    """Live row formatting, including inherited table-style defaults."""
+
+    __slots__ = ()
+    property_name = "trPr"
+    order = ("cnfStyle", "divId", "gridBefore", "gridAfter", "wBefore", "wAfter",
+             "cantSplit", "trHeight", "tblHeader", "tblCellSpacing", "jc", "hidden")
+
+    def _set(self, name, value, **kwargs):
+        self._node._editable()
+        properties = _find(self._node._element, "trPr")
+        if properties is not None:
+            matches = [item for item in _elements(properties) if _is(item, name)]
+            for item in matches[:-1]:
+                properties.removeChild(item)
+        super()._set(name, value, **kwargs)
+
+    def _values(self):
+        from aspose.words_foss.dom.styles import StyleResolver
+        return StyleResolver(self._node.owner_document).row_format(self._node)
+
+    def _set_height(self, value=None, rule=None, *, setting_rule=False):
+        from aspose.words_foss.utils.table_row import coerce_row_height
+        if setting_rule:
+            if not isinstance(rule, HeightRule):
+                raise TypeError("height_rule requires HeightRule")
+        else:
+            value = coerce_row_height(value)
+        current_height, current_rule, _ = self._values()
+        if setting_rule:
+            value = 0.0 if rule == HeightRule.AUTO else current_height
+        else:
+            rule = HeightRule.AUTO if value == 0 else HeightRule.AT_LEAST if current_rule == HeightRule.AUTO else current_rule
+        self._set("trHeight", str(round(value * 20)))
+        self._set("trHeight", {0: "atLeast", 1: "exact", 2: "auto"}[rule], attribute="hRule")
+        element = self._get("trHeight")
+        self._node._element._row_format_warm = (element, element.getAttributeNS(W, "val"),
+            element.getAttributeNS(W, "hRule"), value, rule)
+
+    def _set_split(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("allow_break_across_pages requires bool")
+        # Explicit false on cantSplit also overrides an inherited true declaration.
+        self._set("cantSplit", "0" if value else "1")
+
+    height = property(lambda self: self._values()[0], lambda self, value: self._set_height(value))
+    height_rule = property(lambda self: self._values()[1], lambda self, value: self._set_height(rule=value, setting_rule=True))
+    allow_break_across_pages = property(lambda self: self._values()[2], lambda self, value: self._set_split(value))
 
 
 class Font(_Format):

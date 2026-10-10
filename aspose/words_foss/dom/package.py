@@ -84,8 +84,16 @@ class DocxPackage:
             data = serialized_style_payload(self, name)
             if data is not None:
                 return data
-        if name in self._dirty:
-            tree = self.tree(name)
+        tree = None
+        if name == "word/document.xml":
+            from aspose.words_foss.dom.row_format import projected_row_tree
+            original = self.tree(name)
+            projected = projected_row_tree(original)
+            if projected is not original:
+                tree = projected
+        if name in self._dirty or tree is not None:
+            if tree is None:
+                tree = self.tree(name)
             # Native saving omits empty tables; retain the live detached/imported DOM state.
             if any(_empty_plain_table(node) for node in tree.getElementsByTagNameNS(W, "tbl")):
                 tree = tree.cloneNode(deep=True)

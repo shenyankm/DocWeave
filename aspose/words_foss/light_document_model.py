@@ -1115,8 +1115,26 @@ class RowFormat(BaseModel):
     height_rule: int = 0
     heading_format: bool = False
     allow_break_across_pages: bool = True  # row split control
+    # None preserves legacy model construction; False denotes inherited values.
+    height_explicit: bool | None = None
+    allow_break_explicit: bool | None = None
     conditional_style: ConditionalStyleMask = Field(default_factory=ConditionalStyleMask)
     borders: list[Border] = Field(default_factory=list)
+
+    def __setattr__(self, name, value):
+        super().__setattr__(name, value)
+        if name in {"height", "height_rule"}:
+            super().__setattr__("height_explicit", True)
+        elif name == "allow_break_across_pages":
+            super().__setattr__("allow_break_explicit", True)
+
+    def model_copy(self, *, update=None, deep=False):
+        changes = dict(update or {})
+        if {"height", "height_rule"} & changes.keys():
+            changes.setdefault("height_explicit", True)
+        if "allow_break_across_pages" in changes:
+            changes.setdefault("allow_break_explicit", True)
+        return super().model_copy(update=changes, deep=deep)
 
 
 class Row(BaseModel, NodeCastMixin):
@@ -1360,6 +1378,7 @@ class TableStyleProperty(BaseModel):
     shading: Optional[Shading] = None
     borders: list[Border] = Field(default_factory=list)
     paragraph_format: Optional["ParagraphFormat"] = None
+    row_format: RowFormat | None = None
 
 
 class Style(BaseModel):
@@ -1372,6 +1391,7 @@ class Style(BaseModel):
     paragraph_format: ParagraphFormat | None = None
     font: Font | None = None
     table_style_format: TableStyleFormat | None = None
+    row_format: RowFormat | None = None
     table_style_properties: list[TableStyleProperty] = Field(default_factory=list)
     style_identifier: int = 0
     built_in: bool = False

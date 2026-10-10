@@ -35,6 +35,8 @@ class DocxDocument:
         root = self._package.tree("word/document.xml").documentElement
         if not _is(root, "document") or _find(root, "body") is None:
             raise ValueError("Expected a Transitional Word document with a body")
+        from aspose.words_foss.dom.row_format import validate_row_properties
+        validate_row_properties(root)
 
     def _wrap(self, part_name, element):
         if element not in self._nodes:
@@ -151,7 +153,10 @@ class DocxDocument:
 
     def save(self, destination):
         """Atomically save edits and supported style/table serialization projections."""
+        from aspose.words_foss.dom.row_format import prepare_row_commit
+        commit_rows = prepare_row_commit(self)
         self._package.save(destination)
+        commit_rows()
 
     def to_bytes(self):
         return self._package.to_bytes()
@@ -165,9 +170,13 @@ class DocxDocument:
     def save_flat_opc(self, destination):
         """Atomically save Flat OPC XML; XML serialization is normalized."""
         from aspose.words_foss._io import atomic_output
+        from aspose.words_foss.dom.row_format import prepare_row_commit
 
+        data = self.to_flat_opc()
+        commit_rows = prepare_row_commit(self)
         with atomic_output(destination) as temporary:
-            temporary.write_bytes(self.to_flat_opc())
+            temporary.write_bytes(data)
+        commit_rows()
 
     def to_light_document(self):
         """Produce an independent, potentially lossy conversion snapshot of current edits.

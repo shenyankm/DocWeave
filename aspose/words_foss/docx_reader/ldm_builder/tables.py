@@ -166,7 +166,7 @@ class TableBuilder:
         ctx._current_table_style_id = tbl.style_name
         try:
             for tr_elem in tbl_elem.findall(f"{W_NS}tr"):
-                row = self._row_builder.build(tr_elem)
+                row = self._row_builder.build(tr_elem, tbl.style_name or self._default_style_id)
                 if table_borders:
                     row.row_format.borders = table_borders
                 tbl.rows.append(row)
@@ -183,17 +183,31 @@ class RowBuilder:
         paragraph_builder: ParagraphBuilderFn,
         table_builder: TableBuilder,
     ):
+        self._ctx = ctx
         self._cell_builder = CellBuilder(ctx, paragraph_builder, table_builder)
 
     def build(
         self,
         tr_elem: ET.Element,
+        style_id: str = "",
     ) -> ldm.Row:
         """Translate one ``<w:tr>``."""
         row = ldm.Row()
         trPr = tr_elem.find(f"{W_NS}trPr")
+        rf = ldm.RowFormat(height_rule=2, height_explicit=False, allow_break_explicit=False)
+        for sid in StyleChainResolver(self._ctx).chain(style_id):
+            style = self._ctx._style_elem_cache.get(sid)
+            layer = style.find(f"{W_NS}trPr") if style is not None else None
+            if layer is not None:
+                self._apply_height_split(rf, layer, explicit=False)
         if trPr is not None:
-            row.row_format = self._build_row_format(trPr)
+            direct = self._build_row_format(trPr)
+            if not direct.height_explicit:
+                direct.__dict__.update(height=rf.height, height_rule=rf.height_rule)
+            if not direct.allow_break_explicit:
+                direct.__dict__["allow_break_across_pages"] = rf.allow_break_across_pages
+            rf = direct
+        row.row_format = rf
         # Per-row override (CT_TblPrExBase); only width carried in the LDM.
         tblPrEx = tr_elem.find(f"{W_NS}tblPrEx")
         if tblPrEx is not None:
@@ -206,25 +220,24 @@ class RowBuilder:
 
     @staticmethod
     def _build_row_format(trPr: ET.Element) -> ldm.RowFormat:
-        rf = ldm.RowFormat()
-        trHeight = trPr.find(f"{W_NS}trHeight")
-        if trHeight is not None:
-            rf.height = int(trHeight.get(f"{W_NS}val", "0")) / _TWIPS_PER_PT
-            rule = trHeight.get(f"{W_NS}hRule", "")
-            if rule == "exact":
-                rf.height_rule = _HEIGHT_RULE_EXACT
-            elif rule == "auto":
-                rf.height_rule = _HEIGHT_RULE_AUTO
-            else:
-                rf.height_rule = 0
+        rf = ldm.RowFormat(height_rule=2, height_explicit=False, allow_break_explicit=False)
+        RowBuilder._apply_height_split(rf, trPr, explicit=True)
         if trPr.find(f"{W_NS}tblHeader") is not None:
             rf.heading_format = True
-        if trPr.find(f"{W_NS}cantSplit") is not None:
-            rf.allow_break_across_pages = False
         cnf = trPr.find(f"{W_NS}cnfStyle")
         if cnf is not None:
             rf.conditional_style = ldm.ConditionalStyleMask.from_val(cnf.get(f"{W_NS}val", ""))
         return rf
+
+    @staticmethod
+    def _apply_height_split(rf, trPr, *, explicit):
+        from aspose.words_foss.utils.table_row import parse_row_height, parse_row_split
+
+        for trHeight in trPr.findall(f"{W_NS}trHeight"):
+            height, rule = parse_row_height(trHeight.get(f"{W_NS}val", ""), trHeight.get(f"{W_NS}hRule", ""))
+            rf.__dict__.update(height=height, height_rule=rule, height_explicit=explicit)
+        for split in trPr.findall(f"{W_NS}cantSplit"):
+            rf.__dict__.update(allow_break_across_pages=parse_row_split(split.get(f"{W_NS}val")), allow_break_explicit=explicit)
 
 
 class CellBuilder:

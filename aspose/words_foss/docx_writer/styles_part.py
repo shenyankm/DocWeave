@@ -411,6 +411,11 @@ def _custom_style(
         tblPr = _render_style_tblPr(style.table_style_format)
         if tblPr:
             children.append(tblPr)
+    if style.row_format is not None:
+        from .tables import render_row_format
+        properties = render_row_format(style.row_format, for_style=True)
+        if properties:
+            children.append(properties)
     for tsp in style.table_style_properties:
         rendered = _render_tblStylePr(tsp)
         if rendered:
@@ -490,6 +495,11 @@ def _render_tblStylePr(tsp: ldm.TableStyleProperty) -> str:
         rPr = render_rPr(tsp.font, for_style=True, preserve_explicit_off=True)
         if rPr:
             children.append(rPr)
+    if tsp.row_format is not None:
+        from .tables import render_row_format
+        properties = render_row_format(tsp.row_format, for_style=True)
+        if properties:
+            children.append(properties)
     if tsp.shading or tsp.borders:
         tc_children: list[str] = []
         if tsp.borders:
