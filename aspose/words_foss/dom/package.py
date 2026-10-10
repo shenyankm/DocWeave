@@ -151,8 +151,10 @@ class DocxPackage:
         """Compare uncompressed part bytes with the loaded package, including resources."""
         overrides = overrides or {}
         report = {"added": [], "modified": [], "removed": [], "unchanged": []}
-        for name in sorted(set(self._original_hashes) | set(self._payloads)):
-            if name not in self._payloads:
+        for name in sorted(set(self._original_hashes) | set(self._payloads) | set(overrides)):
+            if name not in self._original_hashes and name in overrides:
+                state = "added"
+            elif name not in self._payloads:
                 state = "removed"
             elif name not in self._original_hashes:
                 state = "added"
@@ -195,7 +197,9 @@ class DocxPackage:
 
     def to_bytes(self, overrides=None):
         overrides = overrides or {}
-        if len(self._entries) > _io.MAX_ZIP_ENTRIES:
+        if set(overrides) - set(self.part_names):
+            self.validate_parts(overrides)
+        if len(set(self.part_names) | set(overrides)) > _io.MAX_ZIP_ENTRIES:
             raise ValueError("DOCX has too many ZIP entries")
         stream = BytesIO()
         expanded = 0
@@ -208,6 +212,15 @@ class DocxPackage:
                 expanded += len(data)
                 if expanded > _io.MAX_EXPANDED_BYTES:
                     raise ValueError("DOCX expanded size exceeds the safety limit")
+                output.writestr(entry, data)
+            for name in sorted(set(overrides) - set(self.part_names)):
+                data = overrides[name]
+                if len(data) > _io.MAX_PART_BYTES:
+                    raise ValueError("DOCX part exceeds the safety limit")
+                expanded += len(data)
+                if expanded > _io.MAX_EXPANDED_BYTES:
+                    raise ValueError("DOCX expanded size exceeds the safety limit")
+                entry = ZipInfo(name);entry.compress_type = ZIP_DEFLATED
                 output.writestr(entry, data)
         data = stream.getvalue()
         if len(data) > _io.MAX_INPUT_BYTES:

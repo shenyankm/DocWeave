@@ -58,6 +58,8 @@ class NoteGraph:
                 if not children or not _is(children[-1], 'p'):
                     entry.appendChild(_new(entry, 'p'))
                     document._package._annotation_normalized_parts.add(name)
+        from aspose.words_foss.dom.comment_utc import CommentUtc
+        self.utc = CommentUtc(document._package, self.entries)
         named_trees = [(name, document._package.tree(name)) for name in sorted(document._package.story_part_names(), key=lambda name: (name != 'word/document.xml', name))]
         trees = [tree for name, tree in named_trees]
         # Split only recognized story content; unchanged OPC bytes remain the source.
@@ -581,12 +583,15 @@ class NoteGraph:
             for source, target in zip(_elements(tree.documentElement), _elements(projected.documentElement)):
                 if _is(source, 'comment') and source.getAttributeNS(W, 'type') in {'', 'normal'}:
                     changed = project_date(source, target) or changed
-            if not changed:
+            if not changed and not self.utc.parts:
                 return {}, lambda: None
             from aspose.words_foss.dom.row_format import projected_row_tree
-            payloads = {name: serialize_xml(projected_row_tree(projected))}
+            trees = {name: projected}
+            mapping = dict(zip(_elements(tree.documentElement), _elements(projected.documentElement)))
+            commit_utc = self.utc.project(trees, mapping)
+            payloads = {n: serialize_xml(projected_row_tree(t)) for n, t in trees.items()}
             package.validate_parts(payloads)
-            return payloads, lambda: None
+            return payloads, commit_utc
         names = {'word/document.xml', *self.parts.values(),
                  *(self.anchor_part(anchor) for anchor in self.anchors.values())}
         trees, mapping = {}, {}
@@ -707,6 +712,7 @@ class NoteGraph:
             if role == 'comments' and entry in mapping:
                 project_date(entry, mapping[entry])
         from aspose.words_foss.dom.row_format import projected_row_tree, validate_row_properties
+        commit_utc = self.utc.project(trees, mapping)
         for tree in trees.values():
             validate_row_properties(tree)
         payloads = {name: serialize_xml(projected_row_tree(tree)) for name, tree in trees.items()}
@@ -741,6 +747,7 @@ class NoteGraph:
                 else:
                     entry.appendChild(value)
                     package._dirty.add(self.parts['comments' if entry.localName == 'comment' else entry.localName + 's'])
+            commit_utc()
         return payloads, commit
 
     def _import_mode(self, node, mode):

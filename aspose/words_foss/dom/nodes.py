@@ -135,6 +135,9 @@ def _safe_structure(node, properties=False):
         return False
     for i in range(node.attributes.length):
         attribute = node.attributes.item(i)
+        if (node.localName == 'p' and attribute.namespaceURI == 'http://schemas.microsoft.com/office/word/2010/wordml'
+                and attribute.localName in {'paraId', 'textId'} and re.fullmatch('[0-9a-fA-F]{8}', attribute.value)):
+            continue
         if (attribute.namespaceURI not in (None, W, XML, XMLNS) or
                 attribute.namespaceURI == XML and attribute.localName not in {"space", "lang"}):
             return False
@@ -783,6 +786,11 @@ class Comment(Body):
     def date_time(self):
         from aspose.words_foss.dom.comment_metadata import get_date
         return get_date(self._element)
+
+    @property
+    def date_time_utc(self):
+        from aspose.words_foss.dom.comment_utc import get_utc
+        return get_utc(self._element)
 
     @date_time.setter
     def date_time(self, value):

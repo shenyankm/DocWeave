@@ -540,7 +540,13 @@ DOCX/Flat OPC 输出使用整秒和 `Z` 后缀，最小值省略日期属性；�
 UTC 转换溢出时，赋值抛出 `OverflowError`、创建抛出 `TypeError`，均不修改文档。
 失败保存保留原文件和日期状态。`author`、`initial` 接受字符串，拒绝 `None` 和其他类型。
 
-当前不是完整 `Footnote`/`Comment` API：批注回复、完成状态、`date_time_utc`/现代 UTC 扩展元数据、
+只读 `date_time_utc` 读取通过类型关系关联的 `commentsIds`/`commentsExtensible` 日期；
+没有有效现代日期时，从 `date_time` 转换到 UTC。最小值仍为无时区 `datetime.min`。
+修改 `date_time` 会使旧现代 UTC 值失效；现代来源、复制和导入会保留独立 UTC 值，
+两格式保存输出整秒日期和有效段落/durable ID 关联。暖态对象保留原精度，保存失败不提交
+新部件、段落 ID 或元数据。未知 XML 保留；这不表示完整批注线程元数据已实现。
+
+当前不是完整 `Footnote`/`Comment` API：批注回复、完成状态、完整现代线程元数据、
 自动编号文本和布局未验收；引用冲突/缺失、特殊 separator 条目编辑与新增默认 separator
 策略仍需校准。跨文档复杂关系资源及不同主题/默认样式下的源格式保留尚未实现，会在
 修改目标前明确拒绝；整份 note/comment part 的复制或删除仍拒绝，避免遗漏正文引用。

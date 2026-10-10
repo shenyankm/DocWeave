@@ -78,7 +78,7 @@ class DocxDocument:
 
     def preservation_report(self):
         """List added/modified/removed/unchanged parts since loading (not sanitization)."""
-        overrides, _ = self._note_graph.prepare_projection() if self._note_graph is not None else ({}, None)
+        overrides, _ = self._prepare_note_projection()
         return self._package.preservation_report(overrides)
 
     def story(self, part_name):
@@ -203,9 +203,15 @@ class DocxDocument:
 
         return StyleResolver(self).has_style(style_id, style_type)
 
+    def _prepare_note_projection(self):
+        from aspose.words_foss.dom.comment_utc import typed_parts
+        if self._note_graph is None and typed_parts(self._package):
+            self._annotations()
+        return self._note_graph.prepare_projection() if self._note_graph is not None else ({}, lambda: None)
+
     def _prepared_output(self, *, flat=False):
         from aspose.words_foss.dom.row_format import prepare_row_commit
-        overrides, commit_notes = self._note_graph.prepare_projection() if self._note_graph is not None else ({}, lambda: None)
+        overrides, commit_notes = self._prepare_note_projection()
         data = self._package.to_bytes(overrides) if overrides else self._package.to_bytes()
         if flat:
             from aspose.words_foss._flat_opc import encode

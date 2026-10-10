@@ -104,12 +104,15 @@ def get_date(element):
 def set_date(element, value):
     from aspose.words_foss.dom.importing import _set_word_attribute
     value = normalize_date(value)
+    element._comment_utc_source = None
     raw = value.isoformat()
     _set_word_attribute(element, "date", raw)
     element._comment_date_warm = (element, raw, value, 0)
 
 
 def copy_date_state(source, target):
+    from aspose.words_foss.dom.comment_utc import copy_utc
+    copy_utc(source, target)
     state = getattr(source, "_comment_date_warm", None)
     if (state is not None and state[0] is source
             and source.getAttributeNS(W, "date") == target.getAttributeNS(W, "date") == state[1]):
