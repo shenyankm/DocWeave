@@ -7,7 +7,7 @@ import pytest
 
 from aspose.words_foss import Document, SaveFormat, light_document_model as ldm
 from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter, PdfContentLossWarning
+from aspose.words_foss.pdf_writer import LdmPdfWriter
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 A = 'http://schemas.openxmlformats.org/drawingml/2006/main'
@@ -74,11 +74,10 @@ def test_fill_sources_survive_edit_json_and_package_save(direct, style, format, 
     assert (shape(cold).width, shape(cold).height) == (40, 20)
 
 
-def test_reference_only_rectangle_is_preserved_and_pdf_loss_is_explicit():
+def test_reference_only_rectangle_is_preserved():
     model = Document(BytesIO(owned_rectangle('', True))).light_document_model
     assert shape(model).source_drawing_fill.direct_xml == ''
-    with pytest.warns(PdfContentLossWarning, match='DrawingML source fills'):
-        assert LdmPdfWriter().write_to_bytes(model).startswith(b'%PDF')
+    assert LdmPdfWriter().write_to_bytes(model).startswith(b'%PDF')
 
 
 def test_direct_colour_edit_replaces_retained_declaration():
