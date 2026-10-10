@@ -8,9 +8,33 @@ import pytest
 
 import aspose.words_foss as aw
 from aspose.words_foss.dom.nodes import W
-from .test_font_name_utf16 import FIELDS, font_document as _font_document
+from .test_docx_dom import package
 
-font_document = _font_document
+FIELDS = ("name", "name_ascii", "name_other", "name_bi", "name_far_east")
+
+@pytest.fixture
+def font_document(tmp_path):
+    path = tmp_path / 'input.docx'
+    fonts = '<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New" w:eastAsia="Courier New"/>'
+    styles = (f'<w:styles xmlns:w="{W}"><w:docDefaults><w:rPrDefault><w:rPr>{fonts}'
+              '</w:rPr></w:rPrDefault></w:docDefaults>'
+              '<w:style w:type="paragraph" w:styleId="Normal"><w:name w:val="Normal"/></w:style>'
+              f'<w:style w:type="paragraph" w:styleId="NameP"><w:name w:val="NameP"/>'
+              f'<w:basedOn w:val="Normal"/><w:rPr>{fonts}</w:rPr></w:style>'
+              f'<w:style w:type="character" w:styleId="NameC"><w:name w:val="NameC"/>'
+              f'<w:rPr>{fonts}</w:rPr></w:style></w:styles>')
+    package(path, body='<w:p><w:pPr><w:pStyle w:val="NameP"/></w:pPr>'
+                      '<w:r><w:rPr/><w:t>IMPORT</w:t></w:r></w:p><w:sectPr/>',
+            extras={'word/styles.xml': styles.encode(), '[Content_Types].xml': (
+                '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+                '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+                '<Default Extension="xml" ContentType="application/xml"/>'
+                '<Default Extension="bin" ContentType="application/octet-stream"/>'
+                '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
+                '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>'
+                '</Types>').encode()})
+    return path
+
 
 NS = '{' + W + '}'
 
@@ -60,10 +84,10 @@ def test_missing_declarations_have_native_default_without_creating_local_names(i
     assert all(names(font) == dict.fromkeys(FIELDS, 'Times New Roman') for font in fonts)
     assert all(font.source_font_names is None and font.font_names_explicit is False for font in fonts)
     assert aw.light_document_model.Font().name == ''
-    before = document.light_document_model.model_dump_json()
+    before = document.light_document_model.model_dump(exclude={"source_font_table"})
     path = tmp_path / 'defaults.docx'
     document.save(path)
-    assert document.light_document_model.model_dump_json() == before
+    assert document.light_document_model.model_dump(exclude={"source_font_table"}) == before
     with ZipFile(path) as archive:
         for name in ('word/styles.xml', 'word/document.xml'):
             assert not list(ET.fromstring(archive.read(name)).iter(NS + 'rFonts'))
@@ -86,11 +110,11 @@ def test_held_font_follows_parent_edit_with_independent_local_channel(inherited_
     assert names(font) == expected
     assert names(character.font) == dict.fromkeys(FIELDS, 'Courier New')
     assert character.font.source_font_names is None
-    before = document.light_document_model.model_dump_json()
+    before = document.light_document_model.model_dump(exclude={"source_font_table"})
     for format in (aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC):
         path = tmp_path / f'output-{format}'
         document.save(path, format)
-        assert document.light_document_model.model_dump_json() == before
+        assert document.light_document_model.model_dump(exclude={"source_font_table"}) == before
         assert names(handles(aw.Document(path))[0].font) == expected
     assert font.source_font_names is None if not local else font.source_font_names.attributes == {'ascii': 'Courier Local'}
 

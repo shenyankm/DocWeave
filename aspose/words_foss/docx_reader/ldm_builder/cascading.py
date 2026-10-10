@@ -468,7 +468,8 @@ class FontResolver:
         base.color_explicit = rPr is not None and rPr.find(f"{W_NS}color") is not None
         base._name_context = (self._ctx._resolve_style_name(table_id),
                               self._ctx._resolve_style_name(style_id),
-                              self._ctx._resolve_style_name(character_id), tuple(conditions))
+                              self._ctx._resolve_style_name(character_id),
+                              tuple(getattr(self._ctx, "_current_table_conditions", ())))
         for tag, field, _ in RUN_ONOFF_FLAGS:
             setattr(base, field + "_explicit", rPr is not None and rPr.find(f"{W_NS}{tag}") is not None)
         return base
