@@ -212,6 +212,31 @@ PDF 目标字使用红色、官方试用输出使用黑色；已检查 PDF 颜�
 排除“只有 getter 不同”的解释。须修复自动色的来源、层覆盖、保存及最终输出，
 并继续校准主题色、背景对比和颜色编辑，不能仅用拒绝 `font.color` 代替实现。
 
+自动色来源修复已通过本阶段安装包验收：读取、层合并、模型赋值/复制和写出使用
+`color_explicit` 区分缺失与显式声明，`Color [Empty]` 的显式 `auto` 可覆盖已继承 RGB。
+[256 个颜色组合](benchmarks/font-color-categories-26.9.json)的 getter 差异由 70 个降为零；
+直接模型及 JSON→DOCX／Flat OPC 的 1,024 个输出经官方 26.9.0 冷读取，无颜色差异。
+独立 XML 复验还检查来源哈希、直接声明和有效颜色；源代码相关专项 1,823 项通过。
+Linux amd64／Python 3.14 安装包专项 5,237 项通过（244.72 秒），包含实际黑色像素
+及条件表格字体声明回归；另有 Windows ZIP 元数据模拟 1 项通过。
+Mac／Python 3.14 安装包全量及 ApiExamples 共 21,959 项通过、2 项跳过、219 条警告
+（847.81 秒）；随后新增的元数据模拟及主题诊断复验各 1 项单独通过。
+安装包资源及四个修改的生产模块与源代码一致性已检查，独立全量证据复验通过。
+此记录不等于主题色、背景对比、DOM 颜色编辑或完整 Font API 已验收；远端 CI 须另行确认。
+
+主题色的[32 个自有输入及原始 PDF](benchmarks/font-theme-colors-26.9.json)已冻结：
+官方与当前实现有 16 个原始颜色 getter 差异、20 个 PDF 目标文字 RGB 差异。
+生成器分别观察 getter 和渲染文字颜色；复验检查输入生成、包内数据、来源/输出哈希及 PDF 颜色指令。
+该诊断不等于最终像素或排版验收。后续修复须区分原始 RGB／自动色与主题色渲染值，
+修正主题色优先级及 tint/shade 的 HSL 亮度计算，并保留主题声明的保存语义。
+Microsoft 的[兼容规范说明](https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/8229a077-7fc8-4fba-96cc-c77b6a4fc768)
+给出了 HSL 处理及同时存在 tint/shade 时的优先规则；实际舍入仍须对照固定商业基准。
+当前 32 个基准样本中同时给出 tint/shade 的 4 个样本，官方 getter 与 PDF 文字颜色并不等价：
+getter 的 tint/shade 值按 tint 返回，PDF 文字颜色为黑色。追加 8 个单独／组合修饰值观察，
+保存成官方 DOCX 后重开再次生成 PDF，仍保留该差异。尚不能用规范的优先规则宣称
+该版本所有 getter、保存和渲染行为一致；组合修饰值的像素复验及正式证据归档仍待完成。
+主题色实现及验收仍未完成。
+
 格式 getter/setter 的固定观察见上表，不能替代最终渲染验收。首段复验生成器为
 [`first_paragraph_trial.py`](probes/first_paragraph_trial.py)：15 个加载输入及 3 个新建/保存对照，
 覆盖提示段落出现前后的值。官方[许可说明](https://docs.aspose.com/words/python-net/licensing/)确认

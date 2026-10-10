@@ -295,6 +295,7 @@ class Font(BaseModel):
     italic_explicit: bool | None = None
     underline: int = 0
     color: str = ""
+    color_explicit: bool | None = None
     strike_through: bool = False
     superscript: bool = False
     subscript: bool = False
@@ -348,7 +349,7 @@ class Font(BaseModel):
 
     def __setattr__(self, name: str, value: Any) -> None:
         super().__setattr__(name, value)
-        if name in FONT_BOOLEAN_FIELDS:
+        if name in (*FONT_BOOLEAN_FIELDS, 'color'):
             super().__setattr__(name + '_explicit', True)
         if name == 'hidden':
             super().__setattr__('hidden_rendering', None)
@@ -358,7 +359,7 @@ class Font(BaseModel):
             update = dict(update, hidden_rendering=None)
         if update is not None:
             update = dict(update)
-            for field in FONT_BOOLEAN_FIELDS:
+            for field in (*FONT_BOOLEAN_FIELDS, 'color'):
                 if field in update and field + '_explicit' not in update:
                     update[field + '_explicit'] = True
         return super().model_copy(update=update, deep=deep)

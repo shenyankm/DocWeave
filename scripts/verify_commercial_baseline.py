@@ -920,6 +920,94 @@ def saved_hidden_state(raw, tag="vanish"):
     return getter, not rendered, direct, reference.get(w + 'val') if reference is not None else None
 
 
+def color_observation(value):
+    if value is None or value == 'auto':
+        return {'a': 0, 'r': 0, 'g': 0, 'b': 0, 'is_empty': True}
+    assert len(value) == 6
+    return {'a': 255, 'r': int(value[:2], 16), 'g': int(value[2:4], 16),
+            'b': int(value[4:], 16), 'is_empty': False}
+
+
+def saved_color_observation(raw):
+    document, styles = font_size_parts(raw)
+    w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+    paragraph = next(p for p in document.iter(w + 'p') if ''.join(t.text or '' for t in p.iter(w + 't')) == 'IMPORT')
+    run = next(r for r in paragraph.iter(w + 'r') if ''.join(t.text or '' for t in r.iter(w + 't')) == 'IMPORT')
+    by_id = {s.get(w + 'styleId'): s for s in styles.findall(w + 'style')}
+    layers = [styles.find(w + 'docDefaults/' + w + 'rPrDefault/' + w + 'rPr')]
+    for reference in (paragraph.find(w + 'pPr/' + w + 'pStyle'), run.find(w + 'rPr/' + w + 'rStyle')):
+        if reference is None:
+            continue
+        identifier, chain = reference.get(w + 'val'), []
+        while identifier:
+            assert identifier not in chain and identifier in by_id
+            chain.append(identifier)
+            base = by_id[identifier].find(w + 'basedOn')
+            identifier = base.get(w + 'val') if base is not None else None
+        layers.extend(by_id[key].find(w + 'rPr') for key in reversed(chain))
+    direct = run.find(w + 'rPr')
+    layers.append(direct)
+    value = None
+    for layer in layers:
+        color = layer.find(w + 'color') if layer is not None else None
+        if color is not None:
+            assert color.get(w + 'themeColor') is None
+            value = color.get(w + 'val')
+    declared = direct.find(w + 'color') if direct is not None else None
+    return color_observation(value), declared.get(w + 'val') if declared is not None else None
+
+
+def verify_font_color_categories(root):
+    report = json.loads((root / 'font-color-categories-26.9.json').read_text())
+    assert report['version'] == '26.9.0' and report['licensed'] is False
+    assert report['full_Font_acceptance'] is report['rendering_acceptance'] is False
+    generated = {name: (values, raw) for name, values, raw in runpy.run_path(
+        str(Path(__file__).parents[1] / 'docs/probes/font_color_categories.py'))['inputs']()}
+    source, outputs = (root / report['corpus']).read_bytes(), (root / report['outputs']).read_bytes()
+    assert digest(source) == report['corpus_sha256'] and digest(outputs) == report['outputs_sha256']
+    assert len(generated) == len(report['records']) == 256
+    expected = {}
+    with ZipFile(BytesIO(source)) as archive:
+        assert set(archive.namelist()) == set(generated)
+        for row in report['records']:
+            values, generated_raw = generated[row['input']]
+            raw = archive.read(row['input'])
+            assert row['values'] == values and digest(raw) == row['sha256']
+            with ZipFile(BytesIO(raw)) as actual, ZipFile(BytesIO(generated_raw)) as rebuilt:
+                assert {n: actual.read(n) for n in actual.namelist()} == {n: rebuilt.read(n) for n in rebuilt.namelist()}
+            value = next((v for v in reversed(values) if v is not None), None)
+            assert row['observed'] == color_observation(value) == saved_color_observation(raw)[0]
+            expected[row['input']] = (row['observed'], values[3])
+    before = report['current_before_origin_fix']
+    assert len(before) == 256 and {r['input'] for r in before} == set(expected)
+    import re
+    differences = 0
+    for row in before:
+        value = row['observed']
+        observed = color_observation(None) if value == 'Color [Empty]' else dict(zip(
+            ('a', 'r', 'g', 'b'), map(int, re.findall(r'\d+', value)))) | {'is_empty': False}
+        differences += observed != expected[row['input']][0]
+    assert differences == report['getter_differences_before'] == 70
+    native = report['native_cold_reread']
+    assert native['version'] == '26.9.0' and native['licensed'] is False
+    rows = native['records']
+    assert len(rows) == 1024
+    assert {(r['input'], r['json_roundtrip'], r['format']) for r in rows} == {
+        (name, phase, fmt) for name in expected for phase in (False, True) for fmt in ('docx', 'flat_opc')}
+    with ZipFile(BytesIO(outputs)) as archive:
+        assert set(archive.namelist()) == {r['output'] for r in rows}
+        for row in rows:
+            raw = archive.read(row['output'])
+            assert digest(raw) == row['output_sha256']
+            assert raw.startswith(b'PK') is (row['format'] == 'docx')
+            getter, direct = saved_color_observation(raw)
+            assert getter == row['observed'] == expected[row['input']][0]
+            if expected[row['input']][1] is not None:
+                assert direct == expected[row['input']][1]
+    assert report['getter_differences_after'] == report['native_cold_getter_differences'] == 0
+    return len(rows)
+
+
 def verify_dom_font_boolean_errors(root):
     report = json.loads((root / 'dom-font-boolean-errors-26.9.json').read_text())
     assert report['version'] == '26.9.0' and report['licensed'] is False
@@ -1822,6 +1910,7 @@ def verify(root):
     font_boolean_roundtrips = verify_font_boolean_roundtrip(root)
     dom_font_booleans = verify_dom_font_booleans(root)
     dom_font_boolean_errors = verify_dom_font_boolean_errors(root)
+    font_colors = verify_font_color_categories(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -1837,6 +1926,7 @@ def verify(root):
             "checked_font_boolean_roundtrips": font_boolean_roundtrips,
             "checked_dom_font_boolean_outputs": dom_font_booleans,
             "checked_dom_font_boolean_errors": dom_font_boolean_errors,
+            "checked_font_color_outputs": font_colors,
             "checked_font_default_inputs": defaults,
             "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,

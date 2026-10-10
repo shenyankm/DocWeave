@@ -202,7 +202,7 @@ def render_rPr(
             toggle = _bool_toggle(tag, val, getattr(base, field))
         if toggle is not None:
             children.append(toggle)
-    if font.color != base.color:
+    if font.color != base.color or font.color_explicit is True:
         color_hex = color_to_hex(font.color)
         if color_hex:
             children.append(el("w:color", {"w:val": color_hex}))

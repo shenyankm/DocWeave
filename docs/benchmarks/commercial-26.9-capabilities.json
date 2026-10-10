@@ -16119,10 +16119,21 @@
       "declaration": "aspose.words.Font.auto_color",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
+      "implementation": "partial_conversion_RGB_auto_origin_getter_and_save; DOM_and_canonical_Color_API_missing",
+      "gap": "themes_contrast_DOM_color_editing_canonical_Color_and_full_rendering_unaccepted",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "samples": [
+        "font-color-categories-26.9.json",
+        "corpus/font-color-categories-26.9.zip",
+        "corpus/font-color-current.zip"
+      ],
+      "validation": [
+        "256 owned native category getter observations: differences 70 before, zero after; 1024 direct/model JSON DOCX/Flat OPC native cold getters, zero differences",
+        "verify_font_color_categories: owned package payloads/hashes, nearest color and direct declaration XML; source related tests 1823 passed",
+        "installed Mac Python 3.14 full tests and ApiExamples: 21959 passed, 2 skipped, 219 warnings, 847.81 seconds; Linux amd64 targeted wheel: 5237 passed; additional Windows ZIP metadata simulation and theme evidence check: 1 passed each; full independent evidence verifier passed"
+      ],
+      "delivery": "conversion_RGB_auto_origin_stage_accepted; theme_DOM_canonical_Color_full_Font_acceptance_and_remote_CI_pending"
     },
     {
       "id": "aspose.words.Font.bidi",
@@ -16246,16 +16257,23 @@
       "declaration": "aspose.words.Font.color",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "DOCX_DOM_property_missing; unsupported_assignment_now_explicitly_rejected",
-      "gap": "canonical_property_load_edit_save_render_and_error_contract_not_implemented",
+      "implementation": "partial_conversion_RGB_auto_origin_getter_and_save; DOM_and_canonical_Color_API_missing",
+      "gap": "themes_contrast_DOM_color_editing_canonical_Color_and_full_rendering_unaccepted",
       "dependencies": [],
       "scope_confirmation": "published_declaration",
-      "samples": [],
+      "samples": [
+        "font-color-categories-26.9.json",
+        "corpus/font-color-categories-26.9.zip",
+        "corpus/font-color-current.zip"
+      ],
       "validation": [
         "tests/test_format_attribute_safety.py: 31 negative/positive direct/style handle checks; source formatting integration 8015 passed",
-        "installed Mac Python 3.14 and Linux amd64 wheel: 8748 affected-path/integration checks each passed; modified production modules identical to source; wheel resources checked"
+        "installed Mac Python 3.14 and Linux amd64 wheel: 8748 affected-path/integration checks each passed; modified production modules identical to source; wheel resources checked",
+        "256 owned native category getter observations: differences 70 before, zero after; 1024 direct/model JSON DOCX/Flat OPC native cold getters, zero differences",
+        "verify_font_color_categories: owned package payloads/hashes, nearest color and direct declaration XML; source related tests 1823 passed",
+        "installed Mac Python 3.14 full tests and ApiExamples: 21959 passed, 2 skipped, 219 warnings, 847.81 seconds; Linux amd64 targeted wheel: 5237 passed; additional Windows ZIP metadata simulation and theme evidence check: 1 passed each; full independent evidence verifier passed"
       ],
-      "delivery": "silent_assignment_loss_safety_fix_accepted; property_functionality_pending; remote_CI_pending",
+      "delivery": "conversion_RGB_auto_origin_stage_accepted; theme_DOM_canonical_Color_full_Font_acceptance_and_remote_CI_pending",
       "limits": [
         "Slots on built-in Font/ParagraphFormat and style variants prevent temporary Python attributes from masquerading as persisted edits; this is not functional parity or a scope exemption"
       ]
@@ -307338,7 +307356,7 @@
           "CELL": true
         },
         "literal_markup_present": false,
-        "first_paragraph_prefix": "﻿"
+        "first_paragraph_prefix": "\ufeff"
       }
     },
     {

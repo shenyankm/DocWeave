@@ -70,6 +70,19 @@
 真实 DOCX、独立 pypdf 导航和受控分配探针见[复验记录](benchmarks/pdf-outline-contract.json)。
 实际阅读器导航操作及完整保存矩阵仍未验收。
 
+### RGB 与自动颜色的声明来源
+
+`Font.color_explicit` 记录当前层是否声明 `w:color`：`True` 为显式声明，
+`False` 为继承，`None` 为旧模型或新建模型未记录来源。
+显式 `auto` 使用 `Color [Empty]`，可以覆盖上层 RGB；它不等于没有颜色声明。
+赋值或 `model_copy(update={'color': ...})` 会记录直接声明，即使颜色值未改变。
+JSON 保留来源，DOCX／Flat OPC 写出保留受测 RGB 和自动色声明。
+旧 JSON 不含此标记时沿用原有生成规则，无法恢复已经丢失的声明来源。
+
+[固定的 256 个组合及 1,024 个保存结果](benchmarks/font-color-categories-26.9.json)
+覆盖默认、段落样式、字符样式及 Run 的 RGB／自动色继承。
+主题色、背景对比、DOM 颜色编辑和完整颜色 API 仍未验收。
+
 ### Boolean 字体直接格式来源
 
 读取 DOCX 时，LDM 的 13 个 Boolean 字体字段各自保留 `*_explicit` 来源：

@@ -1,0 +1,1125 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "implementation_acceptance": false,
+  "full_Font_acceptance": false,
+  "rendering_acceptance": false,
+  "scope": "32 owned direct run accent1 cases; raw color getters and PDF text-span RGB only; no layout or painted-pixel equivalence",
+  "native": {
+    "version": "26.9.0",
+    "python": "3.13.15",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "licensed": false,
+    "records": [
+      {
+        "input": "00.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": "",
+        "sha256": "453b42b9476e2627207e909f235606284109c39511157a0fddc347b53f240a3b",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 1193046,
+        "output": "00.pdf",
+        "output_sha256": "0003c4bd9909038f35f9c812ceda1d802d07a1a5f045920fab5798248e91e3e6"
+      },
+      {
+        "input": "01.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\"",
+        "sha256": "811d37a776132b462b48a0d3ecfec4e5592c90f59ccf3029aa2d3f1f5b26b298",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 5675483,
+        "output": "01.pdf",
+        "output_sha256": "03fe2d54d19240c8837a973a86995006ad73e591064d9c63eeb46deef6981024"
+      },
+      {
+        "input": "02.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"80\"",
+        "sha256": "0fe9bc9442eb851d7da71bf8eae30aef91b52578fc46b6a918b5e2b141b6fce1",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 596523,
+        "output": "02.pdf",
+        "output_sha256": "9de6eef3505db50773632704f7ad9592821c4f281a4079f5dc662d4479561a45"
+      },
+      {
+        "input": "03.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"00\"",
+        "sha256": "34c5af73099ae6200ee1e943314368a2b5d56786abd063248053ea56168fdaf0",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 16777215,
+        "output": "03.pdf",
+        "output_sha256": "3e81ce71f34ef11de692bbf4d95ffca57a24c0af90a0013462aef5afe8ee9ee5"
+      },
+      {
+        "input": "04.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"FF\"",
+        "sha256": "56e34a61b7f91156b2b8b41f5e1e937366c37b60eb9f555f327fad91ff23328e",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 1127254,
+        "output": "04.pdf",
+        "output_sha256": "0d8e91f184354602758cb666ce63a941072c128955cfe861c5d27dcd39741698"
+      },
+      {
+        "input": "05.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"00\"",
+        "sha256": "129111d49cbb673204a27bfd026fd4288761e25f7f7a7c954a6aa61dd0684dda",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "output": "05.pdf",
+        "output_sha256": "3f2c4bf6cd8f1e9f0545d66f546251fa7986be54375f1e3682073f4bc634aba9"
+      },
+      {
+        "input": "06.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"FF\"",
+        "sha256": "c65a26ef23ab33c8d7afa1860fc8275605b7519008227edd650d96803a88a7a3",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 1127254,
+        "output": "06.pdf",
+        "output_sha256": "090434bacddeee0a66dc56865cd720650f9bcea9317bf8076c0eceeae36bc434"
+      },
+      {
+        "input": "07.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "sha256": "a0dcf1383b27dfca680bc4ec43bd9cf66faff6b077c3bb499c57b9560f6ede83",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "output": "07.pdf",
+        "output_sha256": "c77672920fd8a4053b06581d1d9025a06e4289ce286ef2551ee793427cfc4ea1"
+      },
+      {
+        "input": "08.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": "",
+        "sha256": "471d15db821980498ac7e587005a0c5d8b1f5122202c4d534f551ff8c6a7a2f3",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 1193046,
+        "output": "08.pdf",
+        "output_sha256": "767846f991ebc8f5e744b297889efc98ab28f36df3b1e2ea617edd10d942391b"
+      },
+      {
+        "input": "09.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\"",
+        "sha256": "537c12a2ac6706b25cbd50e30b6729433126b05a6ac14a9ba890a6902f1c458e",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 5675483,
+        "output": "09.pdf",
+        "output_sha256": "5e56a99667d36769e562973e526542f707e0c592848652ce4056475a993d80d3"
+      },
+      {
+        "input": "10.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"80\"",
+        "sha256": "804ea8b0c289f64fa07037c0b65fc70365e2048c32a2b947f84f9550496991d8",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 596523,
+        "output": "10.pdf",
+        "output_sha256": "0f8aa8b7704241e59161959f37c87819f3ed39f805dbdf5db11948879db22d2c"
+      },
+      {
+        "input": "11.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"00\"",
+        "sha256": "fa1f5c1a4ab0d572c91fb5d682d214becc40141a19d69df6151282796e495584",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16777215,
+        "output": "11.pdf",
+        "output_sha256": "66b1f2631500735046318442e6e17a5ce6cbee8afbed0bfc0cabc069f149b563"
+      },
+      {
+        "input": "12.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"FF\"",
+        "sha256": "890d698e21ecfa308dd5c1b9dd13e6e509378eb54ddbb7009ee1b550c41e4194",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 1127254,
+        "output": "12.pdf",
+        "output_sha256": "9dd55f2b99b14d569276fcbe03e18e934b51adef56529ce7f0393fb81483d70f"
+      },
+      {
+        "input": "13.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"00\"",
+        "sha256": "304a00f9eb21d715ef2b42636e0ef1aa14e75860f0ce8f759132f1a7635d58cd",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 0,
+        "output": "13.pdf",
+        "output_sha256": "217d503d7cb419a8235f40e424138e67cce14d5dd291083589f3add289d0c980"
+      },
+      {
+        "input": "14.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"FF\"",
+        "sha256": "2ce9911b63bfe00f8eb5af67240f37875addde702bff484cf3b8d4b5b01df56f",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 1127254,
+        "output": "14.pdf",
+        "output_sha256": "1d84ac63c160b601753d67af570e32cd3fb9d7de254a1013b281c01bc69d196b"
+      },
+      {
+        "input": "15.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "sha256": "62b018d49ffe1bb2a9f18ed3bf0f10aafc41bbc4fe4aa77e4f94348b3b23d11f",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "15.pdf",
+        "output_sha256": "af5f31719898963773f77cdcffe2e73703c40f491260591b363b40f0b81d4e33"
+      },
+      {
+        "input": "16.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": "",
+        "sha256": "37a60c49d9d020792dcf8b90cc0efb12e04ec4230b9c08e17ac9ee9fe9b639a7",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 12603469,
+        "output": "16.pdf",
+        "output_sha256": "ce66c4abde0e4910df099362fe09df76ee67cd772749a520a980cdc6dfb9db18"
+      },
+      {
+        "input": "17.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\"",
+        "sha256": "d74a212255643affcb119aa5f8b63e1e1bdc5cb5758131f7f4f1b559409a1467",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 14657445,
+        "output": "17.pdf",
+        "output_sha256": "07c9949e7aa198035266e4714659b4c277d0075f677ab7dfa0fffd09096a7334"
+      },
+      {
+        "input": "18.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"80\"",
+        "sha256": "dcc4d299691ecedea2f6c65938a8f84cace298e7d32d5edaa0ba2d1b459e0055",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 6497315,
+        "output": "18.pdf",
+        "output_sha256": "57fb95c20d111c582e270794374bf88e1b6bc5fba246285c1ed838507472b063"
+      },
+      {
+        "input": "19.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"00\"",
+        "sha256": "90700530beca03bcc40987a3b653108e5804d8a0ea7f26edea21df44417a102e",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 16777215,
+        "output": "19.pdf",
+        "output_sha256": "19b13afeefed8d31ee70da26b0cbd41a35298b300f5354b5f443b75ad1622654"
+      },
+      {
+        "input": "20.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"FF\"",
+        "sha256": "46e5e9f2d9f67bbeea7ff5851a2d0f7b194cb8819954c956eab1d2dd8264c088",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 12603469,
+        "output": "20.pdf",
+        "output_sha256": "11d9188bebc19ceaefa0f65c2eebaf18feca2156637db1066a3c841e4d8521a0"
+      },
+      {
+        "input": "21.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"00\"",
+        "sha256": "8c87a22a28eb15eeaafb91b560d69b26054862d330bc9e4176bf913d59cf19e4",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "output": "21.pdf",
+        "output_sha256": "f129a695919c2ea47715e66991d1a03845f4409adb21744576f06089bafeffe5"
+      },
+      {
+        "input": "22.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"FF\"",
+        "sha256": "ecce674fc70731f7f10ada3b489b93e98d5f59f50f1928832ad0ec0bf83b01bb",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 12603469,
+        "output": "22.pdf",
+        "output_sha256": "0f45914bd54ee50892c09ab937ff9fa2653e7cfdae100571d61b1e4e447d7c01"
+      },
+      {
+        "input": "23.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "sha256": "adbde2ea4512fe9fba09e2c286696db136451f98abf6f12390a55189e3b95037",
+        "getter": {
+          "a": 0,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": true
+        },
+        "pdf_target_color": 0,
+        "output": "23.pdf",
+        "output_sha256": "ee1c3ae8f1a5e2926769568f64551e3b647416d1abe56d43e900b3784c8a1bde"
+      },
+      {
+        "input": "24.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": "",
+        "sha256": "4405dfb75192f002d9edb529d0489fed0ff7e7c4c03e9df2eaf1a1a9c3b49fa1",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 12603469,
+        "output": "24.pdf",
+        "output_sha256": "21ea9f775a31b662a158d4e350dc39558ad4d3322eeb853c9259f89959ba69db"
+      },
+      {
+        "input": "25.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\"",
+        "sha256": "baef4bc875bdc587e24bb40e342c1dd96f60d0a740a466f8448bb6fcbf2fd783",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 14657445,
+        "output": "25.pdf",
+        "output_sha256": "56f62ce8b162a7e15603a2df93b5ddba1e98f6b05d9f4c4fadeaf4c954db69de"
+      },
+      {
+        "input": "26.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"80\"",
+        "sha256": "8cb398adf80b9850a0492c333ee8816a40c098019fd6dbd565b3b6b091d8f5f3",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 6497315,
+        "output": "26.pdf",
+        "output_sha256": "f89292e2b72f603e893fb8b96a56b0c8e233163a669ed0f3f6910ed16fef5cd6"
+      },
+      {
+        "input": "27.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"00\"",
+        "sha256": "473c160a3770488206a14419e72dbccde30edb1473ff7850d881f711388e6aff",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16777215,
+        "output": "27.pdf",
+        "output_sha256": "da9e43740caf25d1cac7f09557c93c66b3a1c3d0aeaa5c52e95f21b1d0563f5c"
+      },
+      {
+        "input": "28.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"FF\"",
+        "sha256": "8c17c8eb6b43e7b0fcab281bf56f3ef5b26e4912facbca44e01da562dfb1384c",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 12603469,
+        "output": "28.pdf",
+        "output_sha256": "aecb1bf69ebae5eac98990720859955aac31a2dcaea545b2fd58cb94e9028271"
+      },
+      {
+        "input": "29.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"00\"",
+        "sha256": "88718194320b9be92d4f34340128f8dc6163d9241c24c512d0058fcc9b54c442",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 0,
+        "output": "29.pdf",
+        "output_sha256": "7b1f8b783be873af6d39b0f58a2d1ba38d6b8c1eb6fce362c854a6316fd758e7"
+      },
+      {
+        "input": "30.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"FF\"",
+        "sha256": "615e397c74a96c5508706c4cb11de370e8efa12e82db40a16edce06d4231f466",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 12603469,
+        "output": "30.pdf",
+        "output_sha256": "ada0be244118104b5a3f9ab5a018d9c82549d30bcd4f1ad2e5b5650828ac5dc4"
+      },
+      {
+        "input": "31.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "sha256": "a2627a2bc098266dfbc06c6aaec07d7e85e62c7385515fa6b299884cefd70d5d",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "31.pdf",
+        "output_sha256": "66d0474537cee23b667c0c5b3d1b40fa7e2e1cedc49032be14e67ce970c3b44a"
+      }
+    ],
+    "full_Font_acceptance": false,
+    "rendering_acceptance": false
+  },
+  "current_before_theme_fix": {
+    "version": "26.7.0.post2",
+    "python": "3.14.7",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "licensed": null,
+    "records": [
+      {
+        "input": "00.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": "",
+        "sha256": "453b42b9476e2627207e909f235606284109c39511157a0fddc347b53f240a3b",
+        "getter": {
+          "a": 255,
+          "r": 18,
+          "g": 52,
+          "b": 86,
+          "is_empty": false
+        },
+        "pdf_target_color": 1193046,
+        "output": "00.pdf",
+        "output_sha256": "72a946454e8118b6603722c9fc35b15fe67fbed3af3c03579d7193e835f580f5"
+      },
+      {
+        "input": "01.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\"",
+        "sha256": "811d37a776132b462b48a0d3ecfec4e5592c90f59ccf3029aa2d3f1f5b26b298",
+        "getter": {
+          "a": 255,
+          "r": 136,
+          "g": 153,
+          "b": 170,
+          "is_empty": false
+        },
+        "pdf_target_color": 8952234,
+        "output": "01.pdf",
+        "output_sha256": "ea31cbc12b75da697564a1df5bc700d84f960d9c35ec9aaa9ba428a7939e96d6"
+      },
+      {
+        "input": "02.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"80\"",
+        "sha256": "0fe9bc9442eb851d7da71bf8eae30aef91b52578fc46b6a918b5e2b141b6fce1",
+        "getter": {
+          "a": 255,
+          "r": 9,
+          "g": 26,
+          "b": 43,
+          "is_empty": false
+        },
+        "pdf_target_color": 596523,
+        "output": "02.pdf",
+        "output_sha256": "103b875cae1374baf3350d462db94f5324a05862098600a511e042e16eaec7fb"
+      },
+      {
+        "input": "03.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"00\"",
+        "sha256": "34c5af73099ae6200ee1e943314368a2b5d56786abd063248053ea56168fdaf0",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 255,
+          "b": 255,
+          "is_empty": false
+        },
+        "pdf_target_color": 16777215,
+        "output": "03.pdf",
+        "output_sha256": "34f7beeb1ed95ea8137983efe964e0fbb157335921f0e85b5a76f08c1564aca1"
+      },
+      {
+        "input": "04.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"FF\"",
+        "sha256": "56e34a61b7f91156b2b8b41f5e1e937366c37b60eb9f555f327fad91ff23328e",
+        "getter": {
+          "a": 255,
+          "r": 18,
+          "g": 52,
+          "b": 86,
+          "is_empty": false
+        },
+        "pdf_target_color": 1193046,
+        "output": "04.pdf",
+        "output_sha256": "72a946454e8118b6603722c9fc35b15fe67fbed3af3c03579d7193e835f580f5"
+      },
+      {
+        "input": "05.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"00\"",
+        "sha256": "129111d49cbb673204a27bfd026fd4288761e25f7f7a7c954a6aa61dd0684dda",
+        "getter": {
+          "a": 255,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 0,
+        "output": "05.pdf",
+        "output_sha256": "01d221b00760854e5f8fde4ed34e1f6521dcb527ca259db3b08e9e762b3784e8"
+      },
+      {
+        "input": "06.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"FF\"",
+        "sha256": "c65a26ef23ab33c8d7afa1860fc8275605b7519008227edd650d96803a88a7a3",
+        "getter": {
+          "a": 255,
+          "r": 18,
+          "g": 52,
+          "b": 86,
+          "is_empty": false
+        },
+        "pdf_target_color": 1193046,
+        "output": "06.pdf",
+        "output_sha256": "72a946454e8118b6603722c9fc35b15fe67fbed3af3c03579d7193e835f580f5"
+      },
+      {
+        "input": "07.docx",
+        "base": "123456",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "sha256": "a0dcf1383b27dfca680bc4ec43bd9cf66faff6b077c3bb499c57b9560f6ede83",
+        "getter": {
+          "a": 255,
+          "r": 136,
+          "g": 153,
+          "b": 170,
+          "is_empty": false
+        },
+        "pdf_target_color": 8952234,
+        "output": "07.pdf",
+        "output_sha256": "ea31cbc12b75da697564a1df5bc700d84f960d9c35ec9aaa9ba428a7939e96d6"
+      },
+      {
+        "input": "08.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": "",
+        "sha256": "471d15db821980498ac7e587005a0c5d8b1f5122202c4d534f551ff8c6a7a2f3",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "08.pdf",
+        "output_sha256": "e9b3b086fc30bc4208388820816f36ac504264bf89923caeffa085463d0fb7d2"
+      },
+      {
+        "input": "09.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\"",
+        "sha256": "537c12a2ac6706b25cbd50e30b6729433126b05a6ac14a9ba890a6902f1c458e",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "09.pdf",
+        "output_sha256": "e9b3b086fc30bc4208388820816f36ac504264bf89923caeffa085463d0fb7d2"
+      },
+      {
+        "input": "10.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"80\"",
+        "sha256": "804ea8b0c289f64fa07037c0b65fc70365e2048c32a2b947f84f9550496991d8",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "10.pdf",
+        "output_sha256": "e9b3b086fc30bc4208388820816f36ac504264bf89923caeffa085463d0fb7d2"
+      },
+      {
+        "input": "11.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"00\"",
+        "sha256": "fa1f5c1a4ab0d572c91fb5d682d214becc40141a19d69df6151282796e495584",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "11.pdf",
+        "output_sha256": "e9b3b086fc30bc4208388820816f36ac504264bf89923caeffa085463d0fb7d2"
+      },
+      {
+        "input": "12.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"FF\"",
+        "sha256": "890d698e21ecfa308dd5c1b9dd13e6e509378eb54ddbb7009ee1b550c41e4194",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "12.pdf",
+        "output_sha256": "e9b3b086fc30bc4208388820816f36ac504264bf89923caeffa085463d0fb7d2"
+      },
+      {
+        "input": "13.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"00\"",
+        "sha256": "304a00f9eb21d715ef2b42636e0ef1aa14e75860f0ce8f759132f1a7635d58cd",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "13.pdf",
+        "output_sha256": "e9b3b086fc30bc4208388820816f36ac504264bf89923caeffa085463d0fb7d2"
+      },
+      {
+        "input": "14.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"FF\"",
+        "sha256": "2ce9911b63bfe00f8eb5af67240f37875addde702bff484cf3b8d4b5b01df56f",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "14.pdf",
+        "output_sha256": "e9b3b086fc30bc4208388820816f36ac504264bf89923caeffa085463d0fb7d2"
+      },
+      {
+        "input": "15.docx",
+        "base": "123456",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "sha256": "62b018d49ffe1bb2a9f18ed3bf0f10aafc41bbc4fe4aa77e4f94348b3b23d11f",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "15.pdf",
+        "output_sha256": "e9b3b086fc30bc4208388820816f36ac504264bf89923caeffa085463d0fb7d2"
+      },
+      {
+        "input": "16.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": "",
+        "sha256": "37a60c49d9d020792dcf8b90cc0efb12e04ec4230b9c08e17ac9ee9fe9b639a7",
+        "getter": {
+          "a": 255,
+          "r": 192,
+          "g": 80,
+          "b": 77,
+          "is_empty": false
+        },
+        "pdf_target_color": 12603469,
+        "output": "16.pdf",
+        "output_sha256": "c3041ac3ac93309467773829c0115f8606ade03a2bb3149b0646478e000dc1f6"
+      },
+      {
+        "input": "17.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\"",
+        "sha256": "d74a212255643affcb119aa5f8b63e1e1bdc5cb5758131f7f4f1b559409a1467",
+        "getter": {
+          "a": 255,
+          "r": 223,
+          "g": 167,
+          "b": 165,
+          "is_empty": false
+        },
+        "pdf_target_color": 14657445,
+        "output": "17.pdf",
+        "output_sha256": "93fe5df470e39d5ec4d06898082ae46b72a3225feca60a9c2be9ad8fbe73c9f8"
+      },
+      {
+        "input": "18.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"80\"",
+        "sha256": "dcc4d299691ecedea2f6c65938a8f84cace298e7d32d5edaa0ba2d1b459e0055",
+        "getter": {
+          "a": 255,
+          "r": 96,
+          "g": 40,
+          "b": 38,
+          "is_empty": false
+        },
+        "pdf_target_color": 6301734,
+        "output": "18.pdf",
+        "output_sha256": "8558d039eb8567bcc63bac1a870820990196697de0522bd68f0fb751b37dc800"
+      },
+      {
+        "input": "19.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"00\"",
+        "sha256": "90700530beca03bcc40987a3b653108e5804d8a0ea7f26edea21df44417a102e",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 255,
+          "b": 255,
+          "is_empty": false
+        },
+        "pdf_target_color": 16777215,
+        "output": "19.pdf",
+        "output_sha256": "932736b6ead6c6cc637bc94339afbeec0823fd8970bdd64080bace605f19b894"
+      },
+      {
+        "input": "20.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"FF\"",
+        "sha256": "46e5e9f2d9f67bbeea7ff5851a2d0f7b194cb8819954c956eab1d2dd8264c088",
+        "getter": {
+          "a": 255,
+          "r": 192,
+          "g": 80,
+          "b": 77,
+          "is_empty": false
+        },
+        "pdf_target_color": 12603469,
+        "output": "20.pdf",
+        "output_sha256": "5a40b65752a3c514b70ea280b0f747601b9f66709a07cc7f156c2646daebbd6b"
+      },
+      {
+        "input": "21.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"00\"",
+        "sha256": "8c87a22a28eb15eeaafb91b560d69b26054862d330bc9e4176bf913d59cf19e4",
+        "getter": {
+          "a": 255,
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 0,
+        "output": "21.pdf",
+        "output_sha256": "3b24571d80e7333dcf0ec25cbfd8dd6e726991c867eef610d1e0c3e893039bd9"
+      },
+      {
+        "input": "22.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeShade=\"FF\"",
+        "sha256": "ecce674fc70731f7f10ada3b489b93e98d5f59f50f1928832ad0ec0bf83b01bb",
+        "getter": {
+          "a": 255,
+          "r": 192,
+          "g": 80,
+          "b": 77,
+          "is_empty": false
+        },
+        "pdf_target_color": 12603469,
+        "output": "22.pdf",
+        "output_sha256": "5a40b65752a3c514b70ea280b0f747601b9f66709a07cc7f156c2646daebbd6b"
+      },
+      {
+        "input": "23.docx",
+        "base": "C0504D",
+        "fallback": "auto",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "sha256": "adbde2ea4512fe9fba09e2c286696db136451f98abf6f12390a55189e3b95037",
+        "getter": {
+          "a": 255,
+          "r": 223,
+          "g": 167,
+          "b": 165,
+          "is_empty": false
+        },
+        "pdf_target_color": 14657445,
+        "output": "23.pdf",
+        "output_sha256": "81903d3534544b437fb4992a70099e7fb94b9fefc141b02e6f1685d2e483cf91"
+      },
+      {
+        "input": "24.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": "",
+        "sha256": "4405dfb75192f002d9edb529d0489fed0ff7e7c4c03e9df2eaf1a1a9c3b49fa1",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "24.pdf",
+        "output_sha256": "262709cfa07098f2b6be0d7880508fa55ce3d3074e3c1f204a6cd1e55fe5165e"
+      },
+      {
+        "input": "25.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\"",
+        "sha256": "baef4bc875bdc587e24bb40e342c1dd96f60d0a740a466f8448bb6fcbf2fd783",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "25.pdf",
+        "output_sha256": "262709cfa07098f2b6be0d7880508fa55ce3d3074e3c1f204a6cd1e55fe5165e"
+      },
+      {
+        "input": "26.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"80\"",
+        "sha256": "8cb398adf80b9850a0492c333ee8816a40c098019fd6dbd565b3b6b091d8f5f3",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "26.pdf",
+        "output_sha256": "262709cfa07098f2b6be0d7880508fa55ce3d3074e3c1f204a6cd1e55fe5165e"
+      },
+      {
+        "input": "27.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"00\"",
+        "sha256": "473c160a3770488206a14419e72dbccde30edb1473ff7850d881f711388e6aff",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "27.pdf",
+        "output_sha256": "262709cfa07098f2b6be0d7880508fa55ce3d3074e3c1f204a6cd1e55fe5165e"
+      },
+      {
+        "input": "28.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"FF\"",
+        "sha256": "8c17c8eb6b43e7b0fcab281bf56f3ef5b26e4912facbca44e01da562dfb1384c",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "28.pdf",
+        "output_sha256": "262709cfa07098f2b6be0d7880508fa55ce3d3074e3c1f204a6cd1e55fe5165e"
+      },
+      {
+        "input": "29.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"00\"",
+        "sha256": "88718194320b9be92d4f34340128f8dc6163d9241c24c512d0058fcc9b54c442",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "29.pdf",
+        "output_sha256": "600bb9d590be05db3fb7f28060197056ab4037d236dd019a63b3c3b29c5ad355"
+      },
+      {
+        "input": "30.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeShade=\"FF\"",
+        "sha256": "615e397c74a96c5508706c4cb11de370e8efa12e82db40a16edce06d4231f466",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "30.pdf",
+        "output_sha256": "600bb9d590be05db3fb7f28060197056ab4037d236dd019a63b3c3b29c5ad355"
+      },
+      {
+        "input": "31.docx",
+        "base": "C0504D",
+        "fallback": "FF0000",
+        "modifiers": " w:themeTint=\"80\" w:themeShade=\"80\"",
+        "sha256": "a2627a2bc098266dfbc06c6aaec07d7e85e62c7385515fa6b299884cefd70d5d",
+        "getter": {
+          "a": 255,
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "is_empty": false
+        },
+        "pdf_target_color": 16711680,
+        "output": "31.pdf",
+        "output_sha256": "600bb9d590be05db3fb7f28060197056ab4037d236dd019a63b3c3b29c5ad355"
+      }
+    ],
+    "full_Font_acceptance": false,
+    "rendering_acceptance": false
+  },
+  "specification": "https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/8229a077-7fc8-4fba-96cc-c77b6a4fc768",
+  "corpus": "corpus/font-theme-corpus-26.9.zip",
+  "corpus_sha256": "7ea74f0371b46fa383b2dcd46f731b44743d80ba434bf2c563851cf7830dca00",
+  "native_outputs": "corpus/font-theme-native-outputs-26.9.zip",
+  "native_outputs_sha256": "c9c198b7baccb480529fdf0922a5733674650f956793c23df61f45501962b268",
+  "current_before_outputs": "corpus/font-theme-current-before-outputs-26.9.zip",
+  "current_before_outputs_sha256": "5027173fbb9d988cc7d70b08d2115ea19b0f446196c41b31d4152fb088b076f9",
+  "getter_differences_before": 16,
+  "pdf_target_color_differences_before": 20
+}

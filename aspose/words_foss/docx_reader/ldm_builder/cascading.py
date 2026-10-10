@@ -107,6 +107,7 @@ class FontBuilder:
         """Translate one ``<w:rPr>`` into a value-only :class:`ldm.Font`."""
         font = ldm.Font()
         font.size_explicit = False
+        font.color_explicit = rPr.find(f"{W_NS}color") is not None
         for tag, field, _ in RUN_ONOFF_FLAGS:
             setattr(font, field + "_explicit", rPr.find(f"{W_NS}{tag}") is not None)
         self._apply_name(rPr, font)
@@ -171,6 +172,8 @@ class FontBuilder:
             return
         theme_name = color.get(f"{W_NS}themeColor", "")
         if not theme_name:
+            if val.lower() == "auto":
+                font.color = COLOR_EMPTY
             return
         resolved = self._ctx._resolve_theme_color(theme_name)
         if not resolved:
@@ -458,6 +461,7 @@ class FontResolver:
         if not base.highlight_color:
             base.highlight_color = COLOR_EMPTY
         base.size_explicit = rPr is not None and rPr.find(f"{W_NS}sz") is not None
+        base.color_explicit = rPr is not None and rPr.find(f"{W_NS}color") is not None
         for tag, field, _ in RUN_ONOFF_FLAGS:
             setattr(base, field + "_explicit", rPr is not None and rPr.find(f"{W_NS}{tag}") is not None)
         return base
@@ -528,7 +532,8 @@ class FontResolver:
             # Zero means unspecified; JSON validation fills model_fields_set.
             if field == "size" and value == 0:
                 continue
-            if field in ("color", "highlight_color") and value == COLOR_EMPTY:
+            if (field in ("color", "highlight_color") and value == COLOR_EMPTY
+                    and not (field == "color" and override.color_explicit is True)):
                 continue
             setattr(base, field, value)
 
