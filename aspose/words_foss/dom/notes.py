@@ -387,20 +387,17 @@ class NoteGraph:
         return name, tree, True
 
     def create(self, role, *, author='', initial='', date_time=None):
-        from datetime import datetime
         if role == 'comments':
-            if not isinstance(author, str) or not isinstance(initial, str):
-                raise TypeError('Comment author and initial must be strings')
-            if date_time is None:
-                date_time = datetime.min
-            if not isinstance(date_time, datetime):
-                raise TypeError('Comment date_time must be datetime')
+            from aspose.words_foss.dom.comment_metadata import normalize_date, normalize_text
+            author, initial = normalize_text(author), normalize_text(initial)
+            date_time = normalize_date(date_time, constructor=True)
         name, tree, _ = self._content_tree(role)
         node = _new(tree.documentElement, _ROLES[role])
         if role == 'comments':
             _set_word_attribute(node, 'author', author)
             _set_word_attribute(node, 'initials', initial)
-            _set_word_attribute(node, 'date', date_time.isoformat() + ('Z' if date_time.tzinfo is None else ''))
+            from aspose.words_foss.dom.comment_metadata import set_date
+            set_date(node, date_time)
             self.comment_ids[node] = self._next_comment_id
             self._next_comment_id += 1
         self.pending[node] = role
@@ -572,9 +569,24 @@ class NoteGraph:
     def prepare_projection(self):
         """Pure serialization plans; commit public IDs/minimum content after successful IO."""
         from aspose.words_foss.utils.xml_helpers import serialize_xml
-        if not self.changed:
-            return {}, lambda: None
+        from aspose.words_foss.dom.comment_metadata import project_date
         package = self.document._package
+        if not self.changed:
+            name = self.parts.get('comments')
+            if name is None:
+                return {}, lambda: None
+            tree = package.tree(name)
+            projected = tree.cloneNode(deep=True)
+            changed = False
+            for source, target in zip(_elements(tree.documentElement), _elements(projected.documentElement)):
+                if _is(source, 'comment') and source.getAttributeNS(W, 'type') in {'', 'normal'}:
+                    changed = project_date(source, target) or changed
+            if not changed:
+                return {}, lambda: None
+            from aspose.words_foss.dom.row_format import projected_row_tree
+            payloads = {name: serialize_xml(projected_row_tree(projected))}
+            package.validate_parts(payloads)
+            return payloads, lambda: None
         names = {'word/document.xml', *self.parts.values(),
                  *(self.anchor_part(anchor) for anchor in self.anchors.values())}
         trees, mapping = {}, {}
@@ -691,6 +703,9 @@ class NoteGraph:
                     identifier = comment_mapping[value]
                     _set_word_attribute(projected, 'id', str(identifier))
                     commits.append(('range-id', marker, identifier))
+        for (role, _), entry in self.entries.items():
+            if role == 'comments' and entry in mapping:
+                project_date(entry, mapping[entry])
         from aspose.words_foss.dom.row_format import projected_row_tree, validate_row_properties
         for tree in trees.values():
             validate_row_properties(tree)

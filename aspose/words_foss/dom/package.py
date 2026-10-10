@@ -127,10 +127,13 @@ class DocxPackage:
             original = self.tree(name)
             validate_row_properties(original)
             projected = projected_row_tree(original)
+            from aspose.words_foss.dom.comment_metadata import projected_comment_tree
+            projected = projected_comment_tree(original, projected)
             if projected is not original:
                 # Read-only logical annotation normalization must not rewrite source runs/content.
                 if name not in self._dirty and name in getattr(self, '_annotation_normalized_parts', ()):
-                    projected = projected_row_tree(parseString(self._payloads[name], forbid_dtd=True))
+                    source = parseString(self._payloads[name], forbid_dtd=True)
+                    projected = projected_comment_tree(source, projected_row_tree(source))
                 tree = projected
         if name in self._dirty or tree is not None:
             if tree is None:

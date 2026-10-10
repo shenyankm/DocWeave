@@ -145,13 +145,16 @@ def _safe_structure(node, properties=False):
 
 
 def _copy_row_warm(source, target):
-    """Retain setter-only row values while rebinding their cloned XML identity."""
+    """Rebind node-owned warm values when cloning rows or comment metadata."""
     pairs = [(source, target)]
     mapping = {}
     pending = []
     while pairs:
         old, new = pairs.pop()
         mapping[old] = new
+        if _is(old, "comment") and _is(new, "comment"):
+            from aspose.words_foss.dom.comment_metadata import copy_date_state
+            copy_date_state(old, new)
         warm = getattr(old, "_row_format_warm", None)
         if warm is not None:
             pending.append((new, warm))
@@ -766,10 +769,8 @@ class Comment(Body):
         return self._element.getAttributeNS(W, name)
 
     def _set_metadata(self, name, value):
-        if value is None:
-            raise RuntimeError('Comment text metadata cannot be None')
-        if not isinstance(value, str):
-            raise TypeError('Comment text metadata requires a string')
+        from aspose.words_foss.dom.comment_metadata import normalize_text
+        value = normalize_text(value)
         self._editable()
         from aspose.words_foss.dom.importing import _set_word_attribute
         _set_word_attribute(self._element, name, value)
@@ -777,6 +778,20 @@ class Comment(Body):
 
     author = property(lambda self: self._metadata('author'), lambda self, value: self._set_metadata('author', value))
     initial = property(lambda self: self._metadata('initials'), lambda self, value: self._set_metadata('initials', value))
+
+    @property
+    def date_time(self):
+        from aspose.words_foss.dom.comment_metadata import get_date
+        return get_date(self._element)
+
+    @date_time.setter
+    def date_time(self, value):
+        from aspose.words_foss.dom.comment_metadata import normalize_date, set_date
+        normalized = normalize_date(value)
+        self._editable()
+        set_date(self._element, normalized)
+        self.owner_document._annotations().changed = True
+        self._changed()
 
     @property
     def child_nodes(self):

@@ -1,5 +1,7 @@
 """Explicit original-package editing entry point; legacy Document remains unchanged."""
 
+from datetime import datetime
+
 from aspose.words_foss._io import MAX_TABLE_COLUMNS
 from aspose.words_foss._opc import resolve_target
 from aspose.words_foss.dom.importing import ImportFormatMode
@@ -100,7 +102,10 @@ class DocxDocument:
             raise TypeError("footnote_type requires FootnoteType")
         return self._annotations().create("footnotes" if footnote_type == FootnoteType.FOOTNOTE else "endnotes")
 
-    def create_comment(self, author="", initial="", date_time=None):
+    def create_comment(self, author="", initial="", date_time=datetime.min):
+        from aspose.words_foss.dom.comment_metadata import normalize_date, normalize_text
+        author, initial = normalize_text(author), normalize_text(initial)
+        date_time = normalize_date(date_time, constructor=True)
         return self._annotations().create("comments", author=author, initial=initial, date_time=date_time)
 
     def _create_comment_range(self, local_name, identifier):
