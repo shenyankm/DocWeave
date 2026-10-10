@@ -47,12 +47,13 @@ def test_disable_save_twice_preserves_original_graph_and_held_metadata(tmp_path,
 
 
 @pytest.mark.parametrize('format', [SaveFormat.DOCX, SaveFormat.FLAT_OPC])
-def test_shared_resource_with_nonfont_reference_is_retained(format):
+@pytest.mark.parametrize('relationship_kind', ['image', 'font'])
+def test_shared_resource_with_nonfont_reference_is_retained(format, relationship_kind):
     parts = owned_parts(False)
     root = ET.fromstring(parts[TABLE]);font = root.find(f'{{{W}}}font')
     ET.SubElement(font, f'{{{W}}}custom', {f'{{{R}}}id': 'other'})
     parts[TABLE] = ET.tostring(root)
-    parts[relationships_path(TABLE)] = rels(('font', 'font', '../fonts/tiny.odttf'), ('other', 'image', '../fonts/tiny.odttf'))
+    parts[relationships_path(TABLE)] = rels(('font', 'font', '../fonts/tiny.odttf'), ('other', relationship_kind, '../fonts/tiny.odttf'))
     doc = Document(BytesIO(archive(parts)))
     saved = unpack(doc.to_bytes(format))
     edges = ET.fromstring(saved['word/_rels/fontTable.xml.rels'])

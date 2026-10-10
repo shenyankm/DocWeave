@@ -425,11 +425,15 @@ def _strip_embedded_fonts(text_parts, binary_parts, start):
             if child.tag in {w + 'embedRegular', w + 'embedBold', w + 'embedItalic', w + 'embedBoldItalic'}:
                 font.remove(child)
     parts[root_name] = ET.tostring(root, encoding='utf-8')
+    relationship_namespace = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+    referenced = {value for node in root.iter() for key, value in node.attrib.items()
+                  if key.startswith(relationship_namespace)}
     rels_name = relationships_path(root_name)
     if rels_name in parts:
         edges = fromstring(parts[rels_name], forbid_dtd=True)
         for edge in list(edges):
-            if edge.get('Type') == 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/font':
+            if (edge.get('Type') == 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/font'
+                    and edge.get('Id') not in referenced):
                 edges.remove(edge)
         if len(edges):
             parts[rels_name] = ET.tostring(edges, encoding='utf-8')
