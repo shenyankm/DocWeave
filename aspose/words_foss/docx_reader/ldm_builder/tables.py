@@ -114,6 +114,13 @@ class TableBuilder:
         tblW = tblPr.find(f"{W_NS}tblW")
         if tblW is not None:
             tbl.preferred_width = self._parse_preferred_width(tblW)
+        layouts = tblPr.findall(f"{W_NS}tblLayout")
+        if len(layouts) > 1:
+            from aspose.words_foss.diagnostics import ConversionWarning, warn
+            warn('DOCX normalizes repeated table layout declarations', ConversionWarning,
+                 code='docx.normalized_table_layout')
+        for layout in layouts:
+            self._apply_layout(tbl, layout)
         tblInd = tblPr.find(f"{W_NS}tblInd")
         if tblInd is not None and tblInd.get(f"{W_NS}type", "dxa") == "dxa":
             tbl.left_indent = int(tblInd.get(f"{W_NS}w", "0")) / _TWIPS_PER_PT
@@ -134,6 +141,19 @@ class TableBuilder:
         if desc is not None:
             tbl.description = desc.get(f"{W_NS}val", "")
         return borders
+
+    @staticmethod
+    def _apply_layout(tbl: ldm.Table, layout: ET.Element) -> None:
+        layout_type = layout.get(f"{W_NS}type")
+        if layout_type is None:
+            if tbl.allow_auto_fit is None:
+                tbl.allow_auto_fit = True
+            return
+        if layout_type not in {"fixed", "autofit"}:
+            from aspose.words_foss.diagnostics import ConversionWarning, warn
+            warn('DOCX normalizes an unknown table layout type to autofit', ConversionWarning,
+                 code='docx.normalized_table_layout')
+        tbl.allow_auto_fit = layout_type != "fixed"
 
     @staticmethod
     def _parse_preferred_width(tblW: ET.Element) -> ldm.PreferredWidth:

@@ -216,6 +216,13 @@ AUTO 即使请求较低 JPEG 质量，也保留含透明像素图片的原字节
 
 ## PDF 排版契约
 
+LDM `Table.allow_auto_fit` 保留 DOCX 布局声明：`None` 表示未声明，
+`True` / `False` 分别表示显式 `autofit` / `fixed`；JSON、DOCX 和 Flat OPC 保存保留该区别。
+缺少布局声明时有效默认值为 AutoFit。读取未知类型时按 AutoFit 恢复并报告
+`docx.normalized_table_layout`；重复声明按文档顺序处理并报告同一诊断，
+后续缺少 `type` 的声明不覆盖已有值。诊断不包含输入属性值。
+这项声明与恢复语义不代表完整 AutoFit 排版已通过基准验收。
+
 表格保留逐 Run 格式、图片及段落/子表格的交错顺序；单元格 `children` 有序视图与
 `content_order` 序列化兼容旧 `paragraphs` / `tables` 构造。换页重复连续前导表头，
 可容纳的行整体移动，超高行按内容行拆分；不可满足的行高、cantSplit 或单元格分页要求会报警。

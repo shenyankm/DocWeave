@@ -409,6 +409,9 @@ def _tblPr(
         if tbl_borders:
             children.append(tbl_borders)
 
+    if table.allow_auto_fit is not None:
+        children.append(el("w:tblLayout", {"w:type": "autofit" if table.allow_auto_fit else "fixed"}))
+
     margins: list[str] = []
     margin_map = {
         "top": table.top_padding,
