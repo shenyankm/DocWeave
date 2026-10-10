@@ -237,7 +237,7 @@ editable.save("with-resources.docx")
 
 - Text ranges are paragraph-local Python Unicode code-point offsets, `[start, end)`, not grapheme clusters.
   Replacement/range editing only accepts supported plain inline structures; complex ranges are rejected.
-- Direct formatting supports bold, italic, size, alignment, and existing paragraph/character style IDs.
+- Direct formatting supports 13 font Boolean properties (including bold and italic), size, alignment, and existing paragraph/character style IDs.
   `effective_font` / `effective_paragraph_format` resolve a supported subset of defaults/style inheritance;
   numbering, conditional table styles, theme fonts/colors, and complex-script rules are not fully resolved.
 - Picture insertion accepts PNG/JPEG bytes, streams, or paths. Dimensions are in points; one specified

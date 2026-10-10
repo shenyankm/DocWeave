@@ -94,9 +94,18 @@ paragraph.paragraph_format.alignment = None
 ```
 
 `run.font` 和 `paragraph.paragraph_format` 的 getter 返回**直接设置**，不存在时是 `None`。
-现在支持粗体、斜体、字号、段落对齐和段落/字符样式 ID。`run.font.style_id` 只接受已存在的
+现在支持字号、13 个字体布尔属性、段落对齐和段落/字符样式 ID。字体布尔属性为
+`bold`、`italic`、`bold_bi`、`italic_bi`、`all_caps`、`small_caps`、`strike_through`、
+`hidden`、`outline`、`shadow`、`emboss`、`engrave`、`no_proofing`；赋值只接受
+`True`、`False`、`None`，数字和字符串会在修改前拒绝。`run.font.style_id` 只接受已存在的
 character style，`paragraph.paragraph_format.style_id` 只接受 paragraph style；两者支持 `None` 移除引用。
 不把样式继承结果物化为直接格式，也不自动创建样式。
+
+非布尔类型的字体开关与段落分页开关赋值现在抛出 `TypeError`；此前为 `ValueError`，
+捕获旧异常的调用方需要调整。非法 OOXML 属性值仍抛出 `ValueError`。
+[官方错误观测](benchmarks/dom-font-boolean-errors-26.9.json)覆盖 297 组输入，
+其中 264 组错误类型差异已修正。Run 的直接字体接受 `None` 清除声明是本项目 DOM
+接口的明确功能；商业 Font 拒绝 `None`，其完整接口契约尚未对齐。
 
 ### 样式集合与字体编辑
 
@@ -117,8 +126,8 @@ for style in editable.styles:
 
 - 集合按实际 styles XML 顺序遍历，支持 `len()`、`get_by_id()` 和精确名称
   `get_by_name()`；未找到返回 `None`，同名歧义抛出 `ValueError`。不自动创建内建样式。
-- `Style.font` 读取最近的样式层及文档默认 b/i/sz，设置写入当前层；`direct_font`
-  读取当前层，未设置返回 `None`，可赋 `None` 清除。`font` 的这三项 setter 拒绝 `None`。
+- `Style.font` 读取最近的样式层及文档默认字号、上述布尔属性，设置写入当前层；`direct_font`
+  读取当前层，未设置返回 `None`，可赋 `None` 清除。`font` 的这些 setter 拒绝 `None`。
   字号 setter 仍限正的半点数；读取普通 `w:sz` 时支持已测得的整数、小数、指数及
   `pt/in/cm/mm/pc/pi` 单位，按官方观察截断不足半点的部分；结果须为正且可表示，原包 XML 不因读取改变。
   [126 个固定输入及 105 个官方保存输出](benchmarks/font-size-loading-26.9.json)中，
@@ -204,9 +213,14 @@ print(paragraph.effective_paragraph_format.widow_control)
 - 通过主文档的 styles relationship 定位实际部件，支持相对路径、绝对包路径和 URI 转义；
   不把未被关系引用的 `word/styles.xml` 当成有效样式表。缺失/外部/非法关系明确报错。
 - 字体按 `docDefaults → 默认或显式段落样式 basedOn 链 → 显式字符样式 basedOn 链 → 直接格式`
-  解析；未引用的默认字符样式不应用到 Run。粗斜体在每条链内取最近的显式值；两类样式均
+  解析；未引用的默认字符样式不应用到 Run。字体布尔属性在每条链内取最近的显式值；两类样式均
   定义时，其异或结果与文档默认开启值合并，只有一类定义时使用该值。直接格式明确设置开/关。
   此规则按官方 26.9.0 的固定语料校准，不能推广为所有 Word 版本、表格或复杂文字的行为。
+- [字体布尔编辑观测](benchmarks/dom-font-booleans-26.9.json)复用 891 个自有输入，新增 11 个
+  属性的 Run／段落样式／字符样式赋值共 5,346 组，当前 live getter 与官方完全一致。
+  保存成 DOCX／Flat OPC 后，10,692 组官方冷读取无 getter 差异；原始输出、独立 XML
+  声明复验及官方观测保存在同一压缩归档。该语料不覆盖 basedOn 链、表格/列表字体、
+  跨文档样式翻译及渲染；`hidden` getter 尤其不能直接作为最终文字可见性判断。
 - 段落对齐按 `docDefaults → 段落样式链 → 直接格式` 解析；段落标记字体不错误地应用到文字 Run。
 - 样式循环、缺失父样式、跨类型继承、重复 ID 和非法已支持属性值不会静默忽略。
 - 当前解析 `w:b`、`w:i`、`w:sz`、`w:jc`、上述分页标志及五个点数属性，不是完整字体或排版解析器。
@@ -234,7 +248,7 @@ paragraph.range(0, 0).replace("前缀")
   不按 UTF-16 单元或字素簇计算；调用方需避免主动切开组合字符。
 - `replace()` 支持替换、删除（空字符串）和折叠范围插入，沿用匹配起点的格式。
   空段落可插入文本；原文本节点和其属性/注释保留，不自动合并 Run。
-- `apply_font()` 支持 `bold`、`italic`、`size`；不传某项则不改它，传 `None` 则移除该直接设置。
+- `apply_font()` 支持 `size` 和上述 13 个字体布尔属性；不传某项则不改它，传 `None` 则移除该直接设置。
   自动拆分首尾边界 Run，只修改选中片段，其余格式保留。空范围不支持字体设置。
 - 参数、整段普通文本结构及所选 Run 的可安全拆分性均在修改前检查。
   未支持的 XML 元数据（包括唯一 `xml:id`）不被拆分或复制；未知内容不被压平成纯文本。

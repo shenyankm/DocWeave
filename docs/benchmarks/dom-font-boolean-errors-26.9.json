@@ -1,0 +1,7151 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "python": "3.13.15",
+  "source": "font-boolean-contexts-26.9.json",
+  "scope": "11 Boolean properties; owned default/paragraph true, character/direct absent; 3 targets by 9 invalid values; exception classes and run getters only",
+  "full_Font_acceptance": false,
+  "rendering_acceptance": false,
+  "native": [
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    }
+  ],
+  "current_before_error_fix": [
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 0,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": -1,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 1.5,
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": "false",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": "",
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": [],
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": {},
+      "error": "ValueError",
+      "before": true,
+      "after": true
+    }
+  ],
+  "non_bool_error_class_differences": 264,
+  "direct_None_extension_differences": 11,
+  "limits": [
+    "DocxDocument direct_font/run.font accept None to clear declarations; canonical Font None rejection still requires a separate API contract",
+    "Non-bool input exception classes now match native TypeError; direct None clearing remains an explicit DOM extension"
+  ],
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "current_after_error_fix": [
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "all_caps",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "small_caps",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "strike_through",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "hidden",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "outline",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "shadow",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "emboss",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "engrave",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "no_proofing",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "bold_bi",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": null,
+      "error": null,
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "run",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "paragraph",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": null,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 0,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": -1,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": 1.5,
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": "false",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": "",
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": [],
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    },
+    {
+      "field": "italic_bi",
+      "target": "character",
+      "input": {},
+      "error": "TypeError",
+      "before": true,
+      "after": true
+    }
+  ],
+  "non_bool_error_class_differences_after_fix": 0
+}

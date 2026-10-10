@@ -352,6 +352,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
               "corpus/hidden-font-roundtrip-before-origin-fix.zip"]
     names += ["font-boolean-roundtrip-26.9.json", "corpus/font-boolean-roundtrip-current.zip",
               "corpus/font-boolean-roundtrip-before-origin-fix.zip"]
+    names += ["dom-font-booleans-26.9.json", "corpus/dom-font-boolean-observations-26.9.zip"]
+    names += ["dom-font-boolean-errors-26.9.json"]
     for name in names:
         target = tmp_path / name
         target.parent.mkdir(exist_ok=True)
@@ -360,6 +362,8 @@ def test_frozen_evidence_verifies_after_windows_text_checkout_and_detects_binary
         else:
             copyfile(source / name, target)
     result = verify(tmp_path)
+    assert result["checked_dom_font_boolean_outputs"] == 10692
+    assert result["checked_dom_font_boolean_errors"] == 297
     assert result["checked_format_outputs"] == 100 and result["behavioral_acceptance"] is False
     assert result["checked_import_outputs"] == 168
     assert result["checked_style_inputs"] == 745

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from aspose.words_foss import _io
 from aspose.words_foss._opc import resolve_target
+from aspose.words_foss.docx_reader.field_mappings import RUN_ONOFF_FLAGS
 from aspose.words_foss.dom.nodes import (
     DIMENSION_PROPERTIES,
     PAGINATION_PROPERTIES,
@@ -126,14 +127,14 @@ class Style:
 
 
 class StyleFont(Font):
-    """Nearest inherited b/i/sz getters; setters write this style's own layer."""
+    """Nearest inherited Boolean/size getters; setters write this style's own layer."""
 
     def __init__(self, style, resolved=True):
         super().__init__(style)
         self._resolved = resolved
 
     def _get(self, name):
-        if not self._resolved or name not in {"b", "i", "sz"}:
+        if not self._resolved or name not in {"sz", *(tag for tag, _, _ in RUN_ONOFF_FLAGS)}:
             return super()._get(name)
         resolver = StyleResolver(self._node.owner_document)
         layers = [resolver._defaults("rPr")] + [_child(style, "rPr") for style in
@@ -388,11 +389,22 @@ def _effective_toggle(default, paragraph_styles, character_styles, direct, name)
 
 @dataclass(frozen=True)
 class EffectiveFont:
-    """Resolved w:b/w:i/w:sz (not complex-script selection or rendered glyph metrics)."""
+    """Resolved Boolean/ordinary-size values, independent of rendered glyph metrics."""
 
     bold: bool
     italic: bool
     size: float
+    bold_bi: bool = False
+    italic_bi: bool = False
+    all_caps: bool = False
+    small_caps: bool = False
+    strike_through: bool = False
+    hidden: bool = False
+    outline: bool = False
+    shadow: bool = False
+    emboss: bool = False
+    engrave: bool = False
+    no_proofing: bool = False
 
 
 @dataclass(frozen=True)
@@ -527,9 +539,9 @@ class StyleResolver:
             element = _child(properties, "sz")
             if element is not None:
                 size = _read_size(element)
-        bold = _effective_toggle(default, paragraph_styles, character_styles, direct, "b")
-        italic = _effective_toggle(default, paragraph_styles, character_styles, direct, "i")
+        flags = {field: _effective_toggle(default, paragraph_styles, character_styles, direct, tag)
+                 for tag, field, _ in RUN_ONOFF_FLAGS}
         element = _child(direct, "sz")
         if element is not None:
             size = _read_size(element)
-        return EffectiveFont(bold, italic, size)
+        return EffectiveFont(size=size, **flags)

@@ -920,6 +920,94 @@ def saved_hidden_state(raw, tag="vanish"):
     return getter, not rendered, direct, reference.get(w + 'val') if reference is not None else None
 
 
+def verify_dom_font_boolean_errors(root):
+    report = json.loads((root / 'dom-font-boolean-errors-26.9.json').read_text())
+    assert report['version'] == '26.9.0' and report['licensed'] is False
+    assert report['full_Font_acceptance'] is report['rendering_acceptance'] is False
+    fields = {r['field'] for r in json.loads((root / report['source']).read_text())['records']}
+    values = (None, 0, 1, -1, 1.5, 'false', '', [], {})
+    expected = {(field, target, json.dumps(value)) for field in fields
+                for target in ('run', 'paragraph', 'character') for value in values}
+    native, before, after = (report[key] for key in ('native', 'current_before_error_fix', 'current_after_error_fix'))
+    assert len(native) == len(before) == len(after) == len(expected) == 297
+    assert {(r['field'], r['target'], json.dumps(r['input'])) for r in native} == expected
+    type_differences = none_differences = 0
+    for actual, old, current in zip(native, before, after):
+        identity = ('field', 'target', 'input')
+        assert all(actual[k] == old[k] == current[k] for k in identity)
+        assert actual['before'] is actual['after'] is old['before'] is old['after'] is current['before'] is current['after'] is True
+        assert actual['error'] == 'TypeError'
+        cleared = actual['input'] is None and actual['target'] == 'run'
+        assert current['error'] == (None if cleared else 'TypeError')
+        assert old['error'] == (None if cleared else 'TypeError' if actual['input'] is None else 'ValueError')
+        none_differences += cleared
+        type_differences += actual['input'] is not None
+    assert type_differences == report['non_bool_error_class_differences'] == 264
+    assert none_differences == report['direct_None_extension_differences'] == 11
+    assert report['non_bool_error_class_differences_after_fix'] == 0
+    return len(native)
+
+
+def verify_dom_font_booleans(root):
+    report = json.loads((root / 'dom-font-booleans-26.9.json').read_text())
+    assert report['full_Font_acceptance'] is report['rendering_acceptance'] is False
+    assert report['version'] == '26.9.0' and report['licensed'] is False
+    source = json.loads((root / report['source']).read_text())
+    sources = {r['input']: r for r in source['records']}
+    data = (root / report['observations']).read_bytes()
+    assert digest(data) == report['observations_sha256']
+    tags = runpy.run_path(str(Path(__file__).parents[1] / 'docs/probes/font_boolean_contexts.py'))['FIELDS']
+    expected = {(name, target, value) for name in sources for target in ('run', 'paragraph', 'character')
+                for value in (False, True)}
+    with ZipFile(BytesIO(data)) as archive:
+        live = json.loads(archive.read('live.json'))
+        saves = json.loads(archive.read('saves.json'))
+        cold = json.loads(archive.read('cold.json'))
+        assert live['version'] == cold['version'] == '26.9.0'
+        assert live['licensed'] is cold['licensed'] is False
+        assert live['full_Font_acceptance'] is live['rendering_acceptance'] is False
+        assert len(live['records']) == len(saves['records']) == len(expected) == report['live_edits'] == 5346
+        assert {(r['input'], r['target'], r['value']) for r in live['records']} == expected
+        assert len(cold['records']) == report['saved_outputs'] == 10692
+        used, index = {'live.json', 'saves.json', 'cold.json'}, 0
+        for native, current in zip(live['records'], saves['records']):
+            assert native == {k: v for k, v in current.items() if k != 'outputs'}
+            original = sources[native['input']]
+            assert native['field'] == original['field'] and native['source_sha256'] == original['sha256']
+            default, paragraph, character, direct = original['values']
+            assert native['before'] == {'run': original['value'],
+                                       'paragraph': bool(default if paragraph is None else paragraph),
+                                       'character': bool(default if character is None else character)}
+            assert native['after'][native['target']] is native['value']
+            assert {r['format'] for r in current['outputs']} == {'docx', 'flat_opc'}
+            assert len(current['outputs']) == 2
+            for saved in current['outputs']:
+                observed = cold['records'][index]
+                index += 1
+                assert saved == {k: v for k, v in observed.items() if k != 'observed'}
+                raw = archive.read(saved['storage'])
+                used.add(saved['storage'])
+                assert digest(raw) == saved['sha256']
+                assert raw.startswith(b'PK') is (saved['format'] == 'docx')
+                assert saved['current_cold'] == observed['observed'] == native['after']
+                tag = tags[native['field']]
+                state = saved_hidden_state(raw, tag)
+                assert state[0] is observed['observed']['run']
+                assert state[2] is (native['value'] if native['target'] == 'run' else direct)
+                assert state[3] == 'P'
+                _, styles = font_size_parts(raw)
+                w = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+                for target, identifier, declaration in (('paragraph', 'P', paragraph), ('character', 'C', character)):
+                    style = next(s for s in styles.findall(w + 'style') if s.get(w + 'styleId') == identifier)
+                    element = style.find(w + 'rPr/' + w + tag)
+                    actual = None if element is None else element.get(w + 'val', '1') in {'1', 'true', 'on'}
+                    assert actual is (native['value'] if native['target'] == target else declaration)
+                    assert observed['observed'][target] is bool(default if actual is None else actual)
+        assert set(archive.namelist()) == used
+    assert len(sources) == report['input_count'] == 891 and report['native_cold_getter_differences'] == 0
+    return index
+
+
 def verify_hidden_font_roundtrip(root):
     report = json.loads((root / 'hidden-font-roundtrip-26.9.json').read_text())
     inputs = {name: (raw, hidden, visible) for name, raw, hidden, visible in
@@ -1732,6 +1820,8 @@ def verify(root):
     hidden_style_contexts = verify_hidden_style_contexts(root)
     hidden_roundtrips = verify_hidden_font_roundtrip(root)
     font_boolean_roundtrips = verify_font_boolean_roundtrip(root)
+    dom_font_booleans = verify_dom_font_booleans(root)
+    dom_font_boolean_errors = verify_dom_font_boolean_errors(root)
     defaults = verify_font_defaults(root)
     default_matrix = verify_font_default_matrix(root)
     return {"declared_symbols": len(symbols), "capability_rows": ledger["capability_count"],
@@ -1745,6 +1835,8 @@ def verify(root):
             "checked_hidden_style_contexts": hidden_style_contexts,
             "checked_hidden_font_roundtrips": hidden_roundtrips,
             "checked_font_boolean_roundtrips": font_boolean_roundtrips,
+            "checked_dom_font_boolean_outputs": dom_font_booleans,
+            "checked_dom_font_boolean_errors": dom_font_boolean_errors,
             "checked_font_default_inputs": defaults,
             "checked_font_default_matrix_inputs": default_matrix,
             "checked_style_roundtrip_outputs": roundtrips,

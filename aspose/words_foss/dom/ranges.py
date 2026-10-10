@@ -84,11 +84,17 @@ class TextRange:
                 return
             offset = end
 
-    def apply_font(self, *, bold=_UNSET, italic=_UNSET, size=_UNSET):
+    def apply_font(self, *, bold=_UNSET, italic=_UNSET, size=_UNSET,
+                   bold_bi=_UNSET, italic_bi=_UNSET, all_caps=_UNSET, small_caps=_UNSET,
+                   strike_through=_UNSET, hidden=_UNSET, outline=_UNSET, shadow=_UNSET,
+                   emboss=_UNSET, engrave=_UNSET, no_proofing=_UNSET):
         """Apply direct formatting to the selection, splitting boundary runs as needed."""
         self._check()
-        values = {name: value for name, value in (("bold", bold), ("italic", italic), ("size", size))
-                  if value is not _UNSET}
+        values = {"bold": bold, "italic": italic, "size": size, "bold_bi": bold_bi,
+                  "italic_bi": italic_bi, "all_caps": all_caps, "small_caps": small_caps,
+                  "strike_through": strike_through, "hidden": hidden, "outline": outline,
+                  "shadow": shadow, "emboss": emboss, "engrave": engrave, "no_proofing": no_proofing}
+        values = {name: value for name, value in values.items() if value is not _UNSET}
         for name, value in values.items():
             if name == "size":
                 _size_value(value)

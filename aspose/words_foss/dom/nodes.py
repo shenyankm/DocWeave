@@ -96,7 +96,7 @@ def _onoff(element):
 
 def _validate_toggle(value):
     if value is not None and not isinstance(value, bool):
-        raise ValueError("Direct toggle formatting must be True, False or None")
+        raise TypeError("Direct toggle formatting must be True, False or None")
 
 
 def _size_value(value):
@@ -677,6 +677,17 @@ class Font(_Format):
 
     bold = property(lambda self: self._toggle("b"), lambda self, value: self._set_toggle("b", value))
     italic = property(lambda self: self._toggle("i"), lambda self, value: self._set_toggle("i", value))
+    bold_bi = property(lambda self: self._toggle("bCs"), lambda self, value: self._set_toggle("bCs", value))
+    italic_bi = property(lambda self: self._toggle("iCs"), lambda self, value: self._set_toggle("iCs", value))
+    all_caps = property(lambda self: self._toggle("caps"), lambda self, value: self._set_toggle("caps", value))
+    small_caps = property(lambda self: self._toggle("smallCaps"), lambda self, value: self._set_toggle("smallCaps", value))
+    strike_through = property(lambda self: self._toggle("strike"), lambda self, value: self._set_toggle("strike", value))
+    hidden = property(lambda self: self._toggle("vanish"), lambda self, value: self._set_toggle("vanish", value))
+    outline = property(lambda self: self._toggle("outline"), lambda self, value: self._set_toggle("outline", value))
+    shadow = property(lambda self: self._toggle("shadow"), lambda self, value: self._set_toggle("shadow", value))
+    emboss = property(lambda self: self._toggle("emboss"), lambda self, value: self._set_toggle("emboss", value))
+    engrave = property(lambda self: self._toggle("imprint"), lambda self, value: self._set_toggle("imprint", value))
+    no_proofing = property(lambda self: self._toggle("noProof"), lambda self, value: self._set_toggle("noProof", value))
 
     @property
     def size(self):

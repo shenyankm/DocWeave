@@ -1,0 +1,14 @@
+{
+  "version": "26.9.0",
+  "licensed": false,
+  "source": "font-boolean-contexts-26.9.json",
+  "observations": "corpus/dom-font-boolean-observations-26.9.zip",
+  "observations_sha256": "98ce719bac3b2b8a80618b26fc979f75a02cc62cdfed1163a113173da2e26bb0",
+  "input_count": 891,
+  "live_edits": 5346,
+  "saved_outputs": 10692,
+  "native_cold_getter_differences": 0,
+  "full_Font_acceptance": false,
+  "rendering_acceptance": false,
+  "scope": "11 Boolean properties; owned docDefaults, paragraph/character categories and direct formatting; live edits and DOCX/Flat OPC cold getters; excludes basedOn chains, table/list font contexts, cross-document style translation and rendering"
+}
