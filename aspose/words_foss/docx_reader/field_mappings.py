@@ -187,7 +187,7 @@ MERGE_FONT_FIELDS: tuple[str, ...] = (
     "emboss", "engrave", "outline", "shadow",
     "text_effect", "emphasis_mark",
     "kerning",
-    "name_bi", "name_far_east", "name_ascii",
+    "name_bi", "name_far_east", "name_ascii", "name_other",
     "locale_id", "locale_id_bi", "locale_id_far_east",
 )
 

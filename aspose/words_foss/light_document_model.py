@@ -319,6 +319,21 @@ class SourceColor(BaseModel):
     theme_shade: str | None = None
 
 
+class ThemeFontLanguages(BaseModel):
+    """Declared theme font languages; None and empty strings remain distinct."""
+
+    model_config = ConfigDict(validate_assignment=True, strict=True, hide_input_in_errors=True)
+    latin: str | None = None
+    east_asian: str | None = None
+    complex_script: str | None = None
+
+    def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False) -> ThemeFontLanguages:
+        for field, value in (update or {}).items():
+            if field in type(self).model_fields and value is not None and not isinstance(value, str):
+                raise TypeError('Theme font language requires str or None')
+        return super().model_copy(update=update, deep=deep)
+
+
 class SourceThemePart(BaseModel):
     """Immutable reachable part, including its original OPC content type."""
 
@@ -394,6 +409,20 @@ class FontEmbeddingSettings(BaseModel):
         return super().model_copy(update=update, deep=deep)
 
 
+class SourceFontNames(BaseModel):
+    """Raw OOXML font channels, distinct from their effective typefaces."""
+    model_config = ConfigDict(strict=True, validate_assignment=True, hide_input_in_errors=True)
+    attributes: dict[str, str] = Field(default_factory=dict)
+
+    @field_validator('attributes')
+    @classmethod
+    def _valid_attributes(cls, value: dict[str, str]) -> dict[str, str]:
+        if set(value) - {'ascii', 'hAnsi', 'cs', 'eastAsia', 'asciiTheme',
+                         'hAnsiTheme', 'cstheme', 'eastAsiaTheme', 'hint'}:
+            raise ValueError('Invalid font channel attribute')
+        return value
+
+
 class Font(BaseModel):
     name: str = ""
     size: float = 0.0
@@ -407,6 +436,8 @@ class Font(BaseModel):
     color_explicit: bool | None = None
     color_rendering: str | None = None
     source_color: SourceColor | None = None
+    source_font_names: SourceFontNames | None = None
+    font_names_explicit: bool | None = None
     strike_through: bool = False
     superscript: bool = False
     subscript: bool = False
@@ -447,6 +478,7 @@ class Font(BaseModel):
     name_bi: str = ""
     name_far_east: str = ""
     name_ascii: str = ""
+    name_other: str = ""
     locale_id: int = 0
     locale_id_bi: int = 0
     locale_id_far_east: int = 0
@@ -464,9 +496,37 @@ class Font(BaseModel):
         return self.color if self.color_rendering is None else self.color_rendering
 
     def __setattr__(self, name: str, value: Any) -> None:
+        channels = {'name_ascii': ('ascii', 'asciiTheme'), 'name_other': ('hAnsi', 'hAnsiTheme'),
+                    'name_bi': ('cs', 'cstheme'), 'name_far_east': ('eastAsia', 'eastAsiaTheme')}
+        if name in ('name', *channels) and (value is None or (isinstance(value, str) and not value)):
+            raise RuntimeError('Font name must not be null or empty')
+        if name in ('name', *channels) and not isinstance(value, str):
+            raise TypeError('Font name requires str')
         if name == 'source_color' and value is not None and not isinstance(value, SourceColor):
             raise TypeError('source_color must be SourceColor or None')
+        if name == 'source_font_names' and value is not None and not isinstance(value, SourceFontNames):
+            raise TypeError('source_font_names must be SourceFontNames or None')
+        if name == 'name':
+            for field in channels:
+                super().__setattr__(field, value)
+        if name == 'name_ascii':
+            for field in ('name_other', 'name_bi', 'name_far_east'):
+                if not getattr(self, field):
+                    super().__setattr__(field, self.name)
+            super().__setattr__('name', value)
         super().__setattr__(name, value)
+        if name in ('name', *channels):
+            source = self.source_font_names
+            if source is None and self.font_names_explicit is False:
+                source = SourceFontNames()
+            if source is not None:
+                attrs = dict(source.attributes)
+                changed = [channels[name]] if name != 'name' else list(channels.values())
+                for literal, theme in changed:
+                    attrs.pop(theme, None)
+                    attrs[literal] = value
+                super().__setattr__('source_font_names', SourceFontNames(attributes=attrs))
+            super().__setattr__('font_names_explicit', True)
         if name in (*FONT_BOOLEAN_FIELDS, 'color'):
             super().__setattr__(name + '_explicit', True)
         if name == 'hidden':
@@ -477,6 +537,27 @@ class Font(BaseModel):
             super().__setattr__('color_rendering', None)
 
     def model_copy(self, *, update: Mapping[str, Any] | None = None, deep: bool = False) -> Font:
+        if (update is not None and 'source_font_names' in update
+                and update['source_font_names'] is not None
+                and not isinstance(update['source_font_names'], SourceFontNames)):
+            raise TypeError('source_font_names must be SourceFontNames or None')
+        name_updates = {key: value for key, value in (update or {}).items()
+                        if key in ('name', 'name_ascii', 'name_other', 'name_bi', 'name_far_east')}
+        if name_updates:
+            if any(value is None or (isinstance(value, str) and not value)
+                   for value in name_updates.values()):
+                raise RuntimeError('Font name must not be null or empty')
+            if any(not isinstance(value, str) for value in name_updates.values()):
+                raise TypeError('Font name requires str')
+            changed = self.model_copy(deep=deep)
+            for key, value in name_updates.items():
+                setattr(changed, key, value)
+            update = dict(update)
+            for field in ('name', 'name_ascii', 'name_other', 'name_bi', 'name_far_east'):
+                if field in name_updates or getattr(changed, field) != getattr(self, field):
+                    update[field] = getattr(changed, field)
+            update.setdefault('source_font_names', changed.source_font_names)
+            update.setdefault('font_names_explicit', True)
         if update is not None and 'hidden' in update and 'hidden_rendering' not in update:
             update = dict(update, hidden_rendering=None)
         if update is not None and 'color' in update:
@@ -1426,6 +1507,7 @@ class SourceStory(BaseModel):
 
 
 class Document(BaseModel):
+    theme_font_languages: ThemeFontLanguages | None = None
     type: str = Field(default="Document", alias="_type")
     default_tab_stop: float = 36.0
     do_not_expand_shift_return: bool = False

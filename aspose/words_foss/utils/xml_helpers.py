@@ -2,7 +2,7 @@
 
 import re
 from decimal import Decimal
-from typing import Iterator, Optional
+from typing import Iterator, Mapping, Optional
 from xml.etree import ElementTree as ET
 
 W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
@@ -104,3 +104,47 @@ def get_bool_val(element: Optional[ET.Element]) -> bool:
     if val is None:
         return True  # Presence without val means true
     return val.lower() not in ("false", "0", "off")
+
+
+def normalize_font_names(attributes: Mapping[str, str]) -> dict[str, str]:
+    """Canonical local rFonts winners observed in the fixed native 26.9 corpus."""
+    themes = {'asciiTheme': 'ascii', 'hAnsiTheme': 'hAnsi',
+              'cstheme': 'cs', 'eastAsiaTheme': 'eastAsia'}
+    known = {prefix + suffix for prefix in ('major', 'minor')
+             for suffix in ('Ascii', 'HAnsi', 'Bidi', 'EastAsia')}
+    winners = {}
+    unknown = set()
+    for raw_key, value in attributes.items():
+        key = raw_key.removeprefix(W_NS)
+        channel = themes.get(key, key)
+        if key not in themes and channel not in themes.values():
+            winners[key] = value
+            continue
+        if not value:
+            continue
+        if key in themes and value not in known:
+            unknown.add(channel)
+            continue
+        winners.pop(channel, None)
+        for theme, owner in themes.items():
+            if owner == channel:
+                winners.pop(theme, None)
+        winners[key] = value
+    for channel in unknown:
+        if channel not in winners and not any(theme in winners and owner == channel for theme, owner in themes.items()):
+            # Unknown nonempty tokens mask inheritance, unlike an empty declaration.
+            winners[channel] = 'Times New Roman'
+    return winners
+
+
+def resolve_font_names(attributes: Mapping[str, str], theme_fonts: Mapping[str, str]) -> dict[str, str]:
+    """Resolve canonical winners without changing the raw declaration mapping."""
+    themes = {'asciiTheme': 'ascii', 'hAnsiTheme': 'hAnsi',
+              'cstheme': 'cs', 'eastAsiaTheme': 'eastAsia'}
+    result = {}
+    for key, value in normalize_font_names(attributes).items():
+        if key in themes:
+            result[themes[key]] = theme_fonts.get(value) or 'Times New Roman'
+        elif key in themes.values():
+            result[key] = value
+    return result

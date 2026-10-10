@@ -14,7 +14,7 @@ from zipfile import ZipFile
 import pytest
 
 from aspose.words_foss import Document, DocxDocument
-from aspose.words_foss.docx_reader.ldm_builder.definitions import _tsp_build_font
+from aspose.words_foss.docx_reader.ldm_builder.cascading import FontBuilder
 from aspose.words_foss.utils.xml_helpers import W_NS
 
 ROOT = Path(__file__).parents[1]
@@ -84,13 +84,13 @@ def test_invalid_sizes_are_private_and_never_silently_inherited(scope, value):
 @pytest.mark.parametrize('value,expected', [('24.0', 12), ('6.25pt', 6), ('0.5in', 36)])
 def test_conditional_table_style_uses_the_same_size_decoder(value, expected):
     rpr = ET.fromstring(f'<w:rPr xmlns:w="{W_NS[1:-1]}"><w:sz w:val="{value}"/></w:rPr>')
-    assert _tsp_build_font(rpr).size == expected
+    assert FontBuilder(None).build(rpr).size == expected
 
 
 def test_conditional_table_style_does_not_hide_invalid_size():
     rpr = ET.fromstring(f'<w:rPr xmlns:w="{W_NS[1:-1]}"><w:sz w:val="PRIVATE FONT VALUE"/></w:rPr>')
     with pytest.raises(ValueError, match='OOXML font size'):
-        _tsp_build_font(rpr)
+        FontBuilder(None).build(rpr)
 
 
 def test_cli_keeps_existing_output_on_invalid_font_size(tmp_path):

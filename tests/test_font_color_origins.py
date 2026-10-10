@@ -83,9 +83,9 @@ def test_automatic_run_color_overrides_red_style_in_painted_pdf(tmp_path):
 def test_conditional_table_font_preserves_automatic_color_declaration():
     from xml.etree import ElementTree as ET
 
-    from aspose.words_foss.docx_reader.ldm_builder.definitions import _tsp_build_font
+    from aspose.words_foss.docx_reader.ldm_builder.cascading import FontBuilder
     from aspose.words_foss.docx_writer.runs import render_rPr
-    font = _tsp_build_font(ET.fromstring(
+    font = FontBuilder(None).build(ET.fromstring(
         '<w:rPr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:color w:val="auto"/></w:rPr>'))
     assert font.color == 'Color [Empty]' and font.color_explicit is True
     assert 'w:color w:val="auto"' in render_rPr(font, for_style=True)
