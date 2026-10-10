@@ -1,5 +1,6 @@
 """PDF projection of the calibrated zero-blur rectangular outer-shadow subset."""
 from math import cos, sin, radians
+from contextlib import contextmanager
 
 from defusedxml.ElementTree import fromstring
 
@@ -95,8 +96,7 @@ def paint_drawing_line_rect(pdf, x, y, width, height, style, *, rotation=0, page
     pdf._out('q ' + matrix(inverse) + ' ' + matrix(exact) + ' ' + rectangle + ' Q')
 
 
-def _paint_page_space_line_rect(pdf, x, y, width, height, style, rotation):
-    """Project captured solid geometry once, without cancelling a rounded outer CTM."""
+def _page_space_rect_geometry(pdf, x, y, width, height, rotation):
     from struct import pack, unpack
     def single(value):
         return unpack('f', pack('f', value))[0]
@@ -117,6 +117,25 @@ def _paint_page_space_line_rect(pdf, x, y, width, height, style, rotation):
     top = min(v for _, v in points)
     px = single(round(round(x * pdf.k, 3) + left, 3) - left)
     py = single(round(round(y * pdf.k, 3) + top, 3) - top)
+    return c, s, points, px, py
+
+
+@contextmanager
+def drawing_rect_text_context(pdf, x, y, width, height, rotation):
+    """Share the captured rectangle's precise local rotation with its text."""
+    c, s, points, px, py = _page_space_rect_geometry(pdf, x, y, width, height, rotation)
+    tx, ty = points[0]
+    with pdf.local_context():
+        pdf._out(f'1 0 0 -1 0 {pdf.h_pt:.8f} cm '
+                 f'1 0 0 1 {px:.8f} {py:.8f} cm '
+                 f'{c:.8f} {s:.8f} {-s:.8f} {c:.8f} {tx:.8f} {ty:.8f} cm '
+                 f'1 0 0 -1 {-x * pdf.k:.8f} {(pdf.h - y) * pdf.k:.8f} cm')
+        yield
+
+
+def _paint_page_space_line_rect(pdf, x, y, width, height, style, rotation):
+    """Project captured solid geometry once, without cancelling a rounded outer CTM."""
+    _, _, points, px, py = _page_space_rect_geometry(pdf, x, y, width, height, rotation)
     path = ' '.join(f'{u:.8f} {v:.8f} ' + ('m' if i == 0 else 'l')
                     for i, (u, v) in enumerate(points))
     operator = {'F': 'f*', 'D': 'S', 'DF': 'B*'}[style]

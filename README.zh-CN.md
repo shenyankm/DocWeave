@@ -432,6 +432,7 @@ render_report("template.docx", context, "report.docx", "report.pdf")
   默认 `SIMPLIFIED` 和 `FINE` 支持不透明、无旋转、无描边矩形填充的零模糊外阴影。
   其他效果、透明填充、描边、旋转、缩放、斜切及未支持的对齐保留内容损失诊断。
   矩形 DrawingML 描边的缺省、round、bevel、miter 来源保留到 JSON 和保存；实色矩形使用局部点坐标与绘图状态，避免抵消已舍入的旋转矩阵。
+  矩形文本框按半描边内缩，使用实际换行测量、Exact 行距基线和内区裁剪，支持顶部／居中／底部对齐；自然／多倍行距度量仍未校准。
   旋转渐变／图片描边、一般形状及完整 miter limit 语义仍未校准。
 - 不提供内置 PDF 读取、DOC/RTF 写出、OCR 或完整 Word 排版/字段计算引擎。
 - LDM 转换不是无损往返。脚注/尾注单独提取，仅显式开启的 Markdown 输出可见锚点注；批注、修订、复杂字段、内容控件、

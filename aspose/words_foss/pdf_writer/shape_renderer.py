@@ -2,6 +2,7 @@
 
 
 from io import BytesIO
+from contextlib import nullcontext
 from typing import Optional
 
 from fpdf import FPDF
@@ -12,13 +13,14 @@ from aspose.words_foss.diagnostics import warn
 from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
 from aspose.words_foss.model.wrap_type import WrapType
 from aspose.words_foss.model.enums import CellVerticalAlignment
+from aspose.words_foss.model.enums import LineSpacingRule
+from aspose.words_foss.pdf_writer.baseline import exact_line_baseline_scope
 from aspose.words_foss.pdf_writer.color import parse_color
 from aspose.words_foss.pdf_writer.constants import (
     DEFAULT_FONT_SIZE_PT,
     DEFAULT_LINE_WIDTH_MM,
     DEFAULT_SHAPE_DIM_PT,
     HORIZONTAL_RULE_RGB,
-    LINE_HEIGHT_FACTOR,
     MIN_LINE_WIDTH_MM,
     POST_IMAGE_SPACING_MM,
     PT_TO_MM,
@@ -407,7 +409,8 @@ class ShapeRenderer:
 
         if page_space_outline and rotated:
             rotation = shape.source_drawing_fill.rotation / 60000
-            with pdf.rotation(-rotation, x + w / 2, y + h / 2):
+            from aspose.words_foss._drawing_effects import drawing_rect_text_context
+            with drawing_rect_text_context(pdf, x, y, w, h, rotation):
                 self._render_positioned_text_box(pdf, shape, x, y, w, h)
         else:
             self._render_positioned_text_box(pdf, shape, x, y, w, h)
@@ -429,6 +432,15 @@ class ShapeRenderer:
                 pad_l, pad_t, pad_r, pad_b = insets
             else:
                 pad_l = pad_t = pad_r = pad_b = TEXTBOX_INNER_PAD_MM
+            half_stroke = 0
+            stroke = shape.stroke
+            if (stroke is not None and stroke.source_drawing_join is not None and
+                    stroke.is_visible and stroke.line_style and stroke.line_width > 0):
+                half_stroke = stroke.line_width * PT_TO_MM / 2
+                pad_l += half_stroke
+                pad_t += half_stroke
+                pad_r += half_stroke
+                pad_b += half_stroke
             pdf.set_margins(
                 x + pad_l, y + pad_t, max(0.0, writer._page_width - (x + w - pad_r))
             )
@@ -438,7 +450,8 @@ class ShapeRenderer:
             prev_bottom = pdf.b_margin
             pdf.set_auto_page_break(auto=False, margin=0)
 
-            content_h = self.estimate_text_box_height(paragraphs)
+            content_h = sum(writer._estimate_paragraph_height(p, w - pad_l - pad_r)
+                            for p in paragraphs)
             inner_h = max(0.0, h - pad_t - pad_b)
             v_offset = 0.0
             if shape.text_box_anchor == CellVerticalAlignment.CENTER and content_h < inner_h:
@@ -446,29 +459,23 @@ class ShapeRenderer:
             elif shape.text_box_anchor == CellVerticalAlignment.BOTTOM and content_h < inner_h:
                 v_offset = inner_h - content_h
 
-            pdf.set_xy(x + pad_l, y + pad_t + v_offset)
-            for p in paragraphs:
-                writer._paragraph_renderer.render_paragraph(pdf, p)
+            captured = (shape.source_drawing_fill is not None or
+                        shape.source_drawing_effects is not None or
+                        stroke is not None and stroke.source_drawing_join is not None)
+            clip = (pdf.rect_clip(x + half_stroke, y + pad_t,
+                                  w - 2 * half_stroke, inner_h)
+                    if captured else nullcontext())
+            with clip:
+                pdf.set_xy(x + pad_l, y + pad_t + v_offset)
+                for p in paragraphs:
+                    pf = p.paragraph_format
+                    scope = (exact_line_baseline_scope(pdf)
+                             if pf.line_spacing_rule == LineSpacingRule.EXACTLY and pf.line_spacing > 0
+                             else nullcontext())
+                    with scope:
+                        writer._paragraph_renderer.render_paragraph(pdf, p)
             pdf.set_auto_page_break(auto=prev_auto, margin=prev_bottom)
             pdf.set_margins(saved_margin_left, writer._page_margin_bottom, saved_margin_right)
             writer._page_margin_left = saved_margin_left
             writer._page_margin_right = saved_margin_right
             writer._page_width = saved_width
-
-    @staticmethod
-    def estimate_text_box_height(paragraphs: list[ldm.Paragraph]) -> float:
-        """Approximate the laid-out height of a list of paragraphs in mm."""
-        if not paragraphs:
-            return 0.0
-        total = 0.0
-        for p in paragraphs:
-            size_pt = DEFAULT_FONT_SIZE_PT
-            for run in p.runs:
-                if run.font.size > 0:
-                    size_pt = run.font.size
-                    break
-            line_h_mm = size_pt * PT_TO_MM * LINE_HEIGHT_FACTOR
-            text = "".join(run.text or "" for run in p.runs)
-            lines = max(1, text.count("\n") + 1)
-            total += lines * line_h_mm
-        return total

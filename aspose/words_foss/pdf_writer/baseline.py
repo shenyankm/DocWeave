@@ -33,7 +33,7 @@ def baseline_size(runs):
 def baseline_scope(pdf, size):
     previous_vpos = pdf.char_vpos
     nested = hasattr(pdf, "_text_baseline_size")
-    if size is None and not nested:
+    if size is None and not nested and not getattr(pdf, '_exact_text_line_height', False):
         try:
             yield
         finally:
@@ -91,9 +91,18 @@ def baseline_scope(pdf, size):
             if shifted:
                 line = _BaselineLine(*line)
                 line.baseline_size = target
+            line_offset = 0
+            if getattr(pdf, '_exact_text_line_height', False) and line.fragments:
+                height = args[0] if args else kwargs.get('h', line.height)
+                if height is not None:
+                    metric_size = max(f.font_size for f in line.get_ordered_fragments())
+                    # Exact textbox baselines are 80% of the line advance.
+                    line_offset = 0.3 * (height - metric_size)
+                    pdf.y += line_offset
             try:
                 return original(line, *args, **kwargs)
             finally:
+                pdf.y -= line_offset
                 output_metrics = previous_metrics
                 if shifted:
                     pdf.current_font_is_set_on_page = False
@@ -119,3 +128,17 @@ def baseline_scope(pdf, size):
                 pdf._render_styled_text_line = original
             else:
                 pdf.__dict__.pop("_render_styled_text_line", None)
+
+
+@contextmanager
+def exact_line_baseline_scope(pdf):
+    previous = getattr(pdf, '_exact_text_line_height', None)
+    pdf._exact_text_line_height = True
+    try:
+        with baseline_scope(pdf, None):
+            yield
+    finally:
+        if previous is None:
+            pdf.__dict__.pop('_exact_text_line_height', None)
+        else:
+            pdf._exact_text_line_height = previous

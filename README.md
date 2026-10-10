@@ -445,6 +445,8 @@ These are the main implemented entry points, not an exhaustive catalog of intern
   Other effects, transparent fills, outlines, rotation, scale, skew and unsupported alignment retain loss diagnostics.
   Captured rectangular DrawingML outlines retain default/round/bevel/miter joins through JSON and saves;
   solid rectangular outlines use local point geometry and graphics state without cancelling rounded rotation matrices.
+  Captured rectangular text boxes honour half-stroke insets, measured wrapping, Exact line baselines and inner clipping,
+  including top/center/bottom alignment. Natural/Multiple line metrics remain uncalibrated.
   Rotated gradient/image outlines and general shape/miter-limit semantics remain uncalibrated.
 - No built-in PDF reading, DOC/RTF writing, OCR, or complete Word layout/field-computation engine.
 - Conversion via LDM is not lossless. Notes are extracted separately; only opt-in Markdown exports visible anchored notes;

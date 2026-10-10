@@ -133,7 +133,9 @@ def test_page_space_outline_keeps_rotated_text_and_following_text_context(angle)
         ldm.Run(text='ROTATED', font=ldm.Font(name='Courier New', size=12))])],
         'insets_mm': [2, 2, 2, 2]}
     control = copy.deepcopy(owner)
-    stroke(control).source_drawing_join = None
+    # Both controls use captured geometry; changing joins must not move text.
+    stroke(control).source_drawing_join = ldm.SourceDrawingLineJoin(
+        xml='<a:miter xmlns:a="' + A + '"/>')
     before = owner.light_document_model.model_dump_json()
     def spans(document):
         page = fitz.open(stream=document.to_bytes(SaveFormat.PDF), filetype='pdf')[0]
