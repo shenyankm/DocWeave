@@ -123,7 +123,8 @@ _SAFE_STRUCTURE = {"p", "r", "t", "tbl", "tr", "tc", "tblGrid", "gridCol",
                    "pPr", "rPr", "tblPr", "trPr", "tcPr"}
 _PROPERTY_ROOTS = {"pPr", "rPr", "tblPr", "trPr", "tcPr"}
 _ALLOWED_CHILDREN = {"body": {"p", "tbl"}, "hdr": {"p", "tbl"}, "ftr": {"p", "tbl"},
-                     "p": {"r"}, "tbl": {"tr"}, "tr": {"tc"}, "tc": {"p", "tbl"}}
+                     "p": {"r"}, "tbl": {"tr"}, "tr": {"tc"}, "tc": {"p", "tbl"},
+                     "footnote": {"p", "tbl"}, "endnote": {"p", "tbl"}, "comment": {"p", "tbl"}}
 
 
 def _safe_structure(node, properties=False):
@@ -212,8 +213,16 @@ class Node:
         while node is not None and node.nodeType == XmlNode.ELEMENT_NODE:
             if node.namespaceURI != W or node.localName not in {
                 "document", "body", "hdr", "ftr", "p", "r", "hyperlink", "tbl", "tr", "tc",
+                "footnotes", "footnote", "endnotes", "endnote", "comments", "comment",
             }:
                 raise NotImplementedError("Editing inside unsupported containers is not supported")
+            note_roots = {"footnotes": "footnotes", "footnote": "footnotes",
+                          "endnotes": "endnotes", "endnote": "endnotes",
+                          "comments": "comments", "comment": "comments"}
+            if node.localName in note_roots:
+                root = node.ownerDocument.documentElement
+                if not _is(root, note_roots[node.localName]) or self.part_name not in self.owner_document._package.story_part_names():
+                    raise NotImplementedError("Editing requires a typed story relationship")
             node = node.parentNode
 
     def _changed(self):
@@ -607,6 +616,15 @@ class Table(Node):
 class Row(Node):
     node_type = NodeType.ROW
 
+    def _editable(self):
+        try:
+            super()._editable()
+        except NotImplementedError:
+            from aspose.words_foss.dom.row_format import supported_row
+            if self.part_name not in self.owner_document._package.story_part_names() or not supported_row(self._element):
+                raise
+
+
     @property
     def row_format(self):
         return RowFormat(self)
@@ -633,6 +651,32 @@ class Cell(Body):
 
 class HeaderFooter(Body):
     node_type = NodeType.HEADER_FOOTER
+
+
+class StoryPart(Node):
+    """An OPC note/comment collection; entries retain their original identifiers."""
+
+    def insert_before(self, child, reference):
+        raise NotImplementedError("Changing story entries requires reference updates")
+
+    def remove(self):
+        raise NotImplementedError("Removing a story part requires reference updates")
+
+
+class Footnote(Body):
+    """Editable footnote/endnote content; note identity remains source metadata."""
+    node_type = NodeType.FOOTNOTE
+
+    def remove(self):
+        raise NotImplementedError("Removing a note requires reference updates")
+
+
+class Comment(Body):
+    """Editable comment content; authors and range identifiers remain source metadata."""
+    node_type = NodeType.COMMENT
+
+    def remove(self):
+        raise NotImplementedError("Removing a comment requires reference updates")
 
 
 class _Format:
@@ -963,4 +1007,6 @@ class ParagraphFormat(_Format):
 
 
 _NODE_CLASSES = {"body": Body, "p": Paragraph, "r": Run, "tbl": Table, "tr": Row,
-                 "tc": Cell, "hdr": HeaderFooter, "ftr": HeaderFooter, "hyperlink": Hyperlink}
+                 "tc": Cell, "hdr": HeaderFooter, "ftr": HeaderFooter, "hyperlink": Hyperlink,
+                 "footnotes": StoryPart, "endnotes": StoryPart, "comments": StoryPart,
+                 "footnote": Footnote, "endnote": Footnote, "comment": Comment}

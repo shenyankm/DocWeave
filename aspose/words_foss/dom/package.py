@@ -34,6 +34,10 @@ def _empty_plain_table(element):
                 for parent in [element, *element.getElementsByTagNameNS("*", "*")]))
 
 
+STORY_ROOTS = {"header": "hdr", "footer": "ftr", "footnotes": "footnotes",
+               "endnotes": "endnotes", "comments": "comments"}
+
+
 class DocxPackage:
     def __init__(self, source):
         if hasattr(source, "read"):
@@ -89,19 +93,19 @@ class DocxPackage:
                     for node in types.getElementsByTagNameNS(ct_ns, "Default")}
         for link in self.tree(rels_name).getElementsByTagNameNS(rel_ns, "Relationship"):
             relation = link.getAttribute("Type")
-            if relation not in {rel_type + "header", rel_type + "footer"} or link.getAttribute("TargetMode") == "External":
+            if relation not in {rel_type + kind for kind in STORY_ROOTS} or link.getAttribute("TargetMode") == "External":
                 continue
             kind = relation.removeprefix(rel_type)
             if link.getAttribute("TargetMode") not in {"", "Internal"}:
-                raise ValueError("Expected an internal header/footer relationship")
+                raise ValueError("Expected an internal story relationship")
             name = resolve_target("word/document.xml", link.getAttribute("Target"))
             if name not in self.part_names:
-                raise ValueError("Header/footer relationship points to a missing part")
+                raise ValueError("Story relationship points to a missing part")
             content_type = overrides.get(name, defaults.get(name.rsplit(".", 1)[-1].lower()))
             if content_type != f"application/vnd.openxmlformats-officedocument.wordprocessingml.{kind}+xml":
-                raise ValueError("Expected a Word header/footer content type")
-            if not _is(self.tree(name).documentElement, "hdr" if kind == "header" else "ftr"):
-                raise ValueError("Expected a Word header/footer part")
+                raise ValueError("Expected a Word story content type")
+            if not _is(self.tree(name).documentElement, STORY_ROOTS[kind]):
+                raise ValueError("Expected a Word story part")
             names.add(name)
         return names
 

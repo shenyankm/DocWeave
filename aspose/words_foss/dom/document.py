@@ -69,12 +69,14 @@ class DocxDocument:
         return self._package.preservation_report()
 
     def story(self, part_name):
-        """Access the main body or a header/footer by its original part name."""
+        """Access a body, header/footer, or related note/comment part."""
         if part_name == "word/document.xml":
             return self.body
         root = self._package.tree(part_name).documentElement
-        if not (_is(root, "hdr") or _is(root, "ftr")):
-            raise NotImplementedError("Only body/header/footer stories are editable")
+        if not (_is(root, "hdr") or _is(root, "ftr") or
+                root.namespaceURI == W and root.localName in {"footnotes", "endnotes", "comments"}
+                and part_name in self._package.story_part_names()):
+            raise NotImplementedError("Only typed Word stories are editable")
         return self._wrap(part_name, root)
 
     def get_child_nodes(self, node_type=0, deep=False):

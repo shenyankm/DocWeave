@@ -493,3 +493,16 @@ style reference. Assigning `Shape.fill_color` replaces the retained declaration.
 This preserves source declarations; the PDF renderer currently warns that their
 appearance is not resolved. Other DrawingML geometry and effects are not covered
 by this declaration path.
+
+### 行格式的其他 story
+
+通过内部关系和对应内容类型关联的脚注、尾注、批注，可用
+`document.story(original_part_name)` 遍历 `StoryPart` 和 `Footnote`/`Comment`
+内容，读取或编辑其中表格的 `Row.row_format`。原有 ID、作者、引用与资源保持；
+创建、删除、复制和重绑 note/comment 条目未实现，相关结构操作明确拒绝。
+条目内部的简单表格可复制，或按现有目标样式导入另一文档；复杂资源和引用仍需显式支持。
+受支持的 VML 或 WordprocessingShape DrawingML 文本框内的行可从所属 story
+深遍历后编辑这三个行格式属性；其他图形角色与不支持的包装容器仍不可编辑。
+图形包装、尺寸与未知 XML 保留，未开放完整 Shape 或文本框 DOM 编辑接口。
+这些 story 沿用纯导出无副作用、成功保存更新 held 行高、失败原子性和直属/继承
+规则，不代表完整脚注、批注、图形渲染或旧 LDM 转换入口已验收。

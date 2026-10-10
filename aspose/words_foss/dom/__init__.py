@@ -4,6 +4,9 @@ from aspose.words_foss.dom.document import DocxDocument
 from aspose.words_foss.dom.nodes import (
     Body,
     Cell,
+    Comment,
+    Footnote,
+    StoryPart,
     Font,
     HeaderFooter,
     Hyperlink,
@@ -29,6 +32,9 @@ from aspose.words_foss.dom.styles import (
 __all__ = [
     "Body",
     "Cell",
+    "Comment",
+    "Footnote",
+    "StoryPart",
     "DocxDocument",
     "EffectiveFont",
     "EffectiveParagraphFormat",
