@@ -16246,10 +16246,19 @@
       "declaration": "aspose.words.Font.color",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
+      "implementation": "DOCX_DOM_property_missing; unsupported_assignment_now_explicitly_rejected",
+      "gap": "canonical_property_load_edit_save_render_and_error_contract_not_implemented",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "samples": [],
+      "validation": [
+        "tests/test_format_attribute_safety.py: 31 negative/positive direct/style handle checks; source formatting integration 8015 passed",
+        "installed Mac Python 3.14 and Linux amd64 wheel: 8748 affected-path/integration checks each passed; modified production modules identical to source; wheel resources checked"
+      ],
+      "delivery": "silent_assignment_loss_safety_fix_accepted; property_functionality_pending; remote_CI_pending",
+      "limits": [
+        "Slots on built-in Font/ParagraphFormat and style variants prevent temporary Python attributes from masquerading as persisted edits; this is not functional parity or a scope exemption"
+      ]
     },
     {
       "id": "aspose.words.Font.complex_script",
@@ -31260,10 +31269,19 @@
       "declaration": "aspose.words.ParagraphFormat.line_spacing",
       "runtime_observed": true,
       "current_entrypoint": null,
-      "implementation": "equivalent_public_name_absent_internal_implementation_unassessed",
-      "gap": "public_surface_and_behavior_not_aligned",
+      "implementation": "DOCX_DOM_property_missing; unsupported_assignment_now_explicitly_rejected",
+      "gap": "canonical_property_load_edit_save_render_and_error_contract_not_implemented",
       "dependencies": [],
-      "scope_confirmation": "published_declaration"
+      "scope_confirmation": "published_declaration",
+      "samples": [],
+      "validation": [
+        "tests/test_format_attribute_safety.py: 31 negative/positive direct/style handle checks; source formatting integration 8015 passed",
+        "installed Mac Python 3.14 and Linux amd64 wheel: 8748 affected-path/integration checks each passed; modified production modules identical to source; wheel resources checked"
+      ],
+      "delivery": "silent_assignment_loss_safety_fix_accepted; property_functionality_pending; remote_CI_pending",
+      "limits": [
+        "Slots on built-in Font/ParagraphFormat and style variants prevent temporary Python attributes from masquerading as persisted edits; this is not functional parity or a scope exemption"
+      ]
     },
     {
       "id": "aspose.words.ParagraphFormat.line_spacing_rule",

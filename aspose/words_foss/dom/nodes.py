@@ -610,6 +610,8 @@ class HeaderFooter(Body):
 
 
 class _Format:
+    __slots__ = ("_node",)
+
     property_name = ""
     order = ()
 
@@ -659,6 +661,8 @@ class _Format:
 
 class Font(_Format):
     """Direct formatting only: None means inherited, not false."""
+
+    __slots__ = ()
 
     property_name = "rPr"
     order = ("rStyle", "rFonts", "b", "bCs", "i", "iCs", "caps", "smallCaps", "strike",
@@ -780,6 +784,8 @@ def _read_dimension(element, prop):
 
 
 class ParagraphFormat(_Format):
+    __slots__ = ()
+
     property_name = "pPr"
     order = ("pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr", "widowControl",
              "numPr", "suppressLineNumbers", "pBdr", "shd", "tabs", "suppressAutoHyphens",

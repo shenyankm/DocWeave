@@ -101,6 +101,11 @@ paragraph.paragraph_format.alignment = None
 character style，`paragraph.paragraph_format.style_id` 只接受 paragraph style；两者支持 `None` 移除引用。
 不把样式继承结果物化为直接格式，也不自动创建样式。
 
+内置字体和段落格式句柄只允许赋值已声明的可写属性。未实现属性（如当前的
+`font.color`）、拼写错误及覆盖方法/内部排序常量会抛出 `AttributeError`，不会修改文档。
+这些句柄不再允许附加任意 Python 属性；调用方的自定义信息应单独存储。
+此保护不表示颜色等缺失属性已实现，它们仍须补齐加载、编辑、保存与渲染链路。
+
 非布尔类型的字体开关与段落分页开关赋值现在抛出 `TypeError`；此前为 `ValueError`，
 捕获旧异常的调用方需要调整。非法 OOXML 属性值仍抛出 `ValueError`。
 [官方错误观测](benchmarks/dom-font-boolean-errors-26.9.json)覆盖 297 组输入，

@@ -129,6 +129,8 @@ class Style:
 class StyleFont(Font):
     """Nearest inherited Boolean/size getters; setters write this style's own layer."""
 
+    __slots__ = ("_resolved",)
+
     def __init__(self, style, resolved=True):
         super().__init__(style)
         self._resolved = resolved
@@ -168,6 +170,8 @@ class StyleFont(Font):
 
 class StyleParagraphFormat(ParagraphFormat):
     """Style alignment and pagination; direct values retain an unset layer."""
+
+    __slots__ = ("_resolved",)
 
     def __init__(self, style, resolved=True):
         super().__init__(style)
