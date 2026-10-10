@@ -84,7 +84,8 @@ def decode(data: bytes) -> bytes:
                    for child in payload.childNodes):
                 raise ValueError("XML payload has text outside its root")
             bind_namespace_context(elements[0], element)
-            decoded = b"".join(serialize_xml(element if child is elements[0] else child) for child in payload.childNodes)
+            decoded = b"".join(serialize_xml(element if child is elements[0] else child)
+                               for child in payload.childNodes)
         else:
             raise ValueError("Unknown Flat OPC payload")
         total += len(decoded)
@@ -163,6 +164,8 @@ def encode(data: bytes, main_content_type: str | None = None) -> bytes:
                 if omitted:
                     warn("Internal XML processing instructions are omitted from Flat OPC output",
                          ContentLossWarning, code="flat_opc.processing_instruction_omitted")
+                if content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml":
+                    _project_style_font_names(xml)
                 for child in xml.childNodes:
                     payload.appendChild(document.importNode(child, deep=True))
             else:
@@ -174,3 +177,30 @@ def encode(data: bytes, main_content_type: str | None = None) -> bytes:
     output = serialize_xml(document)
     _io.check_input_size(len(output))
     return output
+
+
+def _project_style_font_names(tree):
+    """Normalize conflicting declarations on the output copy, retaining theme winners."""
+    from aspose.words_foss.utils.xml_helpers import normalize_font_names
+
+    word = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    pairs = (("ascii", "asciiTheme"), ("hAnsi", "hAnsiTheme"),
+             ("cs", "cstheme"), ("eastAsia", "eastAsiaTheme"))
+    for fonts in tree.getElementsByTagNameNS(word, "rFonts"):
+        attributes = [fonts.attributes.item(index) for index in range(fonts.attributes.length)]
+        local = {attribute.localName: attribute.value for attribute in attributes
+                 if attribute.namespaceURI == word}
+        keys = [key for pair in pairs if all(key in local for key in pair)
+                and any(local[key] for key in pair) for key in pair]
+        if not keys:
+            continue
+        normalized = normalize_font_names(local)
+        prefix = next((attribute.prefix for attribute in attributes
+                       if attribute.namespaceURI == word and attribute.prefix), None)
+        for key in keys:
+            if key in local and key not in normalized:
+                fonts.removeAttributeNS(word, key)
+            elif key in normalized and normalized[key] != local.get(key):
+                if prefix is None:
+                    raise ValueError("Font declarations require a bound Word attribute prefix")
+                fonts.setAttributeNS(word, f"{prefix}:{key}", normalized[key])

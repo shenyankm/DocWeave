@@ -693,6 +693,45 @@ class Font(_Format):
     engrave = property(lambda self: self._toggle("imprint"), lambda self, value: self._set_toggle("imprint", value))
     no_proofing = property(lambda self: self._toggle("noProof"), lambda self, value: self._set_toggle("noProof", value))
 
+    def _name(self, channel):
+        from aspose.words_foss.dom.styles import StyleResolver
+
+        fonts = self._get("rFonts")
+        values = StyleResolver(self._node.owner_document).font_names([fonts])
+        if fonts is not None:
+            for literal, theme in (("ascii", "asciiTheme"), ("hAnsi", "hAnsiTheme"),
+                                   ("cs", "cstheme"), ("eastAsia", "eastAsiaTheme")):
+                if (fonts.hasAttributeNS(W, literal) and fonts.getAttributeNS(W, literal) == ""
+                        and not fonts.getAttributeNS(W, theme)):
+                    # Direct formatting exposes a source declaration, while effective
+                    # formatting ignores empty declarations when resolving inheritance.
+                    values[literal] = ""
+            values["name"] = next((values[literal] for literal in ("ascii", "hAnsi", "cs")
+                                   if values[literal] is not None), None)
+        return values[channel]
+
+    def _set_name(self, channel, value):
+        if value is None or isinstance(value, str) and value == "":
+            raise RuntimeError("Font name must not be null or empty")
+        if not isinstance(value, str):
+            raise TypeError("Font name requires str")
+        # The native string boundary joins UTF-16 pairs and replaces isolated units.
+        value = value.encode("utf-16-le", "surrogatepass").decode("utf-16-le", "replace")
+        self._node._editable()
+        groups = [node for node in _elements(self._node._element) if _is(node, "rPr")]
+        if len(groups) > 1 or groups and len([node for node in _elements(groups[0]) if _is(node, "rFonts")]) > 1:
+            raise ValueError("Duplicate font name properties")
+        channels = ("ascii", "hAnsi", "cs", "eastAsia") if channel == "name" else (channel,)
+        themes = {"ascii": "asciiTheme", "hAnsi": "hAnsiTheme", "cs": "cstheme", "eastAsia": "eastAsiaTheme"}
+        for attribute in channels:
+            self._set("rFonts", value, attribute=attribute, remove=(themes[attribute],))
+
+    name = property(lambda self: self._name("name"), lambda self, value: self._set_name("name", value))
+    name_ascii = property(lambda self: self._name("ascii"), lambda self, value: self._set_name("ascii", value))
+    name_other = property(lambda self: self._name("hAnsi"), lambda self, value: self._set_name("hAnsi", value))
+    name_bi = property(lambda self: self._name("cs"), lambda self, value: self._set_name("cs", value))
+    name_far_east = property(lambda self: self._name("eastAsia"), lambda self, value: self._set_name("eastAsia", value))
+
     @property
     def size(self):
         return _read_size(self._get("sz"))

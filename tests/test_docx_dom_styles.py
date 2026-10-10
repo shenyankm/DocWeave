@@ -167,7 +167,7 @@ def test_invalid_direct_values_are_not_reported_as_valid_effective_values(tmp_pa
     ('', '<w:numPr><w:numId w:val="1"/></w:numPr>', None),
     ('<w:style w:type="paragraph" w:styleId="P" w:default="1"><w:pPr><w:numPr><w:numId w:val="1"/></w:numPr></w:pPr></w:style>', '', None),
     ('', '', '<w:tbl><w:tblPr><w:tblStyle w:val="T"/></w:tblPr><w:tr><w:tc><w:p><w:r><w:t>table</w:t></w:r></w:p></w:tc></w:tr></w:tbl>'),
-    ('<w:style w:type="table" w:styleId="T" w:default="1"/>', '', '<w:tbl><w:tr><w:tc><w:p><w:r><w:t>table</w:t></w:r></w:p></w:tc></w:tr></w:tbl>'),
+    ('<w:style w:type="table" w:styleId="T" w:default="1"><w:tblStylePr w:type="firstRow"/></w:style>', '', '<w:tbl><w:tr><w:tc><w:p><w:r><w:t>table</w:t></w:r></w:p></w:tc></w:tr></w:tbl>'),
 ])
 def test_unsupported_context_is_explicit_not_a_guessed_effective_value(tmp_path, style, ppr, body):
     doc = style_doc(tmp_path, style, ppr, body=body)
