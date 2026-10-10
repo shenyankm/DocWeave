@@ -434,3 +434,23 @@ DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 M
 它按解压后字节的 SHA-256 与最初加载的包比较，包含资源和关系部件；不以 ZIP 压缩字节
 或 XML 语义等价判定。只读取节点不应产生修改。保存不会重置基线，重新打开保存结果才建立新基线。
 该报告描述部件变化，不证明 Word 视觉保真或所有 OOXML 语义均受支持。
+
+### Font name channels
+
+`run.font` exposes direct `name`, `name_ascii`, `name_other`, `name_bi`, and
+`name_far_east` declarations. An unset direct channel returns `None`; an explicit
+empty literal returns `""`. `run.effective_font` resolves document defaults,
+paragraph and character style inheritance, then direct formatting. Style fonts
+resolve their own `basedOn` chains and document defaults.
+
+Assigning `name` sets all four OOXML font channels. Assigning one channel preserves
+the others and removes only that channel's theme reference. Names require nonempty
+strings; invalid values and duplicate property groups fail before mutation.
+UTF-16 surrogate pairs are joined and isolated surrogates become U+FFFD. XML-invalid
+characters may be omitted during serialization without mutating the live value.
+
+Whole-table font name inheritance and numbered paragraph body fonts are supported
+when their references resolve. Conditional or nested styled tables, numbering
+overrides, label fonts, paragraph layout, and missing-theme save lifecycle remain
+outside this stage. These name operations do not establish full Font API or
+rendering equivalence.
