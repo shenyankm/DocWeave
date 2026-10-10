@@ -84,7 +84,8 @@ def test_edits_two_successful_saves_keep_metadata_resources_and_held_objects(tmp
         assert (actual.alt_name, actual.family, actual.pitch, actual.charset) == ('New<&Alias', fonts.FontFamily.ROMAN, fonts.FontPitch.FIXED, 204)
         assert actual.is_true_type is False and actual.panose == bytearray(range(10))
         assert [cold.font_infos.embed_true_type_fonts, cold.font_infos.embed_system_fonts, cold.font_infos.save_subset_fonts] == [False, True, False]
-        assert next(p.data for p in cold.light_document_model.source_font_table.parts if p.content_type.endswith('obfuscatedFont')) == original_font
+        assert not any(p.content_type.endswith('obfuscatedFont') for p in cold.light_document_model.source_font_table.parts)
+        assert next(p.data for p in model.source_font_table.parts if p.name == FONT) == original_font
         roundtrip = ldm.Document.model_validate_json(model.model_dump_json())
         assert roundtrip.source_font_table == model.source_font_table
     font.alt_name = 'After save'
