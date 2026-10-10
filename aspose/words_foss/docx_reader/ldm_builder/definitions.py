@@ -26,7 +26,6 @@ from aspose.words_foss.docx_reader.constants import (
 from aspose.words_foss.docx_reader.field_mappings import LIST_TRAILING_CHARACTER_MAP
 from aspose.words_foss.docx_reader.utils import _canonicalize_style_name, parse_onoff
 from aspose.words_foss.model.style_identifiers import resolve_style_identifier
-from aspose.words_foss.utils.xml_helpers import parse_font_size
 
 from ._context import ReaderContext
 from ._helpers import apply_padding_sides, build_borders, build_shading, parse_int, is_truthy_onoff, read_twip
@@ -40,30 +39,6 @@ from .cascading import (
 
 _STYLE_TYPE_PARAGRAPH = 1
 _STYLE_TYPE_TABLE = 3
-
-
-def _tsp_build_font(rPr: ET.Element) -> ldm.Font:
-    """Lightweight font builder for ``<w:tblStylePr>`` rPr elements."""
-    from aspose.words_foss.docx_reader.field_mappings import RUN_ONOFF_FLAGS
-    from aspose.words_foss.docx_reader.utils import apply_onoff_attrs, _hex_to_ldm_color
-    font = ldm.Font()
-    apply_onoff_attrs(font, rPr, RUN_ONOFF_FLAGS)
-    rFonts = rPr.find(f"{W_NS}rFonts")
-    if rFonts is not None:
-        font.name = rFonts.get(f"{W_NS}ascii", "") or rFonts.get(f"{W_NS}hAnsi", "") or ""
-    color_el = rPr.find(f"{W_NS}color")
-    font.color_explicit = color_el is not None
-    if color_el is not None:
-        val = color_el.get(f"{W_NS}val", "")
-        font.color = _hex_to_ldm_color(val)
-        font.source_color = ldm.SourceColor(
-            value=color_el.get(f"{W_NS}val"), theme_color=color_el.get(f"{W_NS}themeColor"),
-            theme_tint=color_el.get(f"{W_NS}themeTint"), theme_shade=color_el.get(f"{W_NS}themeShade"))
-    size = rPr.find(f"{W_NS}sz")
-    if size is not None:
-        font.size = parse_font_size(size.get(f"{W_NS}val", ""))
-        font.size_explicit = True
-    return font
 
 
 _BUILTIN_HEADING_MAX = 9
@@ -216,8 +191,7 @@ class StyleBuilder:
         elif heading_match:
             pf.outline_level = int(heading_match.group(1)) - 1
 
-    @staticmethod
-    def _apply_table_style_format(style_elem: ET.Element, s: ldm.Style) -> None:  # noqa: C901
+    def _apply_table_style_format(self, style_elem: ET.Element, s: ldm.Style) -> None:  # noqa: C901
         if s.type != _STYLE_TYPE_TABLE:
             return
         tblPr = style_elem.find(f"{W_NS}tblPr")
@@ -251,7 +225,7 @@ class StyleBuilder:
             tsp = ldm.TableStyleProperty(type=tsp_type)
             rPr = tsp_el.find(f"{W_NS}rPr")
             if rPr is not None:
-                tsp.font = _tsp_build_font(rPr)
+                tsp.font = self._fonts.build(rPr)
             pPr = tsp_el.find(f"{W_NS}pPr")
             if pPr is not None:
                 jc = pPr.find(f"{W_NS}jc")

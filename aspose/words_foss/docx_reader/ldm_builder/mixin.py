@@ -58,6 +58,12 @@ class LdmBuilderMixin:
                     flags[field] = parse_onoff(flag)
             if flags:
                 doc.font_embedding = ldm.FontEmbeddingSettings(**flags)
+            languages = self._settings_xml.find(f'{W_NS}themeFontLang')
+            if languages is not None:
+                doc.theme_font_languages = ldm.ThemeFontLanguages(
+                    latin=languages.get(f'{W_NS}val'),
+                    east_asian=languages.get(f'{W_NS}eastAsia'),
+                    complex_script=languages.get(f'{W_NS}bidi'))
             doc.do_not_expand_shift_return = parse_onoff(
                 self._settings_xml.find(f"{W_NS}compat/{W_NS}doNotExpandShiftReturn"))
             for setting in self._settings_xml.findall(f"{W_NS}compat/{W_NS}compatSetting"):

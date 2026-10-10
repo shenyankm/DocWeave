@@ -165,12 +165,16 @@ def render_rPr(
     rfont_changed = (
         font.name != base.name
         or font.name_ascii != base.name_ascii
+        or font.name_other != base.name_other
         or font.name_bi != base.name_bi
         or font.name_far_east != base.name_far_east
     )
-    if rfont_changed:
+    if font.source_font_names is not None and font.font_names_explicit is not False:
+        source = ldm.SourceFontNames(attributes=font.source_font_names.attributes)
+        children.append(el('w:rFonts', {'w:' + key: value for key, value in source.attributes.items()}))
+    elif rfont_changed and font.font_names_explicit is not False:
         ascii_name = font.name_ascii or font.name
-        hAnsi_name = font.name
+        hAnsi_name = font.name_other or font.name
         cs_name = font.name_bi or font.name
         ea_name = font.name_far_east or font.name
         attrs: dict[str, str] = {}

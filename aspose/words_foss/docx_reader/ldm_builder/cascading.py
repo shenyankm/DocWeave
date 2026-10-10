@@ -9,7 +9,7 @@ import re
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.utils.xml_helpers import combine_style_toggle, parse_font_size
+from aspose.words_foss.utils.xml_helpers import combine_style_toggle, parse_font_size, resolve_font_names
 from aspose.words_foss.docx_reader.constants import (
     COLOR_EMPTY,
     W_NS,
@@ -105,7 +105,7 @@ class FontBuilder:
 
     def build(self, rPr: ET.Element) -> ldm.Font:
         """Translate one ``<w:rPr>`` into a value-only :class:`ldm.Font`."""
-        font = ldm.Font()
+        font = ldm.Font(font_names_explicit=False)
         font.size_explicit = False
         font.color_explicit = rPr.find(f"{W_NS}color") is not None
         for tag, field, _ in RUN_ONOFF_FLAGS:
@@ -128,24 +128,32 @@ class FontBuilder:
         rFonts = rPr.find(f"{W_NS}rFonts")
         if rFonts is None:
             return
-        ascii_name = rFonts.get(f"{W_NS}ascii", "")
-        hAnsi_name = rFonts.get(f"{W_NS}hAnsi", "")
-        cs_name = rFonts.get(f"{W_NS}cs", "")
-        ea_name = rFonts.get(f"{W_NS}eastAsia", "")
+        names = resolve_font_names(rFonts.attrib, self._ctx._theme_fonts)
+        ascii_name, hAnsi_name, cs_name, ea_name = (names.get(channel, '') for channel in ('ascii', 'hAnsi', 'cs', 'eastAsia'))
         explicit = ascii_name or hAnsi_name or cs_name
         if explicit:
-            font.name = explicit
-        else:
-            theme = rFonts.get(f"{W_NS}asciiTheme", "") or rFonts.get(f"{W_NS}hAnsiTheme", "")
-            if theme:
-                font.name = self._ctx._resolve_theme_font(theme)
-        primary = font.name
-        if ascii_name and ascii_name != primary:
+            super(ldm.Font, font).__setattr__('name', explicit)
+        if hAnsi_name:
+            font.name_other = hAnsi_name
+        if ascii_name:
             font.name_ascii = ascii_name
-        if cs_name and cs_name != primary:
+        if cs_name:
             font.name_bi = cs_name
-        if ea_name and ea_name != primary:
+        if ea_name:
             font.name_far_east = ea_name
+        font.source_font_names = self.source_font_names(rPr)
+        font.font_names_explicit = True
+
+    @staticmethod
+    def source_font_names(rPr: ET.Element | None) -> ldm.SourceFontNames | None:
+        rFonts = rPr.find(f'{W_NS}rFonts') if rPr is not None else None
+        if rFonts is None:
+            return None
+        attributes = {key.removeprefix(W_NS): value for key, value in rFonts.attrib.items()
+                      if key.startswith(W_NS) and key.removeprefix(W_NS) in
+                      {'ascii', 'hAnsi', 'cs', 'eastAsia', 'asciiTheme', 'hAnsiTheme',
+                       'cstheme', 'eastAsiaTheme', 'hint'}}
+        return ldm.SourceFontNames(attributes=attributes)
 
     @staticmethod
     def _apply_size(rPr: ET.Element, font: ldm.Font) -> None:
@@ -454,6 +462,8 @@ class FontResolver:
             base.color = COLOR_EMPTY
         if not base.highlight_color:
             base.highlight_color = COLOR_EMPTY
+        base.source_font_names = self._fonts.source_font_names(rPr)
+        base.font_names_explicit = base.source_font_names is not None
         base.size_explicit = rPr is not None and rPr.find(f"{W_NS}sz") is not None
         base.color_explicit = rPr is not None and rPr.find(f"{W_NS}color") is not None
         for tag, field, _ in RUN_ONOFF_FLAGS:
@@ -519,7 +529,26 @@ class FontResolver:
     def merge(base: ldm.Font, override: ldm.Font) -> None:
         """Merge *override* into *base* using Pydantic ``model_fields_set``."""
         _set: set[str] = override.model_fields_set
+        name_fields = ('name', 'name_ascii', 'name_other', 'name_bi', 'name_far_east')
+        source = override.source_font_names
+        if source is not None:
+            # Preserve effective aliases before a partial ASCII declaration changes the primary.
+            old_names = {field: getattr(base, field) or base.name for field in name_fields[1:]}
+            for field, value in old_names.items():
+                super(ldm.Font, base).__setattr__(field, value)
+            for field, literal, theme in (
+                ('name_ascii', 'ascii', 'asciiTheme'), ('name_other', 'hAnsi', 'hAnsiTheme'),
+                ('name_bi', 'cs', 'cstheme'), ('name_far_east', 'eastAsia', 'eastAsiaTheme')):
+                if literal not in source.attributes and theme not in source.attributes:
+                    continue
+                value = getattr(override, field)
+                if value:
+                    super(ldm.Font, base).__setattr__(field, value)
+                    if field == 'name_ascii':
+                        super(ldm.Font, base).__setattr__('name', value)
         for field in MERGE_FONT_FIELDS:
+            if source is not None and field in name_fields:
+                continue
             if field not in _set:
                 continue
             value = getattr(override, field)
@@ -529,7 +558,11 @@ class FontResolver:
             if (field in ("color", "highlight_color") and value == COLOR_EMPTY
                     and not (field == "color" and override.color_explicit is True)):
                 continue
-            setattr(base, field, value)
+            if field in name_fields:
+                # Cascade resolution is not a user's explicit font edit.
+                super(ldm.Font, base).__setattr__(field, value)
+            else:
+                setattr(base, field, value)
 
 
 class ParagraphFormatResolver:

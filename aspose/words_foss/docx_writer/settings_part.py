@@ -35,6 +35,12 @@ def render_settings_xml(doc: ldm.Document) -> str:
         tracked += el("w:doNotExpandShiftReturn")
     compat = (compat or "<w:compat></w:compat>").replace("</w:compat>", tracked + "</w:compat>")
     children.append(compat)
+    if doc.theme_font_languages is not None:
+        languages = doc.theme_font_languages
+        attrs = {key: value for key, value in (
+            ('w:val', languages.latin), ('w:eastAsia', languages.east_asian),
+            ('w:bidi', languages.complex_script)) if value is not None}
+        children.append(el('w:themeFontLang', attrs))
     if doc.font_embedding is not None:
         for field, tag in [('embed_true_type_fonts', 'embedTrueTypeFonts'),
                            ('do_not_embed_system_fonts', 'doNotEmbedSystemFonts'),

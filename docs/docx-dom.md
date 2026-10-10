@@ -436,6 +436,18 @@ DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 M
 该报告描述部件变化，不证明 Word 视觉保真或所有 OOXML 语义均受支持。
 
 
+## 转换模型中的字体声明
+
+DOCX 进入转换模型后，`Font.source_font_names` 保存原始 `rFonts` 通道、主题引用和
+`hint`；`font_names_explicit` 区分直接声明与继承。JSON 和 DOCX／Flat OPC 保存保留
+这些声明，避免把读到的有效字体名固定成 run 的直接格式。`name_other` 对应 `hAnsi`。
+编辑一个通道只替换该通道的主题引用；编辑 `name` 则设置四个通道。
+
+`theme_font_languages` 保留 `themeFontLang` 的语言属性，包括未设置和空字符串，
+使东亚和复杂文字的主题选择条件能够随文档保存。条件表格字体复用同一声明读取逻辑。
+字体名赋值拒绝空值和非字符串；加载时缺失或空的 `rFonts` 仍可表达。
+转换模型的实时继承视图、完整主题解析与最终字体排版保真仍需后续独立验收。
+
 ## 缺失页面尺寸的加载默认值
 
 DOCX/Flat OPC 加载及 DOM 转换快照中，未设置的页面宽度和高度分别使用 Letter 的
