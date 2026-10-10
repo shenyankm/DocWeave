@@ -38,6 +38,7 @@ def render_settings_xml(doc: ldm.Document) -> str:
     if doc.font_embedding is not None:
         for field, tag in [('embed_true_type_fonts', 'embedTrueTypeFonts'),
                            ('do_not_embed_system_fonts', 'doNotEmbedSystemFonts'),
+                           ('embed_system_fonts', 'embedSystemFonts'),
                            ('save_subset_fonts', 'saveSubsetFonts')]:
             value = getattr(doc.font_embedding, field)
             if value is not None:

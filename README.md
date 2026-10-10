@@ -64,7 +64,9 @@ tests, and documentation describe this fork; upstream documentation is only back
 | TXT | Yes | Yes | Body text only; output is UTF-8, with no images or original layout |
 | PDF | No | Yes | Built-in renderer with bundled fonts; not Word-identical pagination |
 
-DOCX and Flat OPC conversion retains a loaded font table, its metadata and related package resources, plus the declared `embedTrueTypeFonts`, `doNotEmbedSystemFonts` and `saveSubsetFonts` settings. This preserves source resources; automatic font selection, re-embedding and public font-management APIs are not implemented.
+DOCX and Flat OPC conversion retains loaded font tables, metadata, related resources and declared embedding settings. `Document.font_infos` supports iteration, name lookup, editable font metadata, and the three embedding options. Successful saves refresh held collections only after atomic publication.
+
+These edits preserve source resources; automatic font selection, re-embedding, font extraction and font-source APIs remain unimplemented.
 
 The separate LibreOffice backend converts original DOC/DOCX/RTF files, including standard text RTF, **to PDF only**.
 
