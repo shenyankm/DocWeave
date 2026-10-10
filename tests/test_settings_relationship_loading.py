@@ -65,17 +65,9 @@ def test_only_related_settings_change_default_tabs(tmp_path, mode, flat):
     assert doc.light_document_model.compatibility_mode == (15 if mode in {'external', 'internal', 'custom'} else 12)
 
 
+@pytest.mark.parametrize('mode', ['orphan', 'internal'])
 @pytest.mark.parametrize('malformed', [b'<broken', b'<!DOCTYPE x [<!ENTITY e "Owned entity">]><x>&e;</x>'])
-def test_malformed_orphan_settings_does_not_prevent_document_loading(tmp_path, malformed):
-    raw = settings_package('orphan', malformed=malformed)
-    (tmp_path / 'malformed-orphan.docx').write_bytes(raw)
-    doc = aw.Document(BytesIO(raw))
-    assert doc.light_document_model.default_tab_stop == 36
-    assert doc.light_document_model.compatibility_mode == 12
-
-
-@pytest.mark.parametrize('malformed', [b'<broken', b'<!DOCTYPE x [<!ENTITY e "Owned entity">]><x>&e;</x>'])
-def test_malformed_related_settings_remains_rejected(malformed):
+def test_malformed_settings_remains_rejected(mode, malformed):
     from defusedxml.common import DefusedXmlException
     with pytest.raises((E.ParseError, DefusedXmlException)):
-        aw.Document(BytesIO(settings_package('internal', malformed=malformed)))
+        aw.Document(BytesIO(settings_package(mode, malformed=malformed)))

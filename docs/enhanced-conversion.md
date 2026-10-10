@@ -11,7 +11,7 @@
 `word/settings.xml`、没有该关系的部件不改变默认制表位、兼容模式或字体设置。
 源包编辑需要保留未关联部件时，使用 `DocxDocument`。
 标为 `External` 但指向包内现存 settings 部件的关系按已观测的基准恢复行为读取；
-真正的外部 URL 不读取。关联设置的损坏 XML 和 DTD 仍明确报错。
+真正的外部 URL 不读取。关联或孤立设置的损坏 XML 和 DTD 仍明确报错。
 有效设置映射到 `Document.light_document_model`；这不表示完整商业设置 API 已实现。
 
 ## 保存选项与实际格式

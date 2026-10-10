@@ -164,7 +164,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                     raise ValueError("Duplicate document relationship: " + kind)
                 targets[kind] = name
 
-        for kind, fallback in (("settings", ""), ("theme", "word/theme/theme1.xml"),
+        for kind, fallback in (("settings", "word/settings.xml"), ("theme", "word/theme/theme1.xml"),
                                ("styles", "word/styles.xml"), ("numbering", "word/numbering.xml"),
                                ("fontTable", "word/fontTable.xml")):
             name = targets.get(kind, fallback)
@@ -172,6 +172,8 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 continue
             with zf.open(name) as stream:
                 root = parse(stream).getroot()
+            if kind == "settings" and kind not in targets:
+                continue  # Validate orphan XML without applying unassociated settings.
             if kind == "theme":
                 rels_name = relationships_path(name)
                 self._source_theme = ldm.SourceTheme(
