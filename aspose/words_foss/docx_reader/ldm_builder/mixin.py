@@ -15,7 +15,6 @@ from aspose.words_foss.docx_reader.constants import (
     COLOR_EMPTY,
     W_NS,
     _DEFAULT_TAB_STOP_PT,
-    _TWIPS_PER_PT,
 )
 from aspose.words_foss.docx_reader.utils import (
     _canonicalize_style_name,
@@ -93,16 +92,11 @@ class LdmBuilderMixin:
     def _get_default_tab_stop(self) -> float:
         if self._settings_xml is None:
             return _DEFAULT_TAB_STOP_PT
-        elem = self._settings_xml.find(f"{W_NS}defaultTabStop")
-        if elem is None:
+        elements = self._settings_xml.findall(f"{W_NS}defaultTabStop")
+        if not elements:
             return _DEFAULT_TAB_STOP_PT
-        val = elem.get(f"{W_NS}val", "")
-        if not val:
-            return _DEFAULT_TAB_STOP_PT
-        try:
-            return int(val) / _TWIPS_PER_PT
-        except ValueError:
-            return _DEFAULT_TAB_STOP_PT
+        from aspose.words_foss.utils.tab_stops import parse_default_tab_stop
+        return parse_default_tab_stop(elements[-1].get(f"{W_NS}val", ""))
 
     def _get_page_color(self) -> str:
         if self._document_xml is None:

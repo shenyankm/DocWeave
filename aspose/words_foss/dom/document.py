@@ -72,6 +72,17 @@ class DocxDocument:
     def part_names(self):
         return self._package.part_names
 
+    @property
+    def default_tab_stop(self) -> float:
+        """Default tab interval in points from the related settings part."""
+        from aspose.words_foss.dom.settings import get_default_tab_stop
+        return get_default_tab_stop(self._package)
+
+    @default_tab_stop.setter
+    def default_tab_stop(self, value: float) -> None:
+        from aspose.words_foss.dom.settings import set_default_tab_stop
+        set_default_tab_stop(self._package, value)
+
     def part_xml(self, name):
         """Read-only XML snapshot; parsing alone does not mark a part modified."""
         return self._package.tree(name).documentElement.toxml()

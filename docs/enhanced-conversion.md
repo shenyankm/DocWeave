@@ -12,7 +12,7 @@
 源包编辑需要保留未关联部件时，使用 `DocxDocument`。
 标为 `External` 但指向包内现存 settings 部件的关系按已观测的基准恢复行为读取；
 真正的外部 URL 不读取。关联或孤立设置的损坏 XML 和 DTD 仍明确报错。
-有效设置映射到 `Document.light_document_model`；这不表示完整商业设置 API 已实现。
+有效设置映射到 `Document.light_document_model`。`Document.default_tab_stop` 以点读取和设置默认制表位，按 twip 取整；负数报错且保持原值，非有限输入遵循已观测的基准哨兵值。此接口不表示完整商业设置 API 或包保留 DOM 设置编辑已实现。
 
 ## 保存选项与实际格式
 
