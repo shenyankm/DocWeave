@@ -113,6 +113,8 @@ character style，`paragraph.paragraph_format.style_id` 只接受 paragraph styl
 因此可能在保存后冷读变为正值/精确或零/最小行距。成功保存不改写持有句柄的 warm 值。
 `to_light_document()` 与其 JSON 导出是重新读取当前包的独立 cold 投影，不能保留 warm 差异。
 大间距分页和短 exact 表格行的渲染尚未验收。
+行距读取采用原生度量恢复规则：分数与指数按 twip 解析，无效数字（含数字下划线）
+恢复为零，溢出度量按上述冷读规则投影；其他缩进、段前后间距仍拒绝非法整数 twip。
 
 内置字体和段落格式句柄只允许赋值已声明的可写属性。未实现属性（如当前的
 `font.color`）、拼写错误及覆盖方法/内部排序常量会抛出 `AttributeError`，不会修改文档。

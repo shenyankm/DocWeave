@@ -18,7 +18,8 @@ def parse_line_spacing(line: str, rule: str = "auto") -> tuple[float, int]:
         if unit == '\n':
             return 0.0, {"auto": 2, "exact": 0}.get(rule, 0)
         raise RuntimeError("Invalid line-spacing measurement unit")
-    number = parse_universal_measure(line, 'pt' if unit else 'twip') if last_digit >= 0 else 0.0
+    # Python float accepts numeric underscores; the native measure reader does not.
+    number = parse_universal_measure(line, 'pt' if unit else 'twip') if last_digit >= 0 and '_' not in line else 0.0
     if unit:
         number *= 20
     # The XML reader's numeric measure saturates at signed 64 bits before

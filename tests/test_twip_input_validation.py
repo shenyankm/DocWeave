@@ -93,7 +93,7 @@ def assert_private_error(error, raw):
     assert error.__suppress_context__
 
 
-@pytest.mark.parametrize("attribute", [*DIMENSIONS, "line"])
+@pytest.mark.parametrize("attribute", DIMENSIONS)
 @pytest.mark.parametrize("kind", ["body", "table", "header", "footer", "style", "default"])
 @pytest.mark.parametrize("raw", INVALID)
 def test_invalid_paragraph_dimensions_fail_without_loss_or_disclosure(attribute, kind, raw):
@@ -102,6 +102,28 @@ def test_invalid_paragraph_dimensions_fail_without_loss_or_disclosure(attribute,
     with pytest.raises(ValueError, match="integer twips") as caught:
         document.to_light_document()
     assert_private_error(caught.value, raw)
+    assert document.to_bytes() == before
+
+
+@pytest.mark.parametrize("kind", ["body", "table", "header", "footer", "style", "default"])
+@pytest.mark.parametrize("raw,expected,rule", [
+    (INVALID[0], 0, 2), (INVALID[1], .05, 2), (INVALID[2], 0, 2),
+    (INVALID[3], 0, 2), (INVALID[4], 5, 2), (INVALID[5], 0, 2),
+    (INVALID[6], .05, 1), (INVALID[7], .05, 1),
+])
+def test_line_measure_uses_native_recovery_without_mutating_source(kind, raw, expected, rule):
+    document = DocxDocument(BytesIO(source("line", kind, raw)))
+    before = document.to_bytes()
+    section = document.to_light_document().sections[0]
+    if kind == "table":
+        paragraph = section.body.tables[0].rows[0].cells[0].paragraphs[0]
+    elif kind in {"header", "footer"}:
+        paragraph = section.headers_footers[0].paragraphs[0]
+    else:
+        paragraph = section.body.paragraphs[0]
+    pf = paragraph.paragraph_format
+    assert (pf.line_spacing, pf.line_spacing_rule) == (expected, rule)
+    assert "line_spacing" in pf.model_fields_set
     assert document.to_bytes() == before
 
 
