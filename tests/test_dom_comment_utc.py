@@ -243,7 +243,7 @@ def test_short_durable_id_matches_equivalent_eight_digit_value(tmp_path):
 
 @pytest.mark.parametrize('kind', ['orphan', 'duplicate-cid', 'duplicate-cex'])
 @pytest.mark.parametrize('flat', [False, True])
-def test_unassociated_records_survive_two_saves_and_date_edit(tmp_path, kind, flat):
+def test_unassociated_records_are_normalized_through_two_saves_and_date_edit(tmp_path, kind, flat):
     doc = modern(tmp_path)
     ids = doc._package.tree('word/commentsIds.xml').documentElement
     ext = doc._package.tree('word/commentsExtensible.xml').documentElement
@@ -264,7 +264,7 @@ def test_unassociated_records_survive_two_saves_and_date_edit(tmp_path, kind, fl
         extra.setAttributeNS(CEX, 'm:durableId', '00000001')
         extra.setAttributeNS(CEX, 'm:dateUtc', '2044-01-02T03:04:05Z')
         extra.setAttribute('owned', 'extra');ext.appendChild(extra)
-    # Keep the orphan and the non-winning duplicate records, including their attributes.
+    # Native saves discard orphan and non-winning typed records.
     unselected = ([node, extra] if kind == 'orphan' else
                   ([ids.getElementsByTagNameNS(CID, 'commentId')[0], ext.getElementsByTagNameNS(CEX, 'commentExtensible')[0]]
                    if kind == 'duplicate-cid' else [ext.getElementsByTagNameNS(CEX, 'commentExtensible')[0]]))
@@ -281,7 +281,7 @@ def test_unassociated_records_survive_two_saves_and_date_edit(tmp_path, kind, fl
         cold = DocxDocument(output)
         records = [n.toxml() for p in ['word/commentsIds.xml', 'word/commentsExtensible.xml']
                    for n in cold._package.tree(p).documentElement.childNodes if n.nodeType == n.ELEMENT_NODE]
-        assert all(raw in records for raw in expected_raw)
+        assert all(raw not in records for raw in expected_raw)
         assert comment(cold).date_time_utc == held.date_time_utc.replace(microsecond=0)
         if kind == 'orphan':
             assert cold.get_child_nodes(NodeType.COMMENT, True)[1].date_time_utc == copied.date_time_utc
@@ -290,8 +290,8 @@ def test_unassociated_records_survive_two_saves_and_date_edit(tmp_path, kind, fl
         cold = DocxDocument(output);assert len(cold.get_child_nodes(NodeType.COMMENT, True)) == 1
         records = [n.toxml() for p in ['word/commentsIds.xml', 'word/commentsExtensible.xml']
                    for n in cold._package.tree(p).documentElement.childNodes if n.nodeType == n.ELEMENT_NODE]
-        assert len(cold._package.tree('word/commentsIds.xml').getElementsByTagNameNS(CID, 'commentId')) == 2
-        assert all(raw in records for raw in expected_raw)
+        assert len(cold._package.tree('word/commentsIds.xml').getElementsByTagNameNS(CID, 'commentId')) == 1
+        assert all(raw not in records for raw in expected_raw)
 
 
 @pytest.mark.parametrize('flat', [False, True])
@@ -311,7 +311,7 @@ def test_modern_projection_failure_preserves_unassociated_records(tmp_path, monk
 @pytest.mark.parametrize('reverse_ids', [False, True])
 @pytest.mark.parametrize('reverse_paragraphs', [False, True])
 @pytest.mark.parametrize('flat', [False, True])
-def test_multiple_paragraphs_select_last_cid_record_and_keep_loser(tmp_path, reverse_ids, reverse_paragraphs, flat):
+def test_multiple_paragraphs_select_last_cid_record_and_normalize_loser(tmp_path, reverse_ids, reverse_paragraphs, flat):
     doc = modern(tmp_path)
     entry = doc._package.tree('word/comments.xml').getElementsByTagNameNS(W, 'comment')[0]
     extra_p = entry.ownerDocument.createElementNS(W, 'w:p');extra_p.setAttribute('xmlns:w', W)
@@ -337,4 +337,62 @@ def test_multiple_paragraphs_select_last_cid_record_and_keep_loser(tmp_path, rev
         assert [n.date_time_utc for n in nodes] == [held.date_time_utc, copy.date_time_utc]
         identifiers = [p.getAttributeNS(W14, 'paraId') for p in cold._package.tree('word/comments.xml').getElementsByTagNameNS(W, 'p')]
         assert len(identifiers) == len(set(identifiers))
-        assert loser in [n.toxml() for n in cold._package.tree('word/commentsIds.xml').documentElement.childNodes]
+        assert loser not in [n.toxml() for n in cold._package.tree('word/commentsIds.xml').documentElement.childNodes]
+
+
+@pytest.mark.parametrize('flat', [False, True])
+def test_typed_metadata_normalization_is_diagnosed_and_keeps_foreign_extensions(tmp_path, flat):
+    from aspose.words_foss.diagnostics import ContentLossWarning, collect_diagnostics
+    doc = modern(tmp_path)
+    root = doc._package.tree('word/commentsExtensible.xml').documentElement
+    orphan = root.firstChild.cloneNode(True)
+    orphan.setAttribute('xmlns:m', CEX);orphan.setAttributeNS(CEX, 'm:durableId', '45678901')
+    root.appendChild(orphan)
+    root.setAttribute('owned', 'root-attribute')
+    foreign = root.ownerDocument.createElementNS('urn:owned', 'x:extension')
+    foreign.setAttribute('xmlns:x', 'urn:owned');foreign.appendChild(orphan.cloneNode(True))
+    root.appendChild(foreign)
+    selected = root.firstChild;selected.setAttribute('owned', 'selected-attribute')
+    selected.appendChild(foreign.cloneNode(True))
+    from defusedxml.minidom import parseString
+    from aspose.words_foss.utils.xml_helpers import serialize_xml
+    tree = parseString(serialize_xml(root.ownerDocument), forbid_dtd=True)
+    doc._package._trees['word/commentsExtensible.xml'] = tree
+    root = tree.documentElement
+    foreign = next(n for n in root.childNodes if n.nodeType == n.ELEMENT_NODE and n.namespaceURI == 'urn:owned')
+    snapshot = root.toxml();held = comment(doc);utc = held.date_time_utc
+    collected = []
+    with collect_diagnostics(collected), pytest.warns(ContentLossWarning):
+        report = doc.preservation_report()
+    assert 'word/commentsExtensible.xml' in report['modified']
+    assert root.toxml() == snapshot and held.date_time_utc == utc
+    assert {d.code for d in collected} == {'comment.utc_metadata_normalized'}
+    assert all('45678901' not in d.message and 'root-attribute' not in d.message for d in collected)
+    output = tmp_path / 'normalize-extensions'
+    with pytest.warns(ContentLossWarning):
+        (doc.save_flat_opc if flat else doc.save)(output)
+    cold = DocxDocument(output)
+    saved = cold._package.tree('word/commentsExtensible.xml').documentElement
+    assert saved.getAttribute('owned') == 'root-attribute'
+    direct = [n for n in saved.childNodes if n.nodeType == n.ELEMENT_NODE and n.namespaceURI == CEX]
+    assert len(direct) == 1 and direct[0].getAttribute('owned') == 'selected-attribute'
+    def semantic(node):
+        attributes = tuple(sorted((a.namespaceURI or '', a.localName, a.value)
+                                  for a in node.attributes.values() if a.namespaceURI != 'http://www.w3.org/2000/xmlns/' and not a.name.startswith('xmlns')))
+        return (node.namespaceURI, node.localName, attributes,
+                tuple(semantic(n) for n in node.childNodes if n.nodeType == n.ELEMENT_NODE))
+    assert semantic(foreign) in [semantic(n) for n in saved.childNodes if n.nodeType == n.ELEMENT_NODE]
+    assert semantic(foreign) in [semantic(n) for n in direct[0].childNodes if n.nodeType == n.ELEMENT_NODE]
+    assert comment(cold).date_time_utc == utc and held.date_time_utc == utc
+
+
+@pytest.mark.parametrize('flat', [False, True])
+def test_minimum_utc_keeps_cid_and_omits_extensible_record(tmp_path, flat):
+    doc = modern(tmp_path);held = comment(doc);held.date_time = datetime.min
+    for _ in range(2):
+        output = tmp_path / 'minimum-record'
+        (doc.save_flat_opc if flat else doc.save)(output)
+        cold = DocxDocument(output)
+        assert len(cold._package.tree('word/commentsIds.xml').getElementsByTagNameNS(CID, 'commentId')) == 1
+        assert not cold._package.tree('word/commentsExtensible.xml').getElementsByTagNameNS(CEX, 'commentExtensible')
+        assert comment(cold).date_time_utc == held.date_time_utc == datetime.min

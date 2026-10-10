@@ -161,8 +161,9 @@ class CommentUtc:
         if not self.parts and not any(getattr(s, '_comment_utc_source', None) for s, _ in entries):
             return lambda: None
         ids, ext = self._maps()
-        owned_ids = {source_link(source, ids) for source in known} - {None}
-        owned_ext = {ext.get(hex_id(node.getAttributeNS(CID, 'durableId'))) for node in owned_ids} - {None}
+        selected_ids = {source_link(source, ids) for source, _ in entries} - {None}
+        selected_ext = {ext.get(hex_id(node.getAttributeNS(CID, 'durableId'))) for node in selected_ids} - {None}
+        discarded_records = 0
         reserved_para = set(ids)
         reserved_durable = set(ext)
         if 'commentsIds' in self.parts:
@@ -199,9 +200,9 @@ class CommentUtc:
             if role in self.parts:
                 originals = elements(self.package.tree(name).documentElement, ns, ROLES[role][1])
                 copies = elements(root, ns, ROLES[role][1])
-                owned = owned_ids if role == 'commentsIds' else owned_ext
-                for original, copy in zip(originals, copies):
-                    if original in owned:root.removeChild(copy)
+                selected = selected_ids if role == 'commentsIds' else selected_ext
+                discarded_records += sum(original not in selected for original in originals)
+                for copy in copies:root.removeChild(copy)
         reserved = reserved_para | {hex_id(p.getAttributeNS(W14, 'paraId')) for _, t in entries for p in paragraphs(t)}
         used_para = set()
         used_durable, edits = set(), []
@@ -237,10 +238,15 @@ class CommentUtc:
                 else:
                     value = get_utc(source)
                     if value == datetime.min and value.tzinfo is None:
-                        if node.hasAttributeNS(ns, 'dateUtc'):node.removeAttributeNS(ns, 'dateUtc')
+                        if old_node is not None:discarded_records += 1
+                        continue
                     else:set_attr(node, ns, 'm', 'dateUtc', value.replace(tzinfo=None).isoformat(timespec='seconds') + 'Z')
                 boundary = next(iter(elements(root, ns, 'extLst')), None)
                 root.insertBefore(node, boundary)
+        if discarded_records:
+            from aspose.words_foss.diagnostics import ContentLossWarning, warn
+            warn('Unassociated or non-winning modern comment metadata records are omitted',
+                 ContentLossWarning, code='comment.utc_metadata_normalized')
         from aspose.words_foss.utils.xml_helpers import serialize_xml
         payloads = {name: serialize_xml(trees[name]) for name in set(names.values()) | (set(trees) & {'word/_rels/document.xml.rels', '[Content_Types].xml'})}
         def commit():
