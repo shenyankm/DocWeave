@@ -21,7 +21,19 @@ def elements(node, namespace, local):
 
 
 def hex_id(raw):
-    return int(raw, 16) if re.fullmatch('[0-9a-fA-F]{1,8}', raw) else None
+    # Native trims ASCII whitespace and accepts leading zeroes beyond eight digits.
+    lexical = raw.strip(' \t\r\n')
+    if not lexical:
+        return None
+    lexical = lexical.lstrip('0') or '0'
+    return int(lexical, 16) if re.fullmatch('[0-9a-fA-F]{1,8}', lexical) else None
+
+
+def durable_id(node, namespace):
+    if not node.hasAttributeNS(namespace, 'durableId'):
+        return 0
+    value = hex_id(node.getAttributeNS(namespace, 'durableId'))
+    return 0x80000000 if value is None else value
 
 
 def para_id(raw):
@@ -136,7 +148,7 @@ class CommentUtc:
             if role != 'comments':
                 continue
             link = source_link(entry, self.ids)
-            extension = self.ext.get(hex_id(link.getAttributeNS(CID, 'durableId'))) if link is not None else None
+            extension = self.ext.get(durable_id(link, CID)) if link is not None else None
             value = utc_date(extension.getAttributeNS(CEX, 'dateUtc')) if extension is not None else None
             if value is not None:
                 entry._comment_utc_source = (entry, entry.getAttributeNS(W, 'date'), value)
@@ -150,7 +162,7 @@ class CommentUtc:
                 ids[identifier] = node
         if 'commentsExtensible' in self.parts:
             for node in elements(self.package.tree(self.parts['commentsExtensible']).documentElement, CEX, 'commentExtensible'):
-                ext[hex_id(node.getAttributeNS(CEX, 'durableId'))] = node
+                ext[durable_id(node, CEX)] = node
         return ids, ext
 
     def project(self, trees, mapping):
@@ -162,12 +174,12 @@ class CommentUtc:
             return lambda: None
         ids, ext = self._maps()
         selected_ids = {source_link(source, ids) for source, _ in entries} - {None}
-        selected_ext = {ext.get(hex_id(node.getAttributeNS(CID, 'durableId'))) for node in selected_ids} - {None}
+        selected_ext = {ext.get(durable_id(node, CID)) for node in selected_ids} - {None}
         discarded_records = 0
         reserved_para = set(ids)
         reserved_durable = set(ext)
         if 'commentsIds' in self.parts:
-            reserved_durable |= {hex_id(node.getAttributeNS(CID, 'durableId')) for node in
+            reserved_durable |= {durable_id(node, CID) for node in
                 elements(self.package.tree(self.parts['commentsIds']).documentElement, CID, 'commentId')}
         names = dict(self.parts)
         for role, (ns, _, rel_type) in ROLES.items():
@@ -226,11 +238,11 @@ class CommentUtc:
             old_pid = hex_id(target_paragraphs[-1].getAttributeNS(W14, 'paraId'))
             pid = allocate(old_pid, used_para, reserved, 0x80000000)
             old_link = source_link(source, ids)
-            did = allocate(hex_id(old_link.getAttributeNS(CID, 'durableId')) if old_link is not None else None, used_durable, reserved_durable)
+            did = allocate(durable_id(old_link, CID) if old_link is not None else None, used_durable, reserved_durable)
             set_attr(target_paragraphs[-1], W14, 'w14', 'paraId', f'{pid:08X}')
             if old_paragraphs:edits.append((old_paragraphs[-1], f'{pid:08X}'))
             for role, ns, local, old_node in [('commentsIds', CID, 'commentId', old_link),
-                     ('commentsExtensible', CEX, 'commentExtensible', ext.get(hex_id(old_link.getAttributeNS(CID, 'durableId'))) if old_link is not None else None)]:
+                     ('commentsExtensible', CEX, 'commentExtensible', ext.get(durable_id(old_link, CID)) if old_link is not None else None)]:
                 root = trees[names[role]].documentElement
                 node = root.ownerDocument.importNode(old_node, True) if old_node is not None else root.ownerDocument.createElementNS(ns, 'm:' + local)
                 set_attr(node, ns, 'm', 'durableId', f'{did:08X}')
