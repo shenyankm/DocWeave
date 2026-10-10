@@ -92,6 +92,18 @@ def _find(root, name):
 def _normalize_registrations(root):
     seen = {}
     for font in list(_children(root, "font")):
+        for tag in ("altName", "family", "pitch", "charset", "notTrueType", "panose1"):
+            children = _children(font, tag)
+            if not children:
+                continue
+            # Within one registration, later declarations win. Empty alias/charset/PANOSE
+            # declarations leave the previous value intact in the fixed baseline.
+            values = ([child for child in children if child.getAttributeNS(W, "val")]
+                      if tag in ("altName", "charset", "panose1") else children)
+            winner = (values or children)[-1]
+            for child in children:
+                if child is not winner:
+                    font.removeChild(child)
         key = _key(font.getAttributeNS(W, "name"))
         if key in seen:
             first = seen[key]
