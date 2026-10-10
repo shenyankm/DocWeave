@@ -22,6 +22,7 @@ Usage:
 import warnings
 from contextlib import ExitStack
 from enum import IntEnum
+from importlib import resources
 from pathlib import Path
 from typing import Optional, Union, BinaryIO
 
@@ -228,7 +229,7 @@ class Document:
         stream: Optional[BinaryIO] = None,
         data: Optional[bytes] = None,
     ):
-        """Initialize Document, loading from a file path, stream, or bytes.
+        """Create a blank document, or load a file path, stream, or bytes.
 
         The first positional argument is a file path (``str`` / ``Path``) or a
         binary stream. ``stream=`` / ``data=`` are deprecated.
@@ -261,6 +262,9 @@ class Document:
                 self._load_from_stream(stream, load_options)
             elif data is not None:
                 self._load_from_bytes(data, load_options)
+            else:
+                template = resources.files('aspose.words_foss.docx_writer') / 'resources' / 'blank.docx'
+                self._load_from_bytes(template.read_bytes(), None)
 
     @staticmethod
     def _apply_load_options(reader: object, load_options: Optional[LoadOptions]) -> None:
