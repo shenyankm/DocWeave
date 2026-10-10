@@ -255,6 +255,23 @@ class TableHTMLParser(HTMLParser):
                 if cell.tag == "th":
                     cell_font.bold = True
                 children = self.blocks(cell.children, cell_font)
+                # Fixed 26.9 omits contentless cell paragraphs, but a br-created
+                # paragraph survives even when its final break is consumed.
+                children = [
+                    child
+                    for child in children
+                    if not isinstance(child, ldm.Paragraph)
+                    or any(run.text for run in child._children)
+                ]
+                for child in children:
+                    if isinstance(child, ldm.Paragraph):
+                        last = next(
+                            (run for run in reversed(child._children) if run.text), None
+                        )
+                        if last is not None and last.text.endswith("\n"):
+                            last.text = last.text[:-1]
+                if children and isinstance(children[-1], ldm.Table):
+                    children.append(ldm.Paragraph())
                 if cell.tag == "th":
                     for child in children:
                         if isinstance(child, ldm.Paragraph):
