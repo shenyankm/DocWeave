@@ -25,6 +25,30 @@ INLINE = {
 }
 
 
+class TableBlockBoundary(HTMLParser):
+    """Track real table tags, ignoring lookalikes in comments and script text."""
+
+    def __init__(self):
+        super().__init__()
+        self.depth = 0
+        self.seen = False
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "table":
+            self.seen = True
+            self.depth += 1
+            if self.depth >= MAX_HTML_DEPTH:
+                raise ValueError("HTML table input exceeds the nesting safety limit")
+
+    def handle_endtag(self, tag):
+        if tag == "table":
+            self.depth = max(0, self.depth - 1)
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        self.handle_endtag(tag)
+
+
 @dataclass
 class Element:
     tag: str
