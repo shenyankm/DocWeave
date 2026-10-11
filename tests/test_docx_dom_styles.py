@@ -212,7 +212,6 @@ def test_absent_relationship_does_not_apply_unrelated_styles_part(tmp_path):
 @pytest.mark.parametrize("extras", [
     {"word/_rels/document.xml.rels": f'<Relationships xmlns="{REL}"><Relationship Id="s" Type="{STYLES_REL}" Target="styles.xml" TargetMode="External"/></Relationships>'.encode()},
     {"word/_rels/document.xml.rels": f'<Relationships xmlns="{REL}"><Relationship Id="a" Type="{STYLES_REL}" Target="styles.xml"/><Relationship Id="b" Type="{STYLES_REL}" Target="styles.xml"/></Relationships>'.encode()},
-    {"word/_rels/document.xml.rels": b'<Relationships xmlns="urn:wrong"/>'},
     {"word/styles.xml": b'<styles xmlns="urn:wrong"/>'},
 ])
 def test_malformed_or_ambiguous_styles_relationship_is_not_used(tmp_path, extras):
@@ -221,3 +220,10 @@ def test_malformed_or_ambiguous_styles_relationship_is_not_used(tmp_path, extras
     with pytest.raises(ValueError):
         doc.body.paragraphs[0].paragraph_format.style_id = "P"
     assert payloads(doc.to_bytes()) == original
+
+
+def test_malformed_relationship_root_is_rejected_during_load(tmp_path):
+    with pytest.raises(ValueError, match="Expected an OPC relationships part"):
+        style_doc(tmp_path, '<w:style w:styleId="P"/>', extras={
+            "word/_rels/document.xml.rels": b'<Relationships xmlns="urn:wrong"/>',
+        })
