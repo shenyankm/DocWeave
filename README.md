@@ -155,6 +155,13 @@ Flat OPC requires an explicit `SaveFormat.FLAT_OPC` (or its macro/template varia
 For editing with opaque parts or macro resources retained, use the original-package
 [DOM Flat OPC export](docs/docx-dom.md); conversion through LDM omits VBA and records a diagnostic.
 
+`save(binary_stream, format_or_options)` requires an explicit format and returns
+`aw.saving.SaveOutputParameters` with read-only `content_type`; path saves return
+this metadata too. DOCX writes from position zero; other supported formats start
+at the current stream position. The caller owns the stream: saving leaves it open
+and does not truncate its existing tail. Use an empty stream for a standalone file.
+A failed stream write can leave partial output; path saves retain atomic publication.
+
 ### Markdown and in-memory output
 
 ```python
@@ -424,7 +431,7 @@ These are the main implemented entry points, not an exhaustive catalog of intern
 | API | Contract |
 |---|---|
 | `aw.Document(source, load_options=None)` | Path or binary stream; constructs the LDM immediately |
-| `Document.save(path, format_or_options=None)` | Infers format from extension or accepts a format/save-options object; atomic main-file publication |
+| `Document.save(path_or_stream, format_or_options=None)` | Paths infer format and publish atomically; binary streams require an explicit format; returns read-only content type |
 | `Document.to_bytes(format_or_options)` | Explicit DOCX/Flat OPC/Markdown/PDF/TXT in-memory output |
 | `Document.get_text()` / `to_dict()` | Body text / structured content extraction |
 | `Document.light_document_model` | Mutable parsed model; not an OOXML-preserving DOM |

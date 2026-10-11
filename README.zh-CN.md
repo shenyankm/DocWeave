@@ -163,6 +163,13 @@ pdf_bytes = doc.to_bytes(aw.SaveFormat.PDF)
 print(doc.get_text())
 ```
 
+`save(binary_stream, format_or_options)` 必须显式指定格式，返回含只读
+`content_type` 的 `aw.saving.SaveOutputParameters`；路径保存也返回此元数据。
+DOCX 从位置零写入，其他已支持格式从流的当前位置写入。流由调用者管理，保存后
+保持打开且不截断原有尾部；生成独立文件请使用空流。流写入失败可能留下部分输出，
+路径保存仍采用原子发布。
+
+
 流输入可通过魔数识别 DOCX 及 OLE2/DOC，通过 XML 根命名空间识别 Flat OPC。Markdown 没有可区分的魔数，需传入 `MarkdownLoadOptions`
 或显式指定 `LoadOptions.load_format`。标准 RTF 魔数能够识别，但内置 reader 仍拒绝该格式。
 字节输入请包装为 `BytesIO`；`stream=` / `data=` 参数已弃用。

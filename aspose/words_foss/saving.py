@@ -72,6 +72,25 @@ class _BoolField:
         obj.__dict__[self._name] = value
 
 
+class SaveOutputParameters:
+    """Read-only metadata returned by :meth:`Document.save`."""
+
+    __slots__ = ("_content_type",)
+
+    def __new__(cls):
+        raise TypeError("type has no available constructor")
+
+    @property
+    def content_type(self) -> str:
+        return self._content_type
+
+    @classmethod
+    def _from_content_type(cls, content_type: str) -> "SaveOutputParameters":
+        result = object.__new__(cls)
+        result._content_type = content_type
+        return result
+
+
 class TableContentAlignment(IntEnum):
     """Table content alignment options."""
 

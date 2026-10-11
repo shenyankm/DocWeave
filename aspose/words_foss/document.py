@@ -20,6 +20,7 @@ Usage:
 """
 
 import warnings
+from io import BufferedIOBase, RawIOBase
 from contextlib import ExitStack
 from enum import IntEnum
 from pathlib import Path
@@ -37,6 +38,7 @@ from aspose.words_foss.saving import (
     MarkdownSaveOptions,
     OoxmlSaveOptions,
     PdfSaveOptions,
+    SaveOutputParameters,
 )
 
 _ZIP_MAGIC = b"PK\x03\x04"
@@ -177,6 +179,17 @@ _SAVE_FORMAT_ALIASES = {
     "md": SaveFormat.MARKDOWN,
 }
 
+
+_SAVE_CONTENT_TYPES = {
+    SaveFormat.DOCX: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    SaveFormat.FLAT_OPC: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    SaveFormat.FLAT_OPC_MACRO_ENABLED: "application/vnd.ms-word.document.macroEnabled.12",
+    SaveFormat.FLAT_OPC_TEMPLATE: "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+    SaveFormat.FLAT_OPC_TEMPLATE_MACRO_ENABLED: "application/vnd.ms-word.template.macroEnabled.12",
+    SaveFormat.PDF: "application/pdf",
+    SaveFormat.TEXT: "text/plain",
+    SaveFormat.MARKDOWN: "text/plain",
+}
 
 def _coerce_save_format(value: object) -> "Optional[SaveFormat]":
     """Normalise a save format to a :class:`SaveFormat`, or ``None``."""
@@ -423,62 +436,87 @@ class Document:
 
     def save(
         self,
-        output_path: Union[str, Path],
+        output_path: Union[str, Path, BinaryIO],
         save_format_or_options: Union[
             "SaveFormat", int, str, MarkdownSaveOptions, PdfSaveOptions,
             OoxmlSaveOptions, None
         ] = None,
-    ) -> None:
-        """Save the document to the specified format.
+    ) -> SaveOutputParameters:
+        """Save to a path or caller-owned binary stream and return content metadata.
 
-        Args:
-            output_path: Path to save the output file.
-            save_format_or_options: A :class:`SaveFormat` member (or one of the
-                legacy string spellings such as ``"pdf"``), or a
-                MarkdownSaveOptions, PdfSaveOptions, or OoxmlSaveOptions
-                instance. If ``None``, the format is inferred from
-                ``output_path``'s extension.
+        Paths infer their format from the extension. Streams require an explicit
+        format. DOCX starts at position zero; other formats use the current
+        position. Streams remain open and are never truncated.
         """
         with collect_diagnostics(self.diagnostics):
-            self._save(output_path, save_format_or_options)
+            if isinstance(output_path, (BufferedIOBase, RawIOBase)):
+                if save_format_or_options is None:
+                    raise TypeError("Saving to a stream requires an explicit format")
+                if output_path.closed or not output_path.writable():
+                    raise RuntimeError("Output stream must be open and writable")
+                fmt = (SaveFormat.PDF if isinstance(save_format_or_options, PdfSaveOptions) else
+                       _coerce_save_format(getattr(save_format_or_options, "save_format", save_format_or_options)))
+                with ExitStack() as transactions:
+                    if isinstance(save_format_or_options, MarkdownSaveOptions):
+                        text, encoding = self._render_markdown(
+                            self.light_document_model, save_format_or_options,
+                            _image_transactions=transactions)
+                        data = text.encode(encoding)
+                    else:
+                        data = self.to_bytes(save_format_or_options)
+                    commits = ()
+                    if fmt == SaveFormat.DOCX or fmt in MAIN_TYPES:
+                        from aspose.words_foss.fonts import prepare_font_table_commit
+                        from aspose.words_foss.utils.table_row import prepare_row_height_commit
+                        commits = (prepare_font_table_commit(self.light_document_model, data),
+                                   prepare_row_height_commit(self.light_document_model))
+                    try:
+                        if fmt == SaveFormat.DOCX:
+                            output_path.seek(0)
+                        written = output_path.write(data)
+                        if written != len(data):
+                            raise OSError("Output stream accepted an incomplete write")
+                    except (OSError, ValueError) as error:
+                        raise RuntimeError("Output stream could not be written") from error
+                    for commit in commits:
+                        commit()
+            else:
+                fmt = self._save(output_path, save_format_or_options)
+            return SaveOutputParameters._from_content_type(_SAVE_CONTENT_TYPES[fmt])
 
-    def _save(self, output_path, save_format_or_options) -> None:
-        doc = self.light_document_model  # validates that a document is loaded
+    def _save(self, output_path, save_format_or_options) -> SaveFormat:
+        doc = self.light_document_model
         output_path = Path(output_path)
-        suffix = output_path.suffix.lower()
-
         if isinstance(save_format_or_options, MarkdownSaveOptions):
             self._save_as_markdown(output_path, doc, save_format_or_options)
-            return
+            return SaveFormat.MARKDOWN
         if isinstance(save_format_or_options, PdfSaveOptions):
             self._save_as_pdf(output_path, doc, save_format_or_options)
-            return
+            return SaveFormat.PDF
         if isinstance(save_format_or_options, OoxmlSaveOptions):
             self._save_as_docx(output_path, doc, save_format_or_options)
-            return
+            return _coerce_save_format(save_format_or_options.save_format)
 
         fmt = _coerce_save_format(save_format_or_options)
-        if fmt is None and save_format_or_options is not None:
-            raise ValueError(
-                f"Unsupported save format: {save_format_or_options!r}. "
-                f"Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
-            )
-
+        if fmt is None and save_format_or_options is None:
+            fmt = {".md": SaveFormat.MARKDOWN, ".txt": SaveFormat.TEXT,
+                   ".pdf": SaveFormat.PDF, ".docx": SaveFormat.DOCX}.get(output_path.suffix.lower())
         if fmt in MAIN_TYPES:
             self._save_as_docx(output_path, doc, OoxmlSaveOptions(fmt))
-        elif fmt == SaveFormat.MARKDOWN or (fmt is None and suffix == ".md"):
+        elif fmt == SaveFormat.MARKDOWN:
             self._save_as_markdown(output_path, doc)
-        elif fmt == SaveFormat.TEXT or (fmt is None and suffix == ".txt"):
+        elif fmt == SaveFormat.TEXT:
             self._save_as_text(output_path, doc)
-        elif fmt == SaveFormat.PDF or (fmt is None and suffix == ".pdf"):
+        elif fmt == SaveFormat.PDF:
             self._save_as_pdf(output_path, doc)
-        elif fmt == SaveFormat.DOCX or (fmt is None and suffix == ".docx"):
+        elif fmt == SaveFormat.DOCX:
             self._save_as_docx(output_path, doc)
         else:
             raise ValueError(
                 f"Unsupported save format: {save_format_or_options!r}. "
-                f"Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
+                "Supported formats: Markdown, Text, PDF, DOCX, Flat OPC."
             )
+        return fmt
 
     def to_bytes(
         self,
