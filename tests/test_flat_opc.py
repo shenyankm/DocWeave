@@ -310,3 +310,51 @@ def test_flatten_rejects_dtd_and_duplicate_type_declarations():
             archive.writestr('word/document.xml', '<document/>')
         with pytest.raises((DTDForbidden, ValueError)):
             encode(stream.getvalue())
+
+
+@pytest.mark.parametrize('depth', [0, 1, 2])
+@pytest.mark.parametrize('content_type', ['application/xml', 'application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml'])
+def test_flatten_projects_internal_processing_instructions_with_diagnostic(depth, content_type):
+    from aspose.words_foss.diagnostics import ContentLossWarning, collect_diagnostics
+
+    inner = '<?secret confidential?>'
+    for _ in range(depth):
+        inner = '<keep:child>' + inner + '</keep:child>'
+    xml = '<pkg:xmlData><?before keep?><!--before--><w:document keep:flag="yes">' + inner + '<!--inside--><w:t>文字</w:t></w:document><?after keep?><!--after--></pkg:xmlData>'
+    source = decode(package(part(xml).replace('application/xml', content_type)))
+    diagnostics = []
+    with collect_diagnostics(diagnostics), pytest.warns(ContentLossWarning, match='processing instructions'):
+        result = decode(encode(source))
+    with ZipFile(BytesIO(result)) as archive:
+        output = archive.read('word/document.xml')
+    assert b'<?secret' not in output and b'confidential' not in output
+    assert all(value in output for value in (b'<?before keep?>', b'<?after keep?>', b'<!--before-->', b'<!--inside-->', b'<!--after-->'))
+    assert fromstring(output).find('{urn:word}t').text == '文字'
+    assert len(diagnostics) == 1
+    assert diagnostics[0].code == 'flat_opc.processing_instruction_omitted'
+    assert 'confidential' not in diagnostics[0].message and 'secret' not in diagnostics[0].message
+    with ZipFile(BytesIO(source)) as archive:
+        assert b'<?secret confidential?>' in archive.read('word/document.xml')
+
+
+def test_flatten_processing_instruction_error_preserves_dom_and_destination(tmp_path):
+    import warnings
+    from tests.test_docx_dom import package as docx_package
+    from aspose.words_foss.diagnostics import ContentLossWarning
+
+    source = tmp_path / 'input.docx'
+    parts = docx_package(source)
+    parts['[Content_Types].xml'] = parts['[Content_Types].xml'].replace(
+        b'</Types>', b'<Default Extension="bin" ContentType="application/octet-stream"/></Types>')
+    docx_package(source, extras=parts)
+    document = aw.DocxDocument(source)
+    before = document.to_bytes()
+    output = tmp_path / 'output.xml'
+    output.write_bytes(b'ORIGINAL')
+    with warnings.catch_warnings():
+        warnings.simplefilter('error', ContentLossWarning)
+        with pytest.raises(ContentLossWarning):
+            document.save_flat_opc(output)
+    assert output.read_bytes() == b'ORIGINAL'
+    assert document.to_bytes() == before
+    assert sorted(path.name for path in tmp_path.iterdir()) == ['input.docx', 'output.xml']

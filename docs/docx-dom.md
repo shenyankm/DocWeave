@@ -9,7 +9,11 @@
 编辑边界。`save()` / `to_bytes()` 输出 ZIP OOXML 包，需使用与主部件类型对应的
 `.docx` / `.docm` / `.dotx` / `.dotm` 扩展名；不保留输入 XML 的字面序列化。
 `to_flat_opc()` 返回 UTF-8 XML 字节，`save_flat_opc(path)` 原子保存 Flat OPC XML；
-两者保留部件类型、XML 节点和二进制资源，但 XML 声明、编码及序列化会规范化。
+两者保留部件类型、XML 元素、注释和二进制资源，但 XML 声明、编码及序列化会规范化。
+为避免官方 Flat OPC 读取器拒绝输出，XML 元素内部的处理指令会省略，并发出
+`ContentLossWarning`（诊断码 `flat_opc.processing_instruction_omitted`）；诊断不包含指令内容。
+根元素外的处理指令保留，原始 DOCX 与当前 DOM 不受此输出投影影响。
+将该警告升级为错误可拒绝转换；原子保存失败时不会覆盖已有目标文件。
 宏部件仅作为原始资源保留，不执行宏。签名包仍按原有边界拒绝修改。
 
 现有 `Document` 转换入口也能识别 Flat OPC 字节/流，路径可使用 `.xml`，或显式指定
