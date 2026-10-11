@@ -30,6 +30,7 @@ export default {
   }]],
   themeConfig: {
     colorMode: {respectPrefersColorScheme: true},
+    docs: {sidebar: {hideable: true}},
     navbar: {
       title: 'DocWeave',
       items: [
