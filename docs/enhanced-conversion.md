@@ -7,6 +7,11 @@
 
 ## 保存选项与实际格式
 
+DOCX／Flat OPC 转换中的下划线声明区分缺失属性和显式空值：
+`<w:u/>` 保留样式继承，`w:val=""` 或 `w:val="none"` 取消下划线。
+写出覆盖样式的无下划线格式时使用显式 `none`，避免保存后重新继承下划线。
+该规则不表示完整 Font DOM 接口或 PDF 下划线绘制已对齐。
+
 `OoxmlSaveOptions.save_format` 支持 DOCX 和四种 Flat OPC 变体，`MarkdownSaveOptions.save_format` 只接受 Markdown。
 可使用 `SaveFormat`、对应整数或已有字符串别名（大小写不敏感，如 `docx`、`markdown`、`md`）。
 不匹配或未知值在渲染前抛出 `ValueError`，文件输出保留原文件，内存输出不返回错误格式的字节。

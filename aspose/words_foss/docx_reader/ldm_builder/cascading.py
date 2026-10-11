@@ -159,8 +159,9 @@ class FontBuilder:
         u = rPr.find(f"{W_NS}u")
         if u is None:
             return
-        u_val = u.get(f"{W_NS}val", "none")
-        font.underline = _UNDERLINE_MAP.get(u_val, 1 if u_val != "none" else 0)
+        u_val = u.get(f"{W_NS}val")
+        if u_val is not None:
+            font.underline = _UNDERLINE_MAP.get(u_val, 1 if u_val else 0)
 
     def _apply_color(self, rPr: ET.Element, font: ldm.Font) -> None:
         color = rPr.find(f"{W_NS}color")
