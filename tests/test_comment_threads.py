@@ -286,17 +286,21 @@ def test_added_reply_retains_range_positions(case):
 @pytest.mark.parametrize(('text', 'paragraphs'), [
     ('', ['']), ('a\nb', ['a', 'b']), ('a\rb', ['a', 'b']),
     ('a\r\nb', ['a', 'b']), ('\n\n', ['', '', '']),
-    ('a\tb', ['a\tb']), ('  x  ', ['  x  ']), ('a\vb', ['a\nb']),
+    ('a\tb', ['a\tb']), ('  x  ', ['  x  ']), ('a\vb', ['a\vb']),
 ])
 def test_add_reply_text_controls(text, paragraphs):
     document = DocxDocument(BytesIO(owned_thread()))
     parent = document.get_child_nodes(aw.NodeType.COMMENT, True)[0]
     reply = parent.add_reply('R', 'R', datetime(2026, 2, 3), text)  # noqa: DTZ001
     assert [p.text for p in reply.paragraphs] == paragraphs
+    expected_word_text = [("\x05" if index == 0 else "") + value + "\r"
+                          for index, value in enumerate(paragraphs)]
+    assert [p.get_text() for p in reply.paragraphs] == expected_word_text
     for _ in range(2):
         document = DocxDocument(BytesIO(document.to_flat_opc()))
         reply = document.get_child_nodes(aw.NodeType.COMMENT, True)[1]
         assert [p.text for p in reply.paragraphs] == paragraphs
+        assert [p.get_text() for p in reply.paragraphs] == expected_word_text
 
 
 @pytest.mark.parametrize('kind', ['parent', 'reply', 'paragraph'])
