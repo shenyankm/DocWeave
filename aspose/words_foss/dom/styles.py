@@ -658,16 +658,24 @@ class StyleResolver:
             size = table_size
         from aspose.words_foss.utils.style_identity import builtin_normal
         from aspose.words_foss.utils.table_conditions import table_font_size, table_run_size, table_size_override
-        paragraph_sizes = []
-        for style in paragraph_styles:
-            properties = _child(style, 'rPr')
-            if _child(properties, 'rStyle') is not None:
-                raise NotImplementedError('Nested run-style references in style definitions are unsupported')
+        def is_normal(style):
             attributes = {attr.localName: attr.value for attr in style.attributes.values()
                           if attr.namespaceURI == W}
             name = _child(style, 'name')
-            paragraph_sizes.append((builtin_normal(attributes, name.getAttributeNS(W, 'val') if name else None),
-                                    _read_size(_child(properties, 'sz'))))
+            return builtin_normal(attributes, name.getAttributeNS(W, 'val') if name else None)
+
+        size_styles = paragraph_styles
+        if not size_styles and _child(_child(paragraph._element, 'pPr'), 'pStyle') is None:
+            normal = next((style for style in reversed(tuple(self.styles.values()))
+                           if is_normal(style)), None)
+            if normal is not None:
+                size_styles = self._chain(normal.getAttributeNS(W, 'styleId'), 'paragraph')
+        paragraph_sizes = []
+        for style in size_styles:
+            properties = _child(style, 'rPr')
+            if _child(properties, 'rStyle') is not None:
+                raise NotImplementedError('Nested run-style references in style definitions are unsupported')
+            paragraph_sizes.append((is_normal(style), _read_size(_child(properties, 'sz'))))
         character_size = None
         for style in character_styles:
             properties = _child(style, 'rPr')

@@ -86,12 +86,6 @@ class FontSizeBinding:
             paragraph = next((p for p in self.document.get_child_nodes(ldm.NodeType.PARAGRAPH, True)
                               if any(run.font is font for run in p.runs)), paragraph)
         layers, conditions, paint_conditions = ([], (), ()) if mark else self.table(paragraph)
-        if paint and not layers:
-            # Preserve the existing non-table/Code rendering contract.
-            raw = font.__dict__["size"]
-            if raw == 0 and self.run(font, paragraph, mark=mark) == 0:
-                return 0.5
-            return raw
         paragraph_styles = self.chain(paragraph.paragraph_format.style_name or self.paragraph_style())
         paragraph_sizes = [(s.built_in and s.style_identifier == 0, local_size(s.font))
                            for s in paragraph_styles]
@@ -100,6 +94,12 @@ class FontSizeBinding:
             value = local_size(style.font)
             if value is not None:
                 character = value
+        if (paint and not layers and local_size(font) is None and character is None
+                and not any(value is not None for _, value in paragraph_sizes)
+                and local_size(self.document.doc_defaults_font) is None
+                and not self.document.doc_defaults_rpr_present):
+            # Legacy unmarked programmatic fonts retain the caller's unset fallback.
+            return font.__dict__["size"]
         settings = self.document.current_compatibility_settings or self.document.source_settings
         root = fromstring(settings.data) if settings is not None and settings.data is not None else None
         override = table_size_override(self.document.compatibility_mode, root, paint=paint)
