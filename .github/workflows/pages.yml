@@ -3,9 +3,9 @@ name: GitHub Pages
 on:
   push:
     branches: [dev]
-    paths: ['site/**', 'docs/*.md', 'README*.md', 'THIRD_PARTY_NOTICES.md', '.github/workflows/pages.yml']
+    paths: ['site/**', 'docs/*.md', 'README*.md', '.github/workflows/pages.yml']
   pull_request:
-    paths: ['site/**', 'docs/*.md', 'README*.md', 'THIRD_PARTY_NOTICES.md', '.github/workflows/pages.yml']
+    paths: ['site/**', 'docs/*.md', 'README*.md', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:

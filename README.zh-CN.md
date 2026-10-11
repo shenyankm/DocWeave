@@ -153,6 +153,6 @@ CI 仅在 Linux 上覆盖 Python 3.10–3.14。先构建 sdist，再从 sdist �
 
 ## 许可证与致谢
 
-代码采用 [MIT](LICENSE)，原始声明见 [第三方来源与许可](THIRD_PARTY_NOTICES.md)；内置字体采用 [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt)，来源见 [字体说明](src/dockiln/writers/pdf/fonts/README.md)。可选集成组件有各自的许可证。
+代码及原始版权声明见 [MIT](LICENSE)；内置字体采用 [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt)，来源见 [字体说明](src/dockiln/writers/pdf/fonts/README.md)。内置 python-docx 资源保留其 [MIT 声明](src/dockiln/writers/docx/resources/python-docx-LICENSE.txt)。可选集成组件有各自的许可证。
 
 DocKiln 起源于 [Aspose.Words FOSS for Python](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python)，保留原始版权声明。本项目独立维护，不是 Aspose 官方发布版，也不保证 API 或渲染兼容。

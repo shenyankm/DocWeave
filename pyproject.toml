@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Python document conversion, Unicode PDF generation, structured extraction, and DOCX editing"
 readme = "README.md"
 license = "MIT AND OFL-1.1"
-license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "src/dockiln/writers/pdf/fonts/OFL.txt", "src/dockiln/writers/docx/resources/python-docx-LICENSE.txt"]
+license-files = ["LICENSE", "src/dockiln/writers/pdf/fonts/OFL.txt", "src/dockiln/writers/docx/resources/python-docx-LICENSE.txt"]
 authors = [
     {name = "shenyankm"}
 ]

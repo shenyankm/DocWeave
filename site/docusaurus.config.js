@@ -16,7 +16,7 @@ export default {
     preprocessor: ({fileContent}) => fileContent
       // Local evidence is deliberately excluded from the public website.
       .replace(/\[([^\]]+)\]\((?:benchmarks|probes)\/[^)]+\)/g, '$1（本地复验材料，未公开）')
-      .replace(/\]\(\.\.\/(README[^)]*|THIRD_PARTY_NOTICES\.md|scripts\/[^)]+)\)/g, `](${repository}/blob/dev/$1)`),
+      .replace(/\]\(\.\.\/(README[^)]*|LICENSE|scripts\/[^)]+)\)/g, `](${repository}/blob/dev/$1)`),
   },
   presets: [['classic', {
     docs: {
@@ -54,7 +54,6 @@ export default {
         {title: '来源与许可', items: [
           {label: '上游 Aspose.Words FOSS', href: 'https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python'},
           {label: 'MIT 代码许可证', href: `${repository}/blob/dev/LICENSE`},
-          {label: '第三方来源与许可', href: `${repository}/blob/dev/THIRD_PARTY_NOTICES.md`},
           {label: 'SIL OFL-1.1 字体许可证', href: `${repository}/blob/dev/src/dockiln/writers/pdf/fonts/OFL.txt`},
         ]},
       ],

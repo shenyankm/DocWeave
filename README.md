@@ -153,6 +153,6 @@ Native LibreOffice and optional ecosystem tests skip when their dependencies are
 
 ## License and Credits
 
-Code: [MIT](LICENSE); original notices: [third-party notices](THIRD_PARTY_NOTICES.md). Bundled fonts: [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt); see [font provenance](src/dockiln/writers/pdf/fonts/README.md). Optional integrations have their own licenses.
+Code and original copyright notices: [MIT](LICENSE). Bundled fonts: [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt); see [font provenance](src/dockiln/writers/pdf/fonts/README.md). Bundled python-docx resources retain their [MIT notice](src/dockiln/writers/docx/resources/python-docx-LICENSE.txt). Optional integrations have their own licenses.
 
 DocKiln originated from [Aspose.Words FOSS for Python](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python) and retains the original copyright notices. It is independently maintained, not an official Aspose release; API or rendering compatibility is not guaranteed.

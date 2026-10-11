@@ -2,7 +2,7 @@
 
 本页描述 `dockiln` 0.1.0 的源码接口。迁移后的包名和导入名均为 `dockiln`，目录为
 `src/dockiln/`；不再提供 `aspose.words_foss` 入口。运行库不依赖商业 Aspose 包。
-上游来源及原始版权声明保留于 [第三方声明](../THIRD_PARTY_NOTICES.md)。
+上游来源见 [项目 README](../README.zh-CN.md)，原始版权声明保留于 [MIT 许可证](../LICENSE)。
 
 内置读取 DOCX、旧版 DOC、Flat OPC 及 OLE2/DOC-backed RTF，写出 DOCX、Flat OPC 或 PDF。
 Markdown/TXT 读写、`MarkdownLoadOptions`、`MarkdownSaveOptions` 和 `ConversionOptions`
