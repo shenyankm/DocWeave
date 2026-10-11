@@ -101,12 +101,18 @@ def test_metadata_and_embedded_graph_survive_two_cold_saves(format, flag):
         assert model.model_dump_json() == before
         model = Document(BytesIO(saved)).light_document_model
         snapshot = model.source_font_table
-        if format == SaveFormat.DOCX:
+        expected = ET.fromstring(parts[TABLE])
+        if flag is not True:
+            expected.find(f'{{{W}}}font').remove(expected.find(f'.//{{{W}}}embedRegular'))
+        if format == SaveFormat.DOCX and flag is True:
             assert snapshot.data == parts[TABLE]
         else:
-            assert ET.canonicalize(snapshot.data, rewrite_prefixes=True) == ET.canonicalize(parts[TABLE], rewrite_prefixes=True)
-        font = next(part for part in snapshot.parts if part.content_type.endswith('obfuscatedFont'))
-        assert font.data == parts[FONT]
+            assert ET.canonicalize(snapshot.data, rewrite_prefixes=True) == ET.canonicalize(ET.tostring(expected), rewrite_prefixes=True)
+        embedded = [part for part in snapshot.parts if part.content_type.endswith('obfuscatedFont')]
+        if flag is True:
+            assert [font.data for font in embedded] == [parts[FONT]]
+        else:
+            assert embedded == [] and snapshot.relationships is None
         assert model.font_embedding.model_dump() == {'embed_true_type_fonts': flag,
             'do_not_embed_system_fonts': False, 'embed_system_fonts': None, 'save_subset_fonts': True}
         captured = {part.name for part in snapshot.parts}
