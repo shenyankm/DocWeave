@@ -49,7 +49,7 @@ def test_public_edits_change_only_tracked_source_settings():
     model.compatibility_mode=15;model.do_not_expand_shift_return=False
     values=declarations(model)
     assert values[:2]==[(W+'useFELayout',{}),(W+'compatSetting',{W+'name':'unknown',W+'uri':'owned',W+'val':'a'})]
-    assert values[2:]==[(W+'compatSetting',{W+'name':'compatibilityMode',W+'uri':'http://schemas.microsoft.com/office/word',W+'val':'15'})]
+    assert values[2:]==[(W+'compatSetting',{W+'name':'compatibilityMode',W+'uri':'http://schemas.microsoft.com/office/word',W+'val':'15'})]+[(W+'compatSetting',{W+'name':name,W+'uri':'http://schemas.microsoft.com/office/word',W+'val':'1'}) for name in ('overrideTableStyleFontSizeAndJustification','enableOpenTypeFeatures','doNotFlipMirrorIndents','differentiateMultirowTableHeaders')]
     assert model.source_settings is original
 
 

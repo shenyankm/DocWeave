@@ -326,16 +326,47 @@ class SourceSettings(BaseModel):
     data: bytes | None = None
     compatibility_mode: int = 12
     do_not_expand_shift_return: bool = False
+    ui_compat_97_to_2003: bool | None = None
+    ui_compat_data: bytes | None = None
 
-    @field_serializer('data', when_used='json')
+    @field_serializer('data', 'ui_compat_data', when_used='json')
     def _encode_bytes(self, value: bytes | None):
         return None if value is None else {'encoding': 'base64', 'data': b64encode(value).decode('ascii')}
 
-    @field_validator('data', mode='before')
+    @field_validator('data', 'ui_compat_data', mode='before')
     @classmethod
     def _decode_bytes(cls, value: Any) -> Any:
         if isinstance(value, dict) and value.get('encoding') == 'base64' and isinstance(value.get('data'), str):
             return b64decode(value['data'], validate=True)
+        return value
+
+
+class CompatibilityOptionsState(BaseModel):
+    """Current public preferences; the immutable SourceSettings remains the load snapshot."""
+
+    model_config = ConfigDict(strict=True, validate_assignment=True, hide_input_in_errors=True)
+    flags: dict[str, bool]
+    edited_flags: set[str] = Field(default_factory=set)
+    optimized_for: int | None = Field(default=None, ge=0, le=7)
+
+    @field_validator('flags')
+    @classmethod
+    def _validate_flags(cls, value):
+        from aspose.words_foss.settings import _FLAG_NAMES
+        if value.keys() != _FLAG_NAMES:
+            raise ValueError('Compatibility flags must contain the supported preferences')
+        return value
+
+    @field_validator('edited_flags', mode='before')
+    @classmethod
+    def _validate_edits(cls, value):
+        from aspose.words_foss.settings import _FLAG_NAMES
+        if isinstance(value, list) and all(type(item) is str for item in value):
+            value = set(value)
+        if not isinstance(value, set):
+            raise ValueError('Compatibility edits must be a set of preference names')
+        if not value <= _FLAG_NAMES:
+            raise ValueError('Unknown compatibility preference')
         return value
 
 
@@ -1575,6 +1606,7 @@ class Document(BaseModel):
     source_theme: SourceTheme | None = None
     source_font_table: SourceFontTable | None = None
     source_settings: SourceSettings | None = None
+    compatibility_options_state: CompatibilityOptionsState | None = None
     font_embedding: FontEmbeddingSettings | None = None
     doc_defaults_font: Optional[Font] = None
     doc_defaults_rpr_present: bool | None = None
@@ -1584,7 +1616,7 @@ class Document(BaseModel):
     sections: list[Section] = Field(default_factory=list)
     source_stories: list[SourceStory] = Field(default_factory=list)
 
-    model_config = {"populate_by_name": True}
+    model_config = {"populate_by_name": True, "hide_input_in_errors": True}
 
     def get_child_nodes(self, node_type: int = NodeType.ANY, deep: bool = False) -> list:
         """Child nodes, optionally filtered by :class:`NodeType`."""

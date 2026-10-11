@@ -250,6 +250,17 @@ DOCX 读取并写出 `w:compat/w:doNotExpandShiftReturn`；设为 `True` 后手�
 见[两端对齐验收](benchmarks/justification.json)、[手动换行验收](benchmarks/shift-return.json)
 及[表格对齐验收](benchmarks/cell-justification.json)。
 LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼容模式，缺失/格式无效时按 12。
+
+`Document.compatibility_options` 提供 71 个布尔偏好的读取与编辑，以及
+`optimize_for(aw.settings.MsWordVersion.WORD2010)` 等八个 Word 版本配置。
+配置会更新兼容声明，并联动现有手动换行对齐及表格兼容模式调用；`ul_trail_space` 保留原值。
+新建 `Document()` 使用已有空白模板的兼容声明，缺省模式为 12；直接构造 LDM 的旧默认值不变。
+原始 `SourceSettings` 快照保持不变，已识别的重复布尔声明在保存时取末项，false 声明省略并产生通用规范化诊断。
+普通保存保留未知兼容记录，并按已有声明集合补齐现代缺省项；显式优化会重建 typed `compatSetting` 列表，
+删除原列表中的未知名称、URI、重复项及其扩展内容，并给出不含正文的 `ContentLossWarning`。
+原快照与失败保存保持不变，foreign sibling 节点仍保留；当前偏好及优化状态可通过 LDM JSON 往返。
+`transparent_metafiles` 与四个现代偏好的显式编辑存在官方暖态/冷态区别；不会伪造不存在的 `compatibility_mode` 公共属性。
+此闭环未证明全部选项的排版、图片插入、历史 DOC/RTF 行为或完整 `settings` 命名空间已对齐。
 旧模式小于 15 时，左对齐流式表格按首单元格边距外移；居中/右对齐忽略表格缩进。
 这会改变此前忽略旧模式的 PDF 横坐标；设为 15 可使用现代位置。该字段不代表完整版本兼容，
 浮动/嵌套定位和边框度量仍有限制，见[表格定位验收](benchmarks/table-compatibility.json)。

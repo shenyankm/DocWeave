@@ -5,7 +5,7 @@ from aspose.words_foss.document import (
     LoadOptions,
     MarkdownLoadOptions,
 )
-from aspose.words_foss import loading, saving, fonts
+from aspose.words_foss import loading, saving, fonts, settings
 from aspose.words_foss.dom import DocxDocument
 from aspose.words_foss.dom.importing import ImportFormatMode
 from aspose.words_foss.diagnostics import ContentLossWarning, ConversionDiagnostic, ConversionWarning
@@ -43,4 +43,5 @@ __all__ = [
     "loading",
     "saving",
     "fonts",
+    "settings",
 ]

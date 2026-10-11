@@ -278,6 +278,11 @@ class Document:
         if self._document is None:
             self._document = ldm.Document(sections=[ldm.Section(
                 body=ldm.Body(children=[ldm.Paragraph()]))])
+            from xml.etree import ElementTree as ET
+            from aspose.words_foss.settings import _source_compat
+            self._document.compatibility_mode = 12
+            self._document.source_settings = ldm.SourceSettings(
+                data=ET.tostring(_source_compat(self._document)), compatibility_mode=12)
 
     @staticmethod
     def _apply_load_options(reader: object, load_options: Optional[LoadOptions]) -> None:
@@ -366,6 +371,15 @@ class Document:
     def default_tab_stop(self) -> float:
         """Default tab interval in points, stored at twip precision."""
         return self.light_document_model.default_tab_stop
+
+    @property
+    def compatibility_options(self):
+        """Live compatibility preferences for this document."""
+        from aspose.words_foss.settings import CompatibilityOptions
+        if not hasattr(self, '_compatibility_options'):
+            self._compatibility_options = CompatibilityOptions._for_document(self)
+        self._compatibility_options._state()
+        return self._compatibility_options
 
     @default_tab_stop.setter
     def default_tab_stop(self, value: float) -> None:
