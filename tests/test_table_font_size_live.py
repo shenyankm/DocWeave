@@ -274,10 +274,24 @@ def test_shallow_document_copy_keeps_shared_font_binding():
     first = ldm.Document(sections=[ldm.Section(body=ldm.Body(
         children=[ldm.Paragraph(children=[run])]))], doc_defaults_font=ldm.Font(size=20))
     second = first.model_copy(update={"doc_defaults_font": ldm.Font(size=30)})
-    assert second.sections[0] is first.sections[0]
+    # Section/PageSetup owner views are isolated for note-option defaults;
+    # body content and its live font binding keep their shallow-copy identity.
+    assert second.sections[0] is not first.sections[0]
+    assert second.sections[0].page_setup is not first.sections[0].page_setup
+    assert second.sections[0].body is first.sections[0].body
+    assert second.sections[0].body.paragraphs[0].runs[0] is run
     assert run.font.size == 20
     first.doc_defaults_font = ldm.Font(size=22)
     assert run.font.size == 22
+    second.doc_defaults_font = ldm.Font(size=32)
+    assert second.sections[0].body.paragraphs[0].runs[0].font.size == 22
+    first.footnote_options.start_number = 5
+    second.footnote_options.start_number = 9
+    # Note declarations remain shared mutable values, including section overrides.
+    assert first.sections[0].page_setup.footnote_options.start_number == 9
+    assert second.sections[0].page_setup.footnote_options.start_number == 9
+    run.text = "OWNED EDIT"
+    assert second.sections[0].body.paragraphs[0].runs[0].text == "OWNED EDIT"
     independent = first.model_copy(deep=True, update={"sections": first.sections,
                                                      "doc_defaults_font": ldm.Font(size=30)})
     assert independent.sections[0].body.paragraphs[0].runs[0].font.size == 30

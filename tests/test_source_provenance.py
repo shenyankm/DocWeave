@@ -2,6 +2,7 @@
 
 from io import BytesIO
 from zipfile import ZipFile
+import warnings
 
 from defusedxml.ElementTree import fromstring
 import pytest
@@ -59,9 +60,16 @@ def test_notes_and_nonstandard_header_part_locations_and_reader_reuse():
     raw = source_package()
     assert verify_locations(raw, load_with_loss(raw).to_dict()) >= 6
     reader = DocumentReader()
-    with pytest.warns(aw.ContentLossWarning):
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always", aw.ContentLossWarning)
         reader.load_bytes(raw)
     first = reader.to_light_document()
+    assert not any(issubclass(item.category, aw.ContentLossWarning) for item in caught)
+    assert {(story.kind, story.identifier): ''.join(p.text for p in story.children)
+            for story in first.source_stories if story.kind in {'footnote', 'endnote'}} == {
+        ('footnote', '-1'): 'separator', ('footnote', '7'): 'footnote text',
+        ('endnote', '9'): 'endnote text',
+    }
     raw2 = LdmDocxWriter().write_to_bytes(interleaved_document())
     reader.load_bytes(raw2)
     second = reader.to_light_document()
@@ -73,3 +81,18 @@ def test_notes_and_nonstandard_header_part_locations_and_reader_reuse():
 def test_plain_text_has_no_invented_xml_provenance():
     doc = aw.Document(BytesIO(b'plain text'))
     assert doc.to_dict()['blocks'][0]['provenance'] is None
+
+
+def test_unmatched_note_still_warns_and_cannot_be_saved_as_retained_content():
+    with ZipFile(BytesIO(source_package())) as archive:
+        parts = {name: archive.read(name) for name in archive.namelist()}
+    parts['notes/fn text.xml'] = parts['notes/fn text.xml'].replace(b'w:id="7"', b'w:id="8"')
+    stream = BytesIO()
+    with ZipFile(stream, 'w') as archive:
+        for name, content in parts.items():
+            archive.writestr(name, content)
+    reader = DocumentReader()
+    with pytest.warns(aw.ContentLossWarning, match='footnoteReference'):
+        reader.load_bytes(stream.getvalue())
+    with pytest.raises(ValueError, match='matching normal story'):
+        LdmDocxWriter().write_to_bytes(reader.to_light_document())
