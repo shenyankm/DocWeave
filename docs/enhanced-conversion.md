@@ -249,6 +249,10 @@ DOCX 读取并写出 `w:compat/w:doNotExpandShiftReturn`；设为 `True` 后手�
 超宽行会被固定单元格裁剪。负缩进限制在单元格内边界，旋转/文本框混排及 CJK 字符分布仍有限制。
 见[两端对齐验收](benchmarks/justification.json)、[手动换行验收](benchmarks/shift-return.json)
 及[表格对齐验收](benchmarks/cell-justification.json)。
+直接构造 LDM 段落时，用 `children` 提供有序子节点；`runs` 是读取视图，不是构造参数。
+未知／非法子节点与错误容器会显式拒绝，不再静默移除；校验和旧字段迁移不会修改传入字典。
+格式读取中的未知内容仍沿既有保留与诊断路径处理。
+
 LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼容模式，缺失/格式无效时按 12。
 
 `Document.compatibility_options` 提供 71 个布尔偏好的读取与编辑，以及

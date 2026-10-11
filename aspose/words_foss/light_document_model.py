@@ -638,6 +638,7 @@ class ParagraphFormat(BaseModel):
         """
         if not isinstance(data, dict):
             return data
+        data = dict(data)
         la = data.pop("_frame_lock_anchor", None)
         wt = data.pop("_frame_wrap_type", None)
         if la is not None or wt is not None:
@@ -646,6 +647,8 @@ class ParagraphFormat(BaseModel):
                 ff = {}
                 data["frame_format"] = ff
             if isinstance(ff, dict):
+                ff = dict(ff)
+                data["frame_format"] = ff
                 if la is not None and "anchor_locked" not in ff:
                     ff["anchor_locked"] = bool(la)
                 if wt is not None and "wrap_type" not in ff:
@@ -682,6 +685,7 @@ class FrameFormat(BaseModel):
     def _normalize_legacy_keys(cls, data: Any) -> Any:
         """Absorb legacy key names from earlier FrameFormat schemas."""
         if isinstance(data, dict):
+            data = dict(data)
             for old in ("lock_anchor", "_lock_anchor"):
                 if old in data and "anchor_locked" not in data:
                     data["anchor_locked"] = data.pop(old)
@@ -868,6 +872,7 @@ class Shape(BaseModel, NodeCastMixin):
     def _absorb_legacy_position(cls, data: Any) -> Any:
         """Accept legacy ``horizontal_position``/``vertical_position`` keys."""
         if isinstance(data, dict):
+            data = dict(data)
             if "horizontal_position" in data and "left" not in data:
                 data["left"] = data.pop("horizontal_position")
             else:
@@ -963,16 +968,15 @@ _CHILD_NODE_CLASSES: tuple[type, ...] = (
 _CHILD_NODE_TYPE_TAGS = {"Run", "Shape", "FieldStart", "FieldSeparator", "FieldEnd", "BookmarkStart", "BookmarkEnd", "NoteReference", "CommentMarker"}
 
 
-def _coerce_child_node(item: Any) -> ChildNode | None:
+def _coerce_child_node(item: Any) -> ChildNode:
     """Materialise a dict-or-instance into a typed child node.
 
-    Returns ``None`` for anything that isn't a known child kind (e.g.
-    stale ``CommentNode`` payloads) — the caller drops these on the floor.
+    Reject unsupported input instead of silently removing caller content.
     """
     if isinstance(item, _CHILD_NODE_CLASSES):
         return item
     if isinstance(item, dict):
-        t = item.get("_type", "")
+        t = item.get("_type", item.get("type", ""))
         if t == "Run":
             return Run.model_validate(item)
         if t == "Shape":
@@ -991,7 +995,7 @@ def _coerce_child_node(item: Any) -> ChildNode | None:
             return CommentMarker.model_validate(item)
         if t == "NoteReference":
             return NoteReference.model_validate(item)
-    return None
+    raise ValueError("Unsupported paragraph child type")
 
 
 # ─────────────────────────────────────────────
@@ -1038,16 +1042,18 @@ class Paragraph(BaseModel, NodeCastMixin):
         """
         raw: Any = None
         if isinstance(data, dict):
-            raw = data.pop("children", None)
+            data = dict(data)
+            if "runs" in data:
+                raise ValueError("Paragraph input must use children, not runs")
+            if "children" in data:
+                raw = data.pop("children")
+                if not isinstance(raw, (list, tuple)):
+                    raise ValueError("Paragraph children must be a list or tuple")
             data.pop("_text", None)
+        children = [_coerce_child_node(entry) for entry in raw] if raw is not None else None
         instance: "Paragraph" = handler(data)
-        if raw:
-            kept: list[ChildNode] = []
-            for entry in raw:
-                node = _coerce_child_node(entry)
-                if node is not None:
-                    kept.append(node)
-            instance._children = kept
+        if children is not None:
+            instance._children = children
         return instance
 
     @model_serializer(mode="wrap")
@@ -1231,9 +1237,12 @@ class Row(BaseModel, NodeCastMixin):
         """
         if not isinstance(data, dict):
             return data
+        data = dict(data)
         pw = data.pop("_tblPrEx_width", None)
         rf = data.get("row_format")
         if isinstance(rf, dict) and pw is None:
+            rf = dict(rf)
+            data["row_format"] = rf
             pw = rf.pop("preferred_width", None)
         if pw is not None and "preferred_width" not in data:
             data["preferred_width"] = pw
@@ -1556,6 +1565,7 @@ class DocList(BaseModel):
     def _migrate_levels_key(cls, data: Any) -> Any:
         """Accept legacy ``levels`` key (renamed to ``list_levels``)."""
         if isinstance(data, dict):
+            data = dict(data)
             if "levels" in data and "list_levels" not in data:
                 data["list_levels"] = data.pop("levels")
         return data
@@ -1630,6 +1640,7 @@ class Document(BaseModel):
         """
         hdr_raw = ftr_raw = None
         if isinstance(data, dict):
+            data = dict(data)
             hdr_raw = data.pop("header_paragraphs", None)
             ftr_raw = data.pop("footer_paragraphs", None)
         instance: "Document" = handler(data)
