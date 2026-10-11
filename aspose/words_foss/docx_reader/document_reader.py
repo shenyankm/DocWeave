@@ -145,7 +145,15 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             if mode == "External":
                 if kind == "hyperlink":
                     self._rels[rid] = target
-                continue
+                if kind != "settings":
+                    continue
+                # Native settings recovery accepts a local target even with External mode.
+                try:
+                    name = resolve_target("word/document.xml", target)
+                except ValueError:
+                    continue
+                if name not in namelist:
+                    continue
             if kind not in {"theme", "fontTable", "styles", "settings", "numbering", "image",
                             "header", "footer", "footnotes", "endnotes"}:
                 continue
@@ -159,14 +167,16 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                     raise ValueError("Duplicate document relationship: " + kind)
                 targets[kind] = name
 
-        for kind, fallback in (("theme", "word/theme/theme1.xml"), ("styles", "word/styles.xml"),
-                               ("settings", "word/settings.xml"), ("numbering", "word/numbering.xml"),
+        for kind, fallback in (("settings", "word/settings.xml"), ("theme", "word/theme/theme1.xml"),
+                               ("styles", "word/styles.xml"), ("numbering", "word/numbering.xml"),
                                ("fontTable", "word/fontTable.xml")):
             name = targets.get(kind, fallback)
             if name not in namelist:
                 continue
             with zf.open(name) as stream:
                 root = parse(stream).getroot()
+            if kind == "settings" and kind not in targets:
+                continue  # Validate orphan XML without applying unassociated settings.
             if kind == "theme":
                 rels_name = relationships_path(name)
                 self._source_theme = ldm.SourceTheme(

@@ -293,6 +293,12 @@ class LdmDocxWriter:
             pretty_format=self._pretty_format(),
         )
         data = buffer.getvalue()
+        from aspose.words_foss import _io
+        from zipfile import ZipFile
+
+        _io.check_input_size(len(data))
+        with ZipFile(io.BytesIO(data)) as package:
+            _io.validate_docx_archive(package)
         from aspose.words_foss.document import _coerce_save_format
 
         fmt = _coerce_save_format(getattr(self.options, "save_format", None))

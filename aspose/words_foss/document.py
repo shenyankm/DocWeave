@@ -350,6 +350,16 @@ class Document:
         return self._document
 
     @property
+    def default_tab_stop(self) -> float:
+        """Default tab interval in points, stored at twip precision."""
+        return self.light_document_model.default_tab_stop
+
+    @default_tab_stop.setter
+    def default_tab_stop(self, value: float) -> None:
+        from aspose.words_foss.utils.tab_stops import coerce_default_tab_stop
+        self.light_document_model.default_tab_stop = coerce_default_tab_stop(value)
+
+    @property
     def font_infos(self):
         """Live document-owned font registrations and embedding declarations."""
         from aspose.words_foss.fonts import FontInfoCollection
@@ -599,6 +609,9 @@ class Document:
         writer = LdmDocxWriter(options)
         data = writer.write_to_bytes(doc)
         commit_fonts = prepare_font_table_commit(doc, data)
+        from aspose.words_foss.utils.table_row import prepare_row_height_commit
+        commit_rows = prepare_row_height_commit(doc)
         with atomic_output(output_path) as temporary:
             temporary.write_bytes(data)
         commit_fonts()
+        commit_rows()

@@ -10,6 +10,7 @@ from aspose.words_foss.dom.nodes import (
     ParagraphFormat,
     W,
     _bind_namespace_context,
+    _copy_row_warm,
     _elements,
     _find,
     _is,
@@ -165,7 +166,7 @@ def _translate_style(imported, source_chain, source_bases, target_bases, source,
             _set_style_property(imported, group, name, None if kind == "paragraph" and value == base else value)
 
 
-def import_node(destination, node, deep, mode):
+def _prepare_import(destination, node, deep, mode, *, copied=None):
     if not isinstance(node, Node):
         raise TypeError("src_node must be a DOM node")
     if not isinstance(deep, bool):
@@ -175,14 +176,15 @@ def import_node(destination, node, deep, mode):
     source = node.owner_document
     if source is not destination and mode != ImportFormatMode.USE_DESTINATION_STYLES:
         raise NotImplementedError("Source-format preservation and different-style merging are not implemented")
-    copied = node.clone(deep)
+    copied = node.clone(deep) if copied is None else copied
     if source is destination and node.part_name == "word/document.xml":
-        return copied
+        return copied, lambda: None
     target_tree = destination._package.tree("word/document.xml")
     element = target_tree.importNode(copied._element, deep=True)
     _bind_namespace_context(copied._element, element)
+    _copy_row_warm(copied._element, element)
     if source is destination:
-        return destination._wrap("word/document.xml", element)
+        return destination._wrap("word/document.xml", element), lambda: None
     source_styles, target_styles = StyleResolver(source), StyleResolver(destination)
     root = target_styles.root.cloneNode(deep=True) if target_styles.root is not None else None
     planned = {}
@@ -255,6 +257,8 @@ def import_node(destination, node, deep, mode):
         kind = {"pStyle": "paragraph", "rStyle": "character", "tblStyle": "table"}.get(item.localName)
         if item.namespaceURI == W and kind is not None:
             _set_word_attribute(item, "val", map_style(item.getAttributeNS(W, "val"), kind))
+    planned_parts = {}
+    projected_part = None
     if root is not None:
         part_name = next(name for name, tree in destination._package._trees.items()
                          if tree is target_styles.root.ownerDocument)
@@ -262,6 +266,30 @@ def import_node(destination, node, deep, mode):
         if len(_elements(root)) != len(_elements(target_styles.root)):
             tree = destination._package.tree(part_name).cloneNode(deep=True)
             tree.replaceChild(tree.importNode(root, deep=True), tree.documentElement)
-            destination._package.set_parts({part_name: tree.toxml(encoding="utf-8")})
-        destination._package._style_projection_part = part_name
-    return destination._wrap("word/document.xml", element)
+            planned_parts[part_name] = tree.toxml(encoding="utf-8")
+            destination._package.validate_parts(planned_parts)
+        projected_part = part_name
+    def commit():
+        destination._package._commit_parts(planned_parts)
+        if projected_part is not None:
+            destination._package._style_projection_part = projected_part
+    return destination._wrap("word/document.xml", element), commit
+
+
+def import_node(destination, node, deep, mode):
+    from aspose.words_foss.dom.nodes import Footnote, Comment
+    if isinstance(node, (Footnote, Comment)):
+        if not isinstance(deep, bool):
+            raise TypeError("is_import_children must be a boolean")
+        if not isinstance(mode, ImportFormatMode):
+            raise TypeError("import_format_mode must be an ImportFormatMode")
+        return destination._annotations().import_entry(node.canonical_node, deep, mode)
+    if isinstance(node, Node) and node.owner_document._annotations().contained_entries(node._element):
+        if not isinstance(deep, bool):
+            raise TypeError("is_import_children must be a boolean")
+        if not isinstance(mode, ImportFormatMode):
+            raise TypeError("import_format_mode must be an ImportFormatMode")
+        return destination._annotations().import_container(node, deep, mode)
+    imported, commit = _prepare_import(destination, node, deep, mode)
+    commit()
+    return imported

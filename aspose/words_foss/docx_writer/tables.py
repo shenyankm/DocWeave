@@ -285,24 +285,31 @@ def _render_cell(
 
 
 def _trPr(row: ldm.Row) -> str:
+    return render_row_format(row.row_format)
+
+
+def render_row_format(fmt: ldm.RowFormat, *, for_style=False) -> str:
     """Build a ``<w:trPr>`` honouring the OOXML schema order.
 
     ``CT_TrPrBase`` requires:
     cnfStyle → divId → gridBefore → gridAfter → wBefore → wAfter →
     cantSplit → trHeight → tblHeader → tblCellSpacing → jc → hidden.
     """
-    fmt = row.row_format
     children: list[str] = []
     # ``<w:cnfStyle>`` is the *first* child of CT_TrPrBase — emitting it
     # last produced a schema-invalid order that Word flags as document
     # corruption (other parsers accept it silently).
     if fmt.conditional_style:
         children.append(el("w:cnfStyle", {"w:val": fmt.conditional_style.to_val()}))
-    if not fmt.allow_break_across_pages:
-        children.append(el("w:cantSplit"))
-    if fmt.height > 0:
-        rule = {0: "atLeast", 1: "exact"}.get(fmt.height_rule, "atLeast")
-        children.append(el("w:trHeight", {"w:val": pt_to_twips(fmt.height), "w:hRule": rule}))
+    if fmt.allow_break_explicit is True or (fmt.allow_break_explicit is None and not fmt.allow_break_across_pages):
+        children.append(el("w:cantSplit", {"w:val": "0" if fmt.allow_break_across_pages else "1"}))
+    if fmt.height_explicit is True or (fmt.height_explicit is None and fmt.height != 0):
+        from aspose.words_foss.utils.table_row import MAX_SAVED_ROW_HEIGHT, coerce_row_height
+        height = coerce_row_height(fmt.height)
+        if not for_style:
+            height = min(height, MAX_SAVED_ROW_HEIGHT)
+        rule = {0: "atLeast", 1: "exact", 2: "auto"}.get(fmt.height_rule, "atLeast")
+        children.append(el("w:trHeight", {"w:val": pt_to_twips(height), "w:hRule": rule}))
     if fmt.heading_format:
         children.append(el("w:tblHeader"))
     if not children:

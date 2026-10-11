@@ -6,6 +6,7 @@ from xml.dom import Node as XmlNode
 
 from aspose.words_foss._opc import bind_namespace_context as _bind_namespace_context
 from aspose.words_foss.light_document_model import NodeType
+from aspose.words_foss.model.enums import HeightRule
 from aspose.words_foss.utils.xml_helpers import parse_font_size
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -119,10 +120,12 @@ def _read_size(element):
 
 # Moving/deleting complex content needs relationship and range semantics first.
 _SAFE_STRUCTURE = {"p", "r", "t", "tbl", "tr", "tc", "tblGrid", "gridCol",
-                   "pPr", "rPr", "tblPr", "trPr", "tcPr"}
+                   "pPr", "rPr", "tblPr", "trPr", "tcPr",
+                   "commentRangeStart", "commentRangeEnd", "footnoteRef", "endnoteRef"}
 _PROPERTY_ROOTS = {"pPr", "rPr", "tblPr", "trPr", "tcPr"}
 _ALLOWED_CHILDREN = {"body": {"p", "tbl"}, "hdr": {"p", "tbl"}, "ftr": {"p", "tbl"},
-                     "p": {"r"}, "tbl": {"tr"}, "tr": {"tc"}, "tc": {"p", "tbl"}}
+                     "p": {"r", "commentRangeStart", "commentRangeEnd"}, "tbl": {"tr"}, "tr": {"tc"}, "tc": {"p", "tbl"},
+                     "footnote": {"p", "tbl"}, "endnote": {"p", "tbl"}, "comment": {"p", "tbl"}}
 
 
 def _safe_structure(node, properties=False):
@@ -132,6 +135,9 @@ def _safe_structure(node, properties=False):
         return False
     for i in range(node.attributes.length):
         attribute = node.attributes.item(i)
+        if (node.localName == 'p' and attribute.namespaceURI == 'http://schemas.microsoft.com/office/word/2010/wordml'
+                and attribute.localName in {'paraId', 'textId'} and re.fullmatch('[0-9a-fA-F]{8}', attribute.value)):
+            continue
         if (attribute.namespaceURI not in (None, W, XML, XMLNS) or
                 attribute.namespaceURI == XML and attribute.localName not in {"space", "lang"}):
             return False
@@ -139,6 +145,29 @@ def _safe_structure(node, properties=False):
         return False
     properties = properties or node.localName in _PROPERTY_ROOTS
     return all(_safe_structure(child, properties) for child in _elements(node))
+
+
+def _copy_row_warm(source, target):
+    """Rebind node-owned warm values when cloning rows or comment metadata."""
+    pairs = [(source, target)]
+    mapping = {}
+    pending = []
+    while pairs:
+        old, new = pairs.pop()
+        mapping[old] = new
+        if _is(old, "comment") and _is(new, "comment"):
+            from aspose.words_foss.dom.comment_metadata import copy_date_state
+            copy_date_state(old, new)
+        warm = getattr(old, "_row_format_warm", None)
+        if warm is not None:
+            pending.append((new, warm))
+        pairs.extend((left, right) for left, right in zip(old.childNodes, new.childNodes)
+                     if left.nodeType == right.nodeType and left.nodeName == right.nodeName)
+    for new, warm in pending:
+        height = mapping.get(warm[0])
+        if (height is not None and height.getAttributeNS(W, "val") == warm[1]
+                and height.getAttributeNS(W, "hRule") == warm[2]):
+            new._row_format_warm = (height, *warm[1:])
 
 
 class Node:
@@ -162,7 +191,7 @@ class Node:
         parent = self._element.parentNode
         if parent is None or parent.nodeType != XmlNode.ELEMENT_NODE:
             return None
-        return self._document._wrap(self._part_name, parent)
+        return self._document._wrap(self._part_name, parent, storage=getattr(self, "_storage_view", False))
 
     @property
     def xml(self):
@@ -171,11 +200,16 @@ class Node:
 
     @property
     def child_nodes(self):
-        return tuple(self._document._wrap(self._part_name, child)
-                     for child in _elements(self._element)
-                     if child.namespaceURI != W or (
-                         child.localName not in _PROPERTY_ROOTS and
-                         not (_is(self._element, "tbl") and _is(child, "tblGrid"))))
+        storage = getattr(self, "_storage_view", False)
+        graph = self._document._annotations() if _is(self._element, "p") and not storage else None
+        children = []
+        for child in _elements(self._element):
+            if child.namespaceURI == W and (child.localName in _PROPERTY_ROOTS or
+                    _is(self._element, "tbl") and _is(child, "tblGrid")):
+                continue
+            logical = graph.node_for_run(child) if graph is not None and _is(child, "r") else None
+            children.append(logical or self._document._wrap(self._part_name, child, storage=storage))
+        return tuple(children)
 
     def get_child_nodes(self, node_type=NodeType.ANY, deep=False):
         found = []
@@ -191,8 +225,18 @@ class Node:
         while node is not None and node.nodeType == XmlNode.ELEMENT_NODE:
             if node.namespaceURI != W or node.localName not in {
                 "document", "body", "hdr", "ftr", "p", "r", "hyperlink", "tbl", "tr", "tc",
+                "footnotes", "footnote", "endnotes", "endnote", "comments", "comment",
+                "commentRangeStart", "commentRangeEnd",
             }:
                 raise NotImplementedError("Editing inside unsupported containers is not supported")
+            note_roots = {"footnotes": "footnotes", "footnote": "footnotes",
+                          "endnotes": "endnotes", "endnote": "endnotes",
+                          "comments": "comments", "comment": "comments"}
+            if node.localName in note_roots:
+                root = node.ownerDocument.documentElement
+                pending = self.owner_document._note_graph is not None and self.owner_document._note_graph.owns_pending(node)
+                if not pending and (not _is(root, note_roots[node.localName]) or self.part_name not in self.owner_document._package.story_part_names()):
+                    raise NotImplementedError("Editing requires a typed story relationship")
             node = node.parentNode
 
     def _changed(self):
@@ -216,6 +260,7 @@ class Node:
                   "customXmlMoveToRangeStart", "customXmlMoveToRangeEnd", "rPrChange", "pPrChange",
                   "tblPrChange", "tblGridChange", "trPrChange", "tcPrChange", "sectPrChange",
                   "cellIns", "cellDel", "cellMerge", "numberingChange"}
+        ranges -= {"commentRangeStart", "commentRangeEnd", "commentReference"}
         if any(node.localName in ranges for node in root.getElementsByTagNameNS(W, "*")):
             raise NotImplementedError("Structural edits in stories with ranges/revisions are unsupported")
 
@@ -223,6 +268,8 @@ class Node:
         return self.insert_before(child, None)
 
     def insert_before(self, child, reference):
+        if isinstance(child, (Footnote, Comment)):
+            return self.owner_document._annotations().insert(self, child.canonical_node, reference)
         self._structural_editable()
         if not isinstance(child, Node):
             raise TypeError("child must be a DOM node")
@@ -233,13 +280,15 @@ class Node:
             raise ValueError("Reference must be a direct child")
         current = self
         while current is not None:
-            if current is child:
+            if current._element is child._element:
                 raise ValueError("Cannot insert a node into itself or its descendant")
             current = current.parent_node
         if (child._element.namespaceURI != W or child._element.localName not in
                 _ALLOWED_CHILDREN.get(self._element.localName, set())):
             raise ValueError("Invalid parent/child node types")
-        if not _safe_structure(child._element):
+        graph = self.owner_document._annotations()
+        annotations = graph.contained_entries(child._element)
+        if not annotations and not _safe_structure(child._element):
             raise NotImplementedError("Moving complex content requires relationship/range support")
         if child is reference:
             return child
@@ -247,6 +296,8 @@ class Node:
         if old_parent is not None:
             old_parent._validate_removal(child)
         anchor = reference._element if reference is not None else None
+        if isinstance(reference, (Footnote, Comment)):
+            anchor = self.owner_document._annotations().anchors[reference._element]
         if _is(self._element, "body"):
             section = _find(self._element, "sectPr")
             if reference is not None and section is not None:
@@ -255,8 +306,12 @@ class Node:
                     raise ValueError("Body content must precede the final section properties")
             if anchor is None:
                 anchor = section
+        if annotations:
+            return graph.insert_container(self, child, reference)
         _bind_namespace_context(child._element, child._element, self._element)
         self._element.insertBefore(child._element, anchor)
+        if isinstance(child, (CommentRangeStart, CommentRangeEnd)):
+            self.owner_document._annotations().changed = True
         self._changed()
         return child
 
@@ -271,6 +326,10 @@ class Node:
             raise NotImplementedError("Changing existing table columns requires grid/merge support")
 
     def remove(self):
+        graph = self.owner_document._annotations()
+        if graph.contained_entries(self._element):
+            self._structural_editable()
+            return graph.remove_container(self)
         self._structural_editable()
         parent = self.parent_node
         if parent is None:
@@ -287,6 +346,9 @@ class Node:
         if not isinstance(deep, bool):
             raise TypeError("deep must be a boolean")
         self._structural_editable()
+        graph = self.owner_document._annotations()
+        if graph.contained_entries(self._element):
+            return graph.clone_container(self, deep)
         if not _safe_structure(self._element):
             raise NotImplementedError("Cloning complex content requires resource import support")
         cloned = self._element.cloneNode(deep=True)
@@ -297,6 +359,7 @@ class Node:
                         child.localName not in _PROPERTY_ROOTS | {"tblGrid"}):
                     cloned.removeChild(child)
         _bind_namespace_context(self._element, cloned)
+        _copy_row_warm(self._element, cloned)
         return self._document._wrap(self.part_name, cloned)
 
 
@@ -585,6 +648,19 @@ class Table(Node):
 class Row(Node):
     node_type = NodeType.ROW
 
+    def _editable(self):
+        try:
+            super()._editable()
+        except NotImplementedError:
+            from aspose.words_foss.dom.row_format import supported_row
+            if self.part_name not in self.owner_document._package.story_part_names() or not supported_row(self._element):
+                raise
+
+
+    @property
+    def row_format(self):
+        return RowFormat(self)
+
     @property
     def cells(self):
         return tuple(node for node in self.child_nodes if isinstance(node, Cell))
@@ -607,6 +683,209 @@ class Cell(Body):
 
 class HeaderFooter(Body):
     node_type = NodeType.HEADER_FOOTER
+
+
+class StoryPart(Node):
+    """An OPC note/comment collection; entries retain their original identifiers."""
+
+    def insert_before(self, child, reference):
+        raise NotImplementedError("Changing story entries requires reference updates")
+
+    def remove(self):
+        raise NotImplementedError("Removing a story part requires reference updates")
+
+
+class Footnote(Body):
+    """Editable footnote/endnote content; note identity remains source metadata."""
+    node_type = NodeType.FOOTNOTE
+
+    @property
+    def child_nodes(self):
+        self.owner_document._annotations()
+        return super().child_nodes
+
+    @property
+    def footnote_type(self):
+        from aspose.words_foss.dom.notes import FootnoteType
+        return FootnoteType.FOOTNOTE if _is(self._element, "footnote") else FootnoteType.ENDNOTE
+
+    @property
+    def reference_mark(self):
+        if hasattr(self._element, '_reference_mark'):
+            return self._element._reference_mark
+        anchor = self.owner_document._annotations().anchors.get(self._element)
+        return ''.join(_text(child) for child in _elements(anchor) if _is(child, 't')) if anchor is not None else ''
+
+    @reference_mark.setter
+    def reference_mark(self, value):
+        if value is not None and not isinstance(value, str):
+            raise TypeError('reference_mark requires a string or None')
+        self._element._reference_mark = value
+        self.owner_document._annotations().changed = True
+
+    @property
+    def is_auto(self):
+        return not self.reference_mark
+
+    def clone(self, deep=True):
+        return self.owner_document._annotations().clone(self.canonical_node, deep)
+
+    @property
+    def count(self):
+        return len(self.child_nodes)
+
+    @property
+    def first_paragraph(self):
+        return next(iter(self.paragraphs), None)
+
+    def ensure_minimum(self):
+        children = self.child_nodes
+        if not children or not isinstance(children[-1], Paragraph):
+            paragraph = self.owner_document._wrap(self.part_name, _new(self._element, "p"),
+                storage=getattr(self, "_storage_view", False))
+            self.append_child(paragraph)
+
+    @property
+    def canonical_node(self):
+        """The unique inline node; story-part traversal is a separate storage view."""
+        return self.owner_document._wrap(self.part_name, self._element)
+
+    @property
+    def parent_node(self):
+        if getattr(self, "_storage_view", False):
+            return super().parent_node
+        return self.owner_document._annotations().parent(self._element)
+
+    @property
+    def parent_paragraph(self):
+        return self.canonical_node.parent_node
+
+    def remove(self):
+        return self.owner_document._annotations().remove(self.canonical_node)
+
+
+class Comment(Body):
+    """Editable comment content; authors and range identifiers remain source metadata."""
+    node_type = NodeType.COMMENT
+
+    def _metadata(self, name):
+        return self._element.getAttributeNS(W, name)
+
+    def _set_metadata(self, name, value):
+        from aspose.words_foss.dom.comment_metadata import normalize_text
+        value = normalize_text(value)
+        self._editable()
+        from aspose.words_foss.dom.importing import _set_word_attribute
+        _set_word_attribute(self._element, name, value)
+        self._changed()
+
+    author = property(lambda self: self._metadata('author'), lambda self, value: self._set_metadata('author', value))
+    initial = property(lambda self: self._metadata('initials'), lambda self, value: self._set_metadata('initials', value))
+
+    @property
+    def date_time(self):
+        from aspose.words_foss.dom.comment_metadata import get_date
+        return get_date(self._element)
+
+    @property
+    def date_time_utc(self):
+        from aspose.words_foss.dom.comment_utc import get_utc
+        return get_utc(self._element)
+
+    @date_time.setter
+    def date_time(self, value):
+        from aspose.words_foss.dom.comment_metadata import normalize_date, set_date
+        normalized = normalize_date(value)
+        self._editable()
+        set_date(self._element, normalized)
+        self.owner_document._annotations().changed = True
+        self._changed()
+
+    @property
+    def child_nodes(self):
+        self.owner_document._annotations()
+        return super().child_nodes
+
+    @property
+    def id(self):
+        graph = self.owner_document._annotations()
+        return graph.comment_ids.get(self._element, int(self._element.getAttributeNS(W, "id") or "0"))
+
+    @id.setter
+    def id(self, value):
+        if type(value) is not int:
+            raise TypeError("Comment id requires int")
+        if not -(2**31) <= value < 2**31:
+            raise OverflowError("Comment id exceeds INT32")
+        graph = self.owner_document._annotations()
+        graph.comment_ids[self._element] = value
+        graph.changed = True
+
+    def clone(self, deep=True):
+        return self.owner_document._annotations().clone(self.canonical_node, deep)
+
+    @property
+    def count(self):
+        return len(self.child_nodes)
+
+    @property
+    def first_paragraph(self):
+        return next(iter(self.paragraphs), None)
+
+    def ensure_minimum(self):
+        children = self.child_nodes
+        if not children or not isinstance(children[-1], Paragraph):
+            paragraph = self.owner_document._wrap(self.part_name, _new(self._element, "p"),
+                storage=getattr(self, "_storage_view", False))
+            self.append_child(paragraph)
+
+    @property
+    def canonical_node(self):
+        """The unique inline node; story-part traversal is a separate storage view."""
+        return self.owner_document._wrap(self.part_name, self._element)
+
+    @property
+    def parent_node(self):
+        if getattr(self, "_storage_view", False):
+            return super().parent_node
+        return self.owner_document._annotations().parent(self._element)
+
+    @property
+    def parent_paragraph(self):
+        return self.canonical_node.parent_node
+
+    def remove(self):
+        return self.owner_document._annotations().remove(self.canonical_node)
+
+
+class _CommentRange(Node):
+    @property
+    def id(self):
+        graph = self.owner_document._annotations()
+        if hasattr(self._element, "_logical_comment_id"):
+            return self._element._logical_comment_id
+        from aspose.words_foss.dom.notes import annotation_id
+        identifier = annotation_id(self._element.getAttributeNS(W, 'id'))
+        entry = graph.entries.get(('comments', str(identifier)))
+        return graph.comment_ids[entry] if entry in graph.comment_ids else identifier
+
+    @id.setter
+    def id(self, value):
+        if type(value) is not int:
+            raise TypeError("Comment range id requires int")
+        if not -(2**31) <= value < 2**31:
+            raise OverflowError("Comment range id exceeds INT32")
+        self._editable()
+        self._element._logical_comment_id = value
+        self.owner_document._annotations().changed = True
+
+
+class CommentRangeStart(_CommentRange):
+    node_type = NodeType.COMMENT_RANGE_START
+
+
+class CommentRangeEnd(_CommentRange):
+    node_type = NodeType.COMMENT_RANGE_END
 
 
 class _Format:
@@ -657,6 +936,56 @@ class _Format:
                 element.removeAttributeNS(W, attr)
         element.setAttributeNS(W, f"{prefix}:{attribute}", value)
         node._changed()
+
+
+class RowFormat(_Format):
+    """Live row formatting, including inherited table-style defaults."""
+
+    __slots__ = ()
+    property_name = "trPr"
+    order = ("cnfStyle", "divId", "gridBefore", "gridAfter", "wBefore", "wAfter",
+             "cantSplit", "trHeight", "tblHeader", "tblCellSpacing", "jc", "hidden")
+
+    def _set(self, name, value, **kwargs):
+        self._node._editable()
+        properties = _find(self._node._element, "trPr")
+        if properties is not None:
+            matches = [item for item in _elements(properties) if _is(item, name)]
+            for item in matches[:-1]:
+                properties.removeChild(item)
+        super()._set(name, value, **kwargs)
+
+    def _values(self, *, direct_only=False):
+        from aspose.words_foss.dom.styles import StyleResolver
+        return StyleResolver(self._node.owner_document).row_format(self._node, direct_only=direct_only)
+
+    def _set_height(self, value=None, rule=None, *, setting_rule=False):
+        from aspose.words_foss.utils.table_row import coerce_row_height
+        if setting_rule:
+            if not isinstance(rule, HeightRule):
+                raise TypeError("height_rule requires HeightRule")
+        else:
+            value = coerce_row_height(value)
+        current_height, current_rule, _ = self._values(direct_only=True)
+        if setting_rule:
+            value = 0.0 if rule == HeightRule.AUTO else current_height
+        else:
+            rule = HeightRule.AUTO if value == 0 else HeightRule.AT_LEAST if current_rule == HeightRule.AUTO else current_rule
+        self._set("trHeight", str(round(value * 20)))
+        self._set("trHeight", {0: "atLeast", 1: "exact", 2: "auto"}[rule], attribute="hRule")
+        element = self._get("trHeight")
+        self._node._element._row_format_warm = (element, element.getAttributeNS(W, "val"),
+            element.getAttributeNS(W, "hRule"), value, rule)
+
+    def _set_split(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("allow_break_across_pages requires bool")
+        # Explicit false on cantSplit also overrides an inherited true declaration.
+        self._set("cantSplit", "0" if value else "1")
+
+    height = property(lambda self: self._values()[0], lambda self, value: self._set_height(value))
+    height_rule = property(lambda self: self._values()[1], lambda self, value: self._set_height(rule=value, setting_rule=True))
+    allow_break_across_pages = property(lambda self: self._values()[2], lambda self, value: self._set_split(value))
 
 
 class Font(_Format):
@@ -887,4 +1216,7 @@ class ParagraphFormat(_Format):
 
 
 _NODE_CLASSES = {"body": Body, "p": Paragraph, "r": Run, "tbl": Table, "tr": Row,
-                 "tc": Cell, "hdr": HeaderFooter, "ftr": HeaderFooter, "hyperlink": Hyperlink}
+                 "tc": Cell, "hdr": HeaderFooter, "ftr": HeaderFooter, "hyperlink": Hyperlink,
+                 "footnotes": StoryPart, "endnotes": StoryPart, "comments": StoryPart,
+                 "footnote": Footnote, "endnote": Footnote, "comment": Comment,
+                 "commentRangeStart": CommentRangeStart, "commentRangeEnd": CommentRangeEnd}

@@ -74,7 +74,11 @@ def test_invalid_sizes_are_private_and_never_silently_inherited(scope, value):
                  document.to_light_document, lambda: Document(BytesIO(data))):
         with pytest.raises(ValueError, match='OOXML font size') as caught:
             read()
-        trace = ''.join(traceback.format_exception(caught.value))
+        error = traceback.TracebackException.from_exception(caught.value)
+        # Workspace paths can coincidentally contain the rejected input.
+        for frame in error.stack:
+            frame.filename = Path(frame.filename).name
+        trace = ''.join(error.format())
         if len(value) > 1:
             assert value not in trace
         assert 'IMPORT' not in trace and caught.value.__suppress_context__

@@ -1,5 +1,7 @@
 """Explicit original-package editing entry point; legacy Document remains unchanged."""
 
+from datetime import datetime
+
 from aspose.words_foss._io import MAX_TABLE_COLUMNS
 from aspose.words_foss._opc import resolve_target
 from aspose.words_foss.dom.importing import ImportFormatMode
@@ -32,15 +34,31 @@ class DocxDocument:
     def __init__(self, source):
         self._package = DocxPackage(source)
         self._nodes = {}
+        self._note_graph = None
+        from aspose.words_foss.dom.comment_utc import metadata_links, typed_parts
+        if metadata_links(self._package):
+            typed_parts(self._package)
         root = self._package.tree("word/document.xml").documentElement
         if not _is(root, "document") or _find(root, "body") is None:
             raise ValueError("Expected a Transitional Word document with a body")
+        from aspose.words_foss.dom.row_format import validate_row_properties
+        for name in self._package.story_part_names():
+            validate_row_properties(self._package.tree(name))
 
-    def _wrap(self, part_name, element):
-        if element not in self._nodes:
+    def _annotations(self):
+        if self._note_graph is None:
+            from aspose.words_foss.dom.notes import NoteGraph
+            self._note_graph = NoteGraph(self)
+        return self._note_graph
+
+    def _wrap(self, part_name, element, *, storage=False):
+        storage = storage or element.namespaceURI == W and element.localName in {"footnotes", "endnotes", "comments"}
+        key = (element, True) if storage else element
+        if key not in self._nodes:
             cls = _NODE_CLASSES.get(element.localName, UnknownNode) if element.namespaceURI == W else UnknownNode
-            self._nodes[element] = cls(self, part_name, element)
-        return self._nodes[element]
+            self._nodes[key] = cls(self, part_name, element)
+            self._nodes[key]._storage_view = storage
+        return self._nodes[key]
 
     @property
     def body(self) -> Body:
@@ -57,30 +75,80 @@ class DocxDocument:
     def part_names(self):
         return self._package.part_names
 
+    @property
+    def default_tab_stop(self) -> float:
+        """Default tab interval in points from the related settings part."""
+        from aspose.words_foss.dom.settings import get_default_tab_stop
+        return get_default_tab_stop(self._package)
+
+    @default_tab_stop.setter
+    def default_tab_stop(self, value: float) -> None:
+        from aspose.words_foss.dom.settings import set_default_tab_stop
+        set_default_tab_stop(self._package, value)
+
     def part_xml(self, name):
         """Read-only XML snapshot; parsing alone does not mark a part modified."""
         return self._package.tree(name).documentElement.toxml()
 
     def preservation_report(self):
         """List added/modified/removed/unchanged parts since loading (not sanitization)."""
-        return self._package.preservation_report()
+        overrides, _ = self._prepare_note_projection()
+        return self._package.preservation_report(overrides)
 
     def story(self, part_name):
-        """Access the main body or a header/footer by its original part name."""
+        """Access a body, header/footer, or related note/comment part."""
         if part_name == "word/document.xml":
             return self.body
         root = self._package.tree(part_name).documentElement
-        if not (_is(root, "hdr") or _is(root, "ftr")):
-            raise NotImplementedError("Only body/header/footer stories are editable")
+        if not (_is(root, "hdr") or _is(root, "ftr") or
+                root.namespaceURI == W and root.localName in {"footnotes", "endnotes", "comments"}
+                and part_name in self._package.story_part_names()):
+            raise NotImplementedError("Only typed Word stories are editable")
         return self._wrap(part_name, root)
 
     def get_child_nodes(self, node_type=0, deep=False):
         """Traverse the main story; other stories are accessed explicitly."""
         return self.body.get_child_nodes(node_type, deep)
 
+    def create_footnote(self, footnote_type):
+        from aspose.words_foss.dom.notes import FootnoteType
+        if not isinstance(footnote_type, FootnoteType):
+            raise TypeError("footnote_type requires FootnoteType")
+        return self._annotations().create("footnotes" if footnote_type == FootnoteType.FOOTNOTE else "endnotes")
+
+    def create_comment(self, author="", initial="", date_time=datetime.min):
+        from aspose.words_foss.dom.comment_metadata import normalize_date, normalize_text
+        author, initial = normalize_text(author), normalize_text(initial)
+        date_time = normalize_date(date_time, constructor=True)
+        return self._annotations().create("comments", author=author, initial=initial, date_time=date_time)
+
+    def _create_comment_range(self, local_name, identifier):
+        if type(identifier) is not int:
+            raise TypeError("Comment range id requires int")
+        if not -(2**31) <= identifier < 2**31:
+            raise OverflowError("Comment range id exceeds INT32")
+        from aspose.words_foss.dom.importing import _set_word_attribute
+        element = _new(self.body._element, local_name)
+        _set_word_attribute(element, "id", str(identifier))
+        element._logical_comment_id = identifier
+        return self._wrap("word/document.xml", element)
+
+    def create_comment_range_start(self, identifier):
+        return self._create_comment_range("commentRangeStart", identifier)
+
+    def create_comment_range_end(self, identifier):
+        return self._create_comment_range("commentRangeEnd", identifier)
+
+    def _creation_context(self, part_name):
+        if self._note_graph is not None:
+            for name, tree in self._note_graph.pending_trees.values():
+                if name == part_name:
+                    return tree.documentElement
+        return self.story(part_name)._element
+
     def create_run(self, text="", *, part_name="word/document.xml") -> Run:
         _validate_text(text)
-        element = _new(self.story(part_name)._element, "r")
+        element = _new(self._creation_context(part_name), "r")
         run = self._wrap(part_name, element)
         run.text = text
         return run
@@ -94,7 +162,7 @@ class DocxDocument:
 
     def create_paragraph(self, text="", *, part_name="word/document.xml") -> Paragraph:
         _validate_text(text)
-        element = _new(self.story(part_name)._element, "p")
+        element = _new(self._creation_context(part_name), "p")
         paragraph = self._wrap(part_name, element)
         if text:
             paragraph.append_child(self.create_run(text, part_name=part_name))
@@ -105,7 +173,7 @@ class DocxDocument:
         if (type(rows) is not int or type(columns) is not int or rows < 1 or
                 not 1 <= columns <= MAX_TABLE_COLUMNS):
             raise ValueError("Table requires positive integer dimensions within the column limit")
-        element = _new(self.story(part_name)._element, "tbl")
+        element = _new(self._creation_context(part_name), "tbl")
         grid = _new(element, "tblGrid")
         element.appendChild(grid)
         for _ in range(columns):
@@ -149,25 +217,48 @@ class DocxDocument:
 
         return StyleResolver(self).has_style(style_id, style_type)
 
+    def _prepare_note_projection(self):
+        from aspose.words_foss.dom.comment_utc import metadata_links
+        if self._note_graph is None and metadata_links(self._package):
+            self._annotations()
+        return self._note_graph.prepare_projection() if self._note_graph is not None else ({}, lambda: None)
+
+    def _prepared_output(self, *, flat=False):
+        from aspose.words_foss.dom.row_format import prepare_row_commit
+        overrides, commit_notes = self._prepare_note_projection()
+        data = self._package.to_bytes(overrides) if overrides else self._package.to_bytes()
+        if flat:
+            from aspose.words_foss._flat_opc import encode
+            data = encode(data)
+        commit_rows = prepare_row_commit(self)
+        theme_parts = self._package._default_theme_parts(overrides)
+        self._package.validate_parts(theme_parts)
+        return data, commit_notes, commit_rows, theme_parts
+
+    def _save(self, destination, *, flat=False):
+        from aspose.words_foss._io import atomic_output
+        data, commit_notes, commit_rows, theme_parts = self._prepared_output(flat=flat)
+        with atomic_output(destination) as temporary:
+            temporary.write_bytes(data)
+        commit_notes()
+        commit_rows()
+        self._package._commit_parts(theme_parts)
+        if theme_parts:
+            self._package._injected_default_theme = True
+
     def save(self, destination):
-        """Atomically save edits and supported style/table serialization projections."""
-        self._package.save(destination)
+        """Atomically save supported projections, updating held objects only on success."""
+        self._save(destination)
 
     def to_bytes(self):
-        return self._package.to_bytes()
+        return self._prepared_output()[0]
 
     def to_flat_opc(self):
-        """Return Flat OPC XML bytes, retaining part types and opaque binary resources."""
-        from aspose.words_foss._flat_opc import encode
-
-        return encode(self.to_bytes())
+        """Return Flat OPC bytes without committing any warm-object state."""
+        return self._prepared_output(flat=True)[0]
 
     def save_flat_opc(self, destination):
-        """Atomically save Flat OPC XML; XML serialization is normalized."""
-        from aspose.words_foss._io import atomic_output
-
-        with atomic_output(destination) as temporary:
-            temporary.write_bytes(self.to_flat_opc())
+        self._save(destination, flat=True)
 
     def to_light_document(self):
         """Produce an independent, potentially lossy conversion snapshot of current edits.

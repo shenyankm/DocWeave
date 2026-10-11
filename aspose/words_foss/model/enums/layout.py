@@ -1,7 +1,10 @@
 """Page and section layout enums."""
 
 
-class HeightRule:
+from enum import IntEnum
+
+
+class HeightRule(IntEnum):
     """Specifies the rule for determining the height of an object.
     """
 

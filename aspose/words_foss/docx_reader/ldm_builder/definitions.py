@@ -115,7 +115,30 @@ class StyleBuilder:
         self._apply_relations(style_elem, s)
         self._apply_format(style_elem, s, xml_style_id, heading_match)
         self._apply_table_style_format(style_elem, s)
+        self._apply_row_style_format(style_elem, s)
         return s
+
+    @staticmethod
+    def _apply_row_style_format(style_elem, style):
+        from .tables import RowBuilder
+
+        if style.type != _STYLE_TYPE_TABLE:
+            return
+        direct = style_elem.find(f"{W_NS}trPr")
+        if direct is not None:
+            style.row_format = RowBuilder._build_row_format(direct)
+        # Conditional row properties are preserved, but do not participate in
+        # the observed 26.9 height/splitting getter cascade.
+        for region in style_elem.findall(f"{W_NS}tblStylePr"):
+            properties = region.find(f"{W_NS}trPr")
+            kind = region.get(f"{W_NS}type", "")
+            if properties is None or not kind:
+                continue
+            target = next((item for item in style.table_style_properties if item.type == kind), None)
+            if target is None:
+                target = ldm.TableStyleProperty(type=kind)
+                style.table_style_properties.append(target)
+            target.row_format = RowBuilder._build_row_format(properties)
 
     @staticmethod
     def _apply_name(style_elem: ET.Element, s: ldm.Style, is_custom: bool) -> None:

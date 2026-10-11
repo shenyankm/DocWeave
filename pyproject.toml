@@ -4,7 +4,7 @@ version = "26.7.0.post2"
 description = "Unofficial enhanced fork of Aspose.Words FOSS with Chinese/Unicode PDF export"
 readme = "README.md"
 license = "MIT AND OFL-1.1"
-license-files = ["LICENSE", "aspose/words_foss/pdf_writer/fonts/OFL.txt"]
+license-files = ["LICENSE", "aspose/words_foss/pdf_writer/fonts/OFL.txt", "aspose/words_foss/docx_writer/resources/python-docx-LICENSE.txt"]
 authors = [
     {name = "Aspose"}
 ]
