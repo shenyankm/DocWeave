@@ -147,12 +147,12 @@ class TableBuilder:
 
     @staticmethod
     def _apply_floating(tbl: ldm.Table, tblpPr: ET.Element) -> None:
-        tbl.text_wrapping = _FLOATING_TEXT_WRAPPING
         attrs: dict[str, str] = {}
         for attr_name in _FLOATING_ATTRS:
             value = tblpPr.get(f"{W_NS}{attr_name}", "")
             if value:
                 attrs[attr_name] = value
+        tbl.text_wrapping = _FLOATING_TEXT_WRAPPING if attrs else 0
         tbl._tblp_pr_attrs = attrs
 
     def _build_rows(

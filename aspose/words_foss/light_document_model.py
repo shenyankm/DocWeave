@@ -16,7 +16,7 @@ from enum import IntEnum
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
-    BaseModel, BeforeValidator, ConfigDict, Field, PrivateAttr, field_serializer, field_validator,
+    BaseModel, BeforeValidator, ConfigDict, Field, PrivateAttr, StrictStr, field_serializer, field_validator,
     model_serializer, model_validator,
 )
 
@@ -1210,6 +1210,24 @@ def iter_grid_cells(row):
         column += span
 
 
+class SourceTablePosition(BaseModel):
+    """Sparse imported floating-position attributes, retained through JSON."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+    attributes: tuple[tuple[Literal[
+        "leftFromText", "rightFromText", "topFromText", "bottomFromText",
+        "vertAnchor", "horzAnchor", "tblpX", "tblpXSpec", "tblpY", "tblpYSpec",
+    ], StrictStr], ...] = ()
+
+    @field_validator("attributes")
+    @classmethod
+    def _unique_attributes(cls, value):
+        if len({key for key, _ in value}) != len(value):
+            raise ValueError("Duplicate floating-table position attribute")
+        return value
+
+
+
 class Table(BaseModel, NodeCastMixin):
     type: Literal["Table"] = Field(default="Table", alias="_type")
     source_location: SourceLocation | None = None
@@ -1223,13 +1241,25 @@ class Table(BaseModel, NodeCastMixin):
     bottom_padding: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
     style_name: str = ""
     text_wrapping: int = 0  # 0=None, 1=Default/Around
+    source_position: SourceTablePosition | None = None
     title: str = ""
     description: str = ""
     rows: list[Row] = Field(default_factory=list)
     # REMOVED: style_identifier, allow_auto_fit,
     #          allow_cell_spacing, cell_spacing
 
-    _tblp_pr_attrs: dict[str, str] = PrivateAttr(default_factory=dict)
+    @property
+    def _tblp_pr_attrs(self) -> dict[str, str]:
+        return dict(self.source_position.attributes) if self.source_position is not None else {}
+
+    @_tblp_pr_attrs.setter
+    def _tblp_pr_attrs(self, value: Mapping[str, str]) -> None:
+        self.source_position = SourceTablePosition(attributes=tuple(value.items()))
+
+    def __setattr__(self, name, value):
+        if name == "source_position" and value is not None and not isinstance(value, SourceTablePosition):
+            value = SourceTablePosition.model_validate(value)
+        super().__setattr__(name, value)
 
     model_config = {"populate_by_name": True}
 
