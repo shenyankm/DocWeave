@@ -13,8 +13,7 @@ from pathlib import Path
 # Root of the project
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-# Appended, never prepended: the project root holds an `aspose/` package that
-# would otherwise shadow an installed `aspose.words` wheel.
+# Append the project root without taking precedence over installed packages.
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.append(str(_PROJECT_ROOT))
 
@@ -32,9 +31,8 @@ os.makedirs(ARTIFACTS_DIR, exist_ok=True)
 
 # Format extension -> (SaveFormat constant, human label)
 OUTPUT_FORMATS = {
-    ".md": ("markdown", "Markdown"),
+    ".docx": ("docx", "DOCX"),
     ".pdf": ("pdf", "PDF"),
-    ".txt": ("text", "Text"),
 }
 
 
@@ -61,13 +59,12 @@ class DocsExamplesBase:
 
     @staticmethod
     def convert_to_all_formats(input_file, output_prefix):
-        """Convert input_file to Markdown, PDF, and Text."""
+        """Convert input_file to DOCX and PDF."""
         import dockiln as dk
 
         fmt_map = {
-            ".md": dk.SaveFormat.MARKDOWN,
+            ".docx": dk.SaveFormat.DOCX,
             ".pdf": dk.SaveFormat.PDF,
-            ".txt": dk.SaveFormat.TEXT,
         }
         doc = dk.Document(MY_DIR + input_file)
         for ext, fmt in fmt_map.items():

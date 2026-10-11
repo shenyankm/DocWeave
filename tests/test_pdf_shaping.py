@@ -11,6 +11,7 @@ from pypdf import PdfReader
 import pytest
 
 import dockiln as dk
+from ._word_fixtures import word_document
 from dockiln import light_document_model as ldm
 from dockiln.writers.pdf import PdfMissingGlyphWarning
 from dockiln.writers.pdf.writer import LdmPdfWriter
@@ -42,7 +43,7 @@ def test_shaped_arabic_embeds_real_contextual_glyph_outlines():
     options = dk.saving.PdfSaveOptions()
     options.text_shaping = True
     options.fallback_fonts = [str(font_path)]
-    doc = dk.Document(BytesIO(source.encode()))
+    doc = word_document(source)
     with warnings.catch_warnings():
         warnings.simplefilter("error", PdfMissingGlyphWarning)
         raw = doc.to_bytes(options)

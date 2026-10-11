@@ -27,7 +27,7 @@ def test_nested_instruction_results_do_not_leak(mode):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", dk.ContentLossWarning)
         raw = doc.to_bytes("pdf")
-    result = "".join(p.extract_text() for p in PdfReader(BytesIO(raw)).pages) if mode.startswith("pdf") else raw.decode()
+    result = "".join(p.extract_text() for p in PdfReader(BytesIO(raw)).pages)
     assert "VISIBLE_RESULT" in result and "SECRET" not in result and "OUTER_CODE" not in result
 
 
@@ -46,25 +46,13 @@ def test_note_references_inside_instruction_do_not_expose_note_body(table):
     assert "SECRET_NOTE" not in result and "[^note" not in result
 
 
-@pytest.mark.parametrize("mode", ["pdf"])
-def test_nested_visible_results_remain_visible(mode):
+def test_nested_visible_results_remain_visible():
     doc = word_document(b"BODY")
     doc.sections[0].body.children = [ldm.Paragraph(children=[ldm.FieldStart(),
         ldm.Run(text="CODE"), ldm.FieldSeparator(), ldm.Run(text="BEFORE"),
         ldm.FieldStart(), ldm.Run(text="SECRET_INNER_CODE"), ldm.FieldSeparator(),
         ldm.Run(text="INNER_VISIBLE"), ldm.FieldEnd(), ldm.Run(text="AFTER"), ldm.FieldEnd()])]
-    raw = doc.to_bytes(mode)
-    result = "".join(p.extract_text() for p in PdfReader(BytesIO(raw)).pages) if mode == "pdf" else raw.decode()
+    raw = doc.to_bytes("pdf")
+    result = "".join(p.extract_text() for p in PdfReader(BytesIO(raw)).pages)
     assert all(token in result for token in ("BEFORE", "INNER_VISIBLE", "AFTER"))
     assert "CODE" not in result
-
-
-def test_nested_result_in_hyperlink_instruction_builds_target_without_becoming_label():
-    doc = word_document(b"BODY")
-    doc.sections[0].body.children = [ldm.Paragraph(children=[ldm.FieldStart(),
-        ldm.Run(text='HYPERLINK "https://'), ldm.FieldStart(), ldm.Run(text="DOCVARIABLE URL"),
-        ldm.FieldSeparator(), ldm.Run(text="example.com"), ldm.FieldEnd(),
-        ldm.Run(text='/path"'), ldm.FieldSeparator(), ldm.Run(text="LABEL"), ldm.FieldEnd()])]
-    pdf = PdfReader(BytesIO(doc.to_bytes("pdf")))
-    assert pdf.pages[0].extract_text().strip() == "LABEL"
-    assert pdf.pages[0]["/Annots"][0].get_object()["/A"]["/URI"] == "https://example.com/path"

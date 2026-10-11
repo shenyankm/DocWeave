@@ -162,8 +162,6 @@ def test_default_style_inherits_numbering_from_its_base():
     paras = doc.light_document_model.sections[0].body.paragraphs
     assert all(p.list_format.is_list_item for p in paras)
     assert paras[0].list_format.list_id == paras[1].list_format.list_id > 0
-    markdown = doc.to_bytes('md').decode()
-    assert markdown.splitlines() == ['1. FIRST', '1. SECOND']
     result = dk.Document(BytesIO(doc.to_bytes('docx')))
     assert all(p.list_format.is_list_item for p in result.light_document_model.sections[0].body.paragraphs)
 

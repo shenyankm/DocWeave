@@ -7,12 +7,12 @@ ALPHA (bold), BETA, and a one-cell table containing CELL. Trial watermarks and
 generated resources remain in the inputs. These are generated documents, not
 vendor binaries or implementation code. They do not exercise executable VBA.
 
-Regenerate outside the checkout using the official environment (otherwise the
-local `aspose` namespace may shadow the commercial package):
+Regenerate in the isolated official Aspose environment, separate from DocKiln.
+The `aspose.words` import below belongs to the commercial baseline, not DocKiln:
 
 ```python
 from zipfile import ZipFile, ZIP_DEFLATED
-import aspose.words as dk
+import aspose.words as aw
 
 source = "/absolute/path/to/docs/benchmarks/corpus/commercial-26.9-dom.docx"
 names = ("FLAT_OPC", "FLAT_OPC_MACRO_ENABLED", "FLAT_OPC_TEMPLATE",
@@ -20,7 +20,7 @@ names = ("FLAT_OPC", "FLAT_OPC_MACRO_ENABLED", "FLAT_OPC_TEMPLATE",
 with ZipFile("flat-opc-26.9.zip", "w", compression=ZIP_DEFLATED) as archive:
     for name in names:
         output = "/tmp/" + name + ".xml"
-        dk.Document(source).save(output, getattr(dk.SaveFormat, name))
+        aw.Document(source).save(output, getattr(aw.SaveFormat, name))
         archive.write(output, name + ".xml")
 ```
 

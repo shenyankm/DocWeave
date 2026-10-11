@@ -811,7 +811,7 @@ def verify_font_boolean_contexts(root):
                     else paragraph if paragraph is not None else bool(default))
         if row['value'] is not previous:
             before.append(row['input'])
-    comparison = report['dockiln_getter_comparison']
+    comparison = report['docweave_getter_comparison']
     assert len(before) == 66 and sorted(before) == sorted(comparison['before_mismatches'])
     assert comparison['after_mismatches'] == []
     pdf_report = json.loads((root / 'font-hidden-rendering-26.9.json').read_text())
@@ -1416,7 +1416,7 @@ def verify_font_size_loading(root):
             style_size, resolved = saved_font_sizes(raw)
             assert resolved == expected_size == row["loaded"]["run_size"] == row["after_save"]["run_size"] == row["cold"]["run_size"]
             assert style_size == row["loaded"]["style_size"] == row["after_save"]["style_size"] == row["cold"]["style_size"]
-    current = report["dockiln_roundtrip"]
+    current = report["docweave_roundtrip"]
     assert current["full_acceptance"] is False and current["native_reread"]["version"] == "26.9.0"
     assert current["native_reread"]["licensed"] is False
     raw = (root / current["outputs"]).read_bytes()
@@ -1887,7 +1887,8 @@ def verify(root):
     outputs = (root / literal["raw_outputs"]["archive"]).read_bytes()
     assert digest(outputs) == literal["raw_outputs"]["sha256"]
     with ZipFile(BytesIO(raw)) as archive, ZipFile(BytesIO(outputs)) as generated:
-        for backend in ("commercial", "dockiln"):
+        # Historical snapshot keys retain the project name used at collection.
+        for backend in ("commercial", "docweave"):
             for row in literal[backend]:
                 assert digest(archive.read(row["source"])) == row["source_sha256"]
                 data = generated.read(row["output_member"])

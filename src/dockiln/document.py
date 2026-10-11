@@ -239,15 +239,8 @@ class Document:
     ) -> None:
         """Load from a file path."""
         check_input_size(filepath.stat().st_size)
-        fmt = _coerce_load_format(load_options.load_format) if load_options else None
-        if fmt is not None and fmt != LoadFormat.AUTO:
-            suffix = _LOAD_FORMAT_TO_SUFFIX.get(fmt, filepath.suffix.lower())
-        else:
-            suffix = filepath.suffix.lower()
-        reader = create_reader(suffix)
         with filepath.open("rb") as stream:
-            reader.load_bytes(read_bounded(stream))
-        self._document = reader.to_light_document()
+            self._load_from_stream(stream, load_options)
 
     def _load_from_stream(
         self,

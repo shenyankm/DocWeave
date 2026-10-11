@@ -960,14 +960,14 @@ def test_font_size_loading_evidence_rejects_forged_measurement(tmp_path, phase):
     (tmp_path / 'corpus').mkdir()
     for key in ('corpus', 'outputs'):
         shutil.copyfile(benchmarks / report[key], tmp_path / report[key])
-    shutil.copyfile(benchmarks / report['dockiln_roundtrip']['outputs'],
-                    tmp_path / report['dockiln_roundtrip']['outputs'])
+    shutil.copyfile(benchmarks / report['docweave_roundtrip']['outputs'],
+                    tmp_path / report['docweave_roundtrip']['outputs'])
     if phase == 'current_run':
-        report['dockiln_roundtrip']['native_reread']['records'][0]['run_size'] += .5
+        report['docweave_roundtrip']['native_reread']['records'][0]['run_size'] += .5
     elif phase == 'current_hash':
-        report['dockiln_roundtrip']['records'][0]['output_sha256'] = 'forged'
+        report['docweave_roundtrip']['records'][0]['output_sha256'] = 'forged'
     elif phase == 'current_coverage':
-        rows = report['dockiln_roundtrip']['native_reread']['records']
+        rows = report['docweave_roundtrip']['native_reread']['records']
         rows[0] = rows[1]
     else:
         report['records'][0][phase]['run_size'] += .5

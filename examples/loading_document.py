@@ -73,8 +73,8 @@ class LoadingDocument(DocsExamplesBase):
         with io.FileIO(MY_DIR + "test_full_article.docx") as stream:
             doc = dk.Document(stream)
 
-        doc.save(ARTIFACTS_DIR + "LoadingDocument.OpenAndSave.md", dk.SaveFormat.MARKDOWN)
-        assert Path(ARTIFACTS_DIR + "LoadingDocument.OpenAndSave.md").exists()
+        doc.save(ARTIFACTS_DIR + "LoadingDocument.OpenAndSave.docx", dk.SaveFormat.DOCX)
+        assert Path(ARTIFACTS_DIR + "LoadingDocument.OpenAndSave.docx").exists()
 
 
 if __name__ == "__main__":

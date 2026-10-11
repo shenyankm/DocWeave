@@ -1,6 +1,5 @@
 """Field instructions must not emit images, text boxes, or occupy layout space."""
 
-import base64
 import warnings
 from io import BytesIO
 
@@ -70,28 +69,21 @@ def test_instruction_image_does_not_change_page_break_classification():
     assert not is_pure_page_break(para)
 
 
-@pytest.mark.parametrize("format", ["md", "pdf"])
-def test_instruction_only_table_paragraph_matches_empty_control(format):
+def test_instruction_only_table_paragraph_matches_empty_control():
     doc, _, _ = document("table", "inline")
     control, _, _ = document("table", "inline", instructions=False)
     paragraph = doc.sections[0].body.children[0].rows[0].cells[0].paragraphs[0]
     paragraph._children = [ldm.FieldStart(), image_shape("red"), ldm.Run(text="SECRET"), ldm.FieldEnd()]
     control.sections[0].body.children[0].rows[0].cells[0].paragraphs[0]._children = []
-    raw, expected = render(doc, format), render(control, format)
-    if format == "md":
-        assert raw == expected
-    else:
-        with fitz.open(stream=raw, filetype="pdf") as actual, fitz.open(stream=expected, filetype="pdf") as clean:
-            assert len(actual) == len(clean)
-            for page, reference in zip(actual, clean):
-                assert page.get_pixmap().samples == reference.get_pixmap().samples
-
-
+    raw, expected = render(doc, "pdf"), render(control, "pdf")
+    with fitz.open(stream=raw, filetype="pdf") as actual, fitz.open(stream=expected, filetype="pdf") as clean:
+        assert len(actual) == len(clean)
+        for page, reference in zip(actual, clean):
+            assert page.get_pixmap().samples == reference.get_pixmap().samples
 
 
 @pytest.mark.parametrize("location", ["body", "table", "header", "footer"])
-@pytest.mark.parametrize("format", ["md", "pdf"])
-def test_real_docx_field_images(location, format):
+def test_real_docx_field_images(location):
     native = NativeDocument()
     if location == "body":
         paragraph = native.add_paragraph()
@@ -118,19 +110,14 @@ def test_real_docx_field_images(location, format):
     source = BytesIO()
     native.save(source)
     doc = dk.Document(BytesIO(source.getvalue()))
-    result = render(doc, format)
-    if format == "md":
-        assert base64.b64encode(secret.image_data.image_bytes) not in result
-        assert base64.b64encode(visible.image_data.image_bytes) in result
-        assert b"SECRET_CODE" not in result
-    else:
-        with fitz.open(stream=result, filetype="pdf") as pdf:
-            assert "SECRET_CODE" not in "".join(page.get_text() for page in pdf)
-            assert "VISIBLE_RESULT" in "".join(page.get_text() for page in pdf)
-            images = [pdf.extract_image(item[0])["image"] for page in pdf for item in page.get_images()]
-            assert len(images) == 1
-            with Image.open(BytesIO(images[0])) as image:
-                assert image.convert("RGB").getpixel((0, 0)) == (0, 0, 255)
+    result = render(doc, "pdf")
+    with fitz.open(stream=result, filetype="pdf") as pdf:
+        assert "SECRET_CODE" not in "".join(page.get_text() for page in pdf)
+        assert "VISIBLE_RESULT" in "".join(page.get_text() for page in pdf)
+        images = [pdf.extract_image(item[0])["image"] for page in pdf for item in page.get_images()]
+        assert len(images) == 1
+        with Image.open(BytesIO(images[0])) as image:
+            assert image.convert("RGB").getpixel((0, 0)) == (0, 0, 255)
 
 
 @pytest.mark.parametrize("location", ["body", "table", "header", "footer"])

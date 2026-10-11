@@ -3,41 +3,51 @@ name: GitHub Pages
 on:
   push:
     branches: [dev]
-    paths: ['site/**', 'docs/*.md', '.github/workflows/pages.yml']
+    paths: ['site/**', 'docs/*.md', 'README*.md', 'THIRD_PARTY_NOTICES.md', '.github/workflows/pages.yml']
   pull_request:
-    paths: ['site/**', 'docs/*.md', '.github/workflows/pages.yml']
+    paths: ['site/**', 'docs/*.md', 'README*.md', 'THIRD_PARTY_NOTICES.md', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: false
+  group: pages-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
+    name: Build documentation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: site
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24'
           cache: npm
           cache-dependency-path: site/package-lock.json
-      - run: npm ci
-        working-directory: site
-      - run: npm run build
-        working-directory: site
-      - uses: actions/upload-pages-artifact@v4
-        if: github.event_name != 'pull_request'
+      - name: Install documentation dependencies
+        run: npm ci
+      - name: Build documentation and check links
+        run: npm run build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/dev' }}
         with:
           path: site/build
 
   deploy:
-    if: github.event_name != 'pull_request'
+    name: Deploy documentation
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/dev' }}
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       pages: write
       id-token: write
@@ -45,6 +55,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/configure-pages@v5
-      - uses: actions/deploy-pages@v4
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
         id: deployment

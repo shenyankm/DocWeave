@@ -9,6 +9,8 @@ from pathlib import Path
 import pytest
 from pypdf import PdfReader
 
+from ._word_fixtures import word_bytes
+
 from dockiln import _process, libreoffice
 from dockiln._process import run_process
 

@@ -8,6 +8,7 @@ from defusedxml.ElementTree import fromstring
 import pytest
 
 import dockiln as dk
+from ._word_fixtures import word_document
 from dockiln import light_document_model as ldm
 from dockiln.readers.docx import DocumentReader
 from dockiln.writers.docx import LdmDocxWriter
@@ -78,8 +79,8 @@ def test_notes_and_nonstandard_header_part_locations_and_reader_reuse():
     assert any(story.part_name == 'notes/fn text.xml' for story in first.source_stories)
 
 
-def test_plain_text_has_no_invented_xml_provenance():
-    doc = dk.Document(BytesIO(b'plain text'))
+def test_created_paragraph_has_no_invented_xml_provenance():
+    doc = word_document('plain text')
     assert doc.to_dict()['blocks'][0]['provenance'] is None
 
 

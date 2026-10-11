@@ -8,7 +8,7 @@
 
 ## Features
 
-- Convert DOCX, legacy DOC, Markdown, and TXT to supported output formats.
+- Read DOCX, legacy DOC, and Flat OPC; write DOCX, Flat OPC, or PDF.
 - Generate PDF with bundled Chinese fonts; optionally use fallback fonts and text shaping.
 - Extract body text, ordered paragraphs/tables, formatting, and source stories as structured data.
 - Edit supported DOCX text, formatting, tables, images, and hyperlinks while retaining original package parts.
@@ -18,12 +18,11 @@
 |---|---|---|
 | DOCX | Yes | Yes |
 | DOC (Word 97–2003) | Yes | No |
-| Markdown | Yes | Yes |
-| TXT | Yes | Yes |
+| Flat OPC | Yes | Yes |
 | PDF | No | Yes |
 | RTF | OLE2/DOC-backed files only; not standard text RTF | No |
 
-Flat OPC is also supported; specify its load/save format explicitly. LibreOffice can separately convert original DOC/DOCX/RTF files to PDF, including standard text RTF.
+Input formats are detected from content, including Flat OPC XML files and files without an extension. Specify the save format for Flat OPC XML output. LibreOffice can separately convert original DOC/DOCX/RTF files to PDF, including standard text RTF.
 
 ## Installation
 
@@ -37,7 +36,7 @@ python -m pip install "git+https://github.com/shenyankm/DocKiln.git@dev"
 
 On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`. For reproducible deployments, replace `@dev` with a tested full commit hash.
 
-The distribution name is currently `dockiln`, and the import is `dockiln`; there is no `dockiln` import yet. Do not install alongside `aspose-words-foss`: it is a different distribution sharing the same modules, so installing or removing either can overwrite them.
+The distribution and import names are both `dockiln`, using an independent namespace. The former `aspose.words_foss` import is no longer provided; update old code to `import dockiln as dk`. Markdown/TXT reading, writing, and their load/save options have been removed; use `get_text()` to extract plain text.
 
 Runtime dependencies install automatically. Optional text shaping:
 
@@ -53,26 +52,25 @@ python -m pip install "dockiln[shaping] @ git+https://github.com/shenyankm/DocKi
 import dockiln as dk
 
 doc = dk.Document("report.docx")
-doc.save("report.md", dk.SaveFormat.MARKDOWN)
+doc.save("copy.docx", dk.SaveFormat.DOCX)
 doc.save("report.pdf", dk.SaveFormat.PDF)
-doc.save("report.txt", dk.SaveFormat.TEXT)
 ```
 
 `save(path)` can infer the format from the output extension. Conversion rebuilds supported content; it is not lossless DOCX round-tripping.
 
-### Create from Markdown
+### In-memory input and output
 
 ```python
 from io import BytesIO
+from pathlib import Path
 import dockiln as dk
 
-markdown = "# Report\n\n客户公司\n\n中文 **粗体** and English.\n"
-doc = dk.Document(BytesIO(markdown.encode("utf-8")), dk.MarkdownLoadOptions())
-doc.save("report.docx", dk.SaveFormat.DOCX)
+doc = dk.Document(BytesIO(Path("report.docx").read_bytes()))
+docx_bytes = doc.to_bytes(dk.SaveFormat.DOCX)
 pdf_bytes = doc.to_bytes(dk.SaveFormat.PDF)
 ```
 
-Use an explicit load option for Markdown streams. `to_bytes(format_or_options)` returns in-memory output without creating files.
+`to_bytes(format_or_options)` returns in-memory output without creating files.
 
 ### Edit DOCX without rebuilding it
 
@@ -123,12 +121,11 @@ This backend uses original input files and system fonts, not the bundled PDF fon
 
 ## Limitations and Safety
 
-- No built-in PDF reader, DOC/RTF writer, OCR, or full Word layout engine. Markdown implements selected CommonMark/GFM features.
+- No built-in PDF reader, DOC/RTF writer, Markdown/TXT reader or writer, OCR, or full Word layout engine.
 - Complex fields, revisions, floating content, notes, and section-specific headers/footers have fidelity limits. Use representative documents to verify results.
 - Bundled fonts cover common Chinese and Latin text, not all Unicode. Substitution can change layout; missing glyphs warn. PDF/A and PDF/UA compliance are not implemented.
 - Input/archive/image limits and hardened XML parsing reduce risk, but are **not a sandbox**. Isolate untrusted documents and native parsers; retaining original DOCX parts also retains macros, embedded objects, and external relationships.
-- Markdown does not download remote images. Local images are disabled by default; opt-in access is confined to the source document directory.
-- Main output files are published atomically; external Markdown images are not a multi-file transaction. Do not share a mutable document across concurrent operations.
+- Main output files are published atomically. Do not share a mutable document across concurrent operations.
 
 See [conversion and safety](docs/enhanced-conversion.md) for save options, fonts, resource limits, and backend details.
 
@@ -142,7 +139,9 @@ python -m pytest tests -q
 python -m pytest examples -q --rootdir=examples -c examples/pytest.ini
 ```
 
-Native LibreOffice tests skip when it is not installed. Current cross-platform results are available in [GitHub Actions](https://github.com/shenyankm/DocKiln/actions); passing tests do not guarantee Word-identical rendering.
+CI runs on Linux with Python 3.10–3.14. It builds an sdist and a wheel from that sdist once, checks distribution metadata, then tests the same installed wheel outside the checkout on each Python version. Historical baseline evidence is checked in a separate job; distributions and JUnit reports are retained for seven days.
+
+Native LibreOffice and optional ecosystem tests skip when their dependencies are absent. Current results are available in [GitHub Actions](https://github.com/shenyankm/DocKiln/actions); passing tests do not guarantee Word-identical rendering or Windows/macOS compatibility.
 
 ## Documentation
 
@@ -154,6 +153,6 @@ Native LibreOffice tests skip when it is not installed. Current cross-platform r
 
 ## License and Credits
 
-Code: [MIT](LICENSE). Bundled fonts: [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt); see [font provenance](src/dockiln/writers/pdf/fonts/README.md). Optional integrations have their own licenses.
+Code: [MIT](LICENSE); original notices: [third-party notices](THIRD_PARTY_NOTICES.md). Bundled fonts: [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt); see [font provenance](src/dockiln/writers/pdf/fonts/README.md). Optional integrations have their own licenses.
 
 DocKiln originated from [Aspose.Words FOSS for Python](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python) and retains the original copyright notices. It is independently maintained, not an official Aspose release; API or rendering compatibility is not guaranteed.

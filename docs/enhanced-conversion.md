@@ -1,6 +1,15 @@
-# 增强版转换、诊断与安全边界
+# DocKiln 转换、诊断与安全边界
 
-本页描述本 fork 的 `26.7.0.post2`，不是官方 Aspose 的功能保证。
+本页描述 `dockiln` 0.1.0 的源码接口。迁移后的包名和导入名均为 `dockiln`，目录为
+`src/dockiln/`；不再提供 `aspose.words_foss` 入口。运行库不依赖商业 Aspose 包。
+上游来源及原始版权声明保留于 [第三方声明](../THIRD_PARTY_NOTICES.md)。
+
+内置读取 DOCX、旧版 DOC、Flat OPC 及 OLE2/DOC-backed RTF，写出 DOCX、Flat OPC 或 PDF。
+Markdown/TXT 读写、`MarkdownLoadOptions`、`MarkdownSaveOptions` 和 `ConversionOptions`
+已移除；纯文本提取使用 `Document.get_text()`，结构化输出使用 `to_dict()`。
+输入按内容检测格式，包括无扩展名文件和 Flat OPC XML；也可用 `LoadOptions.load_format`
+显式指定格式。Flat OPC XML 输出应显式指定对应 `SaveFormat`。
+本页保留的专项记录和测试数量属于迁移前证据，不代表当前包或远端 CI 已重新验收。
 内存输出、结构化内容和模板用法见 [项目 README](../README.zh-CN.md)，原包编辑见 [DOM 指南](docx-dom.md)；
 同类项目的参考方向见 [生态对比](ecosystem-adoption.md)，固定商业基准、差距和复验材料见
 [商业对齐计划](commercial-alignment-plan.md)。
@@ -21,38 +30,31 @@ DOCX／Flat OPC 转换中的下划线声明区分缺失属性和显式空值：
 写出覆盖样式的无下划线格式时使用显式 `none`，避免保存后重新继承下划线。
 该规则不表示完整 Font DOM 接口或 PDF 下划线绘制已对齐。
 
-`OoxmlSaveOptions.save_format` 支持 DOCX 和四种 Flat OPC 变体，`MarkdownSaveOptions.save_format` 只接受 Markdown。
-可使用 `SaveFormat`、对应整数或已有字符串别名（大小写不敏感，如 `docx`、`markdown`、`md`）。
+`OoxmlSaveOptions.save_format` 支持 DOCX 和四种 Flat OPC 变体，`PdfSaveOptions` 用于 PDF。
+可使用 `SaveFormat`、对应整数或已有字符串别名（大小写不敏感，如 `docx`、`flat_opc`、`pdf`）。
 不匹配或未知值在渲染前抛出 `ValueError`，文件输出保留原文件，内存输出不返回错误格式的字节。
 `OoxmlSaveOptions(None)` 仍使用默认 DOCX；创建后显式改为 `None` 属于无效值。
 扩展名不覆盖显式选项。此规则也适用于直接使用 `LdmDocxWriter`，以及创建 writer 后修改选项。
 这是行为修正：此前不匹配的 `save_format` 被静默忽略；切换格式应传入对应的 `SaveFormat` 或选项类。
 
-三个保存选项类的 15 个枚举字段接受已定义成员、对应整数和大小写不敏感的成员名；
+两个保存选项类的枚举字段接受已定义成员、对应整数和大小写不敏感的成员名；
 未知字符串、越界整数及错误类型现在在赋值时抛出 `ValueError`，保留原属性值。
 此前部分请求被静默忽略或在保存时才失败；调用方应在赋值与保存边界处理异常。
-直接 `ConversionOptions` 构造的五个共享枚举使用相同校验，详见[逐字段审计](#保存选项逐字段审计)。
+当前保存选项详见[逐字段审计](#保存选项逐字段审计)。
 
-有效但未实现的请求不会因枚举校验而成为已实现功能：`NON_COMPATIBLE_TABLES` 仍等同 `NONE`，
-`Zip64Mode.ALWAYS` 仍等同 `IF_NECESSARY`，Markdown 非默认 `image_resolution` 不会重采样图片。
-这三种请求现在产生 `ConversionWarning` 及 `markdown.unsupported_option` / `docx.unsupported_option`
-诊断；默认设置不增加警告。需要拒绝这些退回行为时，可将 `ConversionWarning` 升级为错误，
-输出前失败会保留原主文件。`--strict` 针对内容损失，并非拒绝所有选项退回的通用开关。
+有效但未实现的请求不会因枚举校验而成为已实现功能：`Zip64Mode.ALWAYS` 仍等同
+`IF_NECESSARY`，并产生 `ConversionWarning` 和 `docx.unsupported_option` 诊断。
+需要拒绝退回行为时，可将 `ConversionWarning` 升级为错误；输出前失败会保留原主文件。
+`--strict` 针对内容损失，并非拒绝所有选项退回的通用开关。
 
 ### 布尔保存开关
 
-`PdfSaveOptions` 的八个、`MarkdownSaveOptions` 的三个及 `OoxmlSaveOptions.pretty_format`
-布尔字段仅接受 `True` / `False`。字符串（包括 `"false"` / `"true"`）、0/1、None 和其他
-非布尔值在赋值时抛出 `ValueError`，不改变原属性，也不污染 PDF 显式请求诊断集合。
-直接 `ConversionOptions` 的八个布尔字段在构造和赋值时同样拒绝错误类型。
-从配置读取这些开关时，调用方应先完成有明确规则的解析，不要依赖 Python 的一般真值判断。
-
-此前非空字符串 `"false"` 会启用 PDF 结构、Markdown 下划线或 DOCX 美化输出；
-现在不会接受该赋值。默认值、公开实例字典字段、复制及有效 True/False 的实际行为保留。
+`PdfSaveOptions` 的布尔字段和 `OoxmlSaveOptions.pretty_format` 仅接受 `True` / `False`。
+字符串（包括 `"false"` / `"true"`）、0/1、None 和其他非布尔值在赋值时抛出 `ValueError`，
+不改变原属性，也不污染 PDF 显式请求诊断集合。
+从配置读取开关时，调用方应按明确规则解析，不要依赖 Python 的一般真值判断。
 尚未实现的 PDF 开关继续发出 unsupported_option 诊断，类型通过不意味着功能已支持。
-普通 Markdown 的下划线使用 `++text++` 扩展语法，HTML 表格使用 u 标签；
-普通 Markdown 扩展不是跨阅读器兼容保证。本次未改变该输出语法。
-真实 DOCX、独立 pypdf/ZIP/python-docx 回读及前后记录见[布尔契约](benchmarks/boolean-save-contract.json)。
+历史独立 pypdf/ZIP/python-docx 回读记录见[布尔契约](benchmarks/boolean-save-contract.json)。
 
 ### PDF 打开缩放因子
 
@@ -157,68 +159,11 @@ PDF 的正文、表格、旋转单元格、文本测量和诊断使用同一状�
 分页符不参与可见文本布局。此专项尚不证明动态样式编辑、其他字体效果、全部格式的
 来源保留或全页面视觉等价；含形状的旋转单元格仍明确拒绝。
 
-### Markdown 页眉页脚损失
+### 字段可见性
 
-Markdown 当前只导出默认页眉/页脚中顶层段落的图片，省略文字、表格、注引用、横线和变体图片。
-现在这些省略会产生 `ContentLossWarning` 和 `markdown.header_footer_content_omitted` 诊断；
-隐藏文字、纯字段指令及空段落不触发该诊断。诊断不包含被省略的文字，也不修改源模型。
-默认输出仍保持既有 Markdown 内容；需要保留页眉页脚应使用原包编辑或支持该内容的输出路径。
-`--strict` 或将 `ContentLossWarning` 升级为错误的调用会在输出前失败，保留原目标文件。
-这补齐了有损转换提示，并未实现 Markdown 页眉页脚渲染。
-
-### HTML 表格与字段可见性
-
-`export_as_html=TABLES` 使用实际 HTML 行/列跨度和格式标签，保留嵌套表格及段落顺序、
-普通编码链接和图片；文字与属性转义，危险 URI 不激活并有损失诊断。
-孤立的纵向合并续格保留内容并报警。默认仍为管道 Markdown，合并/嵌套几何损失继续报警。
-HTML 表格中的复杂字段保留可见结果，但不导出字段动作/目标；注标签和定义可读，
-语义注锚点尚未支持；非图片形状也未支持。这些限制都有 `ContentLossWarning`，不能视为功能完成。
-HTML 输出不等同 Word 的字体、页面布局和完整交互语义。
-
-共享可见性过滤现在按每层字段的指令/结果状态处理嵌套字段：内部字段结束不会让外层指令
-文字进入 Markdown/PDF 输出。指令区的注引用不会触发未显示注正文的导出；可见嵌套结果和
-用内部字段结果组成的 Markdown 超链接目标仍保留。原包和结构化源内容仍可保留原始字段数据。
-
-Markdown 的正文、表格和默认页眉页脚图片，以及 PDF 的内联、浮动、锚定、定位图片和文本框，
-现在均排除字段指令区节点；含图段落的文字也使用同一可见性边界。PDF 图片测量、预绘制和
-纯分页识别同步过滤，避免不绘制的指令图片仍改变布局。可见结果图片继续输出，外置 Markdown
-图片目录不写入指令图片；源模型和原包内容不会因此被删除。见[复验记录](benchmarks/field-shape-visibility.json)。
-
-### 外置图片文件名
-
-外置 Markdown/HTML 表格图片保留可用的原文件名；同名但字节不同的图片追加序号，
-相同字节复用，已有无关文件和目标符号链接不会被覆盖。主 Markdown 路径不会被作为
-图片目标；新图片使用原子文件写入。目录已有冲突时生成名称可能变化，链接随名称更新。
-渲染、编码、后续图片写入及主文件发布的普通异常会回滚本次新图片，已有及复用文件保留。
-独占占用标记保持到主文件提交结束，其他导出避开仍可能回滚的图片；本次重复字节仍复用。
-单导出失败、受控并发占用及失败/成功交错已验证，见[回滚复验](benchmarks/markdown-image-rollback.json)
-和[同名图片复验](benchmarks/markdown-image-collisions.json)。这不是断电或强制终止安全的多文件
-原子事务；中断可能留下图片或占用标记，新建空目录也可能保留。
-本机文件系统上的独立进程占用、普通异常回滚和强制终止后再次导出已验证，
-见[进程复验](benchmarks/markdown-image-processes.json)。被终止进程的残留保留，后续导出避开
-占用名称；已有占用标记不会被自动删除。自动恢复、断电及网络文件系统行为仍未验收。
-
-### 图片替代文本与 URI
-
-普通 Markdown 图片的替代文本按字面转义，避免 `]`、HTML 标签和嵌套图片片段变成新语法；
-CR/LF/TAB 使用字符引用，保留文本并避免空行拆开图片。正文、管道表格和默认页眉页脚图片
-复用该路径。缺失格式元数据的内联栅格图片使用现有 Pillow 识别 MIME，不重编码图片或修改模型；
-无法识别并且没有有效类型的内联图片会产生内容损失诊断。
-
-外置图片的物理文件名保持不变，链接使用 `/`，空格、`#`、`?`、百分号及其他路径字符做 URI 编码。
-`images_folder_alias` 是 URL 前缀：在其 path 后添加编码文件名，保留 query/fragment；
-别名中需要作为路径字符的 `#` / `?` 应写成 `%23` / `%3F`，已有百分号编码不会重复编码。
-激活的别名必须是没有原始 ASCII 控制字符的字符串；URL 解析报错时在创建副产物前拒绝。
-直接 writer 没有主输出路径而使用绝对图片目录时，生成 `file:` URI。
-
-普通 Markdown 与 HTML 表格图片均拒绝危险 scheme，并产生 `ContentLossWarning`；
-严格模式沿用已有回滚，保留原主文件和已有图片。这里只检查 URI/输出语法，不访问远程资源，
-也不提供外部文件访问授权或完整 HTML/SVG 净化。
-
-[复验记录](benchmarks/markdown-image-links.json)包含真实 DOCX、独立 Markdown token 和 Pandoc HTML 对照。
-`markdown-it-py 4.2.0` 的图片 alt 渲染会漏掉 `text_special` token 中的转义标点；
-该复验使用解析 token 检查语法，并用 Pandoc 3.8.3 核对 HTML。
-具体 Markdown 阅读器行为仍需调用方验证；记录不包含浏览器或原生 Office 界面验收。
+共享可见性过滤按每层字段的指令/结果状态处理嵌套字段，PDF 不绘制字段指令区的
+文字、图片或文本框；可见字段结果继续输出。图片测量与分页使用相同边界，
+源模型和原包内容不会因此被删除。历史对照见[复验记录](benchmarks/field-shape-visibility.json)。
 
 ## PDF 图片压缩
 
@@ -234,7 +179,7 @@ AUTO 即使请求较低 JPEG 质量，也保留含透明像素图片的原字节
 `content_order` 序列化兼容旧 `paragraphs` / `tables` 构造。换页重复连续前导表头，
 可容纳的行整体移动，超高行按内容行拆分；不可满足的行高、cantSplit 或单元格分页要求会报警。
 过高的不可拆嵌套表格、无法容纳的表头或旋转内容明确失败。水平跨度保留，垂直合并仍为
-网格/边线近似；Markdown 展平嵌套表格并报告损失。它们不保证 Word 的完整表格排版。
+网格/边线近似，不保证 Word 的完整表格排版。
 
 源上下标标志已用于正文、表格、页眉页脚、列表正文、标题、引用和代码块的富文本绘制，包含塑形路径。
 缩放、基线偏移、装饰线及链接区域采用 fpdf2 度量；自动行高预留上标空间，固定行高保留源值。
@@ -284,8 +229,7 @@ DOCX 表格默认边距包括已支持的样式继承。表格上下边距是单
 旧 LDM JSON 若用 `0` 表示默认间距，应改为 `null`；显式零值现在会改变布局。
 条件表格样式及行级边距例外仍未实现，见[边距验收](benchmarks/cell-margins.json)。
 `Table.bidi` 保留已支持的 DOCX RTL 表格方向，镜像视觉列、对齐及边框，同时保留逻辑内容顺序。
-`start/end` 边距归一为 left/right 字段，DOCX 输出 left/right。普通 Markdown 报告方向丢失，
-HTML 表格使用 `dir="rtl"`；表格方向不会自动启用文字塑形。
+`start/end` 边距归一为 left/right 字段，DOCX 输出 left/right；表格方向不会自动启用文字塑形。
 Word 与 LibreOffice 对照及边界见[方向验收](benchmarks/table-direction.json)。
 小字号及短旋转单元格的最小行高已修正单位；受影响的行会变矮，页/栏断点可能改变，
 见[行高验收](benchmarks/row-height-units.json)。
@@ -330,7 +274,7 @@ dk.Document("report.docx").save("report.pdf", options)
 | `PdfContentLossWarning` | 未知模型节点、页眉页脚变体、超高不可拆行等已知内容或布局降级；未启用塑形的复杂文字也会提示 |
 | `dk.loading.DocumentLoadWarning` | 缺失脚注/尾注正文、对象、altChunk、修订、简单字段、内容控件、公式等尚未完整保留的构造 |
 | `DocxWriterLossyWarning` | 未知模型节点等已知写出损失；无对应正文、冲突 ID 或不支持位置的注释会在发布输出前明确拒绝 |
-| `dk.ContentLossWarning` | 已知内容/布局损失的公共基类；用于统一过滤加载、DOCX、Markdown、PDF 的已知损失 |
+| `dk.ContentLossWarning` | 已知内容/布局损失的公共基类；用于统一过滤加载、DOCX/Flat OPC、PDF 的已知损失 |
 
 默认值不会仅因选项尚未实现而报警；显式赋值即使等于默认值也会提示。
 这些诊断只覆盖已检测到的情况，不是全面的 Word 兼容性检查。可用 Python `warnings` 分类过滤或升级为错误。
@@ -438,20 +382,9 @@ PDF writer 对模型中的字符值另发 `pdf.character_indents_ignored`；错�
 见[检测与拒绝](../tests/test_character_indent_diagnostics.py)及[模型往返](../tests/test_character_indent_roundtrip.py)。
 这些是单位值保留和损失检测，不能视为字符缩进排版验收。
 
-Markdown 默认不读取本地图片，仍支持内嵌 base64 图片。可信文件需要本地图片时显式开启：
-
-```python
-options = dk.MarkdownLoadOptions()
-options.allow_local_images = True
-dk.Document("documents/report.md", options).save("report.pdf")
-```
-
-开启后图片必须位于文档目录内，绝对路径、`..` 或符号链接不能逃出该目录；不会自动下载 HTTP 图片。
-没有文档目录的字节/流输入不能加载本地图片。其他低层读写器不是完整的服务安全入口。
-
-`Document.save()` 的 PDF、DOCX、TXT 和 Markdown 主文件在同目录暂存并原子替换；转换、写入或替换失败
+`Document.save()` 的 PDF、DOCX 和 Flat OPC 文件在同目录暂存并原子替换；转换、写入或替换失败
 不会覆盖原主文件，已有输出符号链接、非普通文件及不可写文件会被拒绝。新文件默认权限为 `0600`，替换已有文件时保留其权限位。
-Markdown 导出的独立图片不是多文件事务；原子替换也不等于完整断电恢复保证。
+原子替换不等于完整断电恢复保证；流输出不具有文件原子替换契约。
 
 ## 有界单任务 CLI
 
@@ -507,9 +440,9 @@ python -m dockiln.convert report.docx report.pdf --backend libreoffice
 
 ## 保存选项逐字段审计
 
-范围为 `saving.py` 的三个保存选项类及其 `OutlineOptions`：40 + 6 个初始化公开字段，其中 15 个字段使用枚举描述符。
+范围为 `saving.py` 的 `PdfSaveOptions`、`OoxmlSaveOptions` 及其 `OutlineOptions`。
 下表记录源码行为与复验入口，不表示已完整验收每项；全矩阵效果、标量边界和跨格式组合仍需完整选项验收。
-枚举拒绝与三项有效但未实现请求的诊断见[记录](benchmarks/save-option-contract.json)；
+历史枚举拒绝与未实现请求的诊断见[记录](benchmarks/save-option-contract.json)；其中 Markdown 专项已不适用。
 后续标量及内容专项按各行记录核对，不能升级为全矩阵已通过。
 支持枚举值不等于对应功能已实现：有效但未实现值仍按表中限制处理。
 
@@ -548,26 +481,6 @@ python -m dockiln.convert report.docx report.pdf --backend libreoffice
 | `pretty_format` | XML 缩进；语义与全部部件仍待矩阵复核 | [examples/working_with_ooxml_save_options.py](../examples/working_with_ooxml_save_options.py) |
 | `reference_docx` | 导入参考样式，非参考正文/资源/页面设置 | [test_reference_styles.py](../tests/test_reference_styles.py) |
 
-### MarkdownSaveOptions
-
-| 字段 | 当前行为/限制 | 证据或复验入口 |
-|---|---|---|
-| `table_content_alignment` | 表格对齐覆盖 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
-| `list_export_mode` | Markdown 列表或纯文本路径 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
-| `export_images_as_base64` | 无 images_folder 时始终内联；有目录时选择内联/外部 | [test_conversion_api.py](../tests/test_conversion_api.py) |
-| `images_folder` | 同名不同内容分配序号，已有文件及目标符号链接保留；普通失败回滚新图片，占用标记保护待提交图片；非断电安全多文件事务；链接使用编码 URI 路径 | [test_markdown_image_rollback.py](../tests/test_markdown_image_rollback.py)、[test_markdown_image_collisions.py](../tests/test_markdown_image_collisions.py) |
-| `images_folder_alias` | URL 前缀：编码文件名追加到 path，保留 query/fragment；激活时拒绝非字符串/原始 ASCII 控制字符及非法 URL | [图片 URI 契约](benchmarks/markdown-image-links.json)、[独立解析](../tests/test_markdown_image_links.py) |
-| `export_underline_formatting` | 普通 Markdown 使用 `++` 扩展标记，HTML 表格使用 u 标签；不是所有 Markdown 阅读器都支持该扩展 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py)、[实际输出](../tests/test_boolean_save_contract.py) |
-| `link_export_mode` | 自动/内联/引用链接 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
-| `export_as_html` | TABLES 走已有 HTML 路径；NON_COMPATIBLE_TABLES 仍等同 NONE，但现在警告 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |
-| `empty_paragraph_export_mode` | 空行、HTML br 或省略 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
-| `image_resolution` | 未重采样；非默认 96 请求现在警告，源图片字节保留 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |
-| `save_format` | 只支持 MARKDOWN；其他值在输出前拒绝 | [test_save_option_formats.py](../tests/test_save_option_formats.py) |
-| `encoding` | 文本编码；编码失败在主输出写入前发生 | [test_conversion_api.py](../tests/test_conversion_api.py) |
-| `paragraph_break` | 顶层块分隔；内部换行仍为 LF | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
-| `style_map` | 精确样式名映射为支持的语义样式 | [test_ecosystem_semantics.py](../tests/test_ecosystem_semantics.py) |
-| `export_notes` | 可见注锚点、定义与回链；缺失/不支持位置有诊断 | [test_markdown_notes.py](../tests/test_markdown_notes.py) |
-
 ### OutlineOptions
 
 | 字段 | 当前行为/限制 | 证据或复验入口 |
@@ -582,9 +495,8 @@ python -m dockiln.convert report.docx report.pdf --backend libreoffice
 ### 选项验收边界
 
 逐字段契约不等于全矩阵验收：标量边界、显式默认值和跨选项组合仍须检查实际输出。
-`models.ConversionOptions` 是直接 writer 的额外接口；共享的五个枚举和八个布尔字段
-遵循上文校验规则，其余字段仍需单独核对，不能计入上述 46 项的完成结论。
-ZIP64 强制输出、选择性 HTML 表格及图片重采样仍未实现；诊断说明退回路径，不计为功能完成。
+直接 writer 使用对应的 `PdfSaveOptions` 或 `OoxmlSaveOptions`。
+ZIP64 强制输出仍未实现；诊断说明退回路径，不计为功能完成。
 
 设置关系选择先跳过空目标，再按跨类型重复 Id 的最后记录、UTF-16 顺序和准确 settings 类型选择首项。选中目标缺失、无法解析为包内路径或非 Word 设置根时使用默认值，与 `TargetMode` 无关，不回退到后续关系；相对 External 目标仅在包内解析，不执行网络或外部文件读取。图片、超链接及其它资源的既有验证不因此放宽。
 
@@ -613,8 +525,7 @@ ZIP64 强制输出、选择性 HTML 表格及图片重采样仍未实现；诊�
 缺失的分隔线设置目标和循环正文都在输出前报错，已有输出文件保持原样。
 这些明确拒绝与商业实现对部分损坏输入的恢复行为不同；不将拒绝计为成功保留。
 
-内置 PDF 和纯文本仍提示注释省略。Markdown 的 `export_notes` 只输出普通注释定义，
-不将分隔线/延续通知误当成另一条注释，并提示这些特殊 story 省略。
+内置 PDF 仍提示脚注/尾注省略；需要保留注释结构时使用 DOCX/Flat OPC 或原包 DOM 保存。
 独立注释正文中的普通 Run、正文锚点和注释标记使用实时普通字号解析链，保留零字号、
 段落/字符样式与直接声明的受测优先级；移动、JSON 和深复制后重新关联当前故事与表格上下文。
 这不证明所有字体属性或注释 PDF 布局等价。

@@ -248,11 +248,8 @@ def test_endnote_imported_bad_position_recovers_document_and_section_defaults():
         assert doc.first_section.page_setup.endnote_options.position == dk.notes.EndnotePosition.END_OF_DOCUMENT
 
 
-@pytest.mark.parametrize('extension', ['txt', 'md'])
-def test_text_reader_binds_section_options_and_json_preserves_value_equality(tmp_path, extension):
-    source = tmp_path / ('input.' + extension)
-    source.write_text('OWNED_NOTE_OPTIONS')
-    doc = dk.Document(source)
+def test_reader_binds_section_options_and_json_preserves_value_equality():
+    doc = dk.Document(BytesIO(owned_notes()))
     model = doc.light_document_model
     page = doc.first_section.page_setup
     assert page._note_defaults is model.note_properties

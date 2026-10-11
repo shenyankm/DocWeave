@@ -60,7 +60,7 @@ Desktop.ini
 
 # Generated conversion and example output
 /output/
-/ApiExamples/output/
+/examples/output/
 
 # Local commercial baseline records and collection probes
 /docs/benchmarks/

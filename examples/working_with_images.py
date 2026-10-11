@@ -1,8 +1,8 @@
 """
 API examples for converting documents that contain images.
 
-Uses DOCX test files with embedded images. Converts each to all three
-output formats (Markdown, PDF, Text).
+Uses DOCX test files with embedded images. Converts each to DOCX
+and PDF.
 
 Run:
     python examples/working_with_images.py
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     print("=== Image Document Examples ===\n")
     for f in IMAGE_FILES:
-        print(f"  {f} -> md, pdf, txt")
+        print(f"  {f} -> docx, pdf")
     examples.test_image_documents_to_all_formats()
     print("  Done.")
     print(f"\nOutput files are in: {ARTIFACTS_DIR}")

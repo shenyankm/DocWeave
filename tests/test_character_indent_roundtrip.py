@@ -12,6 +12,7 @@ from docx import Document as IndependentDocument
 from docx.oxml.ns import qn
 
 import dockiln as dk
+from ._word_fixtures import word_document
 from dockiln import light_document_model as ldm
 from dockiln.diagnostics import ContentLossWarning, collect_diagnostics
 from dockiln.writers.docx import LdmDocxWriter
@@ -85,7 +86,7 @@ def test_alias_units_and_explicit_zero_survive_supported_contexts(attribute, kin
 @pytest.mark.parametrize("field", FIELDS)
 @pytest.mark.parametrize("value", [0, 1.13, -1.13])
 def test_model_edit_serialization_uses_hundredths_without_float_truncation(field, value):
-    document = load(b"plain")
+    document = word_document("plain")
     model = document.light_document_model
     setattr(model.sections[0].body.paragraphs[0].paragraph_format, field, value)
     rebuilt = ldm.Document.model_validate_json(model.model_dump_json())
@@ -98,7 +99,7 @@ def test_model_edit_serialization_uses_hundredths_without_float_truncation(field
 @pytest.mark.parametrize("value,error", [(float("nan"), ValueError), (float("inf"), ValueError),
                                          (1e100, ValueError), (10**1000, ValueError), (True, TypeError), ("bad", TypeError)])
 def test_invalid_model_character_edit_preserves_existing_output(tmp_path, field, value, error):
-    model = load(b"plain").light_document_model
+    model = word_document("plain").light_document_model
     setattr(model.sections[0].body.paragraphs[0].paragraph_format, field, value)
     destination = tmp_path / "existing.docx"
     destination.write_bytes(b"EXISTING")
@@ -108,7 +109,7 @@ def test_invalid_model_character_edit_preserves_existing_output(tmp_path, field,
 
 
 def test_new_model_character_edits_have_private_pdf_loss_diagnostics_and_strict_refusal(tmp_path):
-    model = load(b"PRIVATE BODY").light_document_model
+    model = word_document("PRIVATE BODY").light_document_model
     model.sections[0].body.paragraphs[0].paragraph_format.character_unit_left_indent = 1.13
     diagnostics = []
     with collect_diagnostics(diagnostics), pytest.warns(ContentLossWarning, match="Character-unit"):
@@ -152,7 +153,7 @@ def test_character_style_clear_and_zero_have_distinct_inheritance():
 
 @pytest.mark.parametrize("field", FIELDS)
 def test_numbering_override_character_units_and_pdf_refusal(tmp_path, field):
-    model = load(b"plain").light_document_model
+    model = word_document("plain").light_document_model
     level = ldm.ListLevel()
     setattr(level, field, 1.13)
     model.lists.append(ldm.DocList(list_id=9, overrides=[ldm.ListLevelOverride(list_level=level)]))
@@ -171,7 +172,7 @@ def test_numbering_override_character_units_and_pdf_refusal(tmp_path, field):
 @pytest.mark.parametrize("field", FIELDS)
 @pytest.mark.parametrize("value", [-21474836.48, 21474836.47])
 def test_character_hundredths_signed_boundaries_roundtrip(field, value):
-    model = load(b"plain").light_document_model
+    model = word_document("plain").light_document_model
     setattr(model.sections[0].body.paragraphs[0].paragraph_format, field, value)
     actual = load(LdmDocxWriter().write_to_bytes(model)).light_document_model.sections[0].body.paragraphs[0].paragraph_format
     assert getattr(actual, field) == value
@@ -189,7 +190,7 @@ def test_malformed_character_hundredths_fail_without_exposing_value(value):
 
 
 def test_direct_model_style_character_edit_has_pdf_loss_diagnostic(tmp_path):
-    model = load(b"plain").light_document_model
+    model = word_document("plain").light_document_model
     model.styles.append(ldm.Style(name="PRIVATE STYLE", paragraph_format=ldm.ParagraphFormat(character_unit_left_indent=1.13)))
     destination = tmp_path / "existing.pdf"
     destination.write_bytes(b"EXISTING")

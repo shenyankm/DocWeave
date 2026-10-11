@@ -1,5 +1,5 @@
 """
-Core DOC file reader — loading, parsing, property resolution, Markdown iteration.
+Core DOC file reader — loading, parsing, property resolution, body iteration.
 """
 
 import struct
@@ -72,7 +72,7 @@ class DocFileReaderCore:
     Core reader for Word 97-2003 (.doc) files.
 
     Loads the OLE2 container, parses binary structures, and provides
-    property resolution and Markdown-oriented iteration.
+    property resolution and body iteration.
     """
 
     def __init__(self):

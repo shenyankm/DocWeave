@@ -418,7 +418,7 @@ ldm_snapshot = editable.to_light_document()
 
 `to_light_document()` 调用现有 reader，从当前 DOM 生成独立快照。字符单位缩进保留在快照的
 `character_unit_*_indent` 字段中；正文、表格、默认页眉页脚、样式和编号的受测路径可写回
-DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 Markdown/PDF writer；
+DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 DOCX/Flat OPC 和 PDF writer；
 **修改快照不会反写 DOM**，并且旧 reader 的内容损失警告和限制仍然适用。
 也可以将 `editable.to_bytes()` 交给 `dk.Document(BytesIO(...))` 继续现有转换。
 
@@ -480,7 +480,7 @@ DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 M
 
 ## 新建文档与默认页面尺寸
 
-`Document()` 创建含一个空段落的新节。新建页面、TXT 和 Markdown 文档默认使用
+`Document()` 创建含一个空段落的新节。新建页面默认使用
 Letter（612×792pt），JSON、DOCX/Flat OPC 往返和 PDF 页框保留尺寸；显式 A4 尺寸保持原值。
 默认尺寸变化可能改变换行与分页。这不表示完整 PageSetup、PaperSize 公共枚举、
 构造重载、全部 DOM 创建操作或多节排版已对齐。

@@ -9,7 +9,7 @@ authors = [
     {name = "shenyankm"}
 ]
 keywords = [
-    "word", "docx", "doc", "rtf", "markdown", "pdf",
+    "word", "docx", "doc", "rtf", "pdf",
     "office", "openxml", "document", "convert",
 ]
 requires-python = ">=3.10,<3.15"
@@ -54,7 +54,6 @@ dev = [
     "PyMuPDF>=1.24.0",
     "python-docx>=1.2.0",
     "docx2python>=3.7.0",
-    "markdown-it-py>=4.2.0",
 ]
 
 [tool.pytest.ini_options]

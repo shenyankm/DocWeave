@@ -1,8 +1,8 @@
 """
 API examples for PDF export.
 
-PdfSaveOptions fields (compliance, image_compression, font_embedding_mode, etc.)
-are accepted for API compatibility but are not yet applied during generation.
+PdfSaveOptions controls PDF export. Some fields are not implemented and emit
+unsupported-option warnings; see docs/enhanced-conversion.md for their limits.
 
 Mirrors the Aspose.Words for Python DocsExamples:
   file_formats_and_conversions/save_options/working_with_pdf_save_options.py
@@ -26,12 +26,11 @@ from docs_examples_base import ARTIFACTS_DIR, DocsExamplesBase, MANUAL_DIR  # no
 class WorkingWithPdfSaveOptions(DocsExamplesBase):
 
     def test_pdf_from_all_input_formats(self):
-        """Save DOCX, DOC, RTF, TXT as PDF."""
+        """Save DOCX, DOC, and OLE2/DOC-backed RTF as PDF."""
         inputs = {
             "docx": "test_full_article.docx",
             "doc": "test_full_article.doc",
             "rtf": "test_full_article.rtf",
-            "txt": "test_plain.txt",
         }
         for label, filename in inputs.items():
             self.convert(

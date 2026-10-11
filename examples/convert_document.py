@@ -1,8 +1,8 @@
 """
 API examples for document conversion between all supported formats.
 
-Input:  DOCX, DOC, RTF, TXT, MD
-Output: Markdown, PDF, TXT
+Input:  DOCX, DOC, OLE2/DOC-backed RTF
+Output: DOCX, PDF
 
 Run:
     python examples/convert_document.py
@@ -24,14 +24,11 @@ INPUT_FILES = {
     "docx": "test_full_article.docx",
     "doc": "test_full_article.doc",
     "rtf": "test_full_article.rtf",
-    "txt": "test_plain.txt",
-    "md": "test_markdown.md",
 }
 
 ALL_OUTPUT_FORMATS = {
-    "md": dk.SaveFormat.MARKDOWN,
+    "docx": dk.SaveFormat.DOCX,
     "pdf": dk.SaveFormat.PDF,
-    "txt": dk.SaveFormat.TEXT,
 }
 
 

@@ -1,10 +1,10 @@
-# Bundled PDF fonts — Unofficial Fork Enhancement
+# DocKiln bundled PDF fonts
 
-These resources were added by this repository's unofficial enhanced fork of
+These resources were added by the independently maintained project derived from
 Aspose.Words FOSS for Python. They were not present in the imported upstream
 revision `2d2efee2787cb9e56d071d17f8d7b740dce8b784`; they are not official
 Aspose fonts or a claim about fonts in later upstream releases. See the
-[project's fork status and differences](../../../../README.md#fork-status-and-upstream-differences).
+[project's license and credits](../../../../../README.md#license-and-credits).
 
 `DocumentSansSC-*.woff` are losslessly compressed, renamed derivatives of **Noto Sans SC 2.004**,
 licensed under the SIL Open Font License 1.1; see `OFL.txt`. The original
@@ -36,7 +36,7 @@ bytes (approximately 24.6 MiB). Every decoded table is byte-identical,
 including glyphs, metrics, names and license records. The format remains
 standard WOFF with zlib decoding; Zopfli is not a runtime or build dependency.
 The reproducible probe and measurements are recorded in
-[`woff-recompression.json`](../../../../docs/benchmarks/woff-recompression.json).
+[`woff-recompression.json`](../../../../../docs/benchmarks/woff-recompression.json).
 
 All source glyphs were retained; the resources are not limited to the
 characters used in the regression test. This provides common Simplified

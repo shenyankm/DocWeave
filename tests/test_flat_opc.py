@@ -10,6 +10,7 @@ from defusedxml.ElementTree import fromstring
 from defusedxml.minidom import parseString
 
 import dockiln as dk
+from ._word_fixtures import word_document
 from dockiln import _io
 from dockiln._flat_opc import MAIN_TYPES, decode, encode, is_flat_opc
 from dockiln.readers.docx.document_reader import DocumentReader
@@ -186,7 +187,7 @@ def test_conversion_flat_opc_file_bytes_and_direct_writer(tmp_path, format_value
     fmt = dk.SaveFormat(format_value)
     value = (fmt if kind == "enum" else dk.saving.OoxmlSaveOptions(fmt) if kind == "options"
              else fmt.name.lower())
-    doc = dk.Document(BytesIO(b'FLAT_SAVE_SENTINEL'))
+    doc = word_document('FLAT_SAVE_SENTINEL')
     data = doc.to_bytes(value)
     assert is_flat_opc(data)
     assert 'FLAT_SAVE_SENTINEL' in dk.Document(BytesIO(data)).get_text()

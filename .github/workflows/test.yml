@@ -1,48 +1,127 @@
-name: Tests
-on: [push, pull_request]
+name: CI
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+  workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   PYTHONUTF8: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+
 jobs:
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install build tools
+        run: python -m pip install build twine
+      - name: Build sdist and wheel from sdist
+        run: python -m build
+      - name: Validate distribution metadata
+        run: python -m twine check --strict dist/*
+      - name: Upload distributions
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: distributions
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 7
+
   test:
+    name: Python ${{ matrix.python }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
-        # ponytail: cover version endpoints and platforms; expand for version-specific regressions.
-        include:
-          - os: ubuntu-latest
-            python: '3.10'
-          - os: ubuntu-latest
-            python: '3.14'
-          - os: windows-latest
-            python: '3.14'
-          - os: macos-latest
-            python: '3.14'
-    runs-on: ${{ matrix.os }}
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    defaults:
+      run:
+        shell: bash
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install -e ".[dev,shaping]" build docxtpl
-      - run: python -m build --wheel --outdir wheelhouse
-      - name: Install the wheel, not the checkout
-        shell: bash
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: distributions
+          path: dist
+      - name: Install wheel and test dependencies
+        id: install
+        working-directory: ${{ github.workspace }}
         run: |
-          python -m pip uninstall -y dockiln
-          python -m pip install --no-deps wheelhouse/*.whl
-      - name: Check installed resources and imports
+          wheels=(dist/*.whl)
+          python -m pip install "${wheels[0]}[dev,shaping]" docxtpl
+          python -m pip check
+      - name: Check installed resources and CLI
         working-directory: ${{ runner.temp }}
-        run: python "${{ github.workspace }}/scripts/check_wheel.py"
-      - name: Verify commercial baseline evidence
-        working-directory: ${{ runner.temp }}
-        run: python "${{ github.workspace }}/scripts/verify_commercial_baseline.py"
+        run: |
+          python "$GITHUB_WORKSPACE/scripts/check_wheel.py"
+          dockiln --help
       - name: Test installed wheel outside the checkout
         working-directory: ${{ runner.temp }}
-        run: python -m pytest "${{ github.workspace }}/tests" -q --import-mode=importlib
+        run: python -m pytest "$GITHUB_WORKSPACE/tests" -q --import-mode=importlib --junitxml="$RUNNER_TEMP/tests.xml"
       - name: Test examples against the installed wheel
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: ${{ runner.temp }}
-        run: python -m pytest "${{ github.workspace }}/examples" -q --rootdir="${{ github.workspace }}/examples" -c "${{ github.workspace }}/examples/pytest.ini" --import-mode=importlib
+        run: python -m pytest "$GITHUB_WORKSPACE/examples" -q --rootdir="$GITHUB_WORKSPACE/examples" -c "$GITHUB_WORKSPACE/examples/pytest.ini" --import-mode=importlib --junitxml="$RUNNER_TEMP/examples.xml"
+      - name: Upload test reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: test-results-python-${{ matrix.python }}
+          path: |
+            ${{ runner.temp }}/tests.xml
+            ${{ runner.temp }}/examples.xml
+          retention-days: 7
+
+  evidence:
+    name: Verify historical baseline evidence
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: distributions
+          path: dist
+      - name: Install wheel and verification dependencies
+        shell: bash
+        run: |
+          wheels=(dist/*.whl)
+          python -m pip install "${wheels[0]}[dev,shaping]"
+      - name: Verify stored observations and artifact hashes
+        working-directory: ${{ runner.temp }}
+        run: python "${{ github.workspace }}/scripts/verify_commercial_baseline.py"

@@ -130,6 +130,14 @@ def test_memory_options_and_validation(tmp_path):
     assert not list(tmp_path.iterdir())
 
 
+@pytest.mark.parametrize("extension", ["", ".docx", ".md", ".txt", ".xml"])
+def test_plain_text_input_is_rejected_regardless_of_filename(tmp_path, extension):
+    source = tmp_path / ("input" + extension)
+    source.write_bytes(b"Plain text is not a Word document")
+    with pytest.raises(ValueError, match="Unsupported input format"):
+        dk.Document(source)
+
+
 def test_error_filtered_warning_is_recorded_and_output_preserved(tmp_path):
     doc = document("missing " + chr(0x1FAE0))
     output = tmp_path / "report.pdf"

@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import CodeBlock from '@theme/CodeBlock';
 
 const features = [
-  ['转换与生成', '读取 DOCX、旧版 DOC、Markdown 与 TXT，写出受支持的 DOCX、Markdown、TXT 和 PDF。'],
+  ['转换与生成', '读取 DOCX、旧版 DOC 与 Flat OPC，写出 DOCX、Flat OPC 和 PDF。'],
   ['中文 PDF', '内置中文字体，可选备用字体与文字塑形，也可使用独立的 LibreOffice PDF 后端。'],
   ['提取与编辑', '提取有序内容与格式，或使用 DocxDocument 编辑受支持的 DOCX 内容并保留未修改包部件。'],
 ];
@@ -30,7 +30,7 @@ export default function Home() {
           <div className="col col--5">
             <h2>从一次转换开始</h2>
             <p>在干净的虚拟环境中安装。发行包名为 <code>dockiln</code>，导入名为 <code>dockiln</code>。</p>
-            <p>需要可复现部署时，将 <code>@dev</code> 替换为已验证的完整提交哈希。请勿与共享导入模块的 <code>aspose-words-foss</code> 同环境安装。</p>
+            <p>需要可复现部署时，将 <code>@dev</code> 替换为已验证的完整提交哈希。旧代码需将导入入口改为 <code>dockiln</code>。</p>
             <Link to="https://github.com/shenyankm/DocKiln/blob/dev/README.zh-CN.md#安装">完整安装与使用说明 ↗</Link>
           </div>
           <div className="col col--7">
@@ -39,7 +39,7 @@ export default function Home() {
 
 doc = dk.Document("report.docx")
 doc.save("report.pdf", dk.SaveFormat.PDF)
-doc.save("report.md", dk.SaveFormat.MARKDOWN)
+doc.save("copy.docx", dk.SaveFormat.DOCX)
 data = doc.to_dict()`}</CodeBlock>
           </div>
         </section>
@@ -49,15 +49,15 @@ data = doc.to_dict()`}</CodeBlock>
             <table><thead><tr><th>格式</th><th>内置读取</th><th>内置写出</th></tr></thead><tbody>
               <tr><td>DOCX</td><td>支持</td><td>支持</td></tr>
               <tr><td>DOC / Word 97–2003</td><td>支持</td><td>—</td></tr>
-              <tr><td>Markdown / TXT</td><td>支持</td><td>支持</td></tr>
+              <tr><td>Flat OPC</td><td>支持</td><td>支持</td></tr>
               <tr><td>PDF</td><td>—</td><td>支持</td></tr>
             </tbody></table>
-            <p>支持显式指定 Flat OPC。内置 RTF 仅限 OLE2/DOC-backed 文件；标准文本 RTF 可用 LibreOffice 后端转 PDF。</p>
+            <p>Flat OPC XML 文件需显式指定加载/保存格式。内置 RTF 仅限 OLE2/DOC-backed 文件；标准文本 RTF 可用 LibreOffice 后端转 PDF。</p>
           </div>
           <div className="col col--6">
             <h2>先验证，再交付</h2>
             <p>转换会重建受支持内容，不是 DOCX 无损往返；包级编辑使用 <code>DocxDocument</code>。</p>
-            <p>内置引擎不提供完整 Word 排版、PDF 读取或 OCR。复杂字段、修订、浮动内容、脚注及分节页眉页脚仍有保真限制。</p>
+            <p>内置引擎不提供完整 Word 排版、PDF 读取、Markdown/TXT 读写或 OCR。复杂字段、修订、浮动内容、脚注及分节页眉页脚仍有保真限制。</p>
             <p>用代表性文档验证输出。不可信文档需隔离处理，资源限制不是安全沙箱。</p>
             <Link to="/docs/docx-dom">了解 DOM 支持范围 →</Link>
           </div>

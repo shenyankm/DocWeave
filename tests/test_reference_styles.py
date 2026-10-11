@@ -114,7 +114,7 @@ def test_invalid_reference_does_not_replace_output(tmp_path):
     opts = dk.saving.OoxmlSaveOptions()
     opts.reference_docx = tmp_path / 'missing.docx'
     with pytest.raises(FileNotFoundError):
-        dk.Document(BytesIO(b'Body')).save(target, opts)
+        word_document('Body').save(target, opts)
     assert target.read_bytes() == b'unchanged'
     opts.reference_docx = b'not a path'
     with pytest.raises(ValueError, match='path'):

@@ -8,7 +8,7 @@
 
 ## 功能概览
 
-- 将 DOCX、旧版 DOC、Markdown 和 TXT 转换为受支持的输出格式。
+- 读取 DOCX、旧版 DOC 和 Flat OPC，写出 DOCX、Flat OPC 或 PDF。
 - 使用内置中文字体生成 PDF，可选配置备用字体与文字塑形。
 - 提取正文、有序段落与表格、格式信息，以及脚注、尾注、页眉页脚等来源内容。
 - 在保留原始文档包部件的同时，编辑受支持的 DOCX 文本、格式、表格、图片和超链接。
@@ -18,12 +18,11 @@
 |---|---|---|
 | DOCX | 支持 | 支持 |
 | DOC（Word 97–2003） | 支持 | 不支持 |
-| Markdown | 支持 | 支持 |
-| TXT | 支持 | 支持 |
+| Flat OPC | 支持 | 支持 |
 | PDF | 不支持 | 支持 |
 | RTF | 仅 OLE2/DOC-backed 文件，不支持标准文本 RTF | 不支持 |
 
-也支持 Flat OPC，请显式指定加载/保存格式。独立的 LibreOffice 后端可将原始 DOC/DOCX/RTF 文件转换为 PDF，包括标准文本 RTF。
+输入按内容检测格式，包括 Flat OPC XML 文件和无扩展名文件。Flat OPC XML 输出请显式指定保存格式。独立的 LibreOffice 后端可将原始 DOC/DOCX/RTF 文件转换为 PDF，包括标准文本 RTF。
 
 ## 安装
 
@@ -37,7 +36,7 @@ python -m pip install "git+https://github.com/shenyankm/DocKiln.git@dev"
 
 Windows PowerShell 使用 `.venv\Scripts\Activate.ps1` 激活。需要可复现部署时，将 `@dev` 替换为已验证的完整提交哈希。
 
-当前发行包名为 `dockiln`，导入名为 `dockiln`，尚无 `dockiln` 导入入口。不要与 `aspose-words-foss` 同环境安装：它是另一个发行包，但共享相同模块，安装或卸载任一包都可能覆盖这些模块。
+当前发行包名和导入名均为 `dockiln`，使用独立命名空间。迁移后不再提供 `aspose.words_foss` 导入入口；请将旧代码改为 `import dockiln as dk`。Markdown/TXT 读写及其加载、保存选项已移除；提取纯文本请使用 `get_text()`。
 
 运行时依赖会自动安装。可选文字塑形支持：
 
@@ -53,26 +52,25 @@ python -m pip install "dockiln[shaping] @ git+https://github.com/shenyankm/DocKi
 import dockiln as dk
 
 doc = dk.Document("report.docx")
-doc.save("report.md", dk.SaveFormat.MARKDOWN)
+doc.save("copy.docx", dk.SaveFormat.DOCX)
 doc.save("report.pdf", dk.SaveFormat.PDF)
-doc.save("report.txt", dk.SaveFormat.TEXT)
 ```
 
 `save(path)` 可根据输出扩展名推断格式。转换会重建受支持的内容，不是 DOCX 无损往返。
 
-### 从 Markdown 创建文档
+### 内存输入与输出
 
 ```python
 from io import BytesIO
+from pathlib import Path
 import dockiln as dk
 
-markdown = "# Report\n\n客户公司\n\n中文 **粗体** and English.\n"
-doc = dk.Document(BytesIO(markdown.encode("utf-8")), dk.MarkdownLoadOptions())
-doc.save("report.docx", dk.SaveFormat.DOCX)
+doc = dk.Document(BytesIO(Path("report.docx").read_bytes()))
+docx_bytes = doc.to_bytes(dk.SaveFormat.DOCX)
 pdf_bytes = doc.to_bytes(dk.SaveFormat.PDF)
 ```
 
-Markdown 流输入需要显式加载选项。`to_bytes(format_or_options)` 返回内存中的输出，不创建文件。
+`to_bytes(format_or_options)` 返回内存中的输出，不创建文件。
 
 ### 不重建文档包的 DOCX 编辑
 
@@ -123,12 +121,11 @@ python -m dockiln.convert report.docx native.pdf --backend libreoffice
 
 ## 限制与安全
 
-- 不提供内置 PDF 读取、DOC/RTF 写出、OCR 或完整 Word 排版引擎。Markdown 仅实现选定的 CommonMark/GFM 功能。
+- 不提供内置 PDF 读取、DOC/RTF 写出、Markdown/TXT 读写、OCR 或完整 Word 排版引擎。
 - 复杂字段、修订、浮动内容、脚注/尾注及分节页眉页脚有保真限制，请用代表性文档验证结果。
 - 内置字体覆盖常用中文和拉丁文字，不覆盖所有 Unicode。字体替换可能改变排版，缺字会报警。未实现 PDF/A 或 PDF/UA 合规。
 - 输入、压缩包、图片限制及加固 XML 解析可降低风险，但**不是安全沙箱**。不可信文档及原生解析器仍需隔离；保留原始 DOCX 部件也会保留宏、嵌入对象及外部关系。
-- Markdown 不下载远程图片。本地图片默认禁用，显式开启后仅允许访问源文档目录内的文件。
-- 主输出文件采用原子发布，外置 Markdown 图片不是多文件事务。不要在并发操作间共享可变文档。
+- 主输出文件采用原子发布。不要在并发操作间共享可变文档。
 
 保存选项、字体、资源上限及后端细节见 [转换与安全说明](docs/enhanced-conversion.md)。
 
@@ -142,7 +139,9 @@ python -m pytest tests -q
 python -m pytest examples -q --rootdir=examples -c examples/pytest.ini
 ```
 
-未安装 LibreOffice 时，原生渲染测试会跳过。当前跨平台结果见 [GitHub Actions](https://github.com/shenyankm/DocKiln/actions)；测试通过不保证与 Word 渲染一致。
+CI 仅在 Linux 上覆盖 Python 3.10–3.14。先构建 sdist，再从 sdist 构建 wheel 并校验发行元数据；各 Python 版本在仓库外测试同一份已安装 wheel。历史基准材料在独立任务中校验，发行包和 JUnit 报告保留七天。
+
+未安装 LibreOffice 或可选生态依赖时，相关测试会跳过。当前结果见 [GitHub Actions](https://github.com/shenyankm/DocKiln/actions)；测试通过不保证与 Word 渲染一致，也不证明 Windows/macOS 兼容性。
 
 ## 文档
 
@@ -154,6 +153,6 @@ python -m pytest examples -q --rootdir=examples -c examples/pytest.ini
 
 ## 许可证与致谢
 
-代码采用 [MIT](LICENSE)；内置字体采用 [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt)，来源见 [字体说明](src/dockiln/writers/pdf/fonts/README.md)。可选集成组件有各自的许可证。
+代码采用 [MIT](LICENSE)，原始声明见 [第三方来源与许可](THIRD_PARTY_NOTICES.md)；内置字体采用 [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt)，来源见 [字体说明](src/dockiln/writers/pdf/fonts/README.md)。可选集成组件有各自的许可证。
 
 DocKiln 起源于 [Aspose.Words FOSS for Python](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python)，保留原始版权声明。本项目独立维护，不是 Aspose 官方发布版，也不保证 API 或渲染兼容。

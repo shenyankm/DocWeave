@@ -327,7 +327,7 @@ def test_real_libreoffice_conversion_if_installed(tmp_path):
     # A standard text RTF cannot use the inherited DOC/OLE reader; native input can.
     text = "中文真实原文件通道"
     source = tmp_path / "original.rtf"
-    source.write_bytes(word_bytes("{\\rtf1\\ansi\\uc1 " + "".join(f"\\u{ord(c)}?" for c in text) + "}"))
+    source.write_bytes(("{\\rtf1\\ansi\\uc1 " + "".join(f"\\u{ord(c)}?" for c in text) + "}").encode("ascii"))
     convert_to_pdf(source, output)
     with pymupdf.open(output) as pdf:
         assert text in "".join(page.get_text() for page in pdf).replace("\n", "")
