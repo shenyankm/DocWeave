@@ -326,3 +326,28 @@ def test_shallow_copy_option_defaults_keep_original_owner_context(json_roundtrip
     assert original.sections[0].page_setup.footnote_options.start_number == 5
     assert copied.sections[0].page_setup.footnote_options.start_number == 9
     assert deep.sections[0].page_setup.footnote_options.start_number == 11
+
+
+@pytest.mark.parametrize('dom', [False, True])
+@pytest.mark.parametrize('kind', ['footnote', 'endnote'])
+def test_default_numbering_rule_alias_is_accessible_and_roundtrips(tmp_path, dom, kind):
+    rule = aw.notes.FootnoteNumberingRule
+    assert rule.DEFAULT is rule.CONTINUOUS
+    assert int(rule.DEFAULT) == 0
+    assert rule.__members__['DEFAULT'] is rule.CONTINUOUS
+    doc = document(dom)
+    options = getattr(doc, kind + '_options')
+    options.restart_rule = rule.RESTART_SECTION
+    options.restart_rule = rule.DEFAULT
+    assert options.restart_rule is rule.DEFAULT
+    if not dom:
+        doc._document = ldm.Document.model_validate_json(doc.light_document_model.model_dump_json())
+        assert getattr(doc, kind + '_options').restart_rule is rule.DEFAULT
+    for format, extension in [(aw.SaveFormat.DOCX, 'docx'), (aw.SaveFormat.FLAT_OPC, 'xml')]:
+        target = tmp_path / ('default.' + extension)
+        if dom:
+            (doc.save if extension == 'docx' else doc.save_flat_opc)(target)
+        else:
+            doc.save(target, format)
+        cold = aw.Document(target)
+        assert getattr(cold, kind + '_options').restart_rule is rule.DEFAULT

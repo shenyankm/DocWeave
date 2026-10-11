@@ -10,6 +10,7 @@ class FootnoteNumberingRule(IntEnum):
     CONTINUOUS = 0
     RESTART_SECTION = 1
     RESTART_PAGE = 2
+    DEFAULT = CONTINUOUS
 
 
 class FootnotePosition(IntEnum):
