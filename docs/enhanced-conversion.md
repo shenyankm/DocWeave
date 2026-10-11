@@ -259,6 +259,7 @@ DOCX 读取并写出 `w:compat/w:doNotExpandShiftReturn`；设为 `True` 后手�
 DOCX／Flat OPC 读取和保存分别保留每节显式页眉／页脚，缺少引用继续使用 OOXML 的前节继承规则。
 `HeaderFooter.header_footer_type` 的 0/1 是默认页眉／页脚，2/3 是首页，4/5 是偶数页；
 每份内容有独立图片、超链接关系，显式空故事可中断继承。首页开关按节保存，偶数页开关是文档级设置。
+源文件的节引用决定页眉／页脚角色；关系类型或故事根元素不一致时，恢复后仍按节引用保存。
 这一映射不表示 PDF 已支持每节／首页／偶数页排版；PDF 仍对相关简化发出诊断。
 
 LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼容模式，缺失/格式无效时按 12。

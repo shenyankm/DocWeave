@@ -196,7 +196,17 @@ class LdmBuilderMixin:
             self._install_builders()
 
     def _populate_source_stories(self, doc):
+        stories = []
         for kind, name, identifier, root, references in self._source_story_data:
+            if kind in {"header", "footer"} and references:
+                # Section references determine the role, even for mismatched source parts.
+                for role in ("header", "footer"):
+                    refs = [ref for ref in references if ref.get("kind", kind) == role]
+                    if refs:
+                        stories.append((role, name, identifier, root, refs))
+            else:
+                stories.append((kind, name, identifier, root, references))
+        for kind, name, identifier, root, references in stories:
             _, children = self._build_part_children(
                 [(root, self._part_images[name])],
                 anchor_mode=kind if kind in {"header", "footer"} else "body",

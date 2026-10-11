@@ -232,6 +232,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             for key, rid in active.items():
                 reference_map.setdefault(rid, []).append({
                     "section": index, "variant": key[1],
+                    "kind": "header" if key[0] == "headerReference" else "footer",
                     "inherited": key not in explicit,
                 })
 
