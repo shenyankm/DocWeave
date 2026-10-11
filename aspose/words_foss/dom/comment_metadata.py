@@ -7,7 +7,7 @@ from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-_DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}(?:[Tt ][0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?(?:[Zz]|[+-][0-9]{2}:?[0-9]{2})?)?\Z")
+_DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}(?:[Tt ][0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?(?:[Zz]|[+-](?:[0-9]{1,4}|[0-9]{1,2}:[0-9]{1,2}))?)?\Z")
 
 
 def normalize_text(value):
@@ -60,6 +60,26 @@ def _local_wall(value):
     return value.replace(tzinfo=timezone(offset))
 
 
+def _date_offset(raw):
+    if len(raw) <= 19:
+        return None
+    suffix = re.search(r"([Zz]|([+-])([0-9]{1,4}|[0-9]{1,2}:[0-9]{1,2}))$", raw)
+    if suffix is None:
+        return None
+    if suffix[1].lower() == 'z':
+        return suffix, timedelta(0)
+    digits = suffix[3]
+    if ':' in digits:
+        hours, minutes = map(int, digits.split(':'))
+    elif len(digits) > 2:
+        hours, minutes = int(digits[:-2]), int(digits[-2:])
+    else:
+        hours, minutes = int(digits), 0
+    if minutes >= 60 or hours > 14 or (hours == 14 and minutes):
+        raise ValueError("Invalid comment date offset")
+    return suffix, timedelta(minutes=(hours * 60 + minutes) * (1 if suffix[2] == '+' else -1))
+
+
 def _parse_date(raw):
     lexical = raw.strip()
     if not _DATE.fullmatch(lexical) or (len(lexical) > 10 and int(lexical[11:13]) >= 24):
@@ -72,14 +92,11 @@ def _parse_date(raw):
         lexical = lexical[:fraction.start()] + lexical[fraction.end():]
     # Normalize forms that Python 3.10's narrower ISO parser cannot consume.
     lexical = lexical.replace("t", "T")
-    lexical = re.sub(r"([+-][0-9]{2})([0-9]{2})$", r"\1:\2", lexical)
-    if lexical.endswith(("Z", "z")):
-        lexical = lexical[:-1] + "+00:00"
     try:
+        zone = _date_offset(lexical)
+        if zone is not None:
+            lexical = lexical[:zone[0].start()]
         value = datetime.fromisoformat(lexical)
-        offset = value.utcoffset()
-        if offset is not None and abs(offset) > timedelta(hours=14):
-            return datetime.min, 0
         value = value.replace(tzinfo=None) + timedelta(microseconds=ticks // 10)
     except (ValueError, OverflowError):
         return datetime.min, 0

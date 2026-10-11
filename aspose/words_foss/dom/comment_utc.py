@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from xml.dom.minidom import Document
 
 from aspose.words_foss._opc import resolve_target
-from aspose.words_foss.dom.comment_metadata import W, _DATE, _parse_date, _local_wall, get_date
+from aspose.words_foss.dom.comment_metadata import W, _DATE, _parse_date, _date_offset, _local_wall, get_date
 
 W14 = 'http://schemas.microsoft.com/office/word/2010/wordml'
 CID = 'http://schemas.microsoft.com/office/word/2016/wordml/cid'
@@ -49,13 +49,13 @@ def utc_date(raw):
                 and (len(lexical) == 10 or lexical[11:19] == '00:00:00')):
             return None
     value = value.replace(tzinfo=None)
-    suffix = re.search(r'([Zz]|([+-])([0-9]{2}):?([0-9]{2}))$', raw.strip())
-    if not suffix:
-        return None if value == datetime.min and not residual else value
-    offset = timedelta(0) if suffix[1].lower() == 'z' else timedelta(
-        minutes=(int(suffix[3]) * 60 + int(suffix[4])) * (1 if suffix[2] == '+' else -1))
-    if abs(offset) > timedelta(hours=14):
+    try:
+        zone = _date_offset(raw.strip())
+    except ValueError:
         return None
+    if zone is None:
+        return None if value == datetime.min and not residual else value
+    offset = zone[1]
     try:
         result = (value - offset).replace(tzinfo=timezone.utc)
         return None if result == datetime.min.replace(tzinfo=timezone.utc) and not residual else result
