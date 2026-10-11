@@ -955,6 +955,8 @@ class CommentMarker(BaseModel):
 
 
 class CommentMetadata(BaseModel):
+    ancestor_identifier: str | None = None
+    done: bool | None = None
     author: str | None = None
     initial: str | None = None
     date: str | None = None

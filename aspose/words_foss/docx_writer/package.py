@@ -487,6 +487,7 @@ def _build_parts(
     source_font_table: SourceFontTable | None = None,
     embed_fonts: bool = False,
     comments_xml: str | None = None,
+    comments_extended_xml: str | None = None,
     comment_hyperlinks: dict[str, str] | None = None,
     comment_images: list[ImageEntry] | None = None,
 ) -> tuple[list[tuple[str, str]], list[tuple[str, bytes]]]:
@@ -535,6 +536,15 @@ def _build_parts(
             "Target": "comments.xml"}))
         text_parts[index] = (text_parts[index][0], ET.tostring(relations, encoding="unicode"))
         text_parts.append(("word/comments.xml", comments_xml))
+        if comments_extended_xml is not None:
+            from aspose.words_foss._comment_threads import RELATION, CONTENT_TYPE
+            types.append(ET.Element("{" + CT_URI + "}Override", {
+                "PartName": "/word/commentsExtended.xml", "ContentType": CONTENT_TYPE}))
+            text_parts[0] = (text_parts[0][0], ET.tostring(types, encoding="unicode"))
+            relations.append(ET.Element("{" + PKG_RELS_URI + "}Relationship", {
+                "Id": "rIdCommentsExtended", "Type": RELATION, "Target": "commentsExtended.xml"}))
+            text_parts[index] = (text_parts[index][0], ET.tostring(relations, encoding="unicode"))
+            text_parts.append(("word/commentsExtended.xml", comments_extended_xml))
         if comment_hyperlinks or comment_images:
             text_parts.append(("word/_rels/comments.xml.rels", _hf_part_rels(
                 comment_hyperlinks or {}, list(comment_images or []))))
@@ -609,6 +619,7 @@ def write_docx_package(
     source_font_table: SourceFontTable | None = None,
     embed_fonts: bool = False,
     comments_xml: str | None = None,
+    comments_extended_xml: str | None = None,
     comment_hyperlinks: dict[str, str] | None = None,
     comment_images: list[ImageEntry] | None = None,
     hyperlinks: dict[str, str],
@@ -644,7 +655,7 @@ def write_docx_package(
         source_theme=source_theme,
         source_font_table=source_font_table,
         embed_fonts=embed_fonts,
-        comments_xml=comments_xml, comment_hyperlinks=comment_hyperlinks, comment_images=comment_images,
+        comments_xml=comments_xml, comments_extended_xml=comments_extended_xml, comment_hyperlinks=comment_hyperlinks, comment_images=comment_images,
         document_xml=document_xml,
         styles_xml=styles_xml,
         numbering_xml=numbering_xml,

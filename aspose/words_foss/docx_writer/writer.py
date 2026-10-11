@@ -243,7 +243,16 @@ class LdmDocxWriter:
 
         from aspose.words_foss._comments import render_comments
         comments_xml, comment_hyperlinks, comment_images = render_comments(doc, style_pf_map, style_id_map, style_font_map)
+        comments_extended_xml = None
+        if comments_xml is not None:
+            from aspose.words_foss.dom.notes import annotation_id
+            values = {str(annotation_id(story.identifier)): story.comment_metadata.model_dump()
+                      for story in doc.source_stories if story.kind == "comment" and story.comment_metadata is not None}
+            if any(value.get("ancestor_identifier") is not None or value.get("done") is not None for value in values.values()):
+                from aspose.words_foss._comment_threads import extension_xml
+                comments_xml, comments_extended_xml = extension_xml(comments_xml, values)
         return _RenderedParts(
+            comments_extended_xml=comments_extended_xml,
             comments_xml=comments_xml, comment_hyperlinks=comment_hyperlinks, comment_images=comment_images,
             theme_xml=doc.source_theme.data if doc.source_theme is not None else None,
             source_theme=doc.source_theme,
@@ -319,6 +328,7 @@ class _RenderedParts:
     source_font_table: ldm.SourceFontTable | None
     embed_fonts: bool
     comments_xml: str | None
+    comments_extended_xml: str | None
     comment_hyperlinks: dict[str, str]
     comment_images: list[ImageEntry]
     document_xml: str
@@ -338,6 +348,7 @@ class _RenderedParts:
         """Return the kwargs ``write_docx_package`` accepts."""
         return {
             "comments_xml": self.comments_xml,
+            "comments_extended_xml": self.comments_extended_xml,
             "comment_hyperlinks": self.comment_hyperlinks,
             "comment_images": self.comment_images,
             "theme_xml": self.theme_xml,

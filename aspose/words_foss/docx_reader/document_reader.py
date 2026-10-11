@@ -143,9 +143,13 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             if kind == "vbaProject":
                 warn("VBA project resources are omitted by the conversion model; use DocxDocument for package preservation",
                      DocumentLoadWarning, code="load.vba_project_omitted", location="word/document.xml")
+            if kind == "commentsExtended":
+                from aspose.words_foss._comment_threads import RELATION
+                if rel_type != RELATION or mode == "External":
+                    raise ValueError("Invalid comment extension relationship")
             if kind == "comments" and (mode == "External" or any(item[0] == "comments" for item in stories)):
                 raise ValueError("Invalid comments relationship")
-            if kind in {"commentsExtended", "commentsIds", "commentsExtensible", "people"}:
+            if kind in {"commentsIds", "commentsExtensible", "people"}:
                 warn("Modern comment metadata is not retained by the conversion model",
                      DocumentLoadWarning, code="load.comment_metadata_omitted", location="word/document.xml")
             if mode == "External":
@@ -158,7 +162,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 if name not in namelist:
                     continue
             if kind not in {"theme", "fontTable", "styles", "settings", "numbering", "image",
-                            "header", "footer", "footnotes", "endnotes", "comments"}:
+                            "header", "footer", "footnotes", "endnotes", "comments", "commentsExtended"}:
                 continue
             name = resolve_settings_target(target) if kind == "settings" else resolve_target("word/document.xml", target)
             if name is None:
@@ -283,6 +287,15 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                         warn("Extended comment metadata is not retained by the conversion model",
                              DocumentLoadWarning, code="load.comment_metadata_omitted", location=name)
                     self._source_story_data.append((kind[:-1], name, identifier, note, []))
+        self._comment_threads = {}
+        if "commentsExtended" in targets:
+            from aspose.words_foss._comment_threads import read_threads
+            name = targets["commentsExtended"]
+            root = parse(zf.open(name), forbid_dtd=True).getroot()
+            comments = next((item for item in stories if item[0] == "comments"), None)
+            if comments is None:
+                raise ValueError("Comment extension has no matching story")
+            self._comment_threads = read_threads(parse(zf.open(comments[2]), forbid_dtd=True).getroot(), root)
         for name in self._doc_image_rels.values():
             if name in namelist and name not in self._media:
                 data = zf.read(name)

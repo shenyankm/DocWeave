@@ -452,7 +452,8 @@ These are the main implemented entry points, not an exhaustive catalog of intern
 - No built-in PDF reading, DOC/RTF writing, OCR, or complete Word layout/field-computation engine.
 - Conversion via LDM is not lossless. Notes are extracted separately; only opt-in Markdown exports visible anchored notes;
   classic comment bodies, metadata and ordered point/range anchors survive DOCX/Flat OPC conversion and LDM JSON edits.
-  Other exports diagnose omitted comments; modern reply metadata and comment rendering remain unsupported.
+  Typed reply links and completion state survive DOCX/Flat OPC and LDM JSON edits; DOM comments expose ancestor, replies, done and add_reply.
+  Other exports diagnose omitted comments. Moving, cloning or removing DOM comment threads, other modern metadata and comment rendering remain unsupported.
   Revisions, complex fields, content controls, math, floating content, and header/footer variants have limits.
   Supported inline images do not imply arbitrary image/shape placement or complete OOXML round-trip fidelity.
 - Markdown merged grids/nested tables lose geometry; the parser implements a selected CommonMark/GFM subset.

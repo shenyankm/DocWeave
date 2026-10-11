@@ -223,7 +223,12 @@ class DocxDocument:
 
     def _prepare_note_projection(self):
         from aspose.words_foss.dom.comment_utc import metadata_links
-        if self._note_graph is None and metadata_links(self._package):
+        from aspose.words_foss._comment_threads import RELATION
+        from aspose.words_foss.dom.comment_utc import elements, REL
+        name = 'word/_rels/document.xml.rels'
+        has_threads = name in self.part_names and any(link.getAttribute('Type') == RELATION for link in
+                     elements(self._package.tree(name).documentElement, REL, 'Relationship'))
+        if self._note_graph is None and (metadata_links(self._package) or has_threads):
             self._annotations()
         return self._note_graph.prepare_projection() if self._note_graph is not None else ({}, lambda: None)
 

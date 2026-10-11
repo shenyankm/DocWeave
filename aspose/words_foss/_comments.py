@@ -54,6 +54,15 @@ def validate_comments(document):
         for child in story.children:
             if not isinstance(child, (ldm.Paragraph, ldm.Table)):
                 raise NotImplementedError("Unsupported comment story node")
+    from aspose.words_foss._comment_threads import validate_threads
+    values = {identifier: story.comment_metadata.model_dump() if story.comment_metadata else {}
+              for identifier, story in entries.items()}
+    validate_threads(values)
+    for value in values.values():
+        if value.get("done") is not None and not isinstance(value["done"], bool):
+            raise ValueError("Invalid comment completion state")
+        if value.get("ancestor_identifier") is not None and value["ancestor_identifier"] not in entries:
+            raise ValueError("Comment reply has no matching ancestor")
     markers = {}
     seen = set()
     for paragraph in document_nodes(document):

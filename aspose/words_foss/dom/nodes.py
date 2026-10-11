@@ -121,7 +121,7 @@ def _read_size(element):
 # Moving/deleting complex content needs relationship and range semantics first.
 _SAFE_STRUCTURE = {"p", "r", "t", "tbl", "tr", "tc", "tblGrid", "gridCol",
                    "pPr", "rPr", "tblPr", "trPr", "tcPr",
-                   "commentRangeStart", "commentRangeEnd", "footnoteRef", "endnoteRef"}
+                   "commentRangeStart", "commentRangeEnd", "footnoteRef", "endnoteRef", "annotationRef"}
 _PROPERTY_ROOTS = {"pPr", "rPr", "tblPr", "trPr", "tcPr"}
 _ALLOWED_CHILDREN = {"body": {"p", "tbl"}, "hdr": {"p", "tbl"}, "ftr": {"p", "tbl"},
                      "p": {"r", "commentRangeStart", "commentRangeEnd"}, "tbl": {"tr"}, "tr": {"tc"}, "tc": {"p", "tbl"},
@@ -765,8 +765,114 @@ class Footnote(Body):
 
 
 class Comment(Body):
-    """Editable comment content; authors and range identifiers remain source metadata."""
+    """Editable comment content and typed reply/completion metadata."""
     node_type = NodeType.COMMENT
+
+    @property
+    def ancestor(self):
+        graph = self.owner_document._annotations()
+        parent = graph.threads.parents.get(self._element)
+        return self.owner_document._wrap(self.part_name, parent) if parent is not None else None
+
+    @property
+    def replies(self):
+        from aspose.words_foss.dom.comment_threads import CommentReplies
+        return CommentReplies(self)
+
+    @property
+    def done(self):
+        return self.owner_document._annotations().threads.done.get(self._element, False)
+
+    @done.setter
+    def done(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("done must be a boolean")
+        self._editable()
+        graph = self.owner_document._annotations()
+        graph.threads.done[self._element] = value
+        graph.changed = True
+
+    def add_reply(self, author, initial, date_time, text):
+        from aspose.words_foss.dom.comment_metadata import normalize_text, normalize_date
+        graph = self.owner_document._annotations()
+        if self.ancestor is not None:
+            raise ValueError("Cannot add a reply to another reply")
+        text = normalize_text(text)
+        _validate_text(text.translate({ord(c): None for c in '\r\n\t\v'}))
+        author, initial = normalize_text(author), normalize_text(initial)
+        date_time = normalize_date(date_time, constructor=True)
+        self._editable()
+        if self._element not in graph.anchors:
+            raise ValueError("Comment has no parent node")
+        parent_anchor = graph.anchors[self._element]
+        part_name = graph.anchor_part(parent_anchor)
+        starts = [node for node in parent_anchor.ownerDocument.getElementsByTagNameNS(W, 'commentRangeStart')
+                  if self.owner_document._wrap(part_name, node).id == self.id]
+        ends = [node for node in parent_anchor.ownerDocument.getElementsByTagNameNS(W, 'commentRangeEnd')
+                if self.owner_document._wrap(part_name, node).id == self.id]
+        if len(starts) != len(ends) or len(starts) > 1:
+            raise ValueError('Incomplete or duplicate ancestor comment range')
+        reply = self.owner_document.create_comment(author, initial, date_time)
+        reply.ensure_minimum()
+        # Native add_reply creates paragraphs for CR/LF and keeps tabs/line
+        # breaks within a run; create_run deliberately accepts plain XML text.
+        for index, line in enumerate(text.replace('\r\n', '\n').replace('\r', '\n').split('\n')):
+            paragraph = reply.first_paragraph if index == 0 else self.owner_document.create_paragraph(part_name=self.part_name)
+            if index:
+                reply.append_child(paragraph)
+            if not line:
+                continue
+            run = _new(paragraph._element, 'r')
+            buffer = ''
+            for char in line + '\0':
+                if char in '\t\v\0':
+                    if buffer:
+                        node = _new(run, 't')
+                        _set_text(node, buffer)
+                        run.appendChild(node)
+                        buffer = ''
+                    if char != '\0':
+                        run.appendChild(_new(run, 'tab' if char == '\t' else 'br'))
+                else:
+                    buffer += char
+            paragraph._element.appendChild(run)
+        from aspose.words_foss.dom.importing import _set_word_attribute
+        _set_word_attribute(reply._element, 'id', str(reply.id))
+        mark_run = _new(reply.first_paragraph._element, 'r')
+        mark_run.appendChild(_new(mark_run, 'annotationRef'))
+        reply.first_paragraph._element.insertBefore(mark_run, reply.first_paragraph._element.firstChild)
+        anchor = graph.anchors[self._element].cloneNode(deep=True)
+        reference = next(child for child in _elements(anchor) if _is(child, 'commentReference'))
+        _set_word_attribute(reference, 'id', str(reply.id))
+        previous = graph.anchors[self._element]
+        while True:
+            candidate = previous.nextSibling
+            while candidate is not None and candidate.nodeType != candidate.ELEMENT_NODE:
+                candidate = candidate.nextSibling
+            next_entry = graph.anchor_entries.get(candidate)
+            if next_entry is None or graph.threads.parents.get(next_entry) is not self._element:
+                break
+            previous = candidate
+        operations = [('insert', self._element.parentNode, reply._element, None)]
+        new_ranges = []
+        if starts:
+            for local_name in ['commentRangeStart', 'commentRangeEnd']:
+                marker = _new(parent_anchor, local_name)
+                _set_word_attribute(marker, 'id', str(reply.id))
+                marker._logical_comment_id = reply.id
+                new_ranges.append(marker)
+            operations.append(('insert', starts[0].parentNode, new_ranges[0], starts[0].nextSibling))
+            operations.append(('insert', previous.parentNode, new_ranges[1], previous.nextSibling))
+        operations.append(('insert', previous.parentNode, anchor, previous.nextSibling))
+        graph._transaction(operations)
+        graph.anchors[reply._element] = anchor
+        graph.anchor_entries[anchor] = reply._element
+        graph.pending.pop(reply._element)
+        graph.entries['comments', str(reply.id)] = reply._element
+        graph.threads.parents[reply._element] = self._element
+        graph.threads.done[reply._element] = False
+        graph.changed = True
+        return reply
 
     def _metadata(self, name):
         return self._element.getAttributeNS(W, name)

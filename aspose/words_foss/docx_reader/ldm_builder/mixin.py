@@ -201,7 +201,8 @@ class LdmBuilderMixin:
                 kind=kind, part_name=name, identifier=identifier,
                 references=references, children=children,
                 comment_metadata=(ldm.CommentMetadata(author=root.get(W_NS + "author"),
-                                  initial=root.get(W_NS + "initials"), date=root.get(W_NS + "date"))
+                                  initial=root.get(W_NS + "initials"), date=root.get(W_NS + "date"),
+                                  **self._comment_threads.get(identifier, {}))
                                   if kind == "comment" else None),
             ))
 

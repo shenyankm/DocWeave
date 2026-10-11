@@ -104,7 +104,10 @@ class NoteGraph:
                         if owner in self.comment_ids:
                             marker._logical_comment_id = self.comment_ids[owner]
 
+        from aspose.words_foss.dom.comment_threads import CommentThreads
+        self.threads = CommentThreads(self)
         self._next_comment_id = len(self.comment_ids)
+        self.changed |= bool(self.threads.parents)
 
     @staticmethod
     def _story_paragraph(paragraph):
@@ -250,6 +253,9 @@ class NoteGraph:
 
     def insert_container(self, parent, node, reference):
         entries = self.contained_entries(node._element)
+        if any(entry not in self.pending and (entry in self.threads.parents or self.threads.replies(entry))
+               for entry in entries):
+            raise NotImplementedError('Moving comment threads is not yet supported')
         if not self.safe_content(node._element):
             raise NotImplementedError('Moving complex annotation content requires resource translation')
         operations, additions, new_roles = [], {}, {}
@@ -282,6 +288,8 @@ class NoteGraph:
             raise ValueError('Node has no parent')
         parent._validate_removal(node)
         entries = self.contained_entries(node._element)
+        if any(entry in self.threads.parents or self.threads.replies(entry) for entry in entries):
+            raise NotImplementedError('Removing comment threads is not yet supported')
         operations = [('remove', node._element)]
         for entry in entries:
             if entry.parentNode is not None:
@@ -293,6 +301,8 @@ class NoteGraph:
         return node
 
     def parent(self, entry):
+        if entry in self.threads.parents and entry not in self.anchors:
+            return self.parent(self.threads.parents[entry])
         anchor = self.anchors.get(entry)
         if anchor is None or anchor.parentNode is None:
             return None
@@ -463,6 +473,8 @@ class NoteGraph:
         if not all(_safe_structure(child) for child in _elements(entry)):
             raise NotImplementedError('Annotation content requires resource/range translation')
         existing = self.anchors.get(entry)
+        if existing is not None and (entry in self.threads.parents or self.threads.replies(entry)):
+            raise NotImplementedError('Moving comment threads is not yet supported')
         anchor = self.anchors.get(reference._element) if reference is not None else None
         if anchor is None and reference is not None:
             anchor = reference._element
@@ -518,6 +530,8 @@ class NoteGraph:
 
     def remove(self, node):
         entry = node._element
+        if entry in self.threads.parents or self.threads.replies(entry):
+            raise NotImplementedError('Removing comment threads is not yet supported')
         anchor = self.anchors.get(entry)
         if anchor is None:
             raise ValueError('Node has no parent')
@@ -536,6 +550,7 @@ class NoteGraph:
         self.anchor_entries.pop(anchor)
         self.entries.pop((role, str(annotation_id(entry.getAttributeNS(W, 'id')))), None)
         self.pending[entry] = role
+        self.threads.parents.pop(entry, None)
         self.changed = True
         return node
 
@@ -550,6 +565,8 @@ class NoteGraph:
         if not isinstance(deep, bool):
             raise TypeError('deep must be a boolean')
         entry = node._element
+        if entry in self.threads.parents or self.threads.replies(entry):
+            raise NotImplementedError('Cloning comment threads is not yet supported')
         template = self.anchor_template(entry)
         if not all(_safe_structure(child) for child in _elements(entry)):
             raise NotImplementedError('Annotation content requires resource/range translation')
@@ -566,6 +583,8 @@ class NoteGraph:
             copied._reference_mark = node.reference_mark
         if role == 'comments':
             self.comment_ids[copied] = node.id
+            if entry in self.threads.done:
+                self.threads.done[copied] = self.threads.done[entry]
         return self.document._wrap(node.part_name, copied)
 
     def prepare_projection(self):
@@ -573,7 +592,7 @@ class NoteGraph:
         from aspose.words_foss.utils.xml_helpers import serialize_xml
         from aspose.words_foss.dom.comment_metadata import project_date
         package = self.document._package
-        if not self.changed:
+        if not self.changed and not self.threads.done:
             name = self.parts.get('comments')
             if name is None:
                 return {}, lambda: None
@@ -713,6 +732,7 @@ class NoteGraph:
                 project_date(entry, mapping[entry])
         from aspose.words_foss.dom.row_format import projected_row_tree, validate_row_properties
         commit_utc = self.utc.project(trees, mapping)
+        commit_threads = self.threads.project(trees, mapping)
         for tree in trees.values():
             if tree is not None:
                 validate_row_properties(tree)
@@ -749,6 +769,7 @@ class NoteGraph:
                     entry.appendChild(value)
                     package._dirty.add(self.parts['comments' if entry.localName == 'comment' else entry.localName + 's'])
             commit_utc()
+            commit_threads()
         return payloads, commit
 
     def _import_mode(self, node, mode):
@@ -834,6 +855,13 @@ class NoteGraph:
             if role == 'comments':
                 self.comment_ids[entry] = self._next_comment_id
                 self._next_comment_id += 1
+        translated = {old: entry for old, entry, _, role, _ in planned if role == 'comments'}
+        for old, entry in translated.items():
+            if old in source_graph.threads.done:
+                self.threads.done[entry] = source_graph.threads.done[old]
+            parent = source_graph.threads.parents.get(old)
+            if parent in translated:
+                self.threads.parents[entry] = translated[parent]
         return self.document._wrap('word/document.xml', imported)
 
     def import_entry(self, node, deep, mode):
@@ -872,4 +900,6 @@ class NoteGraph:
         if role == 'comments':
             self.comment_ids[imported] = self._next_comment_id
             self._next_comment_id += 1
+            if node._element in source_graph.threads.done:
+                self.threads.done[imported] = source_graph.threads.done[node._element]
         return self.document._wrap(name, imported)

@@ -445,7 +445,8 @@ render_report("template.docx", context, "report.docx", "report.pdf")
 - 不提供内置 PDF 读取、DOC/RTF 写出、OCR 或完整 Word 排版/字段计算引擎。
 - LDM 转换不是无损往返。脚注/尾注单独提取，仅显式开启的 Markdown 输出可见锚点注。
   经典批注正文、元数据及有序点/范围锚点支持 DOCX/Flat OPC 转换和 LDM JSON 编辑；其他输出报告批注丢失，
-  现代回复元数据和批注绘制尚不支持。修订、复杂字段、内容控件、
+  回复关系与完成状态支持 DOCX/Flat OPC 和 LDM JSON 编辑；DOM 批注提供 ancestor、replies、done 和 add_reply。
+  DOM 回复线程的移动、克隆、删除、其他现代元数据和批注绘制仍未支持。修订、复杂字段、内容控件、
   数学公式、浮动内容及页眉页脚变体仍有限制。支持内联图片不等于任意形状/图片定位或完整 OOXML 保真。
 - Markdown 的合并网格与嵌套表格会丢失几何；parser 仅实现选定 CommonMark/GFM 子集。
   Tab 缩进沿用固定 `+4`，不是按列位置计算的 tab stop。
