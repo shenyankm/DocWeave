@@ -63,7 +63,7 @@ def test_rich_cell_retains_fonts_and_clickable_link():
         spans = [s for b in pdf[0].get_text("dict")["blocks"] for line in b.get("lines", []) for s in line["spans"]]
         bold = next(s for s in spans if "粗体" in s["text"])
         assert bold["size"] == pytest.approx(16) and bold["flags"] & 16
-        assert any(link.get("uri") == "https://example.com" for link in pdf[0].get_links())
+        assert any(link.get("uri") == "https://example.com/" for link in pdf[0].get_links())
         assert len(pdf[0].get_drawings()) >= 4
         assert_in_bounds(pdf)
 

@@ -103,7 +103,7 @@ def test_tab_pieces_preserve_inline_rendering(decoration):
         assert set(words) == {"LEFT", "RIGHT"}
         assert words["RIGHT"][0] == pytest.approx(92, abs=0.05)
         if decoration == "link":
-            assert [link["uri"] for link in pdf[0].get_links()] == ["https://example.test"]
+            assert [link["uri"] for link in pdf[0].get_links()] == ["https://example.test/"]
         else:
             assert len(pdf[0].get_drawings()) == 2
 

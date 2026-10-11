@@ -92,6 +92,19 @@ def _replace_open_action(pdf_bytes: bytes, zoom_behavior: str) -> bytes:
     return pdf_bytes[: match.start()] + padded + pdf_bytes[match.end() :]
 
 
+class _PdfCanvas(FPDF):
+    def link(self, x, y, w, h, link, alt_text=None, **kwargs):
+        if isinstance(link, str):
+            target, separator, fragment = link.partition("#")
+            if target and separator and not fragment:
+                link = target
+            authority = re.match(r"(?i)^https?://[^/?#]+(?=[?#]|$)", link)
+            if authority:
+                end = authority.end()
+                link = link[:end] + "/" + link[end:]
+        return super().link(x, y, w, h, link, alt_text=alt_text, **kwargs)
+
+
 class _ColumnState:
     """Tracks multi-column layout position within a section."""
 
@@ -232,7 +245,7 @@ class LdmPdfWriter:
             if ps.page_height > 0:
                 page_h_mm = ps.page_height * PT_TO_MM
 
-        pdf = FPDF(unit="mm", format=(page_w_mm, page_h_mm))
+        pdf = _PdfCanvas(unit="mm", format=(page_w_mm, page_h_mm))
         # Word paragraph indents already define text origins; FPDF cell padding adds a spurious millimeter.
         pdf.c_margin = 0
         if self.options.export_document_structure:

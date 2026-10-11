@@ -150,7 +150,7 @@ def test_shaping_preserves_distinct_styles_and_link_targets():
     model = ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[para]))])
     raw = LdmPdfWriter(options).write_to_bytes(model)
     with pymupdf.open(stream=raw, filetype='pdf') as pdf:
-        assert [link['uri'] for link in pdf[0].get_links()] == ['https://left.example', 'https://right.example']
+        assert [link['uri'] for link in pdf[0].get_links()] == ['https://left.example/', 'https://right.example/']
         spans = [span for block in pdf[0].get_text('dict')['blocks']
                  for line in block.get('lines', []) for span in line['spans']]
         left = next(span for span in spans if 'LEFT' in span['text'])
