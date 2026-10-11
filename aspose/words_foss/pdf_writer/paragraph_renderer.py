@@ -471,7 +471,7 @@ class ParagraphRenderer:
         is_code = bool(style_name and ("Code" in style_name or "code" in style_name))
         if is_code:
             code_size = fs - 1
-            code_runs = [run if run.font.size > 0 else run.model_copy(update={
+            code_runs = [run if run.font.render_size > 0 else run.model_copy(update={
                 "font": run.font.model_copy(update={"size": code_size})}) for run in runs]
             line_h = self.line_height_mm(get_line_font_size(code_runs) if code_runs else code_size, pf)
             with w._tag(pdf, "/Code"), baseline_scope(pdf, baseline_size(code_runs)):
@@ -488,12 +488,14 @@ class ParagraphRenderer:
 
         # Block quote
         if style_name and "Quote" in style_name:
-            line_h = self.line_height_mm(fs, pf)
+            quote_size = get_dominant_font_size(runs) or fs
+            line_h = self.line_height_mm(quote_size, pf)
             text = self._plain_text_from_runs(runs)
             with w._tag(pdf, "/BlockQuote"):
-                pdf.set_font(DEFAULT_FONT_NAME, style="I", size=fs)
+                pdf.set_font(DEFAULT_FONT_NAME, style="I", size=quote_size)
                 pdf.set_text_color(*QUOTE_TEXT_RGB)
-                if any(run.font.superscript or run.font.subscript for run in runs):
+                if (any(run.font.superscript or run.font.subscript for run in runs) or
+                        len({run.font.render_size for run in runs}) > 1):
                     line_h = self.line_height_mm(get_line_font_size(runs), pf)
                     w._run_renderer.render_formatted_runs(pdf, runs, align=align, line_h_override=line_h, pf=pf)
                 else:

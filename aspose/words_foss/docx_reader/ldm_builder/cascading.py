@@ -524,8 +524,8 @@ class FontResolver:
             if field not in _set:
                 continue
             value = getattr(override, field)
-            # Zero means unspecified; JSON validation fills model_fields_set.
-            if field == "size" and value == 0:
+            # Explicit zero is a declaration; unmarked programmatic zero is absent.
+            if field == "size" and value == 0 and override.size_explicit is not True:
                 continue
             if (field in ("color", "highlight_color") and value == COLOR_EMPTY
                     and not (field == "color" and override.color_explicit is True)):

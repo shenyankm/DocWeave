@@ -24,7 +24,7 @@ def baseline_size(runs):
     scripted = False
     for run in runs:
         if run.text:
-            sizes.add(run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT)
+            sizes.add(run.font.render_size if run.font.render_size > 0 else DEFAULT_FONT_SIZE_PT)
             scripted |= run.font.superscript or run.font.subscript
     return max(sizes) if sizes and (len(sizes) > 1 or scripted) else None
 

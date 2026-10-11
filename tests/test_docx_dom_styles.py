@@ -156,7 +156,7 @@ def test_invalid_default_styles_fail_without_mutation(tmp_path, styles):
     assert payloads(doc.to_bytes()) == original
 
 
-@pytest.mark.parametrize("rpr", ['<w:b w:val="invalid"/>', '<w:sz w:val="invalid"/>', '<w:sz w:val="0"/>'])
+@pytest.mark.parametrize("rpr", ['<w:b w:val="invalid"/>', '<w:sz w:val="invalid"/>', '<w:sz w:val="-1"/>'])
 def test_invalid_direct_values_are_not_reported_as_valid_effective_values(tmp_path, rpr):
     doc = style_doc(tmp_path, rpr=rpr)
     with pytest.raises(ValueError):
@@ -173,8 +173,11 @@ def test_unsupported_context_is_explicit_not_a_guessed_effective_value(tmp_path,
     doc = style_doc(tmp_path, style, ppr, body=body)
     p = doc.get_child_nodes(aw.NodeType.PARAGRAPH, deep=True)[0]
     original = payloads(doc.to_bytes())
-    with pytest.raises(NotImplementedError):
-        _ = p.runs[0].effective_font
+    if style.startswith('<w:style w:type="table"'):
+        assert p.runs[0].effective_font.size == 11.0
+    else:
+        with pytest.raises(NotImplementedError):
+            _ = p.runs[0].effective_font
     with pytest.raises(NotImplementedError):
         _ = p.effective_paragraph_format
     assert payloads(doc.to_bytes()) == original

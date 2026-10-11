@@ -426,6 +426,8 @@ def _tblPr(
             )
     if margins:
         children.append(el("w:tblCellMar", None, margins))
+    if table.style_look is not None:
+        children.append(render_table_look(table.style_look))
     if table.title:
         children.append(el("w:tblCaption", {"w:val": table.title}))
     if table.description:
@@ -435,6 +437,13 @@ def _tblPr(
         return ""
     return el("w:tblPr", None, children)
 
+
+
+def render_table_look(look):
+    return el("w:tblLook", {"w:" + name: "1" if value else "0" for name, value in (
+        ("firstRow", look.first_row), ("lastRow", look.last_row),
+        ("firstColumn", look.first_column), ("lastColumn", look.last_column),
+        ("noHBand", not look.row_banding), ("noVBand", not look.column_banding))})
 
 def _tblGrid(table: ldm.Table) -> str:
     """Emit a ``<w:tblGrid>`` with per-column widths from row 0."""

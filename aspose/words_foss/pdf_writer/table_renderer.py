@@ -266,8 +266,8 @@ class TableRenderer:
                 right_indent = max(0.0, pf.right_indent * PT_TO_MM)
                 label = (para.list_label.label_string if para.list_label else None) or w._paragraph_renderer._compute_list_label(para.list_format)
                 if label:
-                    size = next((run.font.size for run in visible_runs(para)
-                                 if not run.font.render_hidden and run.font.size > 0), DEFAULT_FONT_SIZE_PT)
+                    size = next((run.font.render_size for run in visible_runs(para)
+                                 if not run.font.render_hidden and run.font.render_size > 0), DEFAULT_FONT_SIZE_PT)
                     label_run = ldm.Run(text=safe_text(f'{label} '), font=ldm.Font(size=size))
                     apply_run_font(pdf, label_run.font)
                     label_width = pdf.get_string_width(label_run.text)
@@ -347,7 +347,7 @@ class TableRenderer:
             flush(final=True)
             if not para._children:
                 mark = para.paragraph_break_font
-                size = mark.size if mark is not None and mark.size > 0 else DEFAULT_FONT_SIZE_PT
+                size = mark.render_size if mark is not None and mark.render_size > 0 else DEFAULT_FONT_SIZE_PT
                 lines.append(_CellLine(w._paragraph_renderer.line_height_mm(size, para.paragraph_format)))
             if para.paragraph_format.space_after:
                 lines.append(_CellLine(para.paragraph_format.space_after * PT_TO_MM))

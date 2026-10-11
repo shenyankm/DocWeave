@@ -25,6 +25,38 @@ from ._context import ReaderContext
 from .cascading import StyleChainResolver
 
 
+def _read_table_band_size(element: ET.Element) -> int:
+    try:
+        value = int(element.get(f'{W_NS}val', '1'))
+    except ValueError:
+        raise ValueError('Invalid table band size') from None
+    if value <= 0:
+        raise ValueError('Table band size must be positive')
+    return value
+
+
+def _read_table_look(element: ET.Element) -> ldm.TableStyleLook:
+    raw = element.get(f'{W_NS}val')
+    try:
+        bits = int(raw, 16) if raw is not None else 0
+    except ValueError:
+        raise ValueError('Invalid table style look bitmask') from None
+    if not 0 <= bits <= 0xFFFF:
+        raise ValueError('Invalid table style look bitmask')
+    values = {}
+    for attr, field, bit, inverted in (
+        ('firstRow', 'first_row', 0x20, False), ('lastRow', 'last_row', 0x40, False),
+        ('firstColumn', 'first_column', 0x80, False), ('lastColumn', 'last_column', 0x100, False),
+        ('noHBand', 'row_banding', 0x200, True), ('noVBand', 'column_banding', 0x400, True),
+    ):
+        value = element.get(f'{W_NS}{attr}')
+        if value is not None and value not in {'0', '1', 'on', 'off', 'true', 'false'}:
+            raise ValueError('Invalid table style look switch')
+        enabled = bool(bits & bit) if value is None else value in {'1', 'on', 'true'}
+        values[field] = not enabled if inverted else enabled
+    return ldm.TableStyleLook(**values)
+
+
 # Paragraph builder callback signature: (p_elem, image_rels?) -> ldm.Paragraph.
 ParagraphBuilderFn = Callable[..., ldm.Paragraph]
 
@@ -86,6 +118,9 @@ class TableBuilder:
         tbl: ldm.Table,
         tblPr: ET.Element,
     ) -> list[ldm.Border]:
+        look = tblPr.find(f"{W_NS}tblLook")
+        if look is not None:
+            tbl.style_look = _read_table_look(look)
         tblStyle = tblPr.find(f"{W_NS}tblStyle")
         raw_id = tblStyle.get(f"{W_NS}val", "") if tblStyle is not None else self._default_style_id
         for sid in StyleChainResolver(self._ctx).chain(raw_id):

@@ -360,8 +360,8 @@ class ShapeRenderer:
         for p in paragraphs:
             size_pt = DEFAULT_FONT_SIZE_PT
             for run in p.runs:
-                if run.font.size > 0:
-                    size_pt = run.font.size
+                if run.font.render_size > 0:
+                    size_pt = run.font.render_size
                     break
             line_h_mm = size_pt * PT_TO_MM * LINE_HEIGHT_FACTOR
             text = "".join(run.text or "" for run in p.runs)

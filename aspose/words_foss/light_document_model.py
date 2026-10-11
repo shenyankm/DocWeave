@@ -13,6 +13,7 @@ from __future__ import annotations
 from base64 import b64decode, b64encode
 from collections.abc import Mapping
 from enum import IntEnum
+from math import floor, isfinite
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
@@ -348,6 +349,7 @@ class CompatibilityOptionsState(BaseModel):
     flags: dict[str, bool]
     edited_flags: set[str] = Field(default_factory=set)
     optimized_for: int | None = Field(default=None, ge=0, le=7)
+    font_size_override: bool | None = None
 
     @field_validator('flags')
     @classmethod
@@ -446,6 +448,41 @@ class FontEmbeddingSettings(BaseModel):
 
 
 class Font(BaseModel):
+    @staticmethod
+    def _quantize_size(value):
+        # XML sizes are already half-points; public numeric input rounds ties up.
+        if isinstance(value, (int, float)) and isfinite(value) and 0 <= value < 2**51:
+            return floor(value * 2 + 0.5) / 2
+        return value
+
+    @field_validator('size')
+    @classmethod
+    def _normalize_size(cls, value):
+        return cls._quantize_size(value)
+
+    _size_resolver: Any = PrivateAttr(default=None)
+
+    def __getattribute__(self, name):
+        if name == "size":
+            private = object.__getattribute__(self, "__pydantic_private__")
+            resolver = private.get("_size_resolver") if private else None
+            if resolver is not None:
+                return resolver(self)
+        return super().__getattribute__(name)
+
+    @property
+    def render_size(self):
+        resolver = self.__pydantic_private__.get("_size_resolver")
+        if resolver is not None:
+            return resolver(self, paint=True)
+        return 0.5 if self.size == 0 and self.size_explicit is True else self.size
+
+    def __deepcopy__(self, memo=None):
+        # Drop document closures before copying, retaining raw declarations.
+        detached = super().__copy__()
+        detached.__pydantic_private__["_size_resolver"] = None
+        return BaseModel.__deepcopy__(detached, memo)
+
     name: str = ""
     size: float = 0.0
     size_explicit: bool | None = None
@@ -515,10 +552,12 @@ class Font(BaseModel):
         return self.color if self.color_rendering is None else self.color_rendering
 
     def __setattr__(self, name: str, value: Any) -> None:
+        if name == 'size':
+            value = self._quantize_size(value)
         if name == 'source_color' and value is not None and not isinstance(value, SourceColor):
             raise TypeError('source_color must be SourceColor or None')
         super().__setattr__(name, value)
-        if name in (*FONT_BOOLEAN_FIELDS, 'color'):
+        if name in (*FONT_BOOLEAN_FIELDS, 'color', 'size'):
             super().__setattr__(name + '_explicit', True)
         if name == 'hidden':
             super().__setattr__('hidden_rendering', None)
@@ -536,7 +575,9 @@ class Font(BaseModel):
             update.setdefault('source_color', None)
         if update is not None:
             update = dict(update)
-            for field in (*FONT_BOOLEAN_FIELDS, 'color'):
+            if 'size' in update:
+                update['size'] = self._quantize_size(update['size'])
+            for field in (*FONT_BOOLEAN_FIELDS, 'color', 'size'):
                 if field in update and field + '_explicit' not in update:
                     update[field + '_explicit'] = True
         return super().model_copy(update=update, deep=deep)
@@ -1295,7 +1336,20 @@ class SourceTablePosition(BaseModel):
 
 
 
+class TableStyleLook(BaseModel):
+    """Explicit table condition switches; absence still allows style inheritance."""
+
+    first_row: bool = False
+    last_row: bool = False
+    first_column: bool = False
+    last_column: bool = False
+    row_banding: bool = True
+    column_banding: bool = True
+
+
 class Table(BaseModel, NodeCastMixin):
+    style_look: TableStyleLook | None = None
+
     type: Literal["Table"] = Field(default="Table", alias="_type")
     source_location: SourceLocation | None = None
     alignment: int = 0
@@ -1478,6 +1532,9 @@ class Section(BaseModel, NodeCastMixin):
 
 
 class TableStyleFormat(BaseModel):
+    style_look: TableStyleLook | None = None
+    row_band_size: int | None = Field(default=None, ge=1, strict=True)
+    column_band_size: int | None = Field(default=None, ge=1, strict=True)
     """Table-level properties stored on table styles (``w:tblPr`` inside ``w:style``)."""
 
     borders: list[Border] = Field(default_factory=list)
@@ -1619,6 +1676,7 @@ class Document(BaseModel):
     source_theme: SourceTheme | None = None
     source_font_table: SourceFontTable | None = None
     source_settings: SourceSettings | None = None
+    current_compatibility_settings: SourceSettings | None = None
     compatibility_options_state: CompatibilityOptionsState | None = None
     font_embedding: FontEmbeddingSettings | None = None
     doc_defaults_font: Optional[Font] = None
@@ -1630,6 +1688,16 @@ class Document(BaseModel):
     source_stories: list[SourceStory] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True, "hide_input_in_errors": True}
+
+    def model_copy(self, *, update=None, deep=False):
+        if deep and update is not None:
+            from copy import deepcopy
+            update = deepcopy(update)
+        result = super().model_copy(update=update, deep=deep)
+        if deep:
+            from aspose.words_foss._font_sizes import bind_font_sizes
+            bind_font_sizes(result)
+        return result
 
     def get_child_nodes(self, node_type: int = NodeType.ANY, deep: bool = False) -> list:
         """Child nodes, optionally filtered by :class:`NodeType`."""
@@ -1644,6 +1712,25 @@ class Document(BaseModel):
         hdr_raw = ftr_raw = None
         if isinstance(data, dict):
             data = dict(data)
+            pending, seen = list(data.values()), set()
+            while pending:
+                value = pending.pop()
+                if id(value) in seen:
+                    continue
+                seen.add(id(value))
+                if isinstance(value, Font) and value.__pydantic_private__.get("_size_resolver") is not None:
+                    # Already-bound nodes must not replace another document's size views.
+                    from copy import deepcopy
+                    data = deepcopy(data)
+                    break
+                if isinstance(value, BaseModel):
+                    pending.extend(value.__dict__.values())
+                    if isinstance(value, Paragraph):
+                        pending.extend(value._children)
+                elif isinstance(value, dict):
+                    pending.extend(value.values())
+                elif isinstance(value, (list, tuple)):
+                    pending.extend(value)
             hdr_raw = data.pop("header_paragraphs", None)
             ftr_raw = data.pop("footer_paragraphs", None)
         instance: "Document" = handler(data)
@@ -1658,13 +1745,15 @@ class Document(BaseModel):
             if any(hf.header_footer_type == kind for sec in instance.sections
                    for hf in sec.headers_footers):
                 # Serialized legacy fields mirror paragraphs from every section.
-                if paras != existing:
+                if [p.model_dump() for p in paras] != [p.model_dump() for p in existing]:
                     raise ValueError(f"{name} conflicts with section header/footer content")
                 continue
             if not instance.sections:
                 instance.sections.append(Section())
             instance.sections[0].headers_footers.append(
                 HeaderFooter(header_footer_type=kind, children=paras))
+        from aspose.words_foss._font_sizes import bind_font_sizes
+        bind_font_sizes(instance)
         return instance
 
     @model_serializer(mode="wrap")

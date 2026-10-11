@@ -22,7 +22,10 @@ def test_legacy_content_without_section_is_migrated_and_input_is_reusable(by_ali
                 for key, value in data.items()}
     before = deepcopy(data)
     doc = ldm.Document.model_validate(data)
-    assert data == before
+    # A first document adopts fresh typed nodes; runtime bindings are not declarations.
+    declaration = lambda value: value.model_dump() if isinstance(value, ldm.Paragraph) else value
+    assert {k: [declaration(p) for p in v] for k, v in data.items()} == {
+        k: [declaration(p) for p in v] for k, v in before.items()}
     assert len(doc.sections) == 1
     assert [p.text for p in doc.header_paragraphs] == ['OWNED HEADER Ω']
     assert [p.text for p in doc.footer_paragraphs] == ['OWNED FOOTER Ω']
@@ -88,3 +91,23 @@ def test_legacy_content_survives_two_public_saves(tmp_path, fmt, via_json):
         assert [p.text for p in cold.footer_paragraphs] == ['OWNED FOOTER Ω']
         assert cold.header_paragraphs[0]._children[0].font.bold is True
         assert cold.footer_paragraphs[0]._children[0].font.bold is True
+
+
+@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+def test_loaded_bound_header_fonts_keep_legacy_mirrors_equal(tmp_path, fmt):
+    model = ldm.Document(header_paragraphs=[paragraph('OWNED HEADER Ω')],
+                         footer_paragraphs=[paragraph('OWNED FOOTER Ω')])
+    document = aw.Document()
+    document._document = model
+    path = tmp_path / 'owned'
+    document.save(path, fmt)
+    current = aw.Document(path).light_document_model
+    held = current.header_paragraphs[0]._children[0].font
+    for _ in range(2):
+        data = current.model_dump()
+        current = ldm.Document.model_validate(data)
+        current = ldm.Document.model_validate_json(current.model_dump_json())
+        font = current.header_paragraphs[0]._children[0].font
+        assert font.model_dump() == held.model_dump()
+        assert font.size == held.size
+        assert len(current.sections[0].headers_footers) == 2

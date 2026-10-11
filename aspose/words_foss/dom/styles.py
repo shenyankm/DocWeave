@@ -427,6 +427,7 @@ class EffectiveParagraphFormat:
 
 class StyleResolver:
     def __init__(self, document):
+        self.document = document
         self.root = document._styles_root()
         self.styles = {}
         if self.root is not None:
@@ -484,7 +485,7 @@ class StyleResolver:
             return value
         return 11.0 if _child(_child(self.root, "docDefaults"), "rPrDefault") is None else 10.0
 
-    def _paragraph_layers(self, paragraph):
+    def _paragraph_layers(self, paragraph, *, font=False):
         paragraph._editable()
         properties = _child(paragraph._element, "pPr")
         reference = _child(properties, "pStyle")
@@ -498,10 +499,88 @@ class StyleResolver:
         while ancestor is not None:
             if _is(ancestor._element, "tbl"):
                 table_style = _child(_child(ancestor._element, "tblPr"), "tblStyle")
-                if table_style is not None or self._default("table") is not None:
+                if not font and (table_style is not None or self._default("table") is not None):
                     raise NotImplementedError("Effective formatting for styled tables is unsupported")
             ancestor = ancestor.parent_node
         return styles, layers
+
+    def _table_font_layers(self, paragraph):
+        ancestor = paragraph.parent_node
+        while ancestor is not None and not _is(ancestor._element, "tbl"):
+            ancestor = ancestor.parent_node
+        if ancestor is None:
+            return [], None
+        reference = _child(_child(ancestor._element, "tblPr"), "tblStyle")
+        identifier = reference.getAttributeNS(W, "val") if reference is not None else self._default("table")
+        outer = ancestor.parent_node
+        while outer is not None:
+            if _is(outer._element, "tbl") and (identifier is not None or
+                    _child(_child(outer._element, "tblPr"), "tblStyle") is not None):
+                raise NotImplementedError("Effective formatting for nested styled tables is unsupported")
+            outer = outer.parent_node
+        if identifier is None:
+            return [], None
+        if not self.has_style(identifier, "table"):
+            raise NotImplementedError("Effective formatting for unknown table styles is unsupported")
+        from xml.etree import ElementTree as ET
+        from aspose.words_foss.light_document_model import TableStyleLook
+        from aspose.words_foss.docx_reader.ldm_builder.tables import _read_table_look, _read_table_band_size
+        from aspose.words_foss.utils.table_conditions import table_size_conditions, table_font_size
+
+        def attributes(element):
+            return ET.Element("property", {
+                "{" + W + "}" + attr.localName: attr.value
+                for attr in element.attributes.values() if attr.namespaceURI == W})
+
+        def known_complex_size(node):
+            # Ordinary size edits preserve an independent native szCs declaration.
+            return _is(node, "szCs") and _read_size(node) is not None
+
+        styles = self._chain(identifier, "table")
+        layers, sizes = [], []
+        look, bands = TableStyleLook(), {"tblStyleRowBandSize": 1, "tblStyleColBandSize": 1}
+        supported = {"firstRow", "lastRow", "firstCol", "lastCol", "nwCell", "neCell",
+                     "swCell", "seCell", "band1Horz", "band2Horz", "band1Vert", "band2Vert", "wholeTable"}
+        for style in styles:
+            properties = _child(style, "rPr")
+            if properties is not None and any(not (_is(node, "rFonts") or _is(node, "sz") or known_complex_size(node)) for node in _elements(properties)):
+                raise NotImplementedError("Effective table font properties beyond whole-table names and size are unsupported")
+            layers.append(properties)
+            whole = _child(properties, "sz")
+            local_regions = []
+            sizes.append((_read_size(whole) if whole is not None else None, local_regions))
+            table_properties = _child(style, "tblPr")
+            inherited = _child(table_properties, "tblLook")
+            if inherited is not None:
+                look = _read_table_look(attributes(inherited))
+            for name in bands:
+                element = _child(table_properties, name)
+                if element is not None:
+                    bands[name] = _read_table_band_size(attributes(element))
+            for group in _elements(style):
+                if not _is(group, "tblStylePr"):
+                    continue
+                properties = _child(group, "rPr")
+                kind = group.getAttributeNS(W, "type")
+                if kind not in supported or (properties is not None and any(not (_is(node, "sz") or known_complex_size(node)) for node in _elements(properties))):
+                    raise NotImplementedError("Effective conditional table font properties beyond row/band size are unsupported")
+                size = _child(properties, "sz")
+                local_regions.append((kind, _read_size(size) if size is not None else None))
+        explicit = _child(_child(ancestor._element, "tblPr"), "tblLook")
+        if explicit is not None:
+            look = _read_table_look(attributes(explicit))
+        cell = paragraph.parent_node
+        while cell is not None and not _is(cell._element, "tc"):
+            cell = cell.parent_node
+        if cell is None:
+            raise ValueError("A table paragraph requires a cell ancestor")
+        # Native getter conditions use physical cells, independently of paint grid positions.
+        positions = [[(node, index, 1) for index, node in enumerate(
+            child for child in _elements(row) if _is(child, "tc"))]
+            for row in _elements(ancestor._element) if _is(row, "tr")]
+        conditions = table_size_conditions(positions, look, bands,
+            {kind for _, regions in sizes for kind, _ in regions})
+        return layers, table_font_size(sizes, conditions.get(id(cell._element), ()))
 
     def row_format(self, row, *, direct_only=False):
         from aspose.words_foss.dom.row_format import last_row_property
@@ -550,6 +629,16 @@ class StyleResolver:
                     dimensions[name] = value
         return EffectiveParagraphFormat(alignment, **flags, **dimensions)
 
+    def _related_settings(self):
+        from xml.etree import ElementTree as ET
+        from aspose.words_foss.dom.settings import settings_target
+        package = self.document._package
+        target = settings_target(package)
+        if target is None:
+            return None
+        root = package.tree(target).documentElement
+        return ET.fromstring(root.toxml()) if _is(root, 'settings') else None
+
     def font(self, run):
         run._editable()
         paragraph = run.parent_node
@@ -557,23 +646,41 @@ class StyleResolver:
             paragraph = paragraph.parent_node
         if paragraph is None or not _is(paragraph._element, "p"):
             raise ValueError("Effective run formatting requires a direct paragraph parent")
-        paragraph_styles, _ = self._paragraph_layers(paragraph)
+        paragraph_styles, _ = self._paragraph_layers(paragraph, font=True)
+        table_layers, table_size = self._table_font_layers(paragraph)
         direct = _child(run._element, "rPr")
         reference = _child(direct, "rStyle")
         style_id = reference.getAttributeNS(W, "val") if reference is not None else None
         character_styles = self._chain(style_id, "character")
         default = self._defaults("rPr")
         size = self.default_size()
-        for style in paragraph_styles + character_styles:
-            properties = _child(style, "rPr")
-            if _child(properties, "rStyle") is not None:
-                raise NotImplementedError("Nested run-style references in style definitions are unsupported")
-            element = _child(properties, "sz")
-            if element is not None:
-                size = _read_size(element)
+        if table_size is not None:
+            size = table_size
+        from aspose.words_foss.utils.style_identity import builtin_normal
+        from aspose.words_foss.utils.table_conditions import table_font_size, table_run_size, table_size_override
+        paragraph_sizes = []
+        for style in paragraph_styles:
+            properties = _child(style, 'rPr')
+            if _child(properties, 'rStyle') is not None:
+                raise NotImplementedError('Nested run-style references in style definitions are unsupported')
+            attributes = {attr.localName: attr.value for attr in style.attributes.values()
+                          if attr.namespaceURI == W}
+            name = _child(style, 'name')
+            paragraph_sizes.append((builtin_normal(attributes, name.getAttributeNS(W, 'val') if name else None),
+                                    _read_size(_child(properties, 'sz'))))
+        character_size = None
+        for style in character_styles:
+            properties = _child(style, 'rPr')
+            if _child(properties, 'rStyle') is not None:
+                raise NotImplementedError('Nested run-style references in style definitions are unsupported')
+            value = _read_size(_child(properties, 'sz'))
+            if value is not None:
+                character_size = value
+        whole = table_font_size([(_read_size(_child(layer, 'sz')), []) for layer in table_layers], ())
+        size = table_run_size(self.default_size(), whole, table_size, paragraph_sizes,
+                              character_size, _read_size(_child(direct, 'sz')),
+                              table_style=bool(table_layers),
+                              override_normal=bool(table_layers) and table_size_override(0, self._related_settings()))
         flags = {field: _effective_toggle(default, paragraph_styles, character_styles, direct, tag)
                  for tag, field, _ in RUN_ONOFF_FLAGS}
-        element = _child(direct, "sz")
-        if element is not None:
-            size = _read_size(element)
         return EffectiveFont(size=size, **flags)

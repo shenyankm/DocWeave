@@ -38,6 +38,13 @@ from aspose.words_foss.docx_reader import PAGE_FIELD_SENTINEL
 from aspose.words_foss.pdf_writer._context import PDFWriterContext
 
 
+def _font_style_key(font):
+    # Document bindings are runtime views, not shaping boundaries.
+    private = {name: value for name, value in (font.__pydantic_private__ or {}).items()
+               if name != '_size_resolver'}
+    return type(font), font.__dict__, private
+
+
 class _ShapedSegment(tuple):
     """Keep the existing five values plus the native direction/font context."""
 
@@ -103,7 +110,7 @@ class RunRenderer:
                 if not text:
                     continue
                 font = run.font
-                size = font.size if font.size > 0 else fs
+                size = font.render_size if font.render_size > 0 else fs
                 line_h = (
                     line_h_override
                     if line_h_override is not None
@@ -234,7 +241,7 @@ class RunRenderer:
             if not text:
                 continue
             font = run.font
-            size = font.size if font.size > 0 else fs
+            size = font.render_size if font.render_size > 0 else fs
             apply_run_font(pdf, font, default_size=fs)
             if not is_toc and "\t" in text:
                 text = text.replace("\t", " ")
@@ -396,7 +403,7 @@ class RunRenderer:
         if leader not in styles or x2 <= x1:
             return
         dash, gap, shift, width = styles[leader]
-        size = (run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT) * PT_TO_MM
+        size = (run.font.render_size if run.font.render_size > 0 else DEFAULT_FONT_SIZE_PT) * PT_TO_MM
         # Leave half a stroke of clear space after accounting for the line caps.
         x1 += width * size
         x2 -= width * size
@@ -512,7 +519,7 @@ class RunRenderer:
         """Use fpdf2\'s shaping-aware line breaker, including fallback-font metrics."""
         grouped = []
         # Run boundaries with identical formatting must not break shaping context.
-        for (_, size, link), group in groupby(segments, key=lambda item: (item[0].font, item[3], item[4])):
+        for (_, size, link), group in groupby(segments, key=lambda item: (_font_style_key(item[0].font), item[3], item[4])):
             items = list(group)
             grouped.append((items[0][0], "".join(item[1] for item in items), 0.0, size, link))
         segments = grouped

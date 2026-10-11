@@ -173,6 +173,7 @@ class CompatibilityOptions:
                 continue
             state.flags[name] = name in enabled
         state.optimized_for = int(version)
+        state.font_size_override = int(version) >= 4
         state.edited_flags.update(name for name in _FLAG_NAMES
                                  if name not in _MODERN_FLAGS and previous[name] != state.flags[name])
         doc = self._owner.light_document_model

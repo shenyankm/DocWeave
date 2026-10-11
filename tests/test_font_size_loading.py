@@ -60,7 +60,7 @@ def test_font_size_roundtrip_accepts_windows_zip_metadata(monkeypatch):
     test_positive_ordinary_sizes_match_native_and_roundtrip(ROWS[0])
 
 
-BAD = ('PRIVATE FONT VALUE', '', '0', '-2', '2_4', '٢٤', 'NaN', 'Infinity', '24hp', ' 24 ', '9' * 400)
+BAD = ('PRIVATE FONT VALUE', '', '-2', '2_4', '٢٤', 'NaN', 'Infinity', '24hp', ' 24 ', '9' * 400)
 
 
 @pytest.mark.parametrize('scope', ['run', 'style', 'default'])

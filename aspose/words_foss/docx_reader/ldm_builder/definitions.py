@@ -245,8 +245,17 @@ class StyleBuilder:
             return
         tblPr = style_elem.find(f"{W_NS}tblPr")
         if tblPr is None:
-            return
+            tblPr = ET.Element(f"{W_NS}tblPr")
         tsf = ldm.TableStyleFormat()
+        from .tables import _read_table_look, _read_table_band_size
+        look = tblPr.find(f"{W_NS}tblLook")
+        if look is not None:
+            tsf.style_look = _read_table_look(look)
+        for tag, field in (("tblStyleRowBandSize", "row_band_size"),
+                           ("tblStyleColBandSize", "column_band_size")):
+            element = tblPr.find(f"{W_NS}{tag}")
+            if element is not None:
+                setattr(tsf, field, _read_table_band_size(element))
         direction = tblPr.find(f"{W_NS}bidiVisual")
         if direction is not None:
             tsf.bidi = parse_onoff(direction)
@@ -261,11 +270,11 @@ class StyleBuilder:
         )
         has_padding = any(value is not None for value in
             (tsf.left_padding, tsf.right_padding, tsf.top_padding, tsf.bottom_padding))
-        if not (has_borders or has_padding or tsf.bidi is not None):
-            return
         if not has_borders:
             tsf.borders = []
-        s.table_style_format = tsf
+        if (has_borders or has_padding or tsf.bidi is not None or tsf.style_look is not None
+                or tsf.row_band_size is not None or tsf.column_band_size is not None):
+            s.table_style_format = tsf
 
         for tsp_el in style_elem.findall(f"{W_NS}tblStylePr"):
             tsp_type = tsp_el.get(f"{W_NS}type", "")
@@ -291,8 +300,7 @@ class StyleBuilder:
                 tcBorders = tcPr.find(f"{W_NS}tcBorders")
                 if tcBorders is not None:
                     tsp.borders = build_borders(tcBorders)
-            if tsp.font or tsp.shading or tsp.borders or tsp.paragraph_format:
-                s.table_style_properties.append(tsp)
+            s.table_style_properties.append(tsp)
 
 
 class ListBuilder:

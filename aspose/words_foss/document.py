@@ -482,7 +482,9 @@ class Document:
                     if fmt == SaveFormat.DOCX or fmt in MAIN_TYPES:
                         from aspose.words_foss.fonts import prepare_font_table_commit
                         from aspose.words_foss.utils.table_row import prepare_row_height_commit
-                        commits = (prepare_font_table_commit(self.light_document_model, data),
+                        from aspose.words_foss._font_sizes import prepare_saved_compatibility_commit
+                        commits = (prepare_saved_compatibility_commit(self.light_document_model, data),
+                                   prepare_font_table_commit(self.light_document_model, data),
                                    prepare_row_height_commit(self.light_document_model))
                     try:
                         if fmt == SaveFormat.DOCX:
@@ -663,7 +665,10 @@ class Document:
         commit_fonts = prepare_font_table_commit(doc, data)
         from aspose.words_foss.utils.table_row import prepare_row_height_commit
         commit_rows = prepare_row_height_commit(doc)
+        from aspose.words_foss._font_sizes import prepare_saved_compatibility_commit
+        commit_settings = prepare_saved_compatibility_commit(doc, data)
         with atomic_output(output_path) as temporary:
             temporary.write_bytes(data)
         commit_fonts()
         commit_rows()
+        commit_settings()

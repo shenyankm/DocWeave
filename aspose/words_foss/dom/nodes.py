@@ -104,11 +104,11 @@ def _size_value(value):
     if value is None:
         return None
     if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise TypeError("Font size must be a positive number in half-point increments or None")
+        raise TypeError("Font size must be a non-negative number in half-point increments or None")
     half_points = value * 2
-    if (not 0 < half_points <= 2**64 - 1 or
+    if (not 0 <= half_points <= 2**64 - 1 or
             isinstance(half_points, float) and (not isfinite(half_points) or not half_points.is_integer())):
-        raise ValueError("Font size must be a positive number in half-point increments or None")
+        raise ValueError("Font size must be a non-negative number in half-point increments or None")
     return str(int(half_points))
 
 

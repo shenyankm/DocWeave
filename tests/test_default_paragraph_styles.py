@@ -112,14 +112,15 @@ def test_explicit_style_and_direct_overrides_take_precedence():
 
 
 @pytest.mark.parametrize('flag', ['0', 'false', 'off'])
-def test_normal_name_does_not_imply_default(flag):
+def test_nondefault_normal_font_fallback_keeps_marker_disabled(flag):
     source = Document()
     normal = source.styles['Normal']
     normal.element.set(qn('w:default'), flag)
     normal.font.size = Pt(16)
     source.add_paragraph('NO DEFAULT')
     doc = load(source)
-    assert doc.light_document_model.sections[0].body.paragraphs[0].runs[0].font.size == 11
+    # Native 26.9 uses the built-in Normal size fallback even with a false default marker.
+    assert doc.light_document_model.sections[0].body.paragraphs[0].runs[0].font.size == 16
     with ZipFile(BytesIO(doc.to_bytes('docx'))) as package:
         styles = ET.fromstring(package.read('word/styles.xml'))
     normal_xml = next(s for s in styles.findall(W+'style')

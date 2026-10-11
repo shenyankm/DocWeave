@@ -103,6 +103,8 @@ class LdmBuilderMixin:
         from aspose.words_foss._comments import validate_comments, validate_source_anchors
         validate_comments(doc)
         validate_source_anchors(self, doc)
+        from aspose.words_foss._font_sizes import bind_font_sizes
+        bind_font_sizes(doc)
         return doc
 
     # -- Reader-side state helpers ---------------------------------------------

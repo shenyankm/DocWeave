@@ -187,23 +187,13 @@ class LdmDocxWriter:
     # ------------------------------------------------------------------
     def write(self, doc: ldm.Document, output_path: Union[str, Path]) -> None:
         """Render ``doc`` and atomically write DOCX or explicit Flat OPC XML."""
-        from aspose.words_foss.document import _coerce_save_format
+        from aspose.words_foss._font_sizes import prepare_saved_compatibility_commit
 
-        if _coerce_save_format(getattr(self.options, "save_format", None)) in MAIN_TYPES:
-            with atomic_output(output_path) as temporary:
-                temporary.write_bytes(self.write_to_bytes(doc))
-            return
-        parts = self._render_parts(doc)
-        compress_type, compresslevel = self._compression()
+        data = self.write_to_bytes(doc)
+        commit_settings = prepare_saved_compatibility_commit(doc, data)
         with atomic_output(output_path) as temporary:
-            write_docx_package(
-                temporary,
-                **parts.as_kwargs(),
-                compression=compress_type,
-                compresslevel=compresslevel,
-                allow_zip64=self._allow_zip64(),
-                pretty_format=self._pretty_format(),
-            )
+            temporary.write_bytes(data)
+        commit_settings()
 
     def write_to_bytes(self, doc: ldm.Document) -> bytes:
         """Render ``doc`` and return DOCX or explicit Flat OPC XML bytes."""

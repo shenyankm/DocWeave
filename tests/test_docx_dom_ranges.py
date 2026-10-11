@@ -132,7 +132,7 @@ def test_split_edges_noops_and_space_preservation(tmp_path):
     assert list(root.iter(f'{{{W}}}t'))[1].get('{http://www.w3.org/XML/1998/namespace}space') == "preserve"
 
 
-@pytest.mark.parametrize("value", [0, -1, 12.25, float("nan"), float("inf"), True, "12"])
+@pytest.mark.parametrize("value", [-1, 12.25, float("nan"), float("inf"), True, "12"])
 def test_invalid_size_rejected_before_range_split(tmp_path, value):
     doc = paragraph_doc(tmp_path, '<w:r><w:t>abcdef</w:t></w:r>')
     p = doc.body.paragraphs[0]

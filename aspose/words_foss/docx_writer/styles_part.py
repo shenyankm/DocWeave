@@ -465,6 +465,11 @@ def _render_style_tblPr(tsf: ldm.TableStyleFormat) -> str:
     children: list[str] = []
     if tsf.bidi is not None:
         children.append(el("w:bidiVisual", {"w:val": "1" if tsf.bidi else "0"}))
+    for field, tag in (("row_band_size", "tblStyleRowBandSize"),
+                       ("column_band_size", "tblStyleColBandSize")):
+        value = getattr(tsf, field)
+        if value is not None:
+            children.append(el("w:" + tag, {"w:val": str(value)}))
     if tsf.borders:
         tbl_borders = _table_borders(tsf.borders)
         if tbl_borders:
@@ -480,6 +485,9 @@ def _render_style_tblPr(tsf: ldm.TableStyleFormat) -> str:
             margins.append(el(f"w:{side}", {"w:w": pt_to_twips(val), "w:type": "dxa"}))
     if margins:
         children.append(el("w:tblCellMar", None, margins))
+    if tsf.style_look is not None:
+        from .tables import render_table_look
+        children.append(render_table_look(tsf.style_look))
     if not children:
         return ""
     return el("w:tblPr", None, children)
@@ -514,8 +522,6 @@ def _render_tblStylePr(tsp: ldm.TableStyleProperty) -> str:
                 )
         if tc_children:
             children.append(el("w:tcPr", None, tc_children))
-    if not children:
-        return ""
     return el("w:tblStylePr", {"w:type": tsp.type}, children)
 
 

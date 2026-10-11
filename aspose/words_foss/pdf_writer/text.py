@@ -98,15 +98,15 @@ def is_toc_style(style_name: str) -> bool:
 def get_dominant_font_size(runs: list[ldm.Run]) -> float:
     """Get the font size from the first run that has a non-zero size."""
     for run in runs:
-        if run.font.size > 0:
-            return run.font.size
+        if run.font.render_size > 0:
+            return run.font.render_size
     return 0.0
 
 
 def get_line_font_size(runs: list[ldm.Run]) -> float:
     """Line advance must accommodate the largest visible run, not just the first."""
     # Native SUP (0.7 scale, 0.4 rise) needs 1.1 em above the common baseline.
-    return max(((run.font.size if run.font.size > 0 else DEFAULT_FONT_SIZE_PT)
+    return max(((run.font.render_size if run.font.render_size > 0 else DEFAULT_FONT_SIZE_PT)
                 * (1.6 / LINE_HEIGHT_FACTOR if run.font.superscript else 1) for run in runs),
                default=DEFAULT_FONT_SIZE_PT)
 
