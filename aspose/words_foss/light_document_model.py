@@ -16,7 +16,7 @@ from enum import IntEnum
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
-    BaseModel, BeforeValidator, ConfigDict, Field, PrivateAttr, StrictStr, field_serializer, field_validator,
+    BaseModel, BeforeValidator, ConfigDict, Field, PrivateAttr, StrictStr, TypeAdapter, field_serializer, field_validator,
     model_serializer, model_validator,
 )
 
@@ -1644,15 +1644,24 @@ class Document(BaseModel):
             hdr_raw = data.pop("header_paragraphs", None)
             ftr_raw = data.pop("footer_paragraphs", None)
         instance: "Document" = handler(data)
-        if (hdr_raw or ftr_raw) and instance.sections:
-            sec = instance.sections[0]
-            existing_types = {hf.header_footer_type for hf in sec.headers_footers}
-            if hdr_raw and 0 not in existing_types:
-                paras = [Paragraph.model_validate(p) if isinstance(p, dict) else p for p in hdr_raw]
-                sec.headers_footers.append(HeaderFooter(header_footer_type=0, children=paras))
-            if ftr_raw and 1 not in existing_types:
-                paras = [Paragraph.model_validate(p) if isinstance(p, dict) else p for p in ftr_raw]
-                sec.headers_footers.append(HeaderFooter(header_footer_type=1, children=paras))
+        for raw, kind, name in ((hdr_raw, 0, "header_paragraphs"),
+                                (ftr_raw, 1, "footer_paragraphs")):
+            if raw is None:
+                continue
+            paras = TypeAdapter(list[Paragraph]).validate_python(raw)
+            if not paras:
+                continue
+            existing = instance.header_paragraphs if kind == 0 else instance.footer_paragraphs
+            if any(hf.header_footer_type == kind for sec in instance.sections
+                   for hf in sec.headers_footers):
+                # Serialized legacy fields mirror paragraphs from every section.
+                if paras != existing:
+                    raise ValueError(f"{name} conflicts with section header/footer content")
+                continue
+            if not instance.sections:
+                instance.sections.append(Section())
+            instance.sections[0].headers_footers.append(
+                HeaderFooter(header_footer_type=kind, children=paras))
         return instance
 
     @model_serializer(mode="wrap")

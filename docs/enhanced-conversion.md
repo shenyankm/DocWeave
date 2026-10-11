@@ -252,6 +252,10 @@ DOCX 读取并写出 `w:compat/w:doNotExpandShiftReturn`；设为 `True` 后手�
 直接构造 LDM 段落时，用 `children` 提供有序子节点；`runs` 是读取视图，不是构造参数。
 未知／非法子节点与错误容器会显式拒绝，不再静默移除；校验和旧字段迁移不会修改传入字典。
 格式读取中的未知内容仍沿既有保留与诊断路径处理。
+旧 LDM 的 `header_paragraphs` / `footer_paragraphs` 在没有 section 时建立第一节，
+并迁入该节对应的默认页眉／页脚。JSON 中这些字段是所有节的段落镜像，完全一致时不重复迁入。
+同时提供 section 页眉／页脚和不同的旧字段内容会明确报错：旧列表无法表达目标节，
+调用者须选择一组结构或将内容明确放入目标节；不会覆盖或静默忽略任一组。
 
 LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼容模式，缺失/格式无效时按 12。
 
