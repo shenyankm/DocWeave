@@ -92,6 +92,9 @@ class LdmBuilderMixin:
 
         self._populate_source_stories(doc)
         self._populate_headers_footers(doc)
+        from aspose.words_foss._comments import validate_comments, validate_source_anchors
+        validate_comments(doc)
+        validate_source_anchors(self, doc)
         return doc
 
     # -- Reader-side state helpers ---------------------------------------------
@@ -194,6 +197,9 @@ class LdmBuilderMixin:
             doc.source_stories.append(ldm.SourceStory(
                 kind=kind, part_name=name, identifier=identifier,
                 references=references, children=children,
+                comment_metadata=(ldm.CommentMetadata(author=root.get(W_NS + "author"),
+                                  initial=root.get(W_NS + "initials"), date=root.get(W_NS + "date"))
+                                  if kind == "comment" else None),
             ))
 
     def _populate_headers_footers(self, doc: ldm.Document) -> None:

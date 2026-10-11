@@ -486,6 +486,9 @@ def _build_parts(
     source_theme: SourceTheme | None = None,
     source_font_table: SourceFontTable | None = None,
     embed_fonts: bool = False,
+    comments_xml: str | None = None,
+    comment_hyperlinks: dict[str, str] | None = None,
+    comment_images: list[ImageEntry] | None = None,
 ) -> tuple[list[tuple[str, str]], list[tuple[str, bytes]]]:
     """Assemble ordered (text_parts, binary_parts) lists for the zip."""
     if source_theme is not None and source_theme.data != theme_xml:
@@ -504,7 +507,7 @@ def _build_parts(
     has_header = bool(header_xml)
     has_footer = bool(footer_xml)
     has_settings = bool(settings_xml)
-    all_images = images + header_images + footer_images
+    all_images = images + header_images + footer_images + list(comment_images or [])
     image_extensions = {image.media_path.rsplit(".", 1)[1].lower() for image in all_images}
     text_parts: list[tuple[str, str]] = [
         (
@@ -519,6 +522,22 @@ def _build_parts(
         ),
         ("word/styles.xml", styles_xml),
     ]
+    if comments_xml is not None:
+        types = fromstring(text_parts[0][1])
+        types.append(ET.Element("{" + CT_URI + "}Override", {
+            "PartName": "/word/comments.xml",
+            "ContentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml"}))
+        text_parts[0] = (text_parts[0][0], ET.tostring(types, encoding="unicode"))
+        index = next(i for i, part in enumerate(text_parts) if part[0] == "word/_rels/document.xml.rels")
+        relations = fromstring(text_parts[index][1])
+        relations.append(ET.Element("{" + PKG_RELS_URI + "}Relationship", {
+            "Id": "rIdComments", "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
+            "Target": "comments.xml"}))
+        text_parts[index] = (text_parts[index][0], ET.tostring(relations, encoding="unicode"))
+        text_parts.append(("word/comments.xml", comments_xml))
+        if comment_hyperlinks or comment_images:
+            text_parts.append(("word/_rels/comments.xml.rels", _hf_part_rels(
+                comment_hyperlinks or {}, list(comment_images or []))))
     if has_numbering and numbering_xml:
         text_parts.append(("word/numbering.xml", numbering_xml))
     if has_settings and settings_xml:
@@ -589,6 +608,9 @@ def write_docx_package(
     source_theme: SourceTheme | None = None,
     source_font_table: SourceFontTable | None = None,
     embed_fonts: bool = False,
+    comments_xml: str | None = None,
+    comment_hyperlinks: dict[str, str] | None = None,
+    comment_images: list[ImageEntry] | None = None,
     hyperlinks: dict[str, str],
     images: Optional[list[ImageEntry]] = None,
     header_xml: Optional[str] = None,
@@ -622,6 +644,7 @@ def write_docx_package(
         source_theme=source_theme,
         source_font_table=source_font_table,
         embed_fonts=embed_fonts,
+        comments_xml=comments_xml, comment_hyperlinks=comment_hyperlinks, comment_images=comment_images,
         document_xml=document_xml,
         styles_xml=styles_xml,
         numbering_xml=numbering_xml,

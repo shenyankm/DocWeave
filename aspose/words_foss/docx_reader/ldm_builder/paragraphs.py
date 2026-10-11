@@ -39,6 +39,12 @@ _VML_LENGTH_RE = re.compile(r"(-?[\d.]+)([a-z]*)")
 _VML_UNIT_TO_PT = {"": 1.0, "pt": 1.0, "in": 72.0, "cm": 72.0 / 2.54, "mm": 72.0 / 25.4, "px": 0.75}
 
 
+def _comment_marker(kind, identifier="", font=None):
+    from aspose.words_foss.dom.notes import annotation_id
+    canonical = "" if kind == "annotation" else str(annotation_id(identifier))
+    return ldm.CommentMarker(kind=kind, identifier=canonical, font=font)
+
+
 def _vml_style_lengths(style: str) -> dict[str, float]:
     out: dict[str, float] = {}
     for declaration in style.split(";"):
@@ -168,7 +174,10 @@ class ParagraphBuilder:
         tracker = _FieldTracker()
         for child in self._ctx._resolve_paragraph_children(p_elem):
             tag = child.tag
-            if tag == f"{W_NS}bookmarkStart":
+            if tag in {W_NS + "commentRangeStart", W_NS + "commentRangeEnd"}:
+                para._children.append(_comment_marker(
+                    kind="start" if tag.endswith("Start") else "end", identifier=child.get(W_NS + "id", "")))
+            elif tag == f"{W_NS}bookmarkStart":
                 self._handle_bookmark_start(child, para)
             elif tag == f"{W_NS}bookmarkEnd":
                 self._handle_bookmark_end(child, para)
@@ -265,7 +274,7 @@ class ParagraphBuilder:
         if tracker.suppress_cached:
             return
         self._extract_drawings(child, para, image_rels)
-        if any(item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference"} for item in child):
+        if any(item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference", W_NS + "commentReference", W_NS + "annotationRef"} for item in child):
             source_run = self._run_builder.build(child, para_style_id, implicit_paragraph_style)
             fragment = ET.Element(W_NS + "r")
             def flush():
@@ -276,7 +285,14 @@ class ParagraphBuilder:
                     para._children.append(run)
                 fragment.clear()
             for item in child:
-                if item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference"}:
+                if item.tag == W_NS + "annotationRef":
+                    flush()
+                    para._children.append(_comment_marker(kind="annotation", font=source_run.font.model_copy(deep=True)))
+                elif item.tag == W_NS + "commentReference":
+                    flush()
+                    para._children.append(_comment_marker(kind="reference", identifier=item.get(W_NS + "id", ""),
+                                                           font=source_run.font.model_copy(deep=True)))
+                elif item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference"}:
                     flush()
                     identifier = item.get(W_NS + "id", "")
                     if identifier:
@@ -357,6 +373,24 @@ class ParagraphBuilder:
     ) -> None:
         url = self._resolve_hyperlink_url(child)
         history = validate_hyperlink_history(child.get(W_NS + "history"))
+        comment_tags = {W_NS + tag for tag in ("commentRangeStart", "commentRangeEnd", "commentReference", "annotationRef")}
+        if any(element.tag in comment_tags for element in child.iter()):
+            after_tab = False
+            for element in self._ctx._resolve_paragraph_children(child):
+                if element.tag in {W_NS + "commentRangeStart", W_NS + "commentRangeEnd"}:
+                    para._children.append(_comment_marker(kind="start" if element.tag.endswith("Start") else "end",
+                                                           identifier=element.get(W_NS + "id", "")))
+                elif element.tag == W_NS + "r":
+                    after_tab |= element.find(W_NS + "tab") is not None
+                    start = len(para._children)
+                    self._handle_run(element, para, tracker, para_style_id, image_rels, implicit_paragraph_style)
+                    if not after_tab and url:
+                        for run in para._children[start:]:
+                            if isinstance(run, ldm.Run):
+                                run.text = format_link(run.text, url)
+                                run.is_hyperlink = True
+                                run.source_hyperlink_history = history
+            return
         head_runs, tail_runs = self._split_at_first_tab(child)
 
         if head_runs:

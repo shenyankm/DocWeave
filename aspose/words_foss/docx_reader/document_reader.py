@@ -141,9 +141,11 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             if kind == "vbaProject":
                 warn("VBA project resources are omitted by the conversion model; use DocxDocument for package preservation",
                      DocumentLoadWarning, code="load.vba_project_omitted", location="word/document.xml")
-            if kind == "comments" and mode != "External":
-                warn("Comment parts and their anchors are omitted by the conversion model; use DocxDocument for package preservation",
-                     DocumentLoadWarning, code="load.comments_omitted", location="word/document.xml")
+            if kind == "comments" and (mode == "External" or any(item[0] == "comments" for item in stories)):
+                raise ValueError("Invalid comments relationship")
+            if kind in {"commentsExtended", "commentsIds", "commentsExtensible", "people"}:
+                warn("Modern comment metadata is not retained by the conversion model",
+                     DocumentLoadWarning, code="load.comment_metadata_omitted", location="word/document.xml")
             if mode == "External":
                 if kind == "hyperlink":
                     self._rels[rid] = target
@@ -154,14 +156,14 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 if name not in namelist:
                     continue
             if kind not in {"theme", "fontTable", "styles", "settings", "numbering", "image",
-                            "header", "footer", "footnotes", "endnotes"}:
+                            "header", "footer", "footnotes", "endnotes", "comments"}:
                 continue
             name = resolve_settings_target(target) if kind == "settings" else resolve_target("word/document.xml", target)
             if name is None:
                 continue
             if kind == "image":
                 self._doc_image_rels[rid] = name
-            elif kind in {"header", "footer", "footnotes", "endnotes"}:
+            elif kind in {"header", "footer", "footnotes", "endnotes", "comments"}:
                 stories.append((kind, rid, name))
             else:
                 if kind in targets:
@@ -230,6 +232,8 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         seen_stories = set()
         for kind, rid, name in stories:
             if name not in namelist:
+                if kind == "comments":
+                    raise ValueError("Missing comments resource")
                 continue
             if (kind, name) in seen_stories:
                 if kind in {"header", "footer"}:
@@ -237,8 +241,13 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                     entry[4].extend(reference_map.get(rid, []))
                 continue
             seen_stories.add((kind, name))
+            if kind == "comments":
+                graph = related_part_snapshot(zf, name)
+                if next(content_type for part, content_type, _ in graph if part == name) != (
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml"):
+                    raise ValueError("Invalid comments content type")
             with zf.open(name) as stream:
-                root = parse(stream).getroot()
+                root = parse(stream, forbid_dtd=True).getroot()
             self._index_source_locations(root, name)
             image_rels, links = self._part_resources(zf, name, namelist)
             self._part_images[name] = image_rels
@@ -248,14 +257,28 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 parts = self._header_data if kind == "header" else self._footer_data
                 parts.append((root, image_rels))
             else:
+                if kind == "comments":
+                    if root.tag != W_NS + "comments":
+                        raise ValueError("Invalid comments root")
+                    if any(child.tag != W_NS + "comment" for child in root):
+                        raise ValueError("Invalid comments entry")
+                    if any(child.tag not in {W_NS + "p", W_NS + "tbl"} for note in root for child in note):
+                        raise NotImplementedError("Unsupported comment story container")
                 identifiers = set()
                 for note in root.findall(W_NS + kind[:-1]):
                     identifier = note.get(W_NS + "id", "")
-                    if note.get(W_NS + "type", "normal") != "normal" or identifier.startswith("-"):
+                    if kind == "comments":
+                        from aspose.words_foss.dom.notes import annotation_id
+                        identifier = str(annotation_id(identifier))
+                    elif note.get(W_NS + "type", "normal") != "normal" or identifier.startswith("-"):
                         continue
-                    if not identifier.isdecimal() or identifier in identifiers:
+                    if (kind != "comments" and not identifier.isdecimal()) or identifier in identifiers:
                         raise ValueError("Invalid or duplicate note ID")
                     identifiers.add(identifier)
+                    if kind == "comments" and any(key not in {W_NS + field for field in ("id", "author", "initials", "date")}
+                                                  for key in note.attrib):
+                        warn("Extended comment metadata is not retained by the conversion model",
+                             DocumentLoadWarning, code="load.comment_metadata_omitted", location=name)
                     self._source_story_data.append((kind[:-1], name, identifier, note, []))
         for name in self._doc_image_rels.values():
             if name in namelist and name not in self._media:
@@ -264,7 +287,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 self._media[name] = data
 
         unsupported = {W_NS + name for name in (
-            "footnoteReference", "endnoteReference", "commentReference", "object", "altChunk",
+            "footnoteReference", "endnoteReference", "object", "altChunk",
             "ins", "del", "moveFrom", "moveTo", "fldSimple", "sdt", "oMath", "oMathPara"
         )}
         roots = [self._document_xml] + [item[3] for item in self._source_story_data]

@@ -902,12 +902,34 @@ class NoteReference(BaseModel):
 
     model_config = {"populate_by_name": True}
 
-ChildNode = Union[Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference]
+class CommentMarker(BaseModel):
+    """An ordered classic comment anchor, separate from the comment story."""
+
+    type: Literal["CommentMarker"] = Field(default="CommentMarker", alias="_type")
+    kind: Literal["start", "end", "reference", "annotation"]
+    identifier: str = ""
+    font: Font | None = None
+    model_config = {"populate_by_name": True}
+
+    @field_validator("identifier")
+    @classmethod
+    def _identifier(cls, value):
+        from aspose.words_foss.dom.notes import annotation_id
+        return str(annotation_id(value)) if value else value
+
+
+class CommentMetadata(BaseModel):
+    author: str | None = None
+    initial: str | None = None
+    date: str | None = None
+
+
+ChildNode = Union[Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference, CommentMarker]
 
 _CHILD_NODE_CLASSES: tuple[type, ...] = (
-    Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference,
+    Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference, CommentMarker,
 )
-_CHILD_NODE_TYPE_TAGS = {"Run", "Shape", "FieldStart", "FieldSeparator", "FieldEnd", "BookmarkStart", "BookmarkEnd", "NoteReference"}
+_CHILD_NODE_TYPE_TAGS = {"Run", "Shape", "FieldStart", "FieldSeparator", "FieldEnd", "BookmarkStart", "BookmarkEnd", "NoteReference", "CommentMarker"}
 
 
 def _coerce_child_node(item: Any) -> ChildNode | None:
@@ -934,6 +956,8 @@ def _coerce_child_node(item: Any) -> ChildNode | None:
             return BookmarkStart.model_validate(item)
         if t == "BookmarkEnd":
             return BookmarkEnd.model_validate(item)
+        if t == "CommentMarker":
+            return CommentMarker.model_validate(item)
         if t == "NoteReference":
             return NoteReference.model_validate(item)
     return None
@@ -1533,9 +1557,10 @@ class DocList(BaseModel):
 class SourceStory(BaseModel):
     """Extracted source content, not a promise that conversion writers can render it."""
 
-    kind: Literal["footnote", "endnote", "header", "footer"]
+    kind: Literal["footnote", "endnote", "header", "footer", "comment"]
     part_name: str
     identifier: str | None = None
+    comment_metadata: CommentMetadata | None = None
     references: list[dict[str, Any]] = Field(default_factory=list)
     children: list[BodyChild] = Field(default_factory=list)
 

@@ -684,7 +684,13 @@ def render_paragraph(
         return sum(1 for seen in field_separator_seen if not seen)
 
     def render_extra(extra) -> Optional[str]:
-        if isinstance(extra, ldm.BookmarkStart):
+        if isinstance(extra, ldm.CommentMarker):
+            if extra.kind in {"reference", "annotation"}:
+                return el("w:r", None, [render_rPr(extra.font, style_id_map=style_id_map) if extra.font is not None else "",
+                                        el("w:annotationRef") if extra.kind == "annotation" else el("w:commentReference", {"w:id": extra.identifier})])
+            return el("w:commentRangeStart" if extra.kind == "start" else "w:commentRangeEnd",
+                      {"w:id": extra.identifier})
+        elif isinstance(extra, ldm.BookmarkStart):
             if bookmark_state is not None and extra.name:
                 bm_id = bookmark_state.open(extra.name)
                 return el("w:bookmarkStart", {"w:id": bm_id, "w:name": extra.name})

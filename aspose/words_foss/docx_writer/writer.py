@@ -56,6 +56,8 @@ def _warn_about_unsupported_constructs(doc: ldm.Document) -> None:
         warn("Unknown document nodes are omitted from DOCX", DocxWriterLossyWarning,
              stacklevel=3, code="docx.unknown_node")
     for code, message in (*header_footer_losses(doc), *source_story_losses(doc)):
+        if code == "comments_omitted":
+            continue  # DOCX/Flat OPC emit classic comment stories and ordered anchors.
         warn(message, DocxWriterLossyWarning, stacklevel=3, code="docx." + code)
 
 
@@ -239,7 +241,10 @@ class LdmDocxWriter:
                 image_state=footer_image_state,
             )
 
+        from aspose.words_foss._comments import render_comments
+        comments_xml, comment_hyperlinks, comment_images = render_comments(doc, style_pf_map, style_id_map, style_font_map)
         return _RenderedParts(
+            comments_xml=comments_xml, comment_hyperlinks=comment_hyperlinks, comment_images=comment_images,
             theme_xml=doc.source_theme.data if doc.source_theme is not None else None,
             source_theme=doc.source_theme,
             source_font_table=doc.source_font_table,
@@ -313,6 +318,9 @@ class _RenderedParts:
     source_theme: ldm.SourceTheme | None
     source_font_table: ldm.SourceFontTable | None
     embed_fonts: bool
+    comments_xml: str | None
+    comment_hyperlinks: dict[str, str]
+    comment_images: list[ImageEntry]
     document_xml: str
     styles_xml: str
     numbering_xml: Optional[str]
@@ -329,6 +337,9 @@ class _RenderedParts:
     def as_kwargs(self) -> dict[str, object]:
         """Return the kwargs ``write_docx_package`` accepts."""
         return {
+            "comments_xml": self.comments_xml,
+            "comment_hyperlinks": self.comment_hyperlinks,
+            "comment_images": self.comment_images,
             "theme_xml": self.theme_xml,
             "source_theme": self.source_theme,
             "source_font_table": self.source_font_table,

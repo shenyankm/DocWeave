@@ -65,6 +65,8 @@ def header_footer_losses(doc):
 def source_story_losses(doc):
     from aspose.words_foss import light_document_model as ldm
 
+    if any(story.kind == "comment" for story in doc.source_stories):
+        yield "comments_omitted", "Comment stories and anchors are omitted from this output"
     if (any(story.kind in {"footnote", "endnote"} for story in doc.source_stories) or
             any(getattr(node, "note_references", None) or
                 any(isinstance(child, ldm.NoteReference) for child in getattr(node, "_children", []))

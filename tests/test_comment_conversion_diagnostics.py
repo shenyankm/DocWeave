@@ -1,4 +1,4 @@
-"""Related comment parts must not disappear without a content-loss diagnostic."""
+"""Supported comment conversion preserves parts; remaining losses stay diagnostic."""
 from io import BytesIO
 import warnings
 from zipfile import ZipFile
@@ -25,7 +25,7 @@ def commented_document(reference):
 
 @pytest.mark.parametrize('reference', [False, True])
 @pytest.mark.parametrize('flat', [False, True])
-def test_comment_part_loss_is_recorded_even_when_warnings_are_ignored(reference, flat):
+def test_classic_comment_parts_are_preserved_even_when_warnings_are_ignored(reference, flat):
     raw = commented_document(reference)
     source = encode(raw) if flat else raw
     with warnings.catch_warnings():
@@ -33,21 +33,21 @@ def test_comment_part_loss_is_recorded_even_when_warnings_are_ignored(reference,
         document = aw.Document(BytesIO(source))
         output = document.to_bytes(aw.SaveFormat.DOCX)
     observed = [item for item in document.diagnostics if item.code == 'load.comments_omitted']
-    assert len(observed) == 1
+    assert observed == []
     assert all(text not in repr(observed) for text in ('PRIVATE BODY', 'PRIVATE COMMENT', 'PRIVATE AUTHOR'))
     with ZipFile(BytesIO(output)) as package:
-        assert 'word/comments.xml' not in package.namelist()
+        assert 'word/comments.xml' in package.namelist()
     assert 'PRIVATE BODY' in document.get_text()
 
 
 @pytest.mark.parametrize('reference', [False, True])
-def test_strict_conversion_rejects_comment_loss_and_keeps_editable_package(reference):
+def test_strict_classic_comment_conversion_keeps_editable_package(reference):
     raw = commented_document(reference)
     editable = aw.DocxDocument(BytesIO(raw))
     with warnings.catch_warnings():
         warnings.simplefilter('error', aw.ContentLossWarning)
-        with pytest.raises(aw.ContentLossWarning, match='Comment parts'):
-            editable.to_light_document()
+        model = editable.to_light_document()
+        assert any(story.kind == 'comment' for story in model.source_stories)
     assert editable.to_bytes() == raw
 
 
