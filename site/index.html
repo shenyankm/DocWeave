@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="DocWeave：独立维护的 Python 文档工具库，用于文档转换、中文 PDF 生成、结构化提取与 DOCX 编辑，无需 Microsoft Word。">
+  <meta name="theme-color" content="#f6f7f2">
+  <title>DocWeave · 让文档进入你的 Python 工作流</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="shell navigation">
+    <a class="brand" href="#"><span class="mark" aria-hidden="true">D<span>W</span></span>DocWeave</a>
+    <nav aria-label="主导航"><a href="#features">能力</a><a href="#start">开始使用</a><a href="https://github.com/shenyankm/DocWeave">GitHub ↗</a></nav>
+  </header>
+  <main id="main">
+    <section class="shell hero">
+      <div>
+        <p class="eyebrow">PYTHON · OPEN SOURCE · DOCUMENTS</p>
+        <h1>让文档进入你的<br><span>Python 工作流。</span></h1>
+        <p class="intro">转换、提取、编辑。从一份 Word 文档，到中文 PDF 和结构化数据，用熟悉的 Python 串起每一步。</p>
+        <div class="actions"><a class="button" href="#start">开始使用 <span aria-hidden="true">→</span></a><a class="text-link" href="https://github.com/shenyankm/DocWeave/blob/dev/README.zh-CN.md">阅读文档 ↗</a></div>
+        <p class="small">Python 3.10–3.14 <span>·</span> MIT 代码许可证 <span>·</span> 无需 Microsoft Word</p>
+      </div>
+      <div class="workbench" aria-label="文档处理示意：从 DOCX 生成 PDF、Markdown 和结构化数据">
+        <div class="bench-heading"><span class="dot"></span> DOCUMENT WORKSPACE <span>01 / 03</span></div>
+        <div class="document"><span class="file-tag">REPORT.DOCX</span><h2>一份文档，<br>更多可能。</h2><p>中文与 English，<br>段落、表格和格式。</p><div class="paper-lines" aria-hidden="true"><i></i><i></i><i></i></div><div class="paper-table" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="outputs"><span>PDF <small>分享与交付</small></span><span>Markdown <small>内容再利用</small></span><span>JSON <small>结构化提取</small></span></div>
+        <p class="bench-note">READ → TRANSFORM → WRITE</p>
+      </div>
+    </section>
+    <section id="features" class="shell section">
+      <div class="section-heading"><p class="eyebrow">WHAT YOU CAN BUILD</p><h2>文档处理的四个入口</h2><p>在脚本、服务与自动化流程中，处理受支持的文档内容。</p></div>
+      <div class="features">
+        <article><span class="number">01 / CONVERT</span><h3>转换与生成</h3><p>读取 DOCX、旧版 DOC、Markdown 与 TXT，输出 DOCX、Markdown、TXT 或 PDF。</p></article>
+        <article><span class="number">02 / RENDER</span><h3>中文 PDF</h3><p>内置中文字体，可选备用字体与文字塑形；也可使用独立的 LibreOffice PDF 后端。</p></article>
+        <article><span class="number">03 / EXTRACT</span><h3>结构化提取</h3><p>获取有序段落、表格、格式及来源内容，包括提取的脚注、尾注和页眉页脚。</p></article>
+        <article><span class="number">04 / EDIT</span><h3>DOCX 包级编辑</h3><p>编辑受支持的文本、格式、表格、图片与超链接，保留未修改包部件的原始内容。</p></article>
+      </div>
+    </section>
+    <section id="start" class="section start-band">
+      <div class="shell start-grid">
+        <div><p class="eyebrow">START SMALL</p><h2>从一次转换开始。</h2><p>在干净的虚拟环境中安装，再把文档交给 Python。</p><p class="small">发行包：<code>aspose-words-foss-enhanced</code><br>导入名：<code>aspose.words_foss</code></p><a class="text-link" href="https://github.com/shenyankm/DocWeave/blob/dev/README.zh-CN.md#安装">完整安装说明 ↗</a></div>
+        <div class="code-card"><div class="code-label">01 — INSTALL</div><pre><code>python -m pip install "git+https://github.com/shenyankm/DocWeave.git@dev"</code></pre><div class="code-label">02 — CONVERT</div><pre><code>import aspose.words_foss as aw
+
+doc = aw.Document("report.docx")
+doc.save("report.pdf", aw.SaveFormat.PDF)
+doc.save("report.md", aw.SaveFormat.MARKDOWN)
+data = doc.to_dict()</code></pre></div>
+      </div>
+      <p class="shell install-note">需要可复现部署时，将 <code>@dev</code> 替换为已验证的完整提交哈希。请勿与 <code>aspose-words-foss</code> 同环境安装，两者共享导入模块。</p>
+    </section>
+    <section class="shell section support-grid">
+      <div><p class="eyebrow">FORMAT SUPPORT</p><h2>选对输入与输出</h2><div class="table-wrap"><table><caption class="sr-only">内置格式支持</caption><thead><tr><th scope="col">格式</th><th scope="col">读取</th><th scope="col">写出</th></tr></thead><tbody><tr><th scope="row">DOCX</th><td>支持</td><td>支持</td></tr><tr><th scope="row">DOC / Word 97–2003</th><td>支持</td><td>—</td></tr><tr><th scope="row">Markdown / TXT</th><td>支持</td><td>支持</td></tr><tr><th scope="row">PDF</th><td>—</td><td>支持</td></tr></tbody></table></div><p class="small">支持显式指定 Flat OPC。内置 RTF 读取仅限 OLE2/DOC-backed 文件；标准文本 RTF 可用 LibreOffice 后端转 PDF。</p></div>
+      <aside class="limits"><p class="eyebrow">KNOW THE BOUNDARIES</p><h2>先验证，再交付。</h2><p>转换会重建受支持内容，不是 DOCX 无损往返。包级编辑请使用 <code>DocxDocument</code>，复杂编辑可能被拒绝。</p><p>内置引擎不提供完整 Word 排版、PDF 读取或 OCR。复杂字段、修订、浮动内容、脚注与分节页眉页脚仍有保真限制。</p><p>请用代表性文档验证输出。不可信文档需隔离处理，资源限制不是安全沙箱。</p><a class="text-link" href="https://github.com/shenyankm/DocWeave/blob/dev/docs/enhanced-conversion.md">转换与安全说明 ↗</a></aside>
+    </section>
+    <section class="shell resources"><div><p class="eyebrow">KEEP EXPLORING</p><h2>把文档接入你的下一步。</h2></div><div class="resource-links"><a href="https://github.com/shenyankm/DocWeave/blob/dev/docs/docx-dom.md">DOCX 编辑指南 ↗</a><a href="https://github.com/shenyankm/DocWeave/tree/dev/ApiExamples">代码示例 ↗</a><a href="https://github.com/shenyankm/DocWeave/actions">CI 状态 ↗</a><a href="https://github.com/shenyankm/DocWeave/issues">反馈问题 ↗</a></div></section>
+  </main>
+  <footer class="shell"><div class="footer-top"><a class="brand" href="#">DocWeave</a><span>Independent. Open source. Python.</span></div><p>独立维护，起源于 <a href="https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python">Aspose.Words FOSS for Python</a>，保留上游版权声明。不是 Aspose 官方发布版，不保证 API 或渲染兼容。</p><p>© 2026 Aspose.Words FOSS Family &amp; shenyankm · <a href="https://github.com/shenyankm/DocWeave/blob/dev/LICENSE">MIT</a> · 内置字体 <a href="https://github.com/shenyankm/DocWeave/blob/dev/aspose/words_foss/pdf_writer/fonts/OFL.txt">SIL OFL-1.1</a></p></footer>
+</body>
+</html>
