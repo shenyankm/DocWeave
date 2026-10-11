@@ -40,6 +40,7 @@ from aspose.words_foss.docx_reader.data_classes import (
 from aspose.words_foss.docx_reader.utils import (
     _apply_theme_color_modifiers,
     _canonicalize_style_name,
+    _read_word_text,
 )
 from aspose.words_foss.docx_reader.ldm_builder import LdmBuilderMixin
 from aspose.words_foss.docx_reader.shapes import ShapeParserMixin
@@ -129,6 +130,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
         # Parse document.xml
         with zf.open("word/document.xml") as f:
             self._document_xml = parse(f).getroot()
+        self._prepare_text_space(self._document_xml)
         self._index_source_locations(self._document_xml, "word/document.xml")
 
         relationships = self._document_relationships(zf, namelist)
@@ -248,6 +250,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                     raise ValueError("Invalid comments content type")
             with zf.open(name) as stream:
                 root = parse(stream, forbid_dtd=True).getroot()
+            self._prepare_text_space(root)
             self._index_source_locations(root, name)
             image_rels, links = self._part_resources(zf, name, namelist)
             self._part_images[name] = image_rels
@@ -320,6 +323,17 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                      "the light document model", DocumentLoadWarning, stacklevel=3,
                      code="load.header_footer_flattened", location="word/document.xml/sectPr")
                 break
+
+    @staticmethod
+    def _prepare_text_space(root):
+        attribute = "{http://www.w3.org/XML/1998/namespace}space"
+        preserve = root.tag == W_NS + "document" and root.get(attribute) == "preserve"
+        for element in root.iter():
+            if element.get(attribute) not in (None, "default", "preserve"):
+                raise ValueError("Invalid xml:space value in Word text")
+            # Word's part-root preserve setting also overrides a local default.
+            if preserve and element.tag == W_NS + "t":
+                element.set(attribute, "preserve")
 
     def _index_source_locations(self, root, part_name):
         stack = [(root, [])]
@@ -645,7 +659,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 link_text_parts = []
                 for r_elem in child.findall(f"{W_NS}r"):
                     for t_elem in r_elem.findall(f"{W_NS}t"):
-                        link_text_parts.append(t_elem.text or "")
+                        link_text_parts.append(_read_word_text(t_elem))
                 link_text = "".join(link_text_parts)
                 if link_text and url:
                     run_data = RunData(text=format_link(link_text, url))
@@ -665,7 +679,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
 
         # Get text from all <w:t> elements
         for t_elem in r_elem.findall(f"{W_NS}t"):
-            data.text += t_elem.text or ""
+            data.text += _read_word_text(t_elem)
 
         # Parse run properties
         rPr = r_elem.find(f"{W_NS}rPr")

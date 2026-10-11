@@ -201,19 +201,31 @@ def _canonicalize_style_name(raw_name: str) -> str:
     return " ".join(result)
 
 
+def _read_word_text(element: ET.Element) -> str:
+    space = element.get("{http://www.w3.org/XML/1998/namespace}space")
+    if space not in (None, "default", "preserve"):
+        raise ValueError("Invalid xml:space value in Word text")
+    text = element.text or ""
+    # Word consumes initial LF characters even in preserved text.
+    if space == "preserve":
+        text = text.lstrip("\n")
+    else:
+        text = text.strip(" \t\r\n").replace("\t", " ")
+    return text.replace("\r\n", "\r").replace("\r", " ").replace("\n", " ")
+
+
 def _collect_run_text(r_elem: ET.Element) -> str:
     """Collect text from a <w:r> element, handling special characters.
 
     Processes <w:t>, <w:instrText>, <w:br>, <w:tab>, and <w:cr> children.
     ``<w:instrText>`` carries field-code text in the Aspose model (regular
-    runs that happen to sit between ``begin`` and ``separate``); reading
-    its text the same way as ``<w:t>`` lets the writer round-trip mixed
-    sequences of breaks and instruction text inside one ``<w:r>``.
+    runs that happen to sit between ``begin`` and ``separate``). Its raw
+    text is retained so mixed breaks and field instructions round-trip.
     """
     parts: list[str] = []
     for child in r_elem:
         if child.tag == f"{W_NS}t":
-            parts.append(child.text or "")
+            parts.append(_read_word_text(child))
         elif child.tag == f"{W_NS}instrText":
             parts.append(child.text or "")
         elif child.tag == f"{W_NS}br":
