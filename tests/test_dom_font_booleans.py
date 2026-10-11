@@ -9,8 +9,8 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import DocxDocument, NodeType
-from aspose.words_foss.light_document_model import FONT_BOOLEAN_FIELDS
+from dockiln import DocxDocument, NodeType
+from dockiln.light_document_model import FONT_BOOLEAN_FIELDS
 
 from .test_docx_dom import package, payloads
 from .test_docx_dom_ranges import paragraph_doc

@@ -12,8 +12,8 @@ from fontTools.ttLib import TTFont
 from pypdf import PdfReader
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.libreoffice import convert_to_pdf
+import dockiln as dk
+from dockiln.libreoffice import convert_to_pdf
 
 
 AVAILABLE = bool(shutil.which("soffice") or shutil.which("libreoffice") or
@@ -23,7 +23,7 @@ AVAILABLE = bool(shutil.which("soffice") or shutil.which("libreoffice") or
 @pytest.mark.skipif(not AVAILABLE, reason="LibreOffice is not installed")
 def test_native_renderer_accepts_dom_picture_link_and_horizontal_merge(tmp_path, monkeypatch):
     # Native rendering needs installed fonts; ActualText can hide missing visual glyphs.
-    font = TTFont(Path(aw.__file__).parent / "pdf_writer/fonts/DocumentSansSC-Regular.woff")
+    font = TTFont(Path(dk.__file__).parent / "writers/pdf/fonts/DocumentSansSC-Regular.woff")
     font.flavor = None
     font.save(tmp_path / "DocumentSansSC.ttf")
     from xml.sax.saxutils import escape
@@ -38,7 +38,7 @@ def test_native_renderer_accepts_dom_picture_link_and_horizontal_merge(tmp_path,
     table.cell(0, 1).text = "right cell"
     raw = BytesIO()
     original.save(raw)
-    doc = aw.DocxDocument(BytesIO(raw.getvalue()))
+    doc = dk.DocxDocument(BytesIO(raw.getvalue()))
     paragraph = doc.body.paragraphs[0]
     paragraph.add_hyperlink("链接 [说明]", "https://example.com/a_(b)?x=1&y=2")
     image = BytesIO()
@@ -66,7 +66,7 @@ def test_native_renderer_accepts_dom_picture_link_and_horizontal_merge(tmp_path,
 
 @pytest.mark.skipif(not AVAILABLE or os.name != "posix", reason="Requires native LibreOffice and POSIX cleanup")
 def test_native_timeout_then_changed_input_succeeds_with_fresh_profiles(tmp_path, monkeypatch):
-    from aspose.words_foss import libreoffice
+    from dockiln import libreoffice
 
     real_process = libreoffice.run_process
     profiles = []

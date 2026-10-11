@@ -9,8 +9,8 @@ import pytest
 from docx import Document as NativeDocument
 from markdown_it import MarkdownIt
 
-import aspose.words_foss as aw
-from aspose.words_foss.md_writer import LdmMarkdownWriter
+import dockiln as aw
+from dockiln.writers.markdown import LdmMarkdownWriter
 
 TEXTS = [
     "<script>alert(1)</script>",

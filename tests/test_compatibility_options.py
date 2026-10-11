@@ -6,10 +6,10 @@ from defusedxml.common import DefusedXmlException
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer.settings_part import render_settings_xml
-from aspose.words_foss.settings import MsWordVersion
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx.settings_part import render_settings_xml
+from dockiln.settings import MsWordVersion
 
 W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 
@@ -22,10 +22,10 @@ def document(compat='', ui=''):
         z.writestr('word/document.xml','<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:t>OWNED</w:t></w:r></w:p><w:sectPr/></w:body></w:document>')
         z.writestr('word/_rels/document.xml.rels','<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdS" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/></Relationships>')
         z.writestr('word/settings.xml','<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:compat>'+compat+'</w:compat>'+ui+'</w:settings>')
-    return aw.Document(io.BytesIO(out.getvalue()))
+    return dk.Document(io.BytesIO(out.getvalue()))
 
 
-@pytest.mark.parametrize('fmt',[aw.SaveFormat.DOCX,aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt',[dk.SaveFormat.DOCX,dk.SaveFormat.FLAT_OPC])
 @pytest.mark.parametrize('version',list(MsWordVersion))
 def test_version_profiles_preserve_trailing_underlining_and_roundtrip(tmp_path,fmt,version):
     doc=document()
@@ -40,15 +40,15 @@ def test_version_profiles_preserve_trailing_underlining_and_roundtrip(tmp_path,f
     for i in range(2):
         path=tmp_path/str(i)
         doc.save(path,fmt)
-        cold=aw.Document(path,load_options=_format(fmt))
+        cold=dk.Document(path,load_options=_format(fmt))
         assert cold.compatibility_options.ul_trail_space
         assert cold.compatibility_options.do_not_break_wrapped_tables == held.do_not_break_wrapped_tables
         assert doc.light_document_model.source_settings is source
 
 
 def _format(fmt):
-    options=aw.LoadOptions()
-    options.load_format=aw.LoadFormat.DOCX if fmt == aw.SaveFormat.DOCX else aw.LoadFormat.FLAT_OPC
+    options=dk.LoadOptions()
+    options.load_format=dk.LoadFormat.DOCX if fmt == dk.SaveFormat.DOCX else dk.LoadFormat.FLAT_OPC
     return options
 
 
@@ -56,7 +56,7 @@ def _format(fmt):
     ('<w:doNotExpandShiftReturn w:val="0"/>',''),
     ('','<w:uiCompat97To2003 w:val="0"/>'),
 ])
-@pytest.mark.parametrize('fmt',[aw.SaveFormat.DOCX,aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt',[dk.SaveFormat.DOCX,dk.SaveFormat.FLAT_OPC])
 def test_false_source_declarations_keep_warm_defaults_and_recover_cold(tmp_path,fragment,ui,fmt):
     doc=document(fragment,ui)
     held=doc.compatibility_options
@@ -65,7 +65,7 @@ def test_false_source_declarations_keep_warm_defaults_and_recover_cold(tmp_path,
     for i in range(2):
         path=tmp_path/str(i)
         doc.save(path,fmt)
-        cold=aw.Document(path,load_options=_format(fmt))
+        cold=dk.Document(path,load_options=_format(fmt))
         assert cold.compatibility_options.disable_open_type_font_formatting_features
         assert not held.disable_open_type_font_formatting_features
         assert doc.light_document_model.source_settings is source
@@ -90,7 +90,7 @@ def test_public_preferences_json_and_exact_wordml_names(name,tag):
 
 @pytest.mark.parametrize('value',[0,1,-1,8,True,False,1.0,None,'WORD2010',[]])
 def test_optimize_requires_real_word_version_and_does_not_mutate(value):
-    doc=aw.Document()
+    doc=dk.Document()
     options=doc.compatibility_options
     before=doc.light_document_model.model_dump_json()
     with pytest.raises(TypeError): options.optimize_for(value)
@@ -100,14 +100,14 @@ def test_optimize_requires_real_word_version_and_does_not_mutate(value):
 @pytest.mark.parametrize('name',['do_not_expand_shift_return','ul_trail_space','ui_compat_97_to_2003','transparent_metafiles'])
 @pytest.mark.parametrize('value',[0,1,None,'false',1.0])
 def test_bool_setters_reject_other_values_without_mutation(name,value):
-    doc=aw.Document()
+    doc=dk.Document()
     options=doc.compatibility_options
     before=doc.light_document_model.model_dump_json()
     with pytest.raises(TypeError):setattr(options,name,value)
     assert doc.light_document_model.model_dump_json() == before
 
 
-@pytest.mark.parametrize('fmt',[aw.SaveFormat.DOCX,aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt',[dk.SaveFormat.DOCX,dk.SaveFormat.FLAT_OPC])
 def test_profile_rebuilds_typed_settings_keeps_foreign_siblings_and_failed_publication_atomic(tmp_path,monkeypatch,fmt):
     doc=document('<x:extension xmlns:x="urn:owned" x:value="keep"/><w:compatSetting w:name="Owned" w:uri="urn:owned" w:val="keep"/>')
     options=doc.compatibility_options
@@ -122,9 +122,9 @@ def test_profile_rebuilds_typed_settings_keeps_foreign_siblings_and_failed_publi
     assert path.read_bytes() == b'original'
     assert doc.light_document_model.model_dump_json() == before
     assert doc.light_document_model.source_settings is original
-    with pytest.warns(aw.ContentLossWarning, match='normalized'):
+    with pytest.warns(dk.ContentLossWarning, match='normalized'):
         doc.save(path,fmt)
-    cold=aw.Document(path,load_options=_format(fmt))
+    cold=dk.Document(path,load_options=_format(fmt))
     source=ET.fromstring(cold.light_document_model.source_settings.data)
     assert source.find('{urn:owned}extension').get('{urn:owned}value') == 'keep'
     assert not any(c.get(W+'uri') == 'urn:owned' for c in source)
@@ -132,17 +132,17 @@ def test_profile_rebuilds_typed_settings_keeps_foreign_siblings_and_failed_publi
 
 
 def test_defaults_are_distinct_and_constructor_readonly_contract():
-    new=aw.Document()
+    new=dk.Document()
     loaded=document()
     assert new.compatibility_options.grow_autofit
     assert not new.compatibility_options.disable_open_type_font_formatting_features
     assert not loaded.compatibility_options.grow_autofit
     assert loaded.compatibility_options.disable_open_type_font_formatting_features
-    with pytest.raises(TypeError):aw.settings.CompatibilityOptions()
+    with pytest.raises(TypeError):dk.settings.CompatibilityOptions()
     with pytest.raises(AttributeError):new.compatibility_options=loaded.compatibility_options
     with pytest.raises(AttributeError):new.compatibility_options.owned_unknown=True
     with pytest.raises(AttributeError):getattr(new.compatibility_options,'owned_unknown')
-    new.compatibility_options.optimize_for(version=aw.settings.MsWordVersion.WORD2019)
+    new.compatibility_options.optimize_for(version=dk.settings.MsWordVersion.WORD2019)
 
 
 def test_invalid_state_and_source_cannot_serialize_or_expose_contents():
@@ -187,23 +187,23 @@ def test_bad_ui_snapshot_cannot_publish_even_when_false(tmp_path,data):
     source=ldm.SourceSettings(ui_compat_97_to_2003=False,ui_compat_data=data)
     doc.light_document_model.source_settings=source
     target=tmp_path/'output';target.write_bytes(b'previous')
-    with pytest.raises((ValueError,ET.ParseError,DefusedXmlException)):doc.save(target,aw.SaveFormat.DOCX)
+    with pytest.raises((ValueError,ET.ParseError,DefusedXmlException)):doc.save(target,dk.SaveFormat.DOCX)
     assert target.read_bytes() == b'previous'
     assert doc.light_document_model.source_settings is source
 
 
 @pytest.mark.parametrize('new_document', [False, True])
 @pytest.mark.parametrize('first', [MsWordVersion.WORD2000, MsWordVersion.WORD2003])
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_sequential_profiles_restore_implicit_defaults_without_losing_explicit_edits(tmp_path, new_document, first, fmt):
-    doc = aw.Document() if new_document else document()
+    doc = dk.Document() if new_document else document()
     held = doc.compatibility_options
     held.optimize_for(first)
     assert not held.disable_open_type_font_formatting_features
     held.optimize_for(MsWordVersion.WORD2019)
     assert held.disable_open_type_font_formatting_features is (not new_document)
     model = ldm.Document.model_validate_json(doc.light_document_model.model_dump_json())
-    restored = aw.Document()
+    restored = dk.Document()
     restored._document = model
     assert restored.compatibility_options.disable_open_type_font_formatting_features is (not new_document)
     for i in range(2):
@@ -211,7 +211,7 @@ def test_sequential_profiles_restore_implicit_defaults_without_losing_explicit_e
         doc.save(path, fmt)
         assert doc.compatibility_options is held
         assert held.disable_open_type_font_formatting_features is (not new_document)
-        assert aw.Document(path, load_options=_format(fmt)).compatibility_options.disable_open_type_font_formatting_features
+        assert dk.Document(path, load_options=_format(fmt)).compatibility_options.disable_open_type_font_formatting_features
     held.disable_open_type_font_formatting_features = True
     held.optimize_for(first)
     held.optimize_for(MsWordVersion.WORD2019)
@@ -222,7 +222,7 @@ def test_sequential_profiles_restore_implicit_defaults_without_losing_explicit_e
     (MsWordVersion.WORD2000, None, '1'), (MsWordVersion.WORD2003, '11', '1'),
     (MsWordVersion.WORD2007, '12', '0'), (MsWordVersion.WORD2010, '14', '1'),
 ])
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_existing_typed_settings_profile_rebuild_includes_legacy_mode_and_defaults(tmp_path, version, mode, override, fmt):
     doc = document('<w:compatSetting xmlns:o="urn:owned" w:name="Owned" '
                    'w:uri="urn:owned" w:val="private" o:extra="private"><o:child/></w:compatSetting>')
@@ -231,9 +231,9 @@ def test_existing_typed_settings_profile_rebuild_includes_legacy_mode_and_defaul
     held.optimize_for(version)
     for i in range(2):
         path = tmp_path / str(i)
-        with pytest.warns(aw.ContentLossWarning):
+        with pytest.warns(dk.ContentLossWarning):
             doc.save(path, fmt)
-        cold = aw.Document(path, load_options=_format(fmt))
+        cold = dk.Document(path, load_options=_format(fmt))
         root = ET.fromstring(cold.light_document_model.source_settings.data)
         records = root.findall(W+'compatSetting')
         values = {n.get(W+'name'): n.get(W+'val') for n in records}

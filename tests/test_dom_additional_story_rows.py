@@ -6,8 +6,8 @@ from xml.dom import minidom
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.dom import Comment, DocxDocument, Footnote, StoryPart
+import dockiln as dk
+from dockiln.dom import Comment, DocxDocument, Footnote, StoryPart
 from .test_dom_story_row_height import W, R, story_package, row_format
 
 
@@ -36,7 +36,7 @@ def test_multiple_entries_keep_references_and_independent_heights(tmp_path, kind
             archive.writestr(part, data)
     document = DocxDocument(source)
     entries = document.story(name).child_nodes
-    formats = [entry.get_child_nodes(aw.NodeType.ROW, True)[0].row_format for entry in entries]
+    formats = [entry.get_child_nodes(dk.NodeType.ROW, True)[0].row_format for entry in entries]
     formats[0].height = 2000
     if not inherited:
         formats[1].height = 1440
@@ -47,7 +47,7 @@ def test_multiple_entries_keep_references_and_independent_heights(tmp_path, kind
     cold = DocxDocument(output)
     cold_entries = cold.story(name).child_nodes
     assert [entry._element.getAttributeNS(W, 'id') for entry in cold_entries] == ['1', '2']
-    assert [entry.get_child_nodes(aw.NodeType.ROW, True)[0].row_format.height
+    assert [entry.get_child_nodes(dk.NodeType.ROW, True)[0].row_format.height
             for entry in cold_entries] == expected
     assert tostring(fromstring(cold._package.payload('word/document.xml'))) == tostring(
         fromstring(parts['word/document.xml']))
@@ -107,7 +107,7 @@ def test_projection_and_held_updates_in_typed_stories(tmp_path, kind, flat, acce
         (document.save_flat_opc if flat else document.save)(output)
         assert held is None or held.height == 1584
         assert row_format(DocxDocument(output), name).height == 1584
-        assert row_format(DocxDocument(output), name).height_rule is aw.HeightRule.EXACTLY
+        assert row_format(DocxDocument(output), name).height_rule is dk.HeightRule.EXACTLY
 
 
 @pytest.mark.parametrize('kind', KINDS)
@@ -122,13 +122,13 @@ def test_inherited_values_and_public_edits(tmp_path, kind, flat):
     assert row_format(DocxDocument(BytesIO(pure)), name).height == 2000
     held.height = 2000
     held.allow_break_across_pages = False
-    assert held.height_rule is aw.HeightRule.AT_LEAST
+    assert held.height_rule is dk.HeightRule.AT_LEAST
     output = tmp_path / 'result'
     for _ in range(2):
         (document.save_flat_opc if flat else document.save)(output)
         cold = row_format(DocxDocument(output), name)
         assert held.height == cold.height == 1584
-        assert cold.height_rule is aw.HeightRule.AT_LEAST
+        assert cold.height_rule is dk.HeightRule.AT_LEAST
         assert held.allow_break_across_pages is cold.allow_break_across_pages is False
     if kind in ['footnotes', 'endnotes', 'comments']:
         root = document.story(name)
@@ -143,7 +143,7 @@ def test_inherited_values_and_public_edits(tmp_path, kind, flat):
 @pytest.mark.parametrize('kind', KINDS)
 @pytest.mark.parametrize('flat', [False, True])
 def test_publish_failure_keeps_all_live_state(tmp_path, monkeypatch, kind, flat):
-    from aspose.words_foss import _io
+    from dockiln import _io
     source = tmp_path / 'input.docx'
     name, _ = additional_story(source, kind)
     document = DocxDocument(source)
@@ -178,7 +178,7 @@ def test_opaque_containers_are_neither_edited_nor_projected(tmp_path, kind):
     document = DocxDocument(source)
     unknown = next(n for n in document.body.child_nodes if n._element.namespaceURI == "urn:owned:opaque")
     original = unknown.xml
-    row = unknown.get_child_nodes(aw.NodeType.ROW, True)[0]
+    row = unknown.get_child_nodes(dk.NodeType.ROW, True)[0]
     with pytest.raises(NotImplementedError):
         row.row_format.height = 2
     exported = DocxDocument(BytesIO(document.to_bytes()))
@@ -226,27 +226,27 @@ def test_plain_story_table_copy_and_cross_document_import(tmp_path, kind, flat):
     source = tmp_path / 'source.docx'
     name, _ = additional_story(source, kind)
     document = DocxDocument(source)
-    table = document.story(name).get_child_nodes(aw.NodeType.TABLE, True)[0]
+    table = document.story(name).get_child_nodes(dk.NodeType.TABLE, True)[0]
     original = document._package.tree(name).toxml()
     copied = table.clone(True)
     assert copied.parent_node is None
     assert copied.owner_document is document
-    assert copied.get_child_nodes(aw.NodeType.ROW, True)[0].row_format.height == 2000
+    assert copied.get_child_nodes(dk.NodeType.ROW, True)[0].row_format.height == 2000
     # Existing destination-style import is sufficient for these identical owned styles.
     target = tmp_path / 'target.docx'
     story_package(target, 'header')
     destination = DocxDocument(target)
     imported = destination.import_node(table, True)
     destination.body.append_child(imported)
-    held = imported.get_child_nodes(aw.NodeType.ROW, True)[0].row_format
+    held = imported.get_child_nodes(dk.NodeType.ROW, True)[0].row_format
     assert held.height == 2000
     held.allow_break_across_pages = False
     output = tmp_path / 'output'
     for _ in range(2):
         (destination.save_flat_opc if flat else destination.save)(output)
-        cold = DocxDocument(output).body.get_child_nodes(aw.NodeType.ROW, True)[0].row_format
+        cold = DocxDocument(output).body.get_child_nodes(dk.NodeType.ROW, True)[0].row_format
         assert held.height == cold.height == 1584
-        assert held.height_rule is cold.height_rule is aw.HeightRule.EXACTLY
+        assert held.height_rule is cold.height_rule is dk.HeightRule.EXACTLY
         assert held.allow_break_across_pages is cold.allow_break_across_pages is False
     assert document._package.tree(name).toxml() == original
 
@@ -256,7 +256,7 @@ def test_cross_part_insertion_and_complex_import_do_not_change_target(tmp_path, 
     source = tmp_path / 'source.docx'
     name, _ = additional_story(source, kind)
     document = DocxDocument(source)
-    table = document.story(name).get_child_nodes(aw.NodeType.TABLE, True)[0]
+    table = document.story(name).get_child_nodes(dk.NodeType.TABLE, True)[0]
     target = tmp_path / 'target.docx'
     story_package(target, 'header')
     destination = DocxDocument(target)
@@ -265,7 +265,7 @@ def test_cross_part_insertion_and_complex_import_do_not_change_target(tmp_path, 
         destination.body.append_child(table)
     assert destination.to_bytes() == before
     # A relationship-bearing payload cannot be copied without resource translation.
-    paragraph = table.get_child_nodes(aw.NodeType.PARAGRAPH, True)[0]
+    paragraph = table.get_child_nodes(dk.NodeType.PARAGRAPH, True)[0]
     paragraph._element.setAttributeNS(R, 'r:owned', 'missing-owned-resource')
     with pytest.raises(NotImplementedError):
         destination.import_node(table, True)
@@ -308,7 +308,7 @@ def test_unknown_drawing_graphic_role_remains_opaque(tmp_path):
         for part, data in parts.items():
             archive.writestr(part, data)
     document = DocxDocument(source)
-    row = document.body.get_child_nodes(aw.NodeType.ROW, True)[0]
+    row = document.body.get_child_nodes(dk.NodeType.ROW, True)[0]
     with pytest.raises(NotImplementedError):
         row.row_format.height = 2
     with ZipFile(BytesIO(document.to_bytes())) as archive:
@@ -321,10 +321,10 @@ def test_copy_retains_setter_only_zero_rule_with_new_xml_identity(tmp_path, kind
     source = tmp_path / 'source.docx'
     name, _ = additional_story(source, kind)
     document = DocxDocument(source)
-    table = document.story(name).get_child_nodes(aw.NodeType.TABLE, True)[0]
-    held = table.get_child_nodes(aw.NodeType.ROW, True)[0].row_format
+    table = document.story(name).get_child_nodes(dk.NodeType.TABLE, True)[0]
+    held = table.get_child_nodes(dk.NodeType.ROW, True)[0].row_format
     held.height = 0
-    held.height_rule = aw.HeightRule.EXACTLY
+    held.height_rule = dk.HeightRule.EXACTLY
     if operation == 'clone':
         copied = table.clone(True)
     else:
@@ -333,14 +333,14 @@ def test_copy_retains_setter_only_zero_rule_with_new_xml_identity(tmp_path, kind
         destination = DocxDocument(target)
         copied = destination.import_node(table, True)
         destination.body.append_child(copied)
-    clone_format = copied.get_child_nodes(aw.NodeType.ROW, True)[0].row_format
+    clone_format = copied.get_child_nodes(dk.NodeType.ROW, True)[0].row_format
     assert clone_format.height == 0
-    assert clone_format.height_rule is aw.HeightRule.EXACTLY
+    assert clone_format.height_rule is dk.HeightRule.EXACTLY
     clone_format.height = 3
     assert clone_format.height == 3
-    assert clone_format.height_rule is aw.HeightRule.EXACTLY
+    assert clone_format.height_rule is dk.HeightRule.EXACTLY
     assert held.height == 0
-    assert held.height_rule is aw.HeightRule.EXACTLY
+    assert held.height_rule is dk.HeightRule.EXACTLY
 
 
 @pytest.mark.parametrize('kind', ['footnotes', 'endnotes', 'comments'])
@@ -360,7 +360,7 @@ def test_related_story_does_not_validate_or_project_opaque_descendants(tmp_path,
                    if node._element.namespaceURI == 'urn:owned:opaque')
     before = unknown.xml
     with pytest.raises(NotImplementedError):
-        unknown.get_child_nodes(aw.NodeType.ROW, True)[0].row_format.height = 3
+        unknown.get_child_nodes(dk.NodeType.ROW, True)[0].row_format.height = 3
     data = document.to_flat_opc() if flat else document.to_bytes()
     cold = DocxDocument(BytesIO(data))
     cold_unknown = next(node for node in cold.story(name).child_nodes[0].child_nodes

@@ -10,13 +10,12 @@ import pytest
 from defusedxml.ElementTree import fromstring
 import pymupdf
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._opc import resolve_target
-from aspose.words_foss.docx_reader import DocumentReader
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.docx_writer.constants import CT_URI, PKG_RELS_URI, R_URI, W_URI
-from aspose.words_foss.md_writer import LdmMarkdownWriter
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._opc import resolve_target
+from dockiln.readers.docx import DocumentReader
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.docx.constants import CT_URI, PKG_RELS_URI, R_URI, W_URI
 
 W = "{" + W_URI + "}"
 
@@ -84,8 +83,8 @@ def source_package():
 
 def load_with_loss(raw):
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore", aw.ContentLossWarning)
-        return aw.Document(BytesIO(raw))
+        warnings.simplefilter("ignore", dk.ContentLossWarning)
+        return dk.Document(BytesIO(raw))
 
 
 def test_cell_order_survives_model_json_docx_and_structured_export():
@@ -93,9 +92,8 @@ def test_cell_order_survives_model_json_docx_and_structured_export():
     restored = ldm.Document.model_validate_json(original.model_dump_json(by_alias=True))
     assert [type(child).__name__ for child in restored.tables[0].rows[0].cells[0].children] == [
         "Paragraph", "Table", "Paragraph"]
-    doc = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(restored)))
+    doc = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(restored)))
     assert doc.get_text() == "before\nnested\nafter"
-    assert doc.to_bytes("text").decode() == doc.get_text()
     cell = doc.to_dict()["blocks"][0]["rows"][0]["cells"][0]
     assert [node["type"] for node in cell["blocks"]] == ["paragraph", "table", "paragraph"]
     assert cell["blocks"][2]["text"] == "after"
@@ -106,17 +104,13 @@ def test_cell_order_survives_model_json_docx_and_structured_export():
     assert [node.tag for node in outer_cell if node.tag != W + "tcPr"] == [W + "p", W + "tbl", W + "p"]
 
 
-def test_pdf_and_markdown_do_not_reorder_or_drop_nested_table_content():
-    doc = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(interleaved_document())))
+def test_pdf_does_not_reorder_or_drop_nested_table_content():
+    doc = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(interleaved_document())))
     with pymupdf.open(stream=doc.to_bytes("pdf"), filetype="pdf") as pdf:
         text = pdf[0].get_text()
         assert text.index("before") < text.index("nested") < text.index("after")
         rectangles = [pdf[0].search_for(value)[0] for value in ("before", "nested", "after")]
         assert rectangles[0].y0 < rectangles[1].y0 < rectangles[2].y0
-    with pytest.warns(aw.ContentLossWarning, match="Nested tables"):
-        markdown = doc.to_bytes("md").decode()
-    assert markdown.index("before") < markdown.index("nested") < markdown.index("after")
-    assert any(item.code == "markdown.nested_table_flattened" for item in doc.diagnostics)
 
 
 def test_legacy_cell_lists_and_horizontal_merge_keep_order():
@@ -131,22 +125,6 @@ def test_legacy_cell_lists_and_horizontal_merge_keep_order():
     assert merged.children[-1].text == "last"
 
 
-def test_markdown_grid_span_and_hidden_field_content():
-    content = ldm.Paragraph(children=[
-        ldm.Run(text="visible"), ldm.Run(text="hidden", font=ldm.Font(hidden=True)),
-        ldm.FieldStart(), ldm.Run(text=" DATE "), ldm.FieldSeparator(),
-        ldm.Run(text="2026-01-01"), ldm.FieldEnd(),
-    ])
-    table = ldm.Table(rows=[
-        ldm.Row(cells=[ldm.Cell(paragraphs=[content], cell_format=ldm.CellFormat(grid_span=2))]),
-        ldm.Row(cells=[ldm.Cell(paragraphs=[paragraph("A")]), ldm.Cell(paragraphs=[paragraph("B")])]),
-    ])
-    model = ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[table]))])
-    assert model.text == "visible2026-01-01\nA\nB"
-    with pytest.warns(aw.ContentLossWarning, match="Merged cells"):
-        markdown = LdmMarkdownWriter().write(model)
-    assert "visible2026-01-01" in markdown and "hidden" not in markdown and "DATE" not in markdown
-    assert all(line.count("|") == 3 for line in markdown.splitlines())
 
 
 def test_source_stories_have_note_ids_links_and_section_variant_inheritance():
@@ -168,23 +146,23 @@ def test_source_stories_have_note_ids_links_and_section_variant_inheritance():
         {"section": 1, "variant": "default", "inherited": False, "kind": "header"}]
 
 
-@pytest.mark.parametrize("fmt", ["pdf", "md", "text"])
+@pytest.mark.parametrize("fmt", ["pdf"])
 def test_extraction_is_not_misrepresented_as_note_rendering(fmt):
     doc = load_with_loss(source_package())
-    with pytest.warns(aw.ContentLossWarning, match="Footnotes/endnotes"):
+    with pytest.warns(dk.ContentLossWarning, match="Footnotes/endnotes"):
         doc.to_bytes(fmt)
-    prefix = "markdown" if fmt == "md" else fmt
+    prefix = fmt
     assert any(item.code == prefix + ".notes_omitted" for item in doc.diagnostics)
 
 
-@pytest.mark.parametrize("fmt", ["pdf", "md", "text"])
+@pytest.mark.parametrize("fmt", ["pdf"])
 def test_reference_only_notes_also_warn_on_output(fmt):
     model = interleaved_document()
     model.tables[0].rows[0].cells[0].paragraphs[0].note_references = [
         ldm.NoteReference(kind="footnote", identifier="7")]
-    doc = aw.Document()
+    doc = dk.Document()
     doc._document = model
-    with pytest.warns(aw.ContentLossWarning, match="Footnotes/endnotes"):
+    with pytest.warns(dk.ContentLossWarning, match="Footnotes/endnotes"):
         doc.to_bytes(fmt)
     assert any(item.code.endswith(".notes_omitted") for item in doc.diagnostics)
 
@@ -192,7 +170,7 @@ def test_reference_only_notes_also_warn_on_output(fmt):
 def test_reusing_reader_does_not_leak_stories_relationships_or_styles():
     reader = DocumentReader()
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore", aw.ContentLossWarning)
+        warnings.simplefilter("ignore", dk.ContentLossWarning)
         reader.load_bytes(source_package())
     assert reader.to_light_document().source_stories
     plain = LdmDocxWriter().write_to_bytes(ldm.Document(sections=[ldm.Section(body=ldm.Body(
@@ -206,7 +184,7 @@ def test_dom_horizontal_merges_preserve_text_and_grid_and_reject_partial_cells()
     table = ldm.Table(rows=[ldm.Row(cells=[ldm.Cell(paragraphs=[paragraph(f"{r}-{c}")])
                                         for c in range(3)]) for r in range(2)])
     raw = LdmDocxWriter().write_to_bytes(ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[table]))]))
-    doc = aw.DocxDocument(BytesIO(raw))
+    doc = dk.DocxDocument(BytesIO(raw))
     grid = doc.body.tables[0]
     target = grid.merge_cells(0, 0, 2)
     assert [p.text for p in target.paragraphs] == ["0-0", "0-1"]
@@ -217,7 +195,7 @@ def test_dom_horizontal_merges_preserve_text_and_grid_and_reject_partial_cells()
     assert doc.to_bytes() == before
     assert grid.merge_cells(0, 0, 2) is target
     grid.merge_cells(1, 0, 3)
-    loaded = aw.Document(BytesIO(doc.to_bytes()))
+    loaded = dk.Document(BytesIO(doc.to_bytes()))
     assert [c.cell_format.grid_span for c in loaded.light_document_model.tables[0].rows[0].cells] == [2, 1]
     assert loaded.light_document_model.tables[0].rows[1].cells[0].cell_format.grid_span == 3
     assert loaded.get_text().splitlines() == [f"{r}-{c}" for r in range(2) for c in range(3)]
@@ -228,7 +206,7 @@ def test_dom_invalid_merge_is_atomic(args):
     table = ldm.Table(rows=[ldm.Row(cells=[ldm.Cell(paragraphs=[paragraph("A")]),
                                         ldm.Cell(paragraphs=[paragraph("B")])])])
     raw = LdmDocxWriter().write_to_bytes(ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[table]))]))
-    doc = aw.DocxDocument(BytesIO(raw))
+    doc = dk.DocxDocument(BytesIO(raw))
     with pytest.raises(ValueError):
         doc.body.tables[0].merge_cells(*args)
     assert doc.to_bytes() == raw

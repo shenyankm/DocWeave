@@ -1,0 +1,2 @@
+Image below is wider than the page (900pt, page is ~468pt usable):
+Text after wide image.

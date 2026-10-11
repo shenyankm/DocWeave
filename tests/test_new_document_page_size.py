@@ -1,33 +1,34 @@
-"""New and text-based documents use the fixed baseline's Letter dimensions."""
+"""New and round-tripped Word documents use the fixed baseline's Letter dimensions."""
 
 from io import BytesIO
 
 import pytest
 from pypdf import PdfReader
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+from ._word_fixtures import word_bytes
+
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
 
 
-@pytest.mark.parametrize('kind', ['new', 'txt', 'md'])
+@pytest.mark.parametrize('kind', ['new', 'docx'])
 def test_default_page_size_survives_json_outputs_and_pdf(kind, tmp_path):
-    inputs = {'txt': 'OWNED_TEXT', 'md': '# OWNED_MARKDOWN'}
     if kind == 'new':
-        doc = aw.Document()
+        doc = dk.Document()
     else:
         source = tmp_path / ('input.' + kind)
-        source.write_text(inputs[kind])
-        doc = aw.Document(source)
+        source.write_bytes(word_bytes("OWNED_WORD"))
+        doc = dk.Document(source)
     model = doc.light_document_model
     page = model.sections[0].page_setup
     assert (page.page_width, page.page_height, page.paper_size) == (612, 792, 1)
     restored = ldm.Document.model_validate_json(model.model_dump_json())
     assert restored.sections[0].page_setup == page
-    pdf = PdfReader(BytesIO(doc.to_bytes(aw.SaveFormat.PDF))).pages[0]
+    pdf = PdfReader(BytesIO(doc.to_bytes(dk.SaveFormat.PDF))).pages[0]
     assert tuple(map(float, (pdf.mediabox.width, pdf.mediabox.height))) == (612, 792)
-    for format in (aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC):
-        cold = aw.Document(BytesIO(doc.to_bytes(format)))
+    for format in (dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC):
+        cold = dk.Document(BytesIO(doc.to_bytes(format)))
         actual = cold.light_document_model.sections[0].page_setup
         assert (actual.page_width, actual.page_height, actual.paper_size) == (612, 792, 1)
 

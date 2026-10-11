@@ -3,9 +3,9 @@ from io import BytesIO
 from zipfile import ZipFile
 from xml.etree import ElementTree as E
 import pytest
-import aspose.words_foss as aw
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss._flat_opc import encode
+import dockiln as dk
+from dockiln.dom import DocxDocument
+from dockiln._flat_opc import encode
 from tests.test_settings_relationship_loading import settings_package, W
 
 
@@ -56,7 +56,7 @@ def test_related_default_tabs_preserve_source_and_unrelated_parts(tmp_path, mode
         (doc.save_flat_opc if flat else doc.save)(dest)
         assert doc.default_tab_stop == 42.1
         assert DocxDocument(dest).default_tab_stop == 42.1
-        assert aw.Document(dest).default_tab_stop == 42.1
+        assert dk.Document(dest).default_tab_stop == 42.1
 
 
 @pytest.mark.parametrize('values,expected', [
@@ -69,7 +69,7 @@ def test_related_default_tabs_preserve_source_and_unrelated_parts(tmp_path, mode
 def test_two_models_share_source_measure_semantics(tmp_path, values, expected):
     raw = package_with_values(values)
     dom = DocxDocument(BytesIO(raw))
-    assert dom.default_tab_stop == aw.Document(BytesIO(raw)).default_tab_stop == expected
+    assert dom.default_tab_stop == dk.Document(BytesIO(raw)).default_tab_stop == expected
     dom.default_tab_stop = 61.7
     name = 'word/settings.xml'
     root = E.fromstring(dom._package.payload(name))
@@ -84,7 +84,7 @@ def test_two_models_share_source_measure_semantics(tmp_path, values, expected):
 def test_invalid_source_units_are_explicit_errors(value):
     raw = package_with_values([value])
     with pytest.raises(RuntimeError):
-        aw.Document(BytesIO(raw))
+        dk.Document(BytesIO(raw))
     with pytest.raises(RuntimeError):
         _ = DocxDocument(BytesIO(raw)).default_tab_stop
 
@@ -95,7 +95,7 @@ def test_failed_set_keeps_package_and_raw_xml(monkeypatch, mode):
     before = {n: doc._package.payload(n) for n in doc.part_names}
     with pytest.raises(RuntimeError):
         doc.default_tab_stop = -.01
-    from aspose.words_foss import _io
+    from dockiln import _io
     monkeypatch.setattr(_io, 'MAX_PART_BYTES', 1)
     with pytest.raises(ValueError, match='safety limit'):
         doc.default_tab_stop = 42
@@ -113,7 +113,7 @@ def test_dom_setter_uses_the_public_numeric_contract(tmp_path, value, expected, 
     assert doc.default_tab_stop == expected
     dest = tmp_path / ('tabs.xml' if flat else 'tabs.docx')
     (doc.save_flat_opc if flat else doc.save)(dest)
-    assert DocxDocument(dest).default_tab_stop == aw.Document(dest).default_tab_stop == expected
+    assert DocxDocument(dest).default_tab_stop == dk.Document(dest).default_tab_stop == expected
 
 
 def test_new_attribute_binding_does_not_rebind_foreign_prefix():

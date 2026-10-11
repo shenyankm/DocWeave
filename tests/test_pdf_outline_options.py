@@ -6,9 +6,9 @@ import warnings
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter, PdfUnsupportedOptionWarning
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter, PdfUnsupportedOptionWarning
+from dockiln.saving import PdfSaveOptions
 
 
 def model(levels, kind):
@@ -79,7 +79,7 @@ def test_heading_and_bookmark_share_outline_path():
 
 def test_public_docx_save_compacts_heading_levels(tmp_path):
     from docx import Document
-    import aspose.words_foss as aw
+    import dockiln as dk
 
     source = tmp_path / "headings.docx"
     document = Document()
@@ -88,7 +88,7 @@ def test_public_docx_save_compacts_heading_levels(tmp_path):
     document.save(source)
     options = PdfSaveOptions()
     options.outline_options.headings_outline_levels = 5
-    reader = PdfReader(BytesIO(aw.Document(source).to_bytes(options)))
+    reader = PdfReader(BytesIO(dk.Document(source).to_bytes(options)))
     assert entries(reader) == [(1, "Entry0"), (2, "Entry1"), (2, "Entry2")]
 
 

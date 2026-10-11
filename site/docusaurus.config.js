@@ -1,12 +1,12 @@
-const repository = 'https://github.com/shenyankm/DocWeave';
+const repository = 'https://github.com/shenyankm/DocKiln';
 
 export default {
-  title: 'DocWeave',
+  title: 'DocKiln',
   tagline: '让文档进入你的 Python 工作流',
   url: 'https://shenyankm.github.io',
-  baseUrl: '/DocWeave/',
+  baseUrl: '/DocKiln/',
   organizationName: 'shenyankm',
-  projectName: 'DocWeave',
+  projectName: 'DocKiln',
   trailingSlash: true,
   onBrokenLinks: 'throw',
   i18n: {defaultLocale: 'zh-CN', locales: ['zh-CN']},
@@ -32,7 +32,7 @@ export default {
     colorMode: {respectPrefersColorScheme: true},
     docs: {sidebar: {hideable: true}},
     navbar: {
-      title: 'DocWeave',
+      title: 'DocKiln',
       items: [
         {type: 'docSidebar', sidebarId: 'guides', position: 'left', label: '文档'},
         {href: `${repository}/blob/dev/README.zh-CN.md`, label: '快速开始', position: 'left'},
@@ -54,7 +54,7 @@ export default {
         {title: '来源与许可', items: [
           {label: '上游 Aspose.Words FOSS', href: 'https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python'},
           {label: 'MIT 代码许可证', href: `${repository}/blob/dev/LICENSE`},
-          {label: 'SIL OFL-1.1 字体许可证', href: `${repository}/blob/dev/aspose/words_foss/pdf_writer/fonts/OFL.txt`},
+          {label: 'SIL OFL-1.1 字体许可证', href: `${repository}/blob/dev/src/dockiln/writers/pdf/fonts/OFL.txt`},
         ]},
       ],
       copyright: '© 2026 Aspose.Words FOSS Family & shenyankm。独立维护，非 Aspose 官方发布版，不保证 API 或渲染兼容。使用 Docusaurus 构建。',

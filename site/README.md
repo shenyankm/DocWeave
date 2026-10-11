@@ -1,7 +1,7 @@
-# DocWeave 文档站
+# DocKiln 文档站
 
 使用 Docusaurus Classic 默认主题，与 Docusaurus 官网保持相同的导航、侧边栏、
-代码块和明暗主题风格。站点地址：<https://shenyankm.github.io/DocWeave/>。
+代码块和明暗主题风格。站点地址：<https://shenyankm.github.io/DocKiln/>。
 
 ## 本地开发
 

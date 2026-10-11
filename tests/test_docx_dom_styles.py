@@ -9,8 +9,8 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.dom.nodes import W
+import dockiln as dk
+from dockiln.dom.nodes import W
 
 from .test_docx_dom import package, payloads
 
@@ -25,7 +25,7 @@ def test_style_toggle_getters_match_recorded_commercial_inputs(record):
     with ZipFile(BENCHMARKS / "corpus" / "style-toggles-26.9.zip") as archive:
         data = archive.read(record["input"])
     assert hashlib.sha256(data).hexdigest() == record["sha256"]
-    doc = aw.DocxDocument(BytesIO(data))
+    doc = dk.DocxDocument(BytesIO(data))
     run = doc.body.paragraphs[0].runs[0]
     font = run.effective_font
     assert (font.bold, font.italic) == (record["bold"], record["italic"])
@@ -42,7 +42,7 @@ def style_doc(tmp_path, styles="", ppr="", rpr="", body=None, target="styles.xml
         **(extras or {}),
     }
     package(path, body, parts)
-    return aw.DocxDocument(path)
+    return dk.DocxDocument(path)
 
 
 def test_nearest_style_values_combine_between_paragraph_and_character_levels(tmp_path):
@@ -111,7 +111,7 @@ def test_character_style_setter_validates_type_and_effective_values_are_fresh(tm
     assert payloads(doc.to_bytes()) == before
     run.font.style_id = None
     assert run.font.style_id is None and not run.effective_font.italic
-    reopened = aw.DocxDocument(BytesIO(doc.to_bytes()))
+    reopened = dk.DocxDocument(BytesIO(doc.to_bytes()))
     assert reopened.body.paragraphs[0].runs[0].effective_font.bold
 
 
@@ -171,7 +171,7 @@ def test_invalid_direct_values_are_not_reported_as_valid_effective_values(tmp_pa
 ])
 def test_unsupported_context_is_explicit_not_a_guessed_effective_value(tmp_path, style, ppr, body):
     doc = style_doc(tmp_path, style, ppr, body=body)
-    p = doc.get_child_nodes(aw.NodeType.PARAGRAPH, deep=True)[0]
+    p = doc.get_child_nodes(dk.NodeType.PARAGRAPH, deep=True)[0]
     original = payloads(doc.to_bytes())
     if style.startswith('<w:style w:type="table"'):
         assert p.runs[0].effective_font.size == 11.0

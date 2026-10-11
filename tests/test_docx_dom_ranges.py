@@ -6,15 +6,15 @@ import pytest
 from defusedxml.ElementTree import fromstring
 from .test_docx_dom import package, payloads
 
-import aspose.words_foss as aw
-from aspose.words_foss.dom import TextRange
-from aspose.words_foss.dom.nodes import W
+import dockiln as dk
+from dockiln.dom import TextRange
+from dockiln.dom.nodes import W
 
 
 def paragraph_doc(tmp_path, runs):
     source = tmp_path / "range.docx"
     package(source, '<w:p>' + runs + '</w:p><w:sectPr/>')
-    return aw.DocxDocument(source)
+    return dk.DocxDocument(source)
 
 
 @pytest.mark.parametrize("start,end,expected", [(0, 4, "甲😀乙丙"), (1, 2, "😀"), (2, 2, ""), (4, None, "")])
@@ -52,7 +52,7 @@ def test_range_replace_refreshes_own_bounds_and_invalidates_other_ranges(tmp_pat
     assert selected.text == "" and selected.start == selected.end == 1
     selected.replace("插入")
     assert p.text == "客插入司"
-    assert aw.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == p.text
+    assert dk.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == p.text
 
 
 @pytest.mark.parametrize("position,expected_runs", [(0, ["Xab", "cd"]), (2, ["ab", "Xcd"]), (4, ["ab", "cdX"])])
@@ -91,7 +91,7 @@ def test_range_formatting_splits_only_boundaries_and_retains_other_properties(tm
     assert selected.text == "bcde" and len(p.runs) == 3
     assert p.runs[1].font.bold is None and p.runs[1].font.size is None
     assert p.runs[1].effective_font.bold is False
-    assert aw.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == "abcdef"
+    assert dk.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == "abcdef"
 
 
 def test_multirun_formatting_and_unrelated_edit_does_not_stale_range(tmp_path):
@@ -116,7 +116,7 @@ def test_split_multiple_text_nodes_preserves_comments_once(tmp_path, offset, lef
     assert original.text == left and suffix.text == right
     assert suffix.parent_node is p and suffix.font.italic is True
     assert p.xml.count('<!--inside-->') == p.xml.count('<!--between-->') == p.xml.count('<?keep instruction?>') == 1
-    assert aw.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == "abcd"
+    assert dk.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == "abcd"
 
 
 def test_split_edges_noops_and_space_preservation(tmp_path):
@@ -197,16 +197,16 @@ def test_namespace_context_survives_cloning_moving_and_new_node_insertion(tmp_pa
     body = (f'<w:p><w:r><w:t>original</w:t></w:r></w:p>'
             f'<x:tbl xmlns:x="{W}" xmlns:w="urn:shadow"><x:tr><x:tc><x:p/></x:tc></x:tr></x:tbl>')
     package(source, body)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     original = doc.body.paragraphs[0]
     cell = doc.body.tables[0].rows[0].cells[0]
     cell.append_child(original.clone())
     cell.append_child(original)
     cell.append_child(doc.create_paragraph("new"))
-    reopened = aw.DocxDocument(BytesIO(doc.to_bytes()))
+    reopened = dk.DocxDocument(BytesIO(doc.to_bytes()))
     paragraphs = reopened.body.tables[0].rows[0].cells[0].paragraphs
     assert [p.text for p in paragraphs] == ["", "original", "original", "new"]
-    assert all(run.node_type == aw.NodeType.RUN for p in paragraphs for run in p.runs)
+    assert all(run.node_type == dk.NodeType.RUN for p in paragraphs for run in p.runs)
 
 
 def test_invalid_split_offset_or_detached_parent_rejected(tmp_path):

@@ -5,9 +5,9 @@ import pymupdf
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 from tests.test_pdf_structure_pages import assert_page_tags
 
 
@@ -89,13 +89,13 @@ def test_non_list_rendering_ends_list_even_when_source_has_list_format(boundary)
 
 @pytest.mark.parametrize('long',[False,True])
 def test_public_docx_list_hierarchy_survives_conversion(long):
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
     doc=list_model('nested',2,long)
     doc.lists=[ldm.DocList(list_id=1,is_multi_level=True,
         list_levels=[ldm.ListLevel(number_format=f'%{index+1}.') for index in range(3)])]
-    document=aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(doc)))
+    document=dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(doc)))
     options=PdfSaveOptions();options.export_document_structure=True
     raw=document.to_bytes(options)
     reader=PdfReader(BytesIO(raw))
@@ -140,7 +140,7 @@ def test_list_labels_and_body_text_are_separate_content_items():
 @pytest.mark.parametrize('failure',['drawing','closing'])
 def test_list_structure_failure_preserves_output_and_writer_recovers(tmp_path,monkeypatch,failure):
     from fpdf import FPDF
-    from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
+    from dockiln.writers.pdf.run_renderer import RunRenderer
 
     options=PdfSaveOptions();options.export_document_structure=True
     writer=LdmPdfWriter(options);output=tmp_path/'keep.pdf';output.write_bytes(b'KEEP')

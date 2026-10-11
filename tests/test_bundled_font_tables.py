@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from fontTools.ttLib.sfnt import SFNTReader
 
-from aspose.words_foss.pdf_writer import font
+from dockiln.writers.pdf import font
 
 
 @pytest.mark.parametrize(

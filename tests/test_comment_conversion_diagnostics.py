@@ -6,8 +6,8 @@ from zipfile import ZipFile
 from docx import Document as NativeDocument
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss._flat_opc import encode
+import dockiln as dk
+from dockiln._flat_opc import encode
 
 
 def commented_document(reference):
@@ -29,9 +29,9 @@ def test_classic_comment_parts_are_preserved_even_when_warnings_are_ignored(refe
     raw = commented_document(reference)
     source = encode(raw) if flat else raw
     with warnings.catch_warnings():
-        warnings.simplefilter('ignore', aw.ContentLossWarning)
-        document = aw.Document(BytesIO(source))
-        output = document.to_bytes(aw.SaveFormat.DOCX)
+        warnings.simplefilter('ignore', dk.ContentLossWarning)
+        document = dk.Document(BytesIO(source))
+        output = document.to_bytes(dk.SaveFormat.DOCX)
     observed = [item for item in document.diagnostics if item.code == 'load.comments_omitted']
     assert observed == []
     assert all(text not in repr(observed) for text in ('PRIVATE BODY', 'PRIVATE COMMENT', 'PRIVATE AUTHOR'))
@@ -43,9 +43,9 @@ def test_classic_comment_parts_are_preserved_even_when_warnings_are_ignored(refe
 @pytest.mark.parametrize('reference', [False, True])
 def test_strict_classic_comment_conversion_keeps_editable_package(reference):
     raw = commented_document(reference)
-    editable = aw.DocxDocument(BytesIO(raw))
+    editable = dk.DocxDocument(BytesIO(raw))
     with warnings.catch_warnings():
-        warnings.simplefilter('error', aw.ContentLossWarning)
+        warnings.simplefilter('error', dk.ContentLossWarning)
         model = editable.to_light_document()
         assert any(story.kind == 'comment' for story in model.source_stories)
     assert editable.to_bytes() == raw
@@ -56,5 +56,5 @@ def test_document_without_comments_has_no_comment_loss_diagnostic():
     document.add_paragraph('OWNED BODY')
     output = BytesIO()
     document.save(output)
-    loaded = aw.Document(BytesIO(output.getvalue()))
+    loaded = dk.Document(BytesIO(output.getvalue()))
     assert not any(item.code == 'load.comments_omitted' for item in loaded.diagnostics)

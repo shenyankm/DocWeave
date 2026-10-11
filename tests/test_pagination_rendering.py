@@ -8,8 +8,8 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import DocxDocument
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+from dockiln import DocxDocument
+from dockiln.writers.pdf import LdmPdfWriter
 
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / "docs/benchmarks"

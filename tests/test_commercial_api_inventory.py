@@ -201,9 +201,9 @@ def test_ledger_does_not_promote_matching_names_to_compatibility():
             {"name": "dynamic", "owner": "aspose.words.Document.dynamic"},
         ]},
     ]}]}
-    current = {"root_module": "aspose.words_foss", "runtime_version": "26.7.0.post2",
-               "modules": [{"exports": [{"id": "aspose.words_foss.Document", "kind": "type",
-                                         "members": [{"name": "save", "owner": "aspose.words_foss.Document.save"}]}]}]}
+    current = {"root_module": "dockiln", "runtime_version": "26.7.0.post2",
+               "modules": [{"exports": [{"id": "dockiln.Document", "kind": "type",
+                                         "members": [{"name": "save", "owner": "dockiln.Document.save"}]}]}]}
     ledger = build(declarations, baseline, current)
     records = {record["id"]: record for record in ledger["records"]}
     assert records["aspose.words.Document.save"]["implementation"] == "name_present_behavior_unverified"
@@ -960,14 +960,14 @@ def test_font_size_loading_evidence_rejects_forged_measurement(tmp_path, phase):
     (tmp_path / 'corpus').mkdir()
     for key in ('corpus', 'outputs'):
         shutil.copyfile(benchmarks / report[key], tmp_path / report[key])
-    shutil.copyfile(benchmarks / report['docweave_roundtrip']['outputs'],
-                    tmp_path / report['docweave_roundtrip']['outputs'])
+    shutil.copyfile(benchmarks / report['dockiln_roundtrip']['outputs'],
+                    tmp_path / report['dockiln_roundtrip']['outputs'])
     if phase == 'current_run':
-        report['docweave_roundtrip']['native_reread']['records'][0]['run_size'] += .5
+        report['dockiln_roundtrip']['native_reread']['records'][0]['run_size'] += .5
     elif phase == 'current_hash':
-        report['docweave_roundtrip']['records'][0]['output_sha256'] = 'forged'
+        report['dockiln_roundtrip']['records'][0]['output_sha256'] = 'forged'
     elif phase == 'current_coverage':
-        rows = report['docweave_roundtrip']['native_reread']['records']
+        rows = report['dockiln_roundtrip']['native_reread']['records']
         rows[0] = rows[1]
     else:
         report['records'][0][phase]['run_size'] += .5

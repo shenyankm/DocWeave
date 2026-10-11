@@ -7,8 +7,8 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import Document
-from aspose.words_foss import light_document_model as ldm
+from dockiln import Document
+from dockiln import light_document_model as ldm
 
 ROOT = Path(__file__).parents[1] / 'docs/benchmarks'
 REPORT = json.loads((ROOT / 'font-boolean-contexts-26.9.json').read_text())
@@ -33,7 +33,7 @@ def test_boolean_category_values_match_native_before_and_after_json(row):
 def test_hidden_visibility_matches_native_pdf(row, json_roundtrip):
     import pymupdf
 
-    from aspose.words_foss.pdf_writer import LdmPdfWriter
+    from dockiln.writers.pdf import LdmPdfWriter
 
     with ZipFile(ROOT / REPORT['corpus']) as archive:
         source = archive.read(row['input'])
@@ -55,7 +55,7 @@ def test_hidden_visibility_matches_native_pdf(row, json_roundtrip):
 def test_hidden_content_does_not_change_visible_layout(hidden_text, keep):
     import pymupdf
 
-    from aspose.words_foss.pdf_writer import LdmPdfWriter
+    from dockiln.writers.pdf import LdmPdfWriter
 
     def render(secret):
         paragraph = ldm.Paragraph(
@@ -107,7 +107,7 @@ def test_table_visibility_and_supported_inline_image(orientation, render_hidden)
     import pymupdf
     from PIL import Image
 
-    from aspose.words_foss.pdf_writer import LdmPdfWriter
+    from dockiln.writers.pdf import LdmPdfWriter
 
     image = BytesIO()
     Image.new('RGB', (4, 4), 'red').save(image, format='PNG')
@@ -137,7 +137,7 @@ def test_table_visibility_and_supported_inline_image(orientation, render_hidden)
 def test_default_paragraph_reference_presence_matches_native(row, json_roundtrip):
     import pymupdf
 
-    from aspose.words_foss.pdf_writer import LdmPdfWriter
+    from dockiln.writers.pdf import LdmPdfWriter
 
     with ZipFile(ROOT / STYLE_REPORT['corpus']) as archive:
         doc = Document(BytesIO(archive.read(row['input'])))
@@ -209,9 +209,9 @@ SAVE_ROWS = ([r for r in REPORT['records'] if r['field'] == 'hidden'] + STYLE_RE
 def test_hidden_save_retains_direct_setting_and_paragraph_reference(row, format, json_roundtrip):
     import runpy
 
-    from aspose.words_foss import SaveFormat
-    from aspose.words_foss.docx_writer import LdmDocxWriter
-    from aspose.words_foss.saving import OoxmlSaveOptions
+    from dockiln import SaveFormat
+    from dockiln.writers.docx import LdmDocxWriter
+    from dockiln.saving import OoxmlSaveOptions
 
     current_report = STYLE_REPORT if row['input'].startswith(('explicit-', 'implicit-')) else REPORT
     with ZipFile(ROOT / current_report['corpus']) as corpus:

@@ -6,13 +6,13 @@ from zipfile import ZipFile
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import Document, light_document_model as ldm
-from aspose.words_foss._flat_opc import encode
-from aspose.words_foss._links import format_link
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.writer import _PdfCanvas
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import Document, light_document_model as ldm
+from dockiln._flat_opc import encode
+from dockiln._links import format_link
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.writer import _PdfCanvas
+from dockiln.saving import PdfSaveOptions
 
 
 @pytest.mark.parametrize('target,action', [

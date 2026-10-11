@@ -3,9 +3,9 @@
 import pymupdf
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.constants import CODE_BLOCK_BG_RGB
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.constants import CODE_BLOCK_BG_RGB
 
 
 def code_model(runs, *, columns=1, align=0):
@@ -72,7 +72,7 @@ def test_public_docx_code_keeps_source_formatting(tmp_path):
     from docx import Document
     from docx.enum.style import WD_STYLE_TYPE
     from docx.shared import Pt, RGBColor
-    import aspose.words_foss as aw
+    import dockiln as dk
 
     document = Document()
     document.styles.add_style("Code", WD_STYLE_TYPE.PARAGRAPH)
@@ -85,7 +85,7 @@ def test_public_docx_code_keeps_source_formatting(tmp_path):
     script.font.superscript = True
     source, target = tmp_path / "code.docx", tmp_path / "code.pdf"
     document.save(source)
-    aw.Document(source).save(target)
+    dk.Document(source).save(target)
     with pymupdf.open(target) as pdf:
         spans = [span for block in pdf[0].get_text("dict")["blocks"]
                  for line in block.get("lines", []) for span in line["spans"]]

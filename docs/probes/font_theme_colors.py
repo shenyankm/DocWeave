@@ -87,7 +87,7 @@ def main(input_generator=inputs, expected_count=32):
         import aspose.words as aw
         assert version('aspose-words') == '26.9.0'
     else:
-        from aspose.words_foss import Document, SaveFormat
+        from dockiln import Document, SaveFormat
     observe = runpy.run_path(str(Path(__file__).with_name('font_color_categories.py')))['observed']
     records = []
     with ZipFile(args.corpus) as sources, ZipFile(args.outputs, 'w', ZIP_DEFLATED) as outputs:
@@ -108,7 +108,7 @@ def main(input_generator=inputs, expected_count=32):
                             'getter': getter, **paint, 'output': output,
                             'output_sha256': hashlib.sha256(pdf_raw).hexdigest()})
     assert len(records) == expected_count
-    args.report.write_text(json.dumps({'version': version('aspose-words' if native else 'aspose-words-foss-enhanced'),
+    args.report.write_text(json.dumps({'version': version('aspose-words' if native else 'dockiln'),
                                       'python': platform.python_version(), 'platform': platform.platform(),
                                       'licensed': False if native else None, 'records': records,
                                       'full_Font_acceptance': False, 'rendering_acceptance': False}, indent=2) + '\n')

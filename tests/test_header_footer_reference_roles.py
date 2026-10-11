@@ -5,8 +5,8 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
+import dockiln as dk
+from dockiln import light_document_model as ldm
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
@@ -46,7 +46,7 @@ CASES += [('header', kind, kind, True) for kind in ('header', 'footer')]
 @pytest.mark.parametrize('format_name', ['DOCX', 'FLAT_OPC'])
 @pytest.mark.parametrize('via_json', [False, True])
 def test_reference_role_survives_recovery_and_two_saves(tmp_path, reference, relationship, root, both, format_name, via_json):
-    doc = aw.Document(BytesIO(owned_story(reference, relationship, root, both=both)))
+    doc = dk.Document(BytesIO(owned_story(reference, relationship, root, both=both)))
     expected = {0, 1} if both else {int(reference == 'footer')}
     for step in range(3):
         model = doc.light_document_model
@@ -58,5 +58,5 @@ def test_reference_role_survives_recovery_and_two_saves(tmp_path, reference, rel
             doc._document = ldm.Document.model_validate_json(model.model_dump_json())
         if step < 2:
             path = tmp_path / f'{step}.bin'
-            doc.save(path, getattr(aw.SaveFormat, format_name))
-            doc = aw.Document(path)
+            doc.save(path, getattr(dk.SaveFormat, format_name))
+            doc = dk.Document(path)

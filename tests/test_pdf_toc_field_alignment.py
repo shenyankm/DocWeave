@@ -3,9 +3,9 @@
 import pymupdf
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 
 
 def aligned_toc_model(alignment, columns=1, number="12", separator=".", suffix="30", long=False):
@@ -135,8 +135,8 @@ def test_long_title_keeps_field_on_last_page_and_column(alignment, columns, shap
 @pytest.mark.parametrize("position", [20, 260])
 @pytest.mark.parametrize("shaping", [False, True])
 def test_outside_field_preserves_existing_target(tmp_path, alignment, position, shaping):
-    from aspose.words_foss import Document
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln import Document
+    from dockiln.writers.docx import LdmDocxWriter
 
     model = aligned_toc_model(alignment)
     model.sections[0].body.children[0].paragraph_format.tab_stops.tab_stops[0].position = position
@@ -154,8 +154,8 @@ def test_outside_field_preserves_existing_target(tmp_path, alignment, position, 
 @pytest.mark.parametrize("alignment", [0, 1, 3])
 @pytest.mark.parametrize("shaping", [False, True])
 def test_public_docx_field_anchor(tmp_path, alignment, shaping):
-    from aspose.words_foss import Document
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln import Document
+    from dockiln.writers.docx import LdmDocxWriter
 
     source = tmp_path / "field.docx"
     LdmDocxWriter().write(aligned_toc_model(alignment), source)
@@ -192,8 +192,8 @@ def test_center_decimal_selection_respects_order_and_clear(shaping, cleared):
 @pytest.mark.parametrize("position,alignment", [(13, 1), (260, 0)])
 @pytest.mark.parametrize("shaping", [False, True])
 def test_near_left_or_right_field_preserves_existing_target(tmp_path, position, alignment, shaping):
-    from aspose.words_foss import Document
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln import Document
+    from dockiln.writers.docx import LdmDocxWriter
 
     model = aligned_toc_model(alignment)
     model.sections[0].body.children[0].paragraph_format.tab_stops.tab_stops[0].position = position

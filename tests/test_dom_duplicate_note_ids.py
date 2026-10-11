@@ -5,9 +5,9 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.dom.nodes import W
+import dockiln as dk
+from dockiln.dom import DocxDocument
+from dockiln.dom.nodes import W
 from .test_dom_note_lifecycle import create, document
 
 
@@ -58,7 +58,7 @@ def test_duplicate_content_uses_first_declaration_and_saves_unique_ids(tmp_path,
     doc, part, count = duplicate_document(tmp_path, kind, variant)
     original = doc.part_xml(part)
     storage = doc.story(part).child_nodes
-    node_type = aw.NodeType.COMMENT if kind == 'comment' else aw.NodeType.FOOTNOTE
+    node_type = dk.NodeType.COMMENT if kind == 'comment' else dk.NodeType.FOOTNOTE
     nodes = doc.get_child_nodes(node_type, True)
     assert len(nodes) == count
     expected = ['Owned entry'] + [f'Owned entry {index}' for index in range(1, count)]
@@ -88,9 +88,9 @@ def test_duplicate_content_uses_first_declaration_and_saves_unique_ids(tmp_path,
 @pytest.mark.parametrize('kind', ['footnote', 'endnote', 'comment'])
 @pytest.mark.parametrize('flat', [False, True])
 def test_failed_duplicate_normalization_keeps_storage_and_existing_output(tmp_path, monkeypatch, kind, flat):
-    from aspose.words_foss import _io
+    from dockiln import _io
     doc, part, _ = duplicate_document(tmp_path, kind, 'conflict')
-    node_type = aw.NodeType.COMMENT if kind == 'comment' else aw.NodeType.FOOTNOTE
+    node_type = dk.NodeType.COMMENT if kind == 'comment' else dk.NodeType.FOOTNOTE
     assert len(doc.get_child_nodes(node_type, True)) == 1
     before = doc.part_xml(part), doc.part_xml('word/document.xml')
     output = tmp_path / 'saved'

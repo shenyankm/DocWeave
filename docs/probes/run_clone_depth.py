@@ -12,7 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--module", choices=["aspose.words", "aspose.words_foss"], required=True)
+    parser.add_argument("--module", choices=["aspose.words", "dockiln"], required=True)
     args = parser.parse_args()
     aw = importlib.import_module(args.module)
     commercial = args.module == "aspose.words"

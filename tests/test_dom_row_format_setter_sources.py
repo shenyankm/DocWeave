@@ -1,8 +1,8 @@
 """Row getter inheritance and setter-local state are distinct contracts."""
 import pytest
 
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.model.enums import HeightRule
+from dockiln.dom import DocxDocument
+from dockiln.model.enums import HeightRule
 from .test_dom_row_format import row_document, values
 
 

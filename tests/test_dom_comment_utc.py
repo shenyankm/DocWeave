@@ -6,9 +6,9 @@ from xml.etree import ElementTree as E
 
 import pytest
 
-from aspose.words_foss import NodeType
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.dom.comment_utc import W14, CID, CEX, ROLES, get_utc, utc_date
+from dockiln import NodeType
+from dockiln.dom import DocxDocument
+from dockiln.dom.comment_utc import W14, CID, CEX, ROLES, get_utc, utc_date
 from .test_dom_comment_metadata import source_date, comment
 
 REL = 'http://schemas.openxmlformats.org/package/2006/relationships'
@@ -125,7 +125,7 @@ def test_modern_utc_projection_runs_without_prior_story_access(tmp_path, flat):
 
 @pytest.mark.parametrize('flat', [False, True])
 def test_new_modern_parts_atomic_failure_and_budget_preserve_held_source(tmp_path, monkeypatch, flat):
-    from aspose.words_foss import _io
+    from dockiln import _io
     source = modern(tmp_path);original = comment(source);target = source_date(tmp_path, None)
     copied = target.import_node(original, True);target.body.paragraphs[1].append_child(copied)
     before = target.to_bytes();names = target.part_names;held = copied.date_time_utc;pid = copied.paragraphs[-1]._element.getAttributeNS(W14, 'paraId')
@@ -342,7 +342,7 @@ def test_multiple_paragraphs_select_last_cid_record_and_normalize_loser(tmp_path
 
 @pytest.mark.parametrize('flat', [False, True])
 def test_typed_metadata_normalization_is_diagnosed_and_keeps_foreign_extensions(tmp_path, flat):
-    from aspose.words_foss.diagnostics import ContentLossWarning, collect_diagnostics
+    from dockiln.diagnostics import ContentLossWarning, collect_diagnostics
     doc = modern(tmp_path)
     root = doc._package.tree('word/commentsExtensible.xml').documentElement
     orphan = root.firstChild.cloneNode(True)
@@ -355,7 +355,7 @@ def test_typed_metadata_normalization_is_diagnosed_and_keeps_foreign_extensions(
     selected = root.firstChild;selected.setAttribute('owned', 'selected-attribute')
     selected.appendChild(foreign.cloneNode(True))
     from defusedxml.minidom import parseString
-    from aspose.words_foss.utils.xml_helpers import serialize_xml
+    from dockiln.utils.xml_helpers import serialize_xml
     tree = parseString(serialize_xml(root.ownerDocument), forbid_dtd=True)
     doc._package._trees['word/commentsExtensible.xml'] = tree
     root = tree.documentElement

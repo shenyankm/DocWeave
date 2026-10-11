@@ -59,7 +59,7 @@ def main():
         import aspose.words as aw
         assert version('aspose-words') == '26.9.0'
     else:
-        from aspose.words_foss import Document
+        from dockiln import Document
     records = []
     if args.action == 'reread':
         if args.manifest is None or args.outputs is None:
@@ -74,10 +74,10 @@ def main():
     elif args.action == 'save':
         if args.outputs is None:
             parser.error('save requires --outputs')
-        from aspose.words_foss import SaveFormat
-        from aspose.words_foss import light_document_model as ldm
-        from aspose.words_foss.docx_writer import LdmDocxWriter
-        from aspose.words_foss.saving import OoxmlSaveOptions
+        from dockiln import SaveFormat
+        from dockiln import light_document_model as ldm
+        from dockiln.writers.docx import LdmDocxWriter
+        from dockiln.saving import OoxmlSaveOptions
         with ZipFile(args.corpus) as archive, ZipFile(args.outputs, 'w', ZIP_DEFLATED) as out:
             for name, _, _ in inputs():
                 model = Document(BytesIO(archive.read(name))).light_document_model
@@ -100,7 +100,7 @@ def main():
                 records.append({'input': name, 'values': values, 'sha256': hashlib.sha256(raw).hexdigest(),
                                 'observed': observed(doc, native)})
         assert len(records) == 256
-    report = {'version': version('aspose-words' if native else 'aspose-words-foss-enhanced'),
+    report = {'version': version('aspose-words' if native else 'dockiln'),
               'python': platform.python_version(), 'platform': platform.platform(), 'licensed': False if native else None,
               'records': records, 'full_Font_acceptance': False, 'rendering_acceptance': False}
     args.report.write_text(json.dumps(report, indent=2) + '\n')

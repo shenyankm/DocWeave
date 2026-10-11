@@ -17,13 +17,15 @@ import pymupdf
 import pytest
 from pypdf import PdfReader
 
-import aspose.words_foss as aw
-from aspose.words_foss import _io, light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import (
+from ._word_fixtures import word_bytes
+
+import dockiln as dk
+from dockiln import _io, light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import (
     PdfContentLossWarning, PdfMissingGlyphWarning, PdfUnsupportedOptionWarning,
 )
-from aspose.words_foss.pdf_writer.paragraph_renderer import ParagraphRenderer
+from dockiln.writers.pdf.paragraph_renderer import ParagraphRenderer
 
 ROOT = Path(__file__).resolve().parents[1]
 YELLOW = "Color [A=255, R=255, G=255, B=0]"
@@ -81,7 +83,7 @@ def test_estimated_height_matches_actual_public_conversion(tmp_path, monkeypatch
 
     monkeypatch.setattr(ParagraphRenderer, "render_paragraph", record)
     output = tmp_path / "height.pdf"
-    aw.Document(source).save(output)
+    dk.Document(source).save(output)
     with pymupdf.open(output) as pdf:
         assert "".join(page.get_text() for page in pdf).replace("\n", "") == text
     assert len(observations) == 1
@@ -115,7 +117,7 @@ def test_keep_together_does_not_split_indented_paragraph(tmp_path):
         source,
     )
     output = tmp_path / "keep.pdf"
-    aw.Document(source).save(output)
+    dk.Document(source).save(output)
     with pymupdf.open(output) as pdf:
         texts = [page.get_text().replace("\n", "") for page in pdf]
         assert text in "".join(texts)
@@ -139,7 +141,7 @@ def test_highlighted_links_survive_real_page_breaks(tmp_path):
     source = tmp_path / "links.docx"
     LdmDocxWriter().write(model([paragraph]), source)
     output = tmp_path / "links.pdf"
-    aw.Document(source).save(output)
+    dk.Document(source).save(output)
     with pymupdf.open(output) as pdf:
         assert len(pdf) >= 2
         assert "".join(page.get_text() for page in pdf).replace("\n", "") == text
@@ -175,21 +177,21 @@ def test_highlighted_links_survive_real_page_breaks(tmp_path):
     ],
 )
 def test_all_six_explicit_unsupported_options_warn_through_document(tmp_path, option):
-    source = tmp_path / "source.txt"
-    source.write_text("中文诊断", encoding="utf-8")
-    options = aw.saving.PdfSaveOptions()
+    source = tmp_path / "source.docx"
+    source.write_bytes(word_bytes("中文诊断"))
+    options = dk.saving.PdfSaveOptions()
     setattr(options, option, getattr(options, option))
     with pytest.warns(PdfUnsupportedOptionWarning, match=option):
-        aw.Document(source).save(tmp_path / "options.pdf", options)
+        dk.Document(source).save(tmp_path / "options.pdf", options)
 
 
 def test_actual_default_input_limit(tmp_path):
     assert _io.MAX_INPUT_BYTES == 64 * 1024 * 1024
-    source = tmp_path / "oversized.txt"
+    source = tmp_path / "oversized.docx"
     with source.open("wb") as stream:
         stream.truncate(_io.MAX_INPUT_BYTES + 1)
     with pytest.raises(ValueError, match="Input exceeds 67108864"):
-        aw.Document(source)
+        dk.Document(source)
 
 
 @pytest.mark.parametrize("limit", ["part", "expanded"])
@@ -210,7 +212,7 @@ def test_actual_docx_zip_limits_without_reducing_constants(limit):
                         part.write(chunk)
     assert len(buffer.getvalue()) < _io.MAX_INPUT_BYTES
     with pytest.raises(ValueError, match="part exceeds" if limit == "part" else "expanded size"):
-        aw.Document(BytesIO(buffer.getvalue()))
+        dk.Document(BytesIO(buffer.getvalue()))
 
 
 def test_real_fallback_font_is_embedded_with_its_actual_outline(tmp_path):
@@ -223,17 +225,17 @@ def test_real_fallback_font_is_embedded_with_its_actual_outline(tmp_path):
         pytest.skip("No suitable real external font installed")
     code = 0x05D0  # Hebrew alef: absent from the bundled SC font, present in Arial/DejaVu.
     original = TTFont(fallback)
-    bundled = TTFont(ROOT / "aspose/words_foss/pdf_writer/fonts/DocumentSansSC-Regular.woff")
+    bundled = TTFont(ROOT / "src/dockiln/writers/pdf/fonts/DocumentSansSC-Regular.woff")
     assert code not in bundled.getBestCmap() and code in original.getBestCmap()
-    source = tmp_path / "fallback.txt"
-    source.write_text("中文" + chr(code), encoding="utf-8")
-    options = aw.saving.PdfSaveOptions()
+    source = tmp_path / "fallback.docx"
+    source.write_bytes(word_bytes("中文" + chr(code)))
+    options = dk.saving.PdfSaveOptions()
     options.fallback_fonts = [str(fallback)]
     output = tmp_path / "fallback.pdf"
     with warnings.catch_warnings():
         warnings.simplefilter("error", PdfMissingGlyphWarning)
         with pytest.warns(PdfContentLossWarning, match="needs text_shaping=True"):
-            aw.Document(source).save(output, options)
+            dk.Document(source).save(output, options)
     embedded = []
     for ref in PdfReader(output).pages[0]["/Resources"]["/Font"].values():
         descriptor = ref.get_object()["/DescendantFonts"][0].get_object()["/FontDescriptor"]
@@ -256,10 +258,10 @@ def test_real_fallback_font_is_embedded_with_its_actual_outline(tmp_path):
         assert pdf[0].get_pixmap().samples
 
 
-@pytest.mark.parametrize("suffix", ["pdf", "docx", "txt", "md"])
+@pytest.mark.parametrize("suffix", ["pdf", "docx"])
 def test_actual_partial_write_preserves_original(tmp_path, monkeypatch, suffix):
-    source = tmp_path / "source.txt"
-    source.write_text("中文输出测试", encoding="utf-8")
+    source = tmp_path / "source.docx"
+    source.write_bytes(word_bytes("中文输出测试"))
     output = tmp_path / f"output.{suffix}"
     output.write_bytes(b"original file must survive")
     if suffix == "docx":
@@ -283,14 +285,14 @@ def test_actual_partial_write_preserves_original(tmp_path, monkeypatch, suffix):
             Path, "write_bytes" if suffix == "pdf" else "write_text", write_then_fail
         )
     with pytest.raises(OSError, match="injected failure"):
-        aw.Document(source).save(output)
+        dk.Document(source).save(output)
     assert output.read_bytes() == b"original file must survive"
     assert sorted(path.name for path in tmp_path.iterdir()) == [output.name, source.name]
 
 
 @pytest.mark.parametrize("style", ["Regular", "Bold", "Oblique", "BoldOblique"])
 def test_woff_really_preserves_preoptimization_font_tables(style):
-    path = f"aspose/words_foss/pdf_writer/fonts/DocumentSansSC-{style}"
+    path = f"src/dockiln/writers/pdf/fonts/DocumentSansSC-{style}"
     result = subprocess.run(
         ["git", "show", "7f6a745:" + path + ".ttf"], cwd=ROOT, capture_output=True
     )
@@ -308,7 +310,7 @@ def test_woff_really_preserves_preoptimization_font_tables(style):
 
 def test_real_libreoffice_conversion_if_installed(tmp_path):
     import shutil
-    from aspose.words_foss.libreoffice import convert_to_pdf
+    from dockiln.libreoffice import convert_to_pdf
 
     if not (
         shutil.which("soffice")
@@ -325,8 +327,7 @@ def test_real_libreoffice_conversion_if_installed(tmp_path):
     # A standard text RTF cannot use the inherited DOC/OLE reader; native input can.
     text = "中文真实原文件通道"
     source = tmp_path / "original.rtf"
-    source.write_text("{\\rtf1\\ansi\\uc1 " + "".join(f"\\u{ord(c)}?" for c in text) + "}",
-                      encoding="ascii")
+    source.write_bytes(word_bytes("{\\rtf1\\ansi\\uc1 " + "".join(f"\\u{ord(c)}?" for c in text) + "}"))
     convert_to_pdf(source, output)
     with pymupdf.open(output) as pdf:
         assert text in "".join(page.get_text() for page in pdf).replace("\n", "")
@@ -354,7 +355,7 @@ def test_real_libreoffice_conversion_if_installed(tmp_path):
         for name, data in parts.items():
             archive.writestr(name, data)
     original = source.read_bytes()
-    lossy = aw.Document(source)
+    lossy = dk.Document(source)
     assert note not in lossy.get_text()
     convert_to_pdf(source, output)
     assert source.read_bytes() == original
@@ -372,16 +373,16 @@ def test_public_save_loads_only_regular_font_for_plain_text(tmp_path, monkeypatc
         return original(self, family=family, style=style, fname=fname, **kwargs)
 
     monkeypatch.setattr(FPDF, "add_font", record)
-    source = tmp_path / "source.txt"
-    source.write_text("中文普通正文", encoding="utf-8")
-    aw.Document(source).save(tmp_path / "plain.pdf")
+    source = tmp_path / "source.docx"
+    source.write_bytes(word_bytes("中文普通正文"))
+    dk.Document(source).save(tmp_path / "plain.pdf")
     assert calls == [("DocumentSansSC", "", ".woff")]
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="POSIX resource limits")
 def test_worker_resource_limits_are_actually_set():
     code = (
-        "import resource,json; from aspose.words_foss.convert import _set_limits; "
+        "import resource,json; from dockiln.convert import _set_limits; "
         "_set_limits(1024,60); print(json.dumps([resource.getrlimit(resource.RLIMIT_CPU),"
         "resource.getrlimit(resource.RLIMIT_FSIZE)]))"
     )

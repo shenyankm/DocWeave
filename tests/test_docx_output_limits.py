@@ -4,7 +4,7 @@ from io import BytesIO
 
 import pytest
 
-from aspose.words_foss import DocxDocument, _io
+from dockiln import DocxDocument, _io
 
 from .test_docx_dom import payloads
 from .test_style_serialization_projection import documents

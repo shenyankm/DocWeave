@@ -10,8 +10,8 @@ from docx import Document as NativeDocx
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
-from aspose.words_foss import Document, DocxDocument
-from aspose.words_foss.diagnostics import ContentLossWarning, collect_diagnostics
+from dockiln import Document, DocxDocument
+from dockiln.diagnostics import ContentLossWarning, collect_diagnostics
 
 ATTRIBUTES = ("leftChars", "rightChars", "startChars", "endChars", "firstLineChars", "hangingChars")
 
@@ -106,7 +106,7 @@ def test_character_indents_warn_and_strict_snapshot_preserves_original(attribute
 
 
 def test_character_indent_warning_state_resets_between_reader_loads():
-    from aspose.words_foss.docx_reader import DocumentReader
+    from dockiln.readers.docx import DocumentReader
 
     reader = DocumentReader()
     diagnostics = []
@@ -123,7 +123,7 @@ def test_strict_cli_rejects_character_indent_loss_before_replacing_output(tmp_pa
     path.write_bytes(source("startChars", "body", "100"))
     output = tmp_path / "output.pdf"
     output.write_bytes(b"existing output")
-    result = subprocess.run([sys.executable, "-m", "aspose.words_foss.convert", str(path), str(output), "--strict"],
+    result = subprocess.run([sys.executable, "-m", "dockiln.convert", str(path), str(output), "--strict"],
                             capture_output=True, text=True, timeout=20, check=False)
     assert result.returncode != 0
     assert "character-unit" in result.stderr

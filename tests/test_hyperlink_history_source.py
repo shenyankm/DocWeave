@@ -9,11 +9,11 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.opc.constants import RELATIONSHIP_TYPE
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._flat_opc import encode, decode
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._flat_opc import encode, decode
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.saving import OoxmlSaveOptions
 
 HISTORY = [None, "0", "1", "false", "true", "off", "on"]
 
@@ -53,12 +53,12 @@ def linked_run(model, story):
 
 @pytest.mark.parametrize("history", HISTORY)
 @pytest.mark.parametrize("target", ["https://owned.test/path", "#OwnedBookmark"])
-@pytest.mark.parametrize("fmt", [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize("fmt", [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 @pytest.mark.parametrize("copy_mode", ["direct", "deep", "json"])
 def test_history_survives_read_copy_save_cold_without_mutating_source(
     history, target, fmt, copy_mode
 ):
-    model = aw.Document(BytesIO(source(history, target))).light_document_model
+    model = dk.Document(BytesIO(source(history, target))).light_document_model
     before = model.model_dump_json()
     current = (
         deepcopy(model)
@@ -71,20 +71,20 @@ def test_history_survives_read_copy_save_cold_without_mutating_source(
         assert linked_run(current, "body").source_hyperlink_history == history
         raw = LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current)
         with ZipFile(
-            BytesIO(decode(raw) if fmt == aw.SaveFormat.FLAT_OPC else raw)
+            BytesIO(decode(raw) if fmt == dk.SaveFormat.FLAT_OPC else raw)
         ) as z:
             link = fromstring(z.read("word/document.xml")).find(
                 ".//" + qn("w:hyperlink")
             )
             assert link.get(qn("w:history")) == history
             assert link.find(".//" + qn("w:t")).text == "OWNED LINK"
-        current = aw.Document(BytesIO(raw)).light_document_model
+        current = dk.Document(BytesIO(raw)).light_document_model
     assert model.model_dump_json() == before
 
 
 @pytest.mark.parametrize("history", HISTORY)
 def test_flat_input_and_header_share_history_mapping(history):
-    model = aw.Document(
+    model = dk.Document(
         BytesIO(encode(source(history, story="header")))
     ).light_document_model
     assert linked_run(model, "header").source_hyperlink_history == history
@@ -93,7 +93,7 @@ def test_flat_input_and_header_share_history_mapping(history):
     )
     assert (
         linked_run(
-            aw.Document(BytesIO(raw)).light_document_model, "header"
+            dk.Document(BytesIO(raw)).light_document_model, "header"
         ).source_hyperlink_history
         == history
     )
@@ -104,21 +104,21 @@ def test_flat_input_and_header_share_history_mapping(history):
 )
 def test_invalid_history_is_rejected_without_source_value_in_error(invalid):
     with pytest.raises(RuntimeError) as error:
-        aw.Document(BytesIO(source(invalid)))
+        dk.Document(BytesIO(source(invalid)))
     assert "OWNED SECRET" not in str(error.value)
 
 
 @pytest.mark.parametrize("invalid", ["", "2", "OWNED SECRET", 1, object()])
 def test_mutated_history_fails_before_path_or_stream_publication(tmp_path, invalid):
-    doc = aw.Document(BytesIO(source("1")))
+    doc = dk.Document(BytesIO(source("1")))
     linked_run(doc.light_document_model, "body").source_hyperlink_history = invalid
     path = tmp_path / "existing.docx"
     path.write_bytes(b"OWNED EXISTING")
     with pytest.raises(RuntimeError):
-        doc.save(path, aw.SaveFormat.DOCX)
+        doc.save(path, dk.SaveFormat.DOCX)
     assert path.read_bytes() == b"OWNED EXISTING"
     stream = BytesIO(b"OWNED EXISTING")
     stream.seek(3)
     with pytest.raises(RuntimeError):
-        doc.save(stream, aw.SaveFormat.DOCX)
+        doc.save(stream, dk.SaveFormat.DOCX)
     assert stream.tell() == 3 and stream.getvalue() == b"OWNED EXISTING"

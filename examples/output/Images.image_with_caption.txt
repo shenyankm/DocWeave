@@ -1,0 +1,3 @@
+Introduction text before the figure.
+Figure 1: A caption describing the image.
+Text that follows the caption.

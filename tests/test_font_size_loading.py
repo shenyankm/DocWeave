@@ -13,9 +13,9 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import Document, DocxDocument
-from aspose.words_foss.docx_reader.ldm_builder.definitions import _tsp_build_font
-from aspose.words_foss.utils.xml_helpers import W_NS
+from dockiln import Document, DocxDocument
+from dockiln.readers.docx.ldm_builder.definitions import _tsp_build_font
+from dockiln.utils.xml_helpers import W_NS
 
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / 'docs/benchmarks'
@@ -103,7 +103,7 @@ def test_cli_keeps_existing_output_on_invalid_font_size(tmp_path):
     source, output = tmp_path / 'input.docx', tmp_path / 'output.pdf'
     source.write_bytes(data)
     output.write_bytes(b'existing')
-    result = subprocess.run([sys.executable, '-m', 'aspose.words_foss.convert', str(source), str(output)],
+    result = subprocess.run([sys.executable, '-m', 'dockiln.convert', str(source), str(output)],
                             capture_output=True, text=True, check=False, timeout=20)
     error = 'requires POSIX process groups' if os.name == 'nt' else 'OOXML font size'
     assert result.returncode != 0 and error in result.stderr
@@ -148,7 +148,7 @@ def test_font_size_units_survive_cross_document_import(scope):
 def test_size_unit_conversion_does_not_depend_on_decimal_context():
     from decimal import localcontext
 
-    from aspose.words_foss.utils.xml_helpers import parse_font_size
+    from dockiln.utils.xml_helpers import parse_font_size
 
     with localcontext() as context:
         context.prec = 2

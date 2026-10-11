@@ -17,7 +17,7 @@ CASES = {"page_break_before": 2, "keep_together": 8, "keep_with_next": 10,
 def prepare_font(folder):
     from fontTools.ttLib import TTFont
 
-    source = Path(__file__).parents[2] / "aspose/words_foss/pdf_writer/fonts/DocumentSansSC-Regular.woff"
+    source = Path(__file__).parents[2] / "src/dockiln/writers/pdf/fonts/DocumentSansSC-Regular.woff"
     folder = Path(folder)
     folder.mkdir(parents=True, exist_ok=True)
     with TTFont(source, recalcTimestamp=False) as font:
@@ -101,7 +101,7 @@ def inputs():
 
 def main(input_generator=inputs, values=(False, True)):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("backend", choices=("commercial", "docweave"))
+    parser.add_argument("backend", choices=("commercial", "dockiln"))
     parser.add_argument("output", type=Path)
     parser.add_argument("--fonts", type=Path, required=True)
     args = parser.parse_args()
@@ -110,7 +110,7 @@ def main(input_generator=inputs, values=(False, True)):
         import aspose.words as aw
         assert version("aspose-words") == "26.9.0"
     else:
-        import aspose.words_foss as aw
+        import dockiln as aw
     args.output.mkdir(parents=True, exist_ok=True)
     rows = []
     for name, prop, raw in input_generator():
@@ -128,14 +128,14 @@ def main(input_generator=inputs, values=(False, True)):
             if commercial:
                 document.save(str(output), aw.SaveFormat.PDF)
             else:
-                from aspose.words_foss.pdf_writer import LdmPdfWriter
+                from dockiln.writers.pdf import LdmPdfWriter
                 LdmPdfWriter().write(document.to_light_document(), output)
             rows.append({"input": name, "input_sha256": hashlib.sha256(raw).hexdigest(), "property": prop,
                          "value": value, "output": output.name, "output_sha256": hashlib.sha256(output.read_bytes()).hexdigest()})
-    report = {"backend": args.backend, "version": version("aspose-words" if commercial else "aspose-words-foss-enhanced"),
+    report = {"backend": args.backend, "version": version("aspose-words" if commercial else "dockiln"),
               "licensed": False if commercial else None, "python": platform.python_version(), "platform": platform.platform(),
               "font_sha256": hashlib.sha256((args.fonts / "DocumentSansSC-Regular.ttf").read_bytes()).hexdigest(),
-              "font_source_sha256": hashlib.sha256((Path(__file__).parents[2] / "aspose/words_foss/pdf_writer/fonts/DocumentSansSC-Regular.woff").read_bytes()).hexdigest(),
+              "font_source_sha256": hashlib.sha256((Path(__file__).parents[2] / "src/dockiln/writers/pdf/fonts/DocumentSansSC-Regular.woff").read_bytes()).hexdigest(),
               "records": rows, "full_rendering_acceptance": False}
     (args.output / "outputs.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"pdf_outputs": len(rows)}))

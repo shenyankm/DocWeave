@@ -7,9 +7,9 @@ import pytest
 from defusedxml.common import DTDForbidden
 from defusedxml.ElementTree import fromstring
 
-import aspose.words_foss as aw
-from aspose.words_foss.dom import UnknownNode
-from aspose.words_foss.dom.nodes import W
+import dockiln as dk
+from dockiln.dom import UnknownNode
+from dockiln.dom.nodes import W
 
 MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
 EXT = "urn:retained-extension"
@@ -62,7 +62,7 @@ def payloads(data):
 def test_no_edit_save_retains_every_part_even_after_reading_and_detached_creation(tmp_path):
     source, output = tmp_path / "source.docx", tmp_path / "output.docx"
     parts = package(source)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     assert doc.body.paragraphs[0].text == "客户公司"
     assert doc.part_xml("word/styles.xml")
     doc.create_paragraph("not inserted")
@@ -78,7 +78,7 @@ def test_no_edit_save_retains_every_part_even_after_reading_and_detached_creatio
 def test_local_edits_preserve_unknown_xml_namespaces_and_other_parts(tmp_path, default_namespace):
     source = tmp_path / "source.docx"
     original = package(source, default_namespace=default_namespace)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     paragraph = doc.body.paragraphs[0]
     assert paragraph.runs[0].font.bold is True
     assert paragraph.runs[1].font.bold is None
@@ -98,7 +98,7 @@ def test_local_edits_preserve_unknown_xml_namespaces_and_other_parts(tmp_path, d
     root = fromstring(xml)
     assert root.find(f'.//{{{EXT}}}opaque').get(f'{{{EXT}}}value') == "unchanged"
     assert root.find(f'.//{{{W}}}t').get('{http://www.w3.org/XML/1998/namespace}space') == "preserve"
-    reopened = aw.DocxDocument(BytesIO(doc.to_bytes()))
+    reopened = dk.DocxDocument(BytesIO(doc.to_bytes()))
     p = reopened.body.paragraphs[0]
     assert p.runs[0].text == " 新客户 & <公司> "
     assert p.runs[0].font.bold is False
@@ -110,7 +110,7 @@ def test_local_edits_preserve_unknown_xml_namespaces_and_other_parts(tmp_path, d
 def test_direct_format_none_restores_inheritance_and_keeps_order(tmp_path):
     source = tmp_path / "source.docx"
     package(source, '<w:p><w:pPr><w:jc w:val="left"/><w:rPr/></w:pPr><w:r><w:rPr><w:i/><w:sz w:val="24"/></w:rPr><w:t>A</w:t></w:r></w:p>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     p = doc.body.paragraphs[0]
     p.runs[0].font.bold = True
     p.paragraph_format.style_id = "Title"
@@ -139,20 +139,20 @@ def test_cross_run_replacement_retains_first_format_and_original_run_nodes(tmp_p
     source = tmp_path / "source.docx"
     body = '<w:p>' + ''.join(f'<w:r><w:rPr><w:b/></w:rPr><w:t>{text}</w:t></w:r>' for text in runs) + '</w:p>'
     package(source, body)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     p = doc.body.paragraphs[0]
     original_runs = p.runs
     assert p.replace_text(old, new) == count
     assert p.text == expected
     assert p.runs == original_runs
     assert all(run.font.bold for run in p.runs)
-    assert aw.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == expected
+    assert dk.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == expected
 
 
 def test_ordered_structure_and_parent_ownership(tmp_path):
     source = tmp_path / "source.docx"
     package(source, '<w:p><w:r><w:t>first</w:t></w:r></w:p><w:sectPr/>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     first = doc.body.paragraphs[0]
     table = doc.create_table(1, 2)
     doc.body.append_child(table)
@@ -181,7 +181,7 @@ def test_ordered_structure_and_parent_ownership(tmp_path):
     doc.body.insert_before(last, first)
     assert doc.body.paragraphs[0] is last
     assert last.parent_node is doc.body
-    assert len(doc.get_child_nodes(aw.NodeType.TABLE, deep=True)) == 2
+    assert len(doc.get_child_nodes(dk.NodeType.TABLE, deep=True)) == 2
     assert isinstance(doc.body.child_nodes[-1], UnknownNode)
     root = fromstring(payloads(doc.to_bytes())["word/document.xml"])
     assert list(root.find(f'{{{W}}}body'))[-1].tag == f'{{{W}}}sectPr'
@@ -197,7 +197,7 @@ def test_clone_depth_preserves_formatting_and_owner(tmp_path, kind):
             '<w:tr><w:trPr><w:trHeight w:val="400"/></w:trPr>'
             '<w:tc><w:tcPr><w:tcW w:w="2400" w:type="dxa"/></w:tcPr>'
             '<w:p><w:r><w:t>CELL</w:t></w:r></w:p></w:tc></w:tr></w:tbl><w:sectPr/>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     paragraph, table = doc.body.paragraphs[0], doc.body.tables[0]
     node = {"paragraph": paragraph, "run": paragraph.runs[0], "table": table,
             "row": table.rows[0], "cell": table.rows[0].cells[0]}[kind]
@@ -222,7 +222,7 @@ def test_clone_depth_preserves_formatting_and_owner(tmp_path, kind):
     if kind in {"paragraph", "run"}:
         parent = doc.body if kind == "paragraph" else paragraph
         parent.append_child(copied)
-        reopened = aw.DocxDocument(BytesIO(doc.to_bytes()))
+        reopened = dk.DocxDocument(BytesIO(doc.to_bytes()))
         if kind == "paragraph":
             saved = reopened.body.paragraphs[-1]
             assert saved.text == "" and not saved.runs
@@ -236,7 +236,7 @@ def test_clone_depth_preserves_formatting_and_owner(tmp_path, kind):
 def test_clone_rejects_non_boolean_depth_without_mutation(tmp_path, value):
     source = tmp_path / "clone.docx"
     package(source, '<w:p><w:r><w:t>ALPHA</w:t></w:r></w:p>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     with pytest.raises(TypeError, match="boolean"):
         doc.body.paragraphs[0].clone(value)
     assert doc.to_bytes() == source.read_bytes()
@@ -254,7 +254,7 @@ def test_first_edit_removal_persists_and_preserves_unaffected_parts(tmp_path, ki
                        '<w:p><w:r><w:t>second cell</w:t></w:r></w:p>'
                        '</w:tc></w:tr></w:tbl><w:sectPr/>',
                        extras={"word/header1.xml": header.encode()})
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     part = "word/header1.xml" if kind == "header_paragraph" else "word/document.xml"
     targets = {"paragraph": lambda: doc.body.paragraphs[0],
                "run": lambda: doc.body.paragraphs[0].runs[0],
@@ -271,7 +271,7 @@ def test_first_edit_removal_persists_and_preserves_unaffected_parts(tmp_path, ki
     visible = "".join(node.text or "" for node in fromstring(saved[part]).iter(f'{{{W}}}t'))
     assert expected_removed not in visible
     assert ("second header" if kind == "header_paragraph" else "SECOND") in visible
-    reloaded = aw.DocxDocument(BytesIO(doc.to_bytes()))
+    reloaded = dk.DocxDocument(BytesIO(doc.to_bytes()))
     assert reloaded.part_xml(part) == doc.part_xml(part)
 
 
@@ -285,7 +285,7 @@ def test_first_edit_removal_persists_and_preserves_unaffected_parts(tmp_path, ki
 def test_complex_replacement_and_structural_delete_fail_before_mutation(tmp_path, inline):
     source = tmp_path / "source.docx"
     original = package(source, f'<w:p><w:r><w:t>A</w:t></w:r>{inline}</w:p>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     p = doc.body.paragraphs[0]
     with pytest.raises(NotImplementedError):
         p.replace_text("A", "B")
@@ -297,8 +297,8 @@ def test_complex_replacement_and_structural_delete_fail_before_mutation(tmp_path
 def test_unsupported_ancestor_is_readable_but_not_editable(tmp_path):
     source = tmp_path / "source.docx"
     package(source, '<w:sdt><w:sdtContent><w:p><w:r><w:t>protected</w:t></w:r></w:p></w:sdtContent></w:sdt>')
-    doc = aw.DocxDocument(source)
-    run = doc.get_child_nodes(aw.NodeType.RUN, deep=True)[0]
+    doc = dk.DocxDocument(source)
+    run = doc.get_child_nodes(dk.NodeType.RUN, deep=True)[0]
     assert run.text == "protected"
     with pytest.raises(NotImplementedError):
         run.text = "changed"
@@ -307,25 +307,25 @@ def test_unsupported_ancestor_is_readable_but_not_editable(tmp_path):
 def test_headers_and_cross_part_document_rejection(tmp_path):
     source = tmp_path / "source.docx"
     original = package(source)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     header = doc.story("word/header1.xml")
     header.paragraphs[0].runs[0].text = "新页眉"
     header.append_child(doc.create_paragraph("追加", part_name="word/header1.xml"))
     with pytest.raises(ValueError):
         header.append_child(doc.body.paragraphs[0])
-    other = aw.DocxDocument(source)
+    other = dk.DocxDocument(source)
     with pytest.raises(ValueError):
         doc.body.append_child(other.body.paragraphs[0])
     actual = payloads(doc.to_bytes())
     assert actual["word/document.xml"] == original["word/document.xml"]
-    assert aw.DocxDocument(BytesIO(doc.to_bytes())).story("word/header1.xml").paragraphs[0].text == "新页眉"
+    assert dk.DocxDocument(BytesIO(doc.to_bytes())).story("word/header1.xml").paragraphs[0].text == "新页眉"
 
 
 @pytest.mark.parametrize("bad", ["\x00", "\ud800", "\uffff", "\n", "\t", 42])
 def test_invalid_text_does_not_modify_part(tmp_path, bad):
     source = tmp_path / "source.docx"
     original = package(source)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     with pytest.raises(ValueError):
         doc.body.paragraphs[0].runs[0].text = bad
     assert payloads(doc.to_bytes()) == original
@@ -341,14 +341,14 @@ def test_signed_dtd_and_strict_packages_rejected(tmp_path, extras):
     source = tmp_path / "source.docx"
     package(source, extras=extras)
     with pytest.raises((ValueError, DTDForbidden)):
-        aw.DocxDocument(source)
+        dk.DocxDocument(source)
 
 
 def test_atomic_save_retains_output_on_serialization_failure(tmp_path, monkeypatch):
     source, output = tmp_path / "source.docx", tmp_path / "output.docx"
     package(source)
     output.write_bytes(b"existing")
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
 
     def fail():
         raise RuntimeError("serialization failed")
@@ -363,13 +363,13 @@ def test_atomic_save_retains_output_on_serialization_failure(tmp_path, monkeypat
 def test_ldm_snapshot_contains_edits_but_is_independent(tmp_path):
     source = tmp_path / "source.docx"
     package(source, '<w:p><w:r><w:t>original</w:t></w:r></w:p>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     doc.body.paragraphs[0].runs[0].text = "edited"
     snapshot = doc.to_light_document()
     assert snapshot.all_paragraphs[0].text == "edited"
     snapshot.all_paragraphs[0].runs[0].text = "snapshot only"
     assert doc.body.paragraphs[0].text == "edited"
-    assert aw.Document(BytesIO(doc.to_bytes())).get_text() == "edited"
+    assert dk.Document(BytesIO(doc.to_bytes())).get_text() == "edited"
 
 
 @pytest.mark.parametrize("marker", [
@@ -380,7 +380,7 @@ def test_ldm_snapshot_contains_edits_but_is_independent(tmp_path):
 def test_structure_cannot_cross_ranges_outside_edited_subtree(tmp_path, marker):
     source = tmp_path / "source.docx"
     original = package(source, f'<w:p>{marker}</w:p><w:p><w:r><w:t>plain</w:t></w:r></w:p>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     plain = doc.body.paragraphs[1]
     with pytest.raises(NotImplementedError):
         plain.remove()
@@ -394,7 +394,7 @@ def test_structure_cannot_cross_ranges_outside_edited_subtree(tmp_path, marker):
 def test_multiple_text_nodes_and_new_default_namespace_nodes(tmp_path):
     source = tmp_path / "source.docx"
     package(source, '<w:p><w:r><w:t>ab</w:t><w:t>ab</w:t></w:r></w:p><w:sectPr/>', default_namespace=True)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     p = doc.body.paragraphs[0]
     assert p.replace_text("ba", "XYZ") == 1
     assert p.text == "aXYZb"
@@ -403,7 +403,7 @@ def test_multiple_text_nodes_and_new_default_namespace_nodes(tmp_path):
     new.runs[0].font.italic = True
     doc.body.append_child(new)
     doc.body.append_child(doc.create_table(1, 1))
-    reopened = aw.DocxDocument(BytesIO(doc.to_bytes()))
+    reopened = dk.DocxDocument(BytesIO(doc.to_bytes()))
     assert [p.text for p in reopened.body.paragraphs] == ["reset", "created"]
     assert reopened.body.paragraphs[1].runs[0].font.italic is True
     assert len(reopened.body.tables[0].rows[0].cells) == 1
@@ -413,7 +413,7 @@ def test_multiple_text_nodes_and_new_default_namespace_nodes(tmp_path):
 def test_invalid_table_dimensions_are_rejected(tmp_path, rows, columns):
     source = tmp_path / "source.docx"
     original = package(source)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     with pytest.raises(ValueError):
         doc.create_table(rows, columns)
     assert payloads(doc.to_bytes()) == original
@@ -422,22 +422,22 @@ def test_invalid_table_dimensions_are_rejected(tmp_path, rows, columns):
 def test_in_place_save_preserves_other_parts(tmp_path):
     source = tmp_path / "source.docx"
     original = package(source)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     doc.body.paragraphs[0].runs[0].text = "changed"
     doc.save(source)
     actual = payloads(source.read_bytes())
     assert actual["word/styles.xml"] == original["word/styles.xml"]
-    assert aw.DocxDocument(source).body.paragraphs[0].text == "changed公司"
+    assert dk.DocxDocument(source).body.paragraphs[0].text == "changed公司"
 
 
 def test_text_edit_retains_comments_processing_instructions_and_attributes(tmp_path):
     source = tmp_path / "source.docx"
     package(source, '<w:p><w:r><w:t ext:flag="retain">A<!--inside--><?inside keep?><![CDATA[B]]></w:t></w:r></w:p>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     run = doc.body.paragraphs[0].runs[0]
     assert run.text == "AB"
     run.text = "new ]]> text"
     xml = payloads(doc.to_bytes())["word/document.xml"]
     assert b'<!--inside-->' in xml and b'<?inside keep?>' in xml
     assert fromstring(xml).find(f'.//{{{W}}}t').get(f'{{{EXT}}}flag') == "retain"
-    assert aw.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == "new ]]> text"
+    assert dk.DocxDocument(BytesIO(doc.to_bytes())).body.paragraphs[0].text == "new ]]> text"

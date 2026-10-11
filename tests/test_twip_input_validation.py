@@ -13,7 +13,7 @@ from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
-from aspose.words_foss import Document, DocxDocument
+from dockiln import Document, DocxDocument
 
 INVALID = ("PRIVATE POINT VALUE", "1.13", "1_13", "١١٣", "1e2", "", "9" * 5000, "9" * 400)
 DIMENSIONS = {"left": "left_indent", "start": "left_indent", "right": "right_indent", "end": "right_indent",
@@ -170,7 +170,7 @@ def test_cli_retains_existing_output_on_malformed_dimensions(tmp_path):
     path.write_bytes(source("left", "body", "PRIVATE POINT VALUE"))
     output = tmp_path / "output.pdf"
     output.write_bytes(b"existing output")
-    result = subprocess.run([sys.executable, "-m", "aspose.words_foss.convert", str(path), str(output)],
+    result = subprocess.run([sys.executable, "-m", "dockiln.convert", str(path), str(output)],
                             capture_output=True, text=True, timeout=20, check=False)
     error = "requires POSIX process groups" if os.name == "nt" else "integer twips"
     assert result.returncode != 0 and error in result.stderr

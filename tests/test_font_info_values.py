@@ -3,8 +3,8 @@ from io import BytesIO
 
 import pytest
 
-from aspose.words_foss import Document, SaveFormat, fonts
-from aspose.words_foss.docx_writer import LdmDocxWriter
+from dockiln import Document, SaveFormat, fonts
+from dockiln.writers.docx import LdmDocxWriter
 from .test_source_font_table import W, TABLE, archive, owned_parts, relationships_path
 
 

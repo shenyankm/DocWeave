@@ -6,9 +6,9 @@ import pymupdf
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 
 
 def navigation_model(style, bands=False, columns=1, long=False):
@@ -83,7 +83,7 @@ def test_public_docx_conversion_navigation_matches_heading(tmp_path):
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
     from docx.shared import Pt
-    import aspose.words_foss as aw
+    import dockiln as dk
 
     document = Document()
     section = document.sections[0]
@@ -117,5 +117,5 @@ def test_public_docx_conversion_navigation_matches_heading(tmp_path):
     document.save(source)
     options = PdfSaveOptions()
     options.outline_options.headings_outline_levels = 6
-    page, _, _ = assert_navigation_matches_content(aw.Document(source).to_bytes(options))
+    page, _, _ = assert_navigation_matches_content(dk.Document(source).to_bytes(options))
     assert page == 1

@@ -4,8 +4,8 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.dom import DocxDocument
+import dockiln as dk
+from dockiln.dom import DocxDocument
 from .test_dom_row_format import row_document
 from .test_dom_story_row_height import W
 
@@ -31,7 +31,7 @@ def test_opaque_row_declarations_are_preserved(tmp_path, value, valid_row, flat)
     node = next(n for n in document.body.child_nodes if n._element.namespaceURI == 'urn:owned:opaque')
     original = node.xml
     held_tree = node._element
-    row = node.get_child_nodes(aw.NodeType.ROW, True)[0]
+    row = node.get_child_nodes(dk.NodeType.ROW, True)[0]
     with pytest.raises(NotImplementedError):
         row.row_format.height = 2
     if not valid_row:

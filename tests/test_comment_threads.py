@@ -7,19 +7,19 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._comment_threads import (
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._comment_threads import (
     CONTENT_TYPE,
     RELATION,
     W14,
     W15,
     read_threads,
 )
-from aspose.words_foss._comment_threads import W as W_URI
-from aspose.words_foss._flat_opc import encode
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.dom import DocxDocument
+from dockiln._comment_threads import W as W_URI
+from dockiln._flat_opc import encode
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.dom import DocxDocument
 from tests.test_conversion_comments import owned_comment, package
 
 W = '{' + W_URI + '}'
@@ -89,7 +89,7 @@ def model_snapshot(model):
 @pytest.mark.parametrize('reverse', [False, True])
 def test_thread_edit_json_and_consecutive_save(flat_input, via_json, flat_output, reverse):
     raw = owned_thread(reverse=reverse)
-    model = aw.Document(BytesIO(encode(raw) if flat_input else raw)).light_document_model
+    model = dk.Document(BytesIO(encode(raw) if flat_input else raw)).light_document_model
     assert model_snapshot(model)[0][1:3] == (None, True)
     assert [item[1] for item in model_snapshot(model)[1:]] == ['0', '0']
     if via_json:
@@ -104,7 +104,7 @@ def test_thread_edit_json_and_consecutive_save(flat_input, via_json, flat_output
     expected = model_snapshot(model)
     for _ in range(2):
         output = LdmDocxWriter().write_to_bytes(model)
-        model = aw.Document(BytesIO(encode(output) if flat_output else output)).light_document_model
+        model = dk.Document(BytesIO(encode(output) if flat_output else output)).light_document_model
         assert model_snapshot(model) == expected
 
 
@@ -113,7 +113,7 @@ def test_thread_edit_json_and_consecutive_save(flat_input, via_json, flat_output
 @pytest.mark.parametrize('case', ['range', 'table'])
 def test_dom_thread_edit_and_add_reply(flat, reverse, case):
     document = DocxDocument(BytesIO(owned_thread(reverse=reverse, case=case)))
-    parent, first, second = document.get_child_nodes(aw.NodeType.COMMENT, True)
+    parent, first, second = document.get_child_nodes(dk.NodeType.COMMENT, True)
     held_replies = parent.replies
     assert held_replies.count == 2
     assert first.ancestor is parent and second.ancestor is parent
@@ -130,7 +130,7 @@ def test_dom_thread_edit_and_add_reply(flat, reverse, case):
     for _ in range(2):
         output = document.to_flat_opc() if flat else document.to_bytes()
         document = DocxDocument(BytesIO(output))
-        comments = document.get_child_nodes(aw.NodeType.COMMENT, True)
+        comments = document.get_child_nodes(dk.NodeType.COMMENT, True)
         assert len(comments) == 4
         expected_done = [False, False, True, False] if case == 'range' else [False, True, False, False]
         assert [c.done for c in comments] == expected_done
@@ -183,7 +183,7 @@ def test_detached_reply_is_rejected_without_mutating_collection():
 
 def test_thread_move_clone_remove_reject_before_mutation():
     document = DocxDocument(BytesIO(owned_thread()))
-    parent = document.get_child_nodes(aw.NodeType.COMMENT, True)[0]
+    parent = document.get_child_nodes(dk.NodeType.COMMENT, True)[0]
     before = document.to_bytes()
     for action in [lambda: parent.remove(), lambda: parent.clone(True),
                    lambda: document.body.paragraphs[0].append_child(parent)]:
@@ -194,7 +194,7 @@ def test_thread_move_clone_remove_reject_before_mutation():
 
 @pytest.mark.parametrize('failure', ['dangling', 'cycle', 'done'])
 def test_invalid_edited_thread_save_is_atomic(tmp_path, failure):
-    model = aw.Document(BytesIO(owned_thread())).light_document_model
+    model = dk.Document(BytesIO(owned_thread())).light_document_model
     stories = [story for story in model.source_stories if story.kind == 'comment']
     if failure == 'dangling':stories[1].comment_metadata.ancestor_identifier = '99'
     elif failure == 'cycle':stories[0].comment_metadata.ancestor_identifier = '1'
@@ -225,18 +225,18 @@ def test_extension_relationship_and_xml_boundary(kind):
         parts['word/_rels/document.xml.rels'] = ET.tostring(root)
     raw = package(parts)
     with pytest.raises((ValueError, DefusedXmlException, KeyError)):
-        aw.Document(BytesIO(raw))
+        dk.Document(BytesIO(raw))
     with pytest.raises((ValueError, DefusedXmlException, KeyError)):
         DocxDocument(BytesIO(raw)).to_bytes()
 
 
 def test_dom_save_commits_live_ids_and_preserves_completion(tmp_path):
     document = DocxDocument(BytesIO(owned_thread()))
-    parent, first, _second = document.get_child_nodes(aw.NodeType.COMMENT, True)
+    parent, first, _second = document.get_child_nodes(dk.NodeType.COMMENT, True)
     held = parent.replies
     added = parent.add_reply('NEW', 'N', datetime(2026, 2, 3), 'OWNED NEW REPLY')  # noqa: DTZ001
     assert [reply.id for reply in held] == [3, 1, 2]
-    assert len(document.get_child_nodes(aw.NodeType.COMMENT_RANGE_START, True)) == 2
+    assert len(document.get_child_nodes(dk.NodeType.COMMENT_RANGE_START, True)) == 2
     parent.done = False
     first.done = True
     original_ids = [reply.id for reply in held]
@@ -246,24 +246,24 @@ def test_dom_save_commits_live_ids_and_preserves_completion(tmp_path):
     assert [reply.id for reply in held] == [1, 2, 3]
     assert added.ancestor is parent and first.done is True and parent.done is False
     loaded = DocxDocument(tmp_path / 'saved.docx')
-    assert [node.done for node in loaded.get_child_nodes(aw.NodeType.COMMENT, True)] == [False, False, True, False]
+    assert [node.done for node in loaded.get_child_nodes(dk.NodeType.COMMENT, True)] == [False, False, True, False]
 
 
 def test_unanchored_source_records_remain_but_are_not_visible_replies():
     raw = owned_thread(references=False)
     document = DocxDocument(BytesIO(raw))
-    comments = document.get_child_nodes(aw.NodeType.COMMENT, True)
+    comments = document.get_child_nodes(dk.NodeType.COMMENT, True)
     assert len(comments) == 1 and comments[0].replies.count == 0
-    model = aw.Document(BytesIO(raw)).light_document_model
+    model = dk.Document(BytesIO(raw)).light_document_model
     output = LdmDocxWriter().write_to_bytes(model)
-    restored = aw.Document(BytesIO(output)).light_document_model
+    restored = dk.Document(BytesIO(output)).light_document_model
     assert model_snapshot(restored) == model_snapshot(model)
 
 
 @pytest.mark.parametrize('case', ['range', 'table'])
 def test_added_reply_retains_range_positions(case):
     document = DocxDocument(BytesIO(owned_thread(case=case)))
-    parent = document.get_child_nodes(aw.NodeType.COMMENT, True)[0]
+    parent = document.get_child_nodes(dk.NodeType.COMMENT, True)[0]
     added = parent.add_reply('NEW', 'N', datetime(2026, 2, 3), 'OWNED NEW')  # noqa: DTZ001
     output = document.to_bytes()
     with ZipFile(BytesIO(output)) as archive:
@@ -290,7 +290,7 @@ def test_added_reply_retains_range_positions(case):
 ])
 def test_add_reply_text_controls(text, paragraphs):
     document = DocxDocument(BytesIO(owned_thread()))
-    parent = document.get_child_nodes(aw.NodeType.COMMENT, True)[0]
+    parent = document.get_child_nodes(dk.NodeType.COMMENT, True)[0]
     reply = parent.add_reply('R', 'R', datetime(2026, 2, 3), text)  # noqa: DTZ001
     assert [p.text for p in reply.paragraphs] == paragraphs
     expected_word_text = [("\x05" if index == 0 else "") + value + "\r"
@@ -298,7 +298,7 @@ def test_add_reply_text_controls(text, paragraphs):
     assert [p.get_text() for p in reply.paragraphs] == expected_word_text
     for _ in range(2):
         document = DocxDocument(BytesIO(document.to_flat_opc()))
-        reply = document.get_child_nodes(aw.NodeType.COMMENT, True)[1]
+        reply = document.get_child_nodes(dk.NodeType.COMMENT, True)[1]
         assert [p.text for p in reply.paragraphs] == paragraphs
         assert [p.get_text() for p in reply.paragraphs] == expected_word_text
 
@@ -308,7 +308,7 @@ def test_add_reply_text_controls(text, paragraphs):
 def test_import_preserves_completion_and_contained_reply_links(kind, flat):
     source = DocxDocument(BytesIO(owned_import_thread()))
     target = DocxDocument(BytesIO(owned_import_thread()))
-    comments = source.get_child_nodes(aw.NodeType.COMMENT, True)
+    comments = source.get_child_nodes(dk.NodeType.COMMENT, True)
     node = comments[0] if kind == 'parent' else comments[1] if kind == 'reply' else comments[0].parent_node
     imported = target.import_node(node, True)
     if kind == 'paragraph':
@@ -319,7 +319,7 @@ def test_import_preserves_completion_and_contained_reply_links(kind, flat):
         target.body.paragraphs[0].append_child(imported)
     for _ in range(2):
         target = DocxDocument(BytesIO(target.to_flat_opc() if flat else target.to_bytes()))
-        actual = target.get_child_nodes(aw.NodeType.COMMENT, True)
+        actual = target.get_child_nodes(dk.NodeType.COMMENT, True)
         if kind == 'paragraph':
             parent, first, second = actual[-3:]
             assert parent.done and parent.replies == (first, second)
@@ -346,12 +346,12 @@ def test_import_reply_only_paragraph_detaches_missing_ancestor(flat):
     parts['word/document.xml'] = ET.tostring(document)
     source = DocxDocument(BytesIO(package(parts)))
     target = DocxDocument(BytesIO(owned_import_thread()))
-    reply = next(comment for comment in source.get_child_nodes(aw.NodeType.COMMENT, True)
+    reply = next(comment for comment in source.get_child_nodes(dk.NodeType.COMMENT, True)
                  if any('OWNED COMMENT 1' in p.text for p in comment.paragraphs))
     imported = target.import_node(reply.parent_node, True)
     target.body.append_child(imported)
     for _ in range(2):
-        comments = target.get_child_nodes(aw.NodeType.COMMENT, True)
+        comments = target.get_child_nodes(dk.NodeType.COMMENT, True)
         assert comments[-1].ancestor is None
         assert comments[-1].replies.count == 0
         assert any('OWNED COMMENT 1' in p.text for p in comments[-1].paragraphs)

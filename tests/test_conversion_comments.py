@@ -7,10 +7,10 @@ import warnings
 from defusedxml import DefusedXmlException
 from docx import Document as NativeDocument
 import pytest
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._flat_opc import encode, decode
-from aspose.words_foss.docx_writer import LdmDocxWriter
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._flat_opc import encode, decode
+from dockiln.writers.docx import LdmDocxWriter
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 
@@ -56,8 +56,8 @@ def package(parts):
 def test_classic_comment_edit_json_and_consecutive_save(case, flat_input, via_json, flat_output):
     raw = owned_comment(case)
     with warnings.catch_warnings():
-        warnings.simplefilter('error', aw.ContentLossWarning)
-        loaded = aw.Document(BytesIO(encode(raw) if flat_input else raw))
+        warnings.simplefilter('error', dk.ContentLossWarning)
+        loaded = dk.Document(BytesIO(encode(raw) if flat_input else raw))
     model = loaded.light_document_model
     if via_json:
         model = ldm.Document.model_validate_json(model.model_dump_json())
@@ -86,14 +86,14 @@ def test_classic_comment_edit_json_and_consecutive_save(case, flat_input, via_js
             assert len(body.findall('.//' + W + 'commentReference')) == (0 if case == 'unanchored' else 1)
             assert len(body.findall('.//' + W + 'commentRangeStart')) == (0 if case in {'point', 'unanchored'} else 1)
             assert len(body.findall('.//' + W + 'commentRangeEnd')) == (0 if case in {'point', 'unanchored'} else 1)
-        model = aw.Document(BytesIO(raw)).light_document_model
+        model = dk.Document(BytesIO(raw)).light_document_model
         if via_json:
             model = ldm.Document.model_validate_json(model.model_dump_json())
 
 
 @pytest.mark.parametrize('failure', ['missing-story', 'duplicate-reference', 'missing-end', 'reversed', 'duplicate-story', 'invalid-metadata'])
 def test_invalid_comment_model_rejects_save_atomically(tmp_path, failure):
-    model = aw.Document(BytesIO(owned_comment())).light_document_model
+    model = dk.Document(BytesIO(owned_comment())).light_document_model
     p = model.sections[0].body.paragraphs[0]
     markers = [c for c in p._children if isinstance(c, ldm.CommentMarker)]
     story = model.source_stories[0]
@@ -145,16 +145,16 @@ def test_invalid_comment_source_graph_is_rejected(failure, flat):
         parts['word/comments.xml'] = ET.tostring(root)
     raw = package(parts)
     with pytest.raises((ValueError, DefusedXmlException)) as error:
-        aw.Document(BytesIO(encode(raw) if flat else raw))
+        dk.Document(BytesIO(encode(raw) if flat else raw))
     assert 'OWNED COMMENT' not in str(error.value)
     assert 'Owned Author' not in str(error.value)
 
 
 def test_other_outputs_still_report_comment_loss_without_body_metadata():
-    loaded = aw.Document(BytesIO(owned_comment()))
+    loaded = dk.Document(BytesIO(owned_comment()))
     with warnings.catch_warnings():
-        warnings.simplefilter('ignore', aw.ContentLossWarning)
-        loaded.to_bytes(aw.SaveFormat.PDF)
+        warnings.simplefilter('ignore', dk.ContentLossWarning)
+        loaded.to_bytes(dk.SaveFormat.PDF)
     observed = [d for d in loaded.diagnostics if d.code == 'pdf.comments_omitted']
     assert observed
     assert all(s not in repr(observed) for s in ('OWNED COMMENT', 'Owned Author', 'OWNED ANCHOR'))
@@ -181,9 +181,9 @@ def test_comment_anchors_inside_hyperlink_are_not_dropped(flat):
         'Target': 'https://owned.test/path', 'TargetMode': 'External'}))
     parts['word/_rels/document.xml.rels'] = ET.tostring(relationships)
     raw = package(parts)
-    loaded = aw.Document(BytesIO(encode(raw) if flat else raw))
-    output = loaded.to_bytes(aw.SaveFormat.DOCX)
-    cold = aw.Document(BytesIO(output))
+    loaded = dk.Document(BytesIO(encode(raw) if flat else raw))
+    output = loaded.to_bytes(dk.SaveFormat.DOCX)
+    cold = dk.Document(BytesIO(output))
     markers = [node for node in cold.light_document_model.sections[0].body.paragraphs[0]._children
                if isinstance(node, ldm.CommentMarker)]
     assert [n.kind for n in markers] == ['start', 'end', 'reference']
@@ -203,9 +203,9 @@ def test_unsupported_anchor_container_fails_without_losing_content():
     paragraph.append(insertion)
     parts['word/document.xml'] = ET.tostring(root)
     with warnings.catch_warnings():
-        warnings.simplefilter('ignore', aw.ContentLossWarning)
+        warnings.simplefilter('ignore', dk.ContentLossWarning)
         with pytest.raises(NotImplementedError, match='Unsupported comment anchor location') as error:
-            aw.Document(BytesIO(package(parts)))
+            dk.Document(BytesIO(package(parts)))
     assert 'PRIVATE AUTHOR' not in str(error.value)
 
 
@@ -216,12 +216,12 @@ def test_malformed_source_marker_identifier_does_not_disclose_its_value():
     root.find('.//' + W + 'commentRangeStart').set(W + 'id', 'PRIVATE INVALID ID')
     parts['word/document.xml'] = ET.tostring(root)
     with pytest.raises(ValueError, match='Invalid annotation identifier') as error:
-        aw.Document(BytesIO(package(parts)))
+        dk.Document(BytesIO(package(parts)))
     assert 'PRIVATE INVALID ID' not in str(error.value)
 
 
 def test_comment_marker_character_style_survives_json_and_save():
-    loaded = aw.Document(BytesIO(owned_comment())).light_document_model
+    loaded = dk.Document(BytesIO(owned_comment())).light_document_model
     loaded = ldm.Document.model_validate_json(loaded.model_dump_json())
     raw = LdmDocxWriter().write_to_bytes(loaded)
     with ZipFile(BytesIO(raw)) as z:
@@ -241,7 +241,7 @@ def test_unknown_comment_container_is_rejected_without_disclosing_content(locati
     child.text = 'PRIVATE CONTENT'
     parts['word/comments.xml'] = ET.tostring(root)
     with pytest.raises((ValueError, NotImplementedError)) as error:
-        aw.Document(BytesIO(package(parts)))
+        dk.Document(BytesIO(package(parts)))
     assert 'PRIVATE CONTENT' not in str(error.value)
 
 
@@ -269,7 +269,7 @@ def test_comment_images_and_links_have_their_own_saved_relationships(flat_input,
         'Type': office_ns[1:-1] + '/hyperlink', 'Target': 'https://owned.test/comment', 'TargetMode': 'External'}))
     parts['word/_rels/comments.xml.rels'] = ET.tostring(relationships)
     source = package(parts)
-    model = aw.Document(BytesIO(encode(source) if flat_input else source)).light_document_model
+    model = dk.Document(BytesIO(encode(source) if flat_input else source)).light_document_model
     model = ldm.Document.model_validate_json(model.model_dump_json())
     for _ in range(2):
         raw = LdmDocxWriter().write_to_bytes(model)
@@ -280,7 +280,7 @@ def test_comment_images_and_links_have_their_own_saved_relationships(flat_input,
             image = next(r for r in relationships if r.get('Type').endswith('/image'))
             assert z.read('word/' + image.get('Target')) == picture.getvalue()
             assert any(r.get('Target') == 'https://owned.test/comment' for r in relationships)
-        model = aw.Document(BytesIO(raw)).light_document_model
+        model = dk.Document(BytesIO(raw)).light_document_model
         children = model.source_stories[0].children[0]._children
         assert sum(isinstance(node, ldm.Shape) for node in children) == 1
         assert any(isinstance(node, ldm.Run) and node.is_hyperlink and 'OWNED LINK' in node.text for node in children)
@@ -303,7 +303,7 @@ def comment_settings_position_package():
 @pytest.mark.parametrize('flat_output', [False, True])
 def test_comment_conversion_preserves_source_settings_and_table_position(flat_input, flat_output):
     source = comment_settings_position_package()
-    model = aw.Document(BytesIO(encode(source) if flat_input else source)).light_document_model
+    model = dk.Document(BytesIO(encode(source) if flat_input else source)).light_document_model
     model = ldm.Document.model_validate_json(model.model_dump_json())
     for _ in range(2):
         initial = model.model_dump_json()
@@ -318,7 +318,7 @@ def test_comment_conversion_preserves_source_settings_and_table_position(flat_in
             assert ET.fromstring(z.read('word/document.xml')).find('.//' + W + 'tblpPr').attrib == {
                 W + 'tblpX': '0', W + 'horzAnchor': 'page'}
             assert 'OWNED COMMENT α' in ''.join(ET.fromstring(z.read('word/comments.xml')).itertext())
-        model = aw.Document(BytesIO(raw)).light_document_model
+        model = dk.Document(BytesIO(raw)).light_document_model
         table = model.sections[0].body.tables[0]
         assert dict(table.source_position.attributes) == {'tblpX': '0', 'horzAnchor': 'page'}
         assert model.source_stories[0].comment_metadata.author == 'Owned Author Ω'
@@ -326,7 +326,7 @@ def test_comment_conversion_preserves_source_settings_and_table_position(flat_in
 
 @pytest.mark.parametrize('cycle', ['table', 'textbox'])
 def test_cyclic_comment_story_is_rejected_before_output_and_source_changes(tmp_path, cycle):
-    model = aw.Document(BytesIO(owned_comment())).light_document_model
+    model = dk.Document(BytesIO(owned_comment())).light_document_model
     story = model.source_stories[0]
     if cycle == 'table':
         node = ldm.Table(rows=[ldm.Row(cells=[ldm.Cell()])])
@@ -350,7 +350,7 @@ def test_cyclic_comment_story_is_rejected_before_output_and_source_changes(tmp_p
 
 
 def test_shared_comment_paragraph_without_cycle_is_not_rejected():
-    model = aw.Document(BytesIO(owned_comment())).light_document_model
+    model = dk.Document(BytesIO(owned_comment())).light_document_model
     paragraph = ldm.Paragraph()
     paragraph._children.append(ldm.Run(text='OWNED ALIAS'))
     model.source_stories[0].children = [paragraph, paragraph]
@@ -362,10 +362,10 @@ def test_shared_comment_paragraph_without_cycle_is_not_rejected():
 
 @pytest.mark.parametrize('flat_input', [False, True])
 @pytest.mark.parametrize('via_json', [False, True])
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_comment_document_stream_save_retains_edits_and_output_metadata(flat_input, via_json, fmt):
     source = owned_comment()
-    doc = aw.Document(BytesIO(encode(source) if flat_input else source))
+    doc = dk.Document(BytesIO(encode(source) if flat_input else source))
     if via_json:
         doc._document = ldm.Document.model_validate_json(doc.light_document_model.model_dump_json())
     doc.light_document_model.source_stories[0].children[0].runs[0].text = 'EDITED STREAM COMMENT'
@@ -374,15 +374,15 @@ def test_comment_document_stream_save_retains_edits_and_output_metadata(flat_inp
         result = doc.save(stream, fmt)
         assert result.content_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         assert not stream.closed
-        doc = aw.Document(BytesIO(stream.getvalue()))
+        doc = dk.Document(BytesIO(stream.getvalue()))
         story = doc.light_document_model.source_stories[0]
         assert story.comment_metadata.author == 'Owned Author Ω'
         assert story.children[0].runs[0].text == 'EDITED STREAM COMMENT'
 
 
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_invalid_comment_stream_save_leaves_stream_unchanged(fmt):
-    doc = aw.Document(BytesIO(owned_comment()))
+    doc = dk.Document(BytesIO(owned_comment()))
     doc.light_document_model.source_stories.clear()
     stream = BytesIO(b'ORIGINAL');stream.seek(3)
     with pytest.raises(ValueError, match='Comment anchor has no matching story'):
@@ -424,7 +424,7 @@ def test_comment_hyperlink_history_survives_json_and_save_cycles(history, flat_i
         root.find('.//' + W + 'hyperlink').set(W + 'history', history)
     parts['word/document.xml'] = ET.tostring(root)
     source = package(parts)
-    model = aw.Document(BytesIO(encode(source) if flat_input else source)).light_document_model
+    model = dk.Document(BytesIO(encode(source) if flat_input else source)).light_document_model
     if via_json:
         model = ldm.Document.model_validate_json(model.model_dump_json())
     for _ in range(2):
@@ -433,7 +433,7 @@ def test_comment_hyperlink_history_survives_json_and_save_cycles(history, flat_i
         raw = LdmDocxWriter().write_to_bytes(model)
         with ZipFile(BytesIO(raw)) as z:
             assert ET.fromstring(z.read('word/document.xml')).find('.//' + W + 'hyperlink').get(W + 'history') == history
-        model = aw.Document(BytesIO(encode(raw) if flat_output else raw)).light_document_model
+        model = dk.Document(BytesIO(encode(raw) if flat_output else raw)).light_document_model
 
 
 @pytest.mark.parametrize('history', ['', '2', 'invalid'])
@@ -446,4 +446,4 @@ def test_comment_hyperlink_invalid_history_is_validated_before_early_branch(hist
     parts['word/document.xml'] = ET.tostring(root)
     raw = package(parts)
     with pytest.raises(RuntimeError, match='Invalid hyperlink history'):
-        aw.Document(BytesIO(encode(raw) if flat else raw))
+        dk.Document(BytesIO(encode(raw) if flat else raw))

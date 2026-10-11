@@ -40,7 +40,7 @@ def main():
         import aspose.words as aw
         assert version('aspose-words') == '26.9.0'
     else:
-        from aspose.words_foss import DocxDocument
+        from dockiln import DocxDocument
     if args.action == 'reread':
         source = json.loads(args.manifest.read_text())
         records = []
@@ -102,7 +102,7 @@ def main():
     if outputs:
         outputs.close()
     assert len(records) == 5346
-    report = {'version': version('aspose-words' if commercial else 'aspose-words-foss-enhanced'),
+    report = {'version': version('aspose-words' if commercial else 'dockiln'),
               'python': platform.python_version(), 'platform': platform.platform(), 'licensed': False if commercial else None,
               'records': records, 'full_Font_acceptance': False, 'rendering_acceptance': False,
               'scope': '891 owned inputs; run effective and style nearest Boolean getters, explicit run/paragraph/character style setters; '

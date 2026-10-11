@@ -10,10 +10,10 @@ import pytest
 from docx import Document as IndependentDocument
 from docx.enum.style import WD_STYLE_TYPE
 
-from aspose.words_foss import Document, SaveFormat
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+from dockiln import Document, SaveFormat
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.saving import OoxmlSaveOptions
 
 BENCHMARKS = Path(__file__).parents[1] / 'docs/benchmarks'
 TOGGLES = json.loads((BENCHMARKS / 'style-toggles-26.9.json').read_text())['records']
@@ -53,7 +53,7 @@ def test_sparse_character_flags_survive_model_json(attribute, declared, format):
     model = Document(BytesIO(stream.getvalue())).light_document_model
     model = ldm.Document.model_validate_json(model.model_dump_json())
     data = LdmDocxWriter(OoxmlSaveOptions(format)).write_to_bytes(model)
-    from aspose.words_foss import DocxDocument
+    from dockiln import DocxDocument
     reopened = DocxDocument(BytesIO(data)).to_bytes()
     actual = IndependentDocument(BytesIO(reopened))
     assert getattr(actual.styles['Derived'].font, attribute) is declared

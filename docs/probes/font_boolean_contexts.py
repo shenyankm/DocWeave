@@ -51,7 +51,7 @@ def main():
     if commercial:
         import aspose.words as aw
     else:
-        import aspose.words_foss as aw
+        import dockiln as aw
     records = []
     if args.action == 'commercial-pdf':
         import pymupdf
@@ -93,7 +93,7 @@ def main():
                 font = doc.light_document_model.sections[0].body.paragraphs[0].runs[0].font
             records.append({'input': name, 'field': field, 'values': values,
                             'sha256': hashlib.sha256(raw).hexdigest(), 'value': getattr(font, field)})
-    report = {'version': version('aspose-words' if commercial else 'aspose-words-foss-enhanced'),
+    report = {'version': version('aspose-words' if commercial else 'dockiln'),
               'python': platform.python_version(), 'platform': platform.platform(), 'licensed': False if commercial else None,
               'corpus': 'corpus/' + args.corpus.name, 'corpus_sha256': hashlib.sha256(args.corpus.read_bytes()).hexdigest(),
               'records': records, 'full_format_acceptance': False, 'rendering_acceptance': False,

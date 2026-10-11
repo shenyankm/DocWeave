@@ -2,11 +2,11 @@
 import pymupdf
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.constants import PT_TO_MM
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.constants import PT_TO_MM
 
 
 @pytest.mark.parametrize("alignment", [0, 1, 2])
@@ -56,7 +56,7 @@ def test_insets_and_page_bands_survive_page_and_column_breaks(tmp_path, columns,
     source = tmp_path / "flow.docx"
     LdmDocxWriter().write(ldm.Document(sections=[section]), source)
     output = tmp_path / "flow.pdf"
-    aw.Document(source).save(output)
+    dk.Document(source).save(output)
     with pymupdf.open(output) as pdf:
         assert len(pdf) > 1
         extracted = "".join(page.get_text() for page in pdf).replace("\n", "")

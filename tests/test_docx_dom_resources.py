@@ -5,12 +5,12 @@ import pytest
 from defusedxml.ElementTree import fromstring
 from PIL import Image
 
-import aspose.words_foss as aw
-from aspose.words_foss import _io
-from aspose.words_foss.docx_writer.constants import CT_URI, PKG_RELS_URI, REL_HYPERLINK
-from aspose.words_foss.docx_writer.drawing import REL_IMAGE, WP_URI
-from aspose.words_foss.dom import Hyperlink
-from aspose.words_foss.dom.nodes import W
+import dockiln as dk
+from dockiln import _io
+from dockiln.writers.docx.constants import CT_URI, PKG_RELS_URI, REL_HYPERLINK
+from dockiln.writers.docx.drawing import REL_IMAGE, WP_URI
+from dockiln.dom import Hyperlink
+from dockiln.dom.nodes import W
 from .test_docx_dom import package, payloads
 
 
@@ -30,7 +30,7 @@ def test_hyperlink_ids_reuse_and_retarget_without_affecting_shared_links(tmp_pat
     source = tmp_path / "source.docx"
     before = package(source, '<w:p><w:r><w:t>before </w:t></w:r></w:p><w:sectPr/>',
                      default_namespace=default_namespace)
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     p = doc.body.paragraphs[0]
     first = p.add_hyperlink("中文 & <链接>", "https://example.com/a?q=1&b=2")
     second = p.add_hyperlink("second", first.target)
@@ -43,7 +43,7 @@ def test_hyperlink_ids_reuse_and_retarget_without_affecting_shared_links(tmp_pat
     assert second.target == "https://example.com/a?q=1&b=2"
     first.target = "#bookmark"
     assert first.target == "#bookmark"
-    reopened = aw.DocxDocument(BytesIO(doc.to_bytes()))
+    reopened = dk.DocxDocument(BytesIO(doc.to_bytes()))
     links = [node for node in reopened.body.paragraphs[0].child_nodes if isinstance(node, Hyperlink)]
     assert [node.target for node in links] == ["#bookmark", second.target]
     actual = payloads(doc.to_bytes())
@@ -57,7 +57,7 @@ def test_hyperlink_ids_reuse_and_retarget_without_affecting_shared_links(tmp_pat
 def test_picture_dimensions_alt_text_and_original_parts(tmp_path, source_kind, kind):
     source = tmp_path / "source.docx"
     before = package(source, '<w:p/><w:sectPr/>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     data = image_bytes(kind)
     image_path = tmp_path / "picture"
     image_path.write_bytes(data)
@@ -69,13 +69,13 @@ def test_picture_dimensions_alt_text_and_original_parts(tmp_path, source_kind, k
     actual = payloads(raw)
     for name in before.keys() - {"word/document.xml", "word/_rels/document.xml.rels", "[Content_Types].xml"}:
         assert actual[name] == before[name]
-    parsed = aw.Document(BytesIO(raw))
-    shape = parsed.get_child_nodes(aw.NodeType.SHAPE, True)[0]
+    parsed = dk.Document(BytesIO(raw))
+    shape = parsed.get_child_nodes(dk.NodeType.SHAPE, True)[0]
     assert (shape.width, shape.height) == (72, 36)
     assert shape.alternative_text == "中文图 & <说明>"
     assert shape.image_data.image_bytes == data
-    rebuilt = aw.Document(BytesIO(parsed.to_bytes("docx")))
-    assert rebuilt.get_child_nodes(aw.NodeType.SHAPE, True)[0].alternative_text == shape.alternative_text
+    rebuilt = dk.Document(BytesIO(parsed.to_bytes("docx")))
+    assert rebuilt.get_child_nodes(dk.NodeType.SHAPE, True)[0].alternative_text == shape.alternative_text
     root = fromstring(actual["[Content_Types].xml"])
     part = next(name for name in actual.keys() - before.keys() if name.startswith("word/media/image"))
     assert root.find(f"{{{CT_URI}}}Override[@PartName='/{part}']").get("ContentType") == (
@@ -87,7 +87,7 @@ def test_picture_dedup_part_local_relationships_and_package_wide_drawing_ids(tmp
     package(source, '<w:p/><w:sectPr/>', extras={"word/header1.xml": (
         f'<w:hdr xmlns:w="{W}" xmlns:wp="{WP_URI}"><w:p><wp:docPr id="1" name="existing"/></w:p></w:hdr>'
     ).encode()})
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     p = doc.body.paragraphs[0]
     for _ in range(2):
         p.add_picture(image_bytes(), height=30)
@@ -103,7 +103,7 @@ def test_picture_dedup_part_local_relationships_and_package_wide_drawing_ids(tmp
     assert len(ids) == len(set(ids)) == 4
     body_targets = {node["Target"] for node in relations(raw).values() if node["Type"] == REL_IMAGE}
     assert body_targets == {node["Target"] for node in header_rels.values()}
-    reopened = aw.DocxDocument(BytesIO(raw))
+    reopened = dk.DocxDocument(BytesIO(raw))
     assert len(reopened.part_names) == len(parts)
     assert payloads(reopened.to_bytes()) == parts
 
@@ -118,7 +118,7 @@ def test_drawing_ids_include_declared_xml_parts_outside_word(tmp_path, part):
     package(source, '<w:p/>', extras={"[Content_Types].xml": types, part: (
         f'<w:hdr xmlns:w="{W}" xmlns:wp="{WP_URI}"><w:p><wp:docPr id="1"/></w:p></w:hdr>'
     ).encode()})
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     doc.body.paragraphs[0].add_picture(image_bytes())
     root = fromstring(payloads(doc.to_bytes())["word/document.xml"])
     assert root.find(f".//{{{WP_URI}}}docPr").get("id") == "2"
@@ -129,7 +129,7 @@ def test_drawing_ids_include_declared_xml_parts_outside_word(tmp_path, part):
 def test_invalid_links_are_atomic(tmp_path, target):
     source = tmp_path / "source.docx"
     before = package(source, '<w:p/>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     with pytest.raises(ValueError):
         doc.body.paragraphs[0].add_hyperlink("text", target)
     assert payloads(doc.to_bytes()) == before
@@ -140,7 +140,7 @@ def test_invalid_links_are_atomic(tmp_path, target):
 def test_invalid_picture_dimensions_are_atomic(tmp_path, width, height):
     source = tmp_path / "source.docx"
     before = package(source, '<w:p/>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     with pytest.raises(ValueError):
         doc.body.paragraphs[0].add_picture(image_bytes(), width=width, height=height)
     assert payloads(doc.to_bytes()) == before
@@ -149,7 +149,7 @@ def test_invalid_picture_dimensions_are_atomic(tmp_path, width, height):
 def test_picture_and_package_limits_fail_before_mutation(tmp_path, monkeypatch):
     source = tmp_path / "source.docx"
     before = package(source, '<w:p/>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     monkeypatch.setattr(_io, "MAX_IMAGE_PIXELS", 10)
     with pytest.raises(ValueError, match="pixels"):
         doc.body.paragraphs[0].add_picture(image_bytes())
@@ -163,7 +163,7 @@ def test_picture_and_package_limits_fail_before_mutation(tmp_path, monkeypatch):
 def test_missing_rels_are_created_and_duplicates_are_not_silently_repaired(tmp_path):
     source = tmp_path / "source.docx"
     package(source, '<w:p/>')
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     link = doc.story("word/header1.xml").paragraphs[0].add_hyperlink("header", "https://example.com")
     assert link.target == "https://example.com"
     assert "word/_rels/header1.xml.rels" in doc.part_names
@@ -171,7 +171,7 @@ def test_missing_rels_are_created_and_duplicates_are_not_silently_repaired(tmp_p
                 '<Relationship Id="same" Type="a" Target="a"/>'
                 '<Relationship Id="same" Type="b" Target="b"/></Relationships>').encode()
     before = package(source, '<w:p/>', extras={"word/_rels/document.xml.rels": bad_rels})
-    doc = aw.DocxDocument(source)
+    doc = dk.DocxDocument(source)
     with pytest.raises(ValueError, match="duplicate"):
         doc.body.paragraphs[0].add_hyperlink("text", "https://example.com")
     assert payloads(doc.to_bytes()) == before
@@ -183,7 +183,7 @@ def test_python_docx_can_open_generated_resource_relationships(tmp_path):
     original = python_docx.Document()
     original.add_paragraph("source")
     original.save(stream)
-    doc = aw.DocxDocument(BytesIO(stream.getvalue()))
+    doc = dk.DocxDocument(BytesIO(stream.getvalue()))
     doc.body.paragraphs[0].add_picture(image_bytes(), width=90)
     doc.body.paragraphs[0].add_hyperlink("link", "https://example.com")
     loaded = python_docx.Document(BytesIO(doc.to_bytes()))

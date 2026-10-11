@@ -14,7 +14,7 @@ def main():
     parser.add_argument("enums", type=Path)
     parser.add_argument("saved", type=Path)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--module", required=True, choices=["aspose.words", "aspose.words_foss"])
+    parser.add_argument("--module", required=True, choices=["aspose.words", "dockiln"])
     args = parser.parse_args()
     aw = importlib.import_module(args.module)
     formats = json.loads(args.enums.read_text())["LoadFormat"]

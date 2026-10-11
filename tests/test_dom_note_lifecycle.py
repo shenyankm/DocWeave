@@ -5,10 +5,10 @@ from datetime import datetime
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.dom.notes import FootnoteType
-from aspose.words_foss.dom.importing import ImportFormatMode
+import dockiln as dk
+from dockiln.dom import DocxDocument
+from dockiln.dom.notes import FootnoteType
+from dockiln.dom.importing import ImportFormatMode
 from .test_docx_dom import package
 from .test_dom_additional_story_rows import additional_story
 
@@ -83,7 +83,7 @@ def test_note_lifecycle_keeps_unique_logical_parent_and_cold_graph(tmp_path, kin
 @pytest.mark.parametrize('kind', ['footnote', 'endnote', 'comment'])
 @pytest.mark.parametrize('flat', [False, True])
 def test_failed_save_preserves_ids_minimum_and_output(tmp_path, monkeypatch, kind, flat):
-    from aspose.words_foss import _io
+    from dockiln import _io
     doc = document(tmp_path)
     node = create(doc, kind, fill=False)
     doc.body.paragraphs[0].append_child(node)
@@ -106,7 +106,7 @@ def test_failed_save_preserves_ids_minimum_and_output(tmp_path, monkeypatch, kin
 
 @pytest.mark.parametrize('kind', ['footnote', 'endnote', 'comment'])
 def test_insertion_budget_failure_preserves_pending_and_all_parts(tmp_path, monkeypatch, kind):
-    from aspose.words_foss import _io
+    from dockiln import _io
     doc = document(tmp_path)
     node = create(doc, kind)
     before = doc.to_bytes()
@@ -128,7 +128,7 @@ def test_loaded_note_storage_view_and_canonical_are_distinct(tmp_path, kind):
     doc = DocxDocument(source)
     before = doc.to_bytes()
     storage = doc.story(name).child_nodes[0]
-    logical = doc.get_child_nodes(aw.NodeType.COMMENT if kind == 'comments' else aw.NodeType.FOOTNOTE, True)[0]
+    logical = doc.get_child_nodes(dk.NodeType.COMMENT if kind == 'comments' else dk.NodeType.FOOTNOTE, True)[0]
     assert storage is not logical
     assert storage.canonical_node is logical
     assert storage.parent_node is doc.story(name)
@@ -206,8 +206,8 @@ def test_comment_ranges_keep_warm_ids_but_filter_orphans_on_output(tmp_path, fla
     (doc.save_flat_opc if flat else doc.save)(output)
     assert comment.id == 0
     cold = DocxDocument(output)
-    assert cold.get_child_nodes(aw.NodeType.COMMENT_RANGE_START, True) == []
-    assert cold.get_child_nodes(aw.NodeType.COMMENT_RANGE_END, True) == []
+    assert cold.get_child_nodes(dk.NodeType.COMMENT_RANGE_START, True) == []
+    assert cold.get_child_nodes(dk.NodeType.COMMENT_RANGE_END, True) == []
 
 @pytest.mark.parametrize('kind', ['footnote', 'endnote', 'comment'])
 @pytest.mark.parametrize('mode', list(ImportFormatMode))
@@ -277,13 +277,13 @@ def test_custom_reference_mark_preserves_warm_value_and_actual_cold_text(tmp_pat
     assert node.is_auto is False
     output = tmp_path / 'result'
     (doc.save_flat_opc if flat else doc.save)(output)
-    cold = DocxDocument(output).get_child_nodes(aw.NodeType.FOOTNOTE, True)[0]
+    cold = DocxDocument(output).get_child_nodes(dk.NodeType.FOOTNOTE, True)[0]
     assert cold.reference_mark == 'Owned*'
     assert cold.is_auto is False
     node.reference_mark = None
     assert node.reference_mark is None and node.is_auto is True
     (doc.save_flat_opc if flat else doc.save)(output)
-    assert DocxDocument(output).get_child_nodes(aw.NodeType.FOOTNOTE, True)[0].reference_mark == ''
+    assert DocxDocument(output).get_child_nodes(dk.NodeType.FOOTNOTE, True)[0].reference_mark == ''
 
 @pytest.mark.parametrize('outside', ['header', 'nested'])
 @pytest.mark.parametrize('flat', [False, True])
@@ -293,7 +293,7 @@ def test_successful_save_removes_unsupported_outside_note_anchor_only_on_commit(
         path = tmp_path / 'header.docx'
         name, _ = story_package(path, 'header')
         doc = DocxDocument(path)
-        parent = doc.story(name).get_child_nodes(aw.NodeType.PARAGRAPH, True)[0]
+        parent = doc.story(name).get_child_nodes(dk.NodeType.PARAGRAPH, True)[0]
     else:
         doc = document(tmp_path)
         outer = create(doc, 'footnote')
@@ -310,7 +310,7 @@ def test_successful_save_removes_unsupported_outside_note_anchor_only_on_commit(
     assert inner not in parent.child_nodes
     assert inner.count == 1
     cold = DocxDocument(BytesIO(pure))
-    assert len(cold.get_child_nodes(aw.NodeType.FOOTNOTE, True)) == (1 if outside == 'nested' else 0)
+    assert len(cold.get_child_nodes(dk.NodeType.FOOTNOTE, True)) == (1 if outside == 'nested' else 0)
 
 @pytest.mark.parametrize('kind', ['footnote', 'endnote', 'comment'])
 def test_detached_paragraph_bundle_never_enters_pure_output(tmp_path, kind):
@@ -341,14 +341,14 @@ def test_paragraph_comment_bundle_allocates_unique_warm_ids_and_ranges(tmp_path,
         target = document(tmp_path)
         target.body.paragraphs[0].append_child(create(target, 'comment'))
         copied = target.import_node(p, True, ImportFormatMode.USE_DESTINATION_STYLES)
-    imported = copied.get_child_nodes(aw.NodeType.COMMENT, True)[0]
+    imported = copied.get_child_nodes(dk.NodeType.COMMENT, True)[0]
     assert imported.id == 1
-    assert copied.get_child_nodes(aw.NodeType.COMMENT_RANGE_START, True)[0].id == 1
-    assert copied.get_child_nodes(aw.NodeType.COMMENT_RANGE_END, True)[0].id == 1
+    assert copied.get_child_nodes(dk.NodeType.COMMENT_RANGE_START, True)[0].id == 1
+    assert copied.get_child_nodes(dk.NodeType.COMMENT_RANGE_END, True)[0].id == 1
     target.body.append_child(copied)
     target.save(tmp_path / 'result.docx')
     assert imported.id == 1
-    assert copied.get_child_nodes(aw.NodeType.COMMENT_RANGE_START, True)[0].id == 1
+    assert copied.get_child_nodes(dk.NodeType.COMMENT_RANGE_START, True)[0].id == 1
 
 
 def test_comment_constructor_id_does_not_follow_edited_literal_id(tmp_path):
@@ -375,7 +375,7 @@ def test_custom_mark_survives_entry_and_paragraph_copy(tmp_path, bundle, operati
         target = document(tmp_path)
         copied = target.import_node(subject, True, ImportFormatMode.USE_DESTINATION_STYLES)
     if bundle:
-        actual = copied.get_child_nodes(aw.NodeType.FOOTNOTE, True)[0]
+        actual = copied.get_child_nodes(dk.NodeType.FOOTNOTE, True)[0]
         target.body.append_child(copied)
     else:
         actual = copied
@@ -383,7 +383,7 @@ def test_custom_mark_survives_entry_and_paragraph_copy(tmp_path, bundle, operati
     assert actual.reference_mark == 'Owned*'
     output = tmp_path / 'result.docx'
     target.save(output)
-    assert DocxDocument(output).get_child_nodes(aw.NodeType.FOOTNOTE, True)[-1].reference_mark == 'Owned*'
+    assert DocxDocument(output).get_child_nodes(dk.NodeType.FOOTNOTE, True)[-1].reference_mark == 'Owned*'
 
 @pytest.mark.parametrize('kind', ['footnotes', 'endnotes', 'comments'])
 @pytest.mark.parametrize('changed', ['entry', 'anchor'])
@@ -397,7 +397,7 @@ def test_decimal_annotation_ids_match_when_lexical_forms_differ(tmp_path, kind, 
             archive.writestr(key, value)
     doc = DocxDocument(source)
     original = doc.to_bytes()
-    nodes = doc.get_child_nodes(aw.NodeType.COMMENT if kind == 'comments' else aw.NodeType.FOOTNOTE, True)
+    nodes = doc.get_child_nodes(dk.NodeType.COMMENT if kind == 'comments' else dk.NodeType.FOOTNOTE, True)
     assert len(nodes) == 1
     assert nodes[0] in nodes[0].parent_node.child_nodes
     assert doc.to_bytes() == original
@@ -413,7 +413,7 @@ def test_bad_annotation_identifier_does_not_echo_sensitive_source(tmp_path, kind
     doc = DocxDocument(source)
     before = doc.to_bytes()
     with pytest.raises(ValueError, match='Invalid annotation identifier') as error:
-        doc.get_child_nodes(aw.NodeType.ANY, True)
+        doc.get_child_nodes(dk.NodeType.ANY, True)
     assert 'Owned' not in str(error.value)
     assert doc.to_bytes() == before
 
@@ -471,8 +471,8 @@ def test_mixed_anchor_run_preserves_comments_pi_and_read_only_row_projection(tmp
         for key,value in parts.items():z.writestr(key,value)
     doc=DocxDocument(path);before=doc.to_bytes()
     paragraph=doc.body.paragraphs[0]
-    expected=aw.NodeType.COMMENT if kind=='comments'else aw.NodeType.FOOTNOTE
-    assert [n.node_type for n in paragraph.child_nodes]==[aw.NodeType.RUN,expected,aw.NodeType.RUN]
+    expected=dk.NodeType.COMMENT if kind=='comments'else dk.NodeType.FOOTNOTE
+    assert [n.node_type for n in paragraph.child_nodes]==[dk.NodeType.RUN,expected,dk.NodeType.RUN]
     assert [n.text for n in paragraph.runs]==['Owned before','Owned after']
     assert doc.to_bytes()==before
     paragraph.runs[0].text='Owned changed'
@@ -490,7 +490,7 @@ def test_note_move_between_body_and_header_preserves_unique_parent_and_safe_save
     from .test_dom_story_row_height import story_package
     path=tmp_path/'header.docx';name,_=story_package(path,'header')
     doc=DocxDocument(path);body=doc.body.paragraphs[0]
-    header=doc.story(name).get_child_nodes(aw.NodeType.PARAGRAPH,True)[0]
+    header=doc.story(name).get_child_nodes(dk.NodeType.PARAGRAPH,True)[0]
     entry=create(doc,kind);body.append_child(entry)
     header.append_child(entry)
     assert entry.parent_node is header and entry in header.child_nodes
@@ -515,7 +515,7 @@ def test_entry_copy_preserves_inline_anchor_direct_format(tmp_path, kind, operat
     path=tmp_path/'styled.docx'
     with ZipFile(path,'w')as z:
         for name,data in parts.items():z.writestr(name,data)
-    source=DocxDocument(path);node=source.get_child_nodes(aw.NodeType.COMMENT if kind=='comment'else aw.NodeType.FOOTNOTE,True)[0]
+    source=DocxDocument(path);node=source.get_child_nodes(dk.NodeType.COMMENT if kind=='comment'else dk.NodeType.FOOTNOTE,True)[0]
     if operation=='clone':target=source;copied=node.clone(True)
     else:target=document(tmp_path);copied=target.import_node(node,True,ImportFormatMode.USE_DESTINATION_STYLES)
     target.body.paragraphs[1].append_child(copied)
@@ -553,11 +553,11 @@ def test_detached_entry_keeps_marker_format_and_custom_mark(tmp_path, kind, oper
         for name, value in parts.items():
             package.writestr(name, value)
     doc = DocxDocument(source)
-    note = doc.get_child_nodes(aw.NodeType.COMMENT if kind == 'comment' else aw.NodeType.FOOTNOTE, True)[0]
+    note = doc.get_child_nodes(dk.NodeType.COMMENT if kind == 'comment' else dk.NodeType.FOOTNOTE, True)[0]
     if kind != 'comment':
         note.reference_mark = 'Owned*'
     if save_detach:
-        from aspose.words_foss import _io
+        from dockiln import _io
         parent = doc.story('word/header1.xml').paragraphs[0]
         parent.append_child(note)
         output = tmp_path / 'outside'
@@ -590,4 +590,4 @@ def test_detached_entry_keeps_marker_format_and_custom_mark(tmp_path, kind, oper
     assert anchors[0].find(w + 'rPr/' + w + 'b') is not None
     assert anchors[0].find(w + 'rPr/' + w + 'sz').get(w + 'val') == '36'
     if kind != 'comment':
-        assert cold.get_child_nodes(aw.NodeType.FOOTNOTE, True)[0].reference_mark == 'Owned*'
+        assert cold.get_child_nodes(dk.NodeType.FOOTNOTE, True)[0].reference_mark == 'Owned*'

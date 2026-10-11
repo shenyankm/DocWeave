@@ -4,9 +4,9 @@ import pytest
 from fpdf import FPDF
 from fpdf.enums import CharVPos
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer.font import register_fonts
-from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf.font import register_fonts
+from dockiln.writers.pdf.run_renderer import RunRenderer
 
 
 def setup_pdf():

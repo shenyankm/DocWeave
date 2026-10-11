@@ -3,8 +3,8 @@ from io import BytesIO
 
 import pytest
 
-from aspose.words_foss._flat_opc import encode
-from aspose.words_foss.dom import DocxDocument
+from dockiln._flat_opc import encode
+from dockiln.dom import DocxDocument
 from tests.test_dom_get_text import controlled_document
 
 

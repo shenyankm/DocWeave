@@ -1,16 +1,16 @@
 [project]
-name = "aspose-words-foss-enhanced"
-version = "26.7.0.post2"
-description = "Unofficial enhanced fork of Aspose.Words FOSS with Chinese/Unicode PDF export"
+name = "dockiln"
+version = "0.1.0"
+description = "Python document conversion, Unicode PDF generation, structured extraction, and DOCX editing"
 readme = "README.md"
 license = "MIT AND OFL-1.1"
-license-files = ["LICENSE", "aspose/words_foss/pdf_writer/fonts/OFL.txt", "aspose/words_foss/docx_writer/resources/python-docx-LICENSE.txt"]
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "src/dockiln/writers/pdf/fonts/OFL.txt", "src/dockiln/writers/docx/resources/python-docx-LICENSE.txt"]
 authors = [
-    {name = "Aspose"}
+    {name = "shenyankm"}
 ]
 keywords = [
     "word", "docx", "doc", "rtf", "markdown", "pdf",
-    "aspose", "office", "openxml", "document", "convert",
+    "office", "openxml", "document", "convert",
 ]
 requires-python = ">=3.10,<3.15"
 dependencies = [
@@ -39,10 +39,12 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/shenyankm/Aspose.Words-FOSS-for-Python"
-Repository = "https://github.com/shenyankm/Aspose.Words-FOSS-for-Python"
-Issues = "https://github.com/shenyankm/Aspose.Words-FOSS-for-Python/issues"
-Upstream = "https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python"
+Homepage = "https://github.com/shenyankm/DocKiln"
+Repository = "https://github.com/shenyankm/DocKiln"
+Issues = "https://github.com/shenyankm/DocKiln/issues"
+
+[project.scripts]
+dockiln = "dockiln.convert:main"
 
 [project.optional-dependencies]
 shaping = ["uharfbuzz>=0.39.0"]
@@ -79,4 +81,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["aspose"]
+packages = ["src/dockiln"]

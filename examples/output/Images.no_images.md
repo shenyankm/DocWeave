@@ -1,0 +1,3 @@
+Just plain text here.
+
+Another paragraph, no images at all.

@@ -5,12 +5,12 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._flat_opc import encode
-from aspose.words_foss.docx_reader.document_reader import DocumentReader
-from aspose.words_foss.docx_reader.utils import _collect_run_text
-from aspose.words_foss.docx_writer import LdmDocxWriter
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._flat_opc import encode
+from dockiln.readers.docx.document_reader import DocumentReader
+from dockiln.readers.docx.utils import _collect_run_text
+from dockiln.writers.docx import LdmDocxWriter
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 X = '{http://www.w3.org/XML/1998/namespace}'
@@ -78,7 +78,7 @@ def owned_text(space):
 @pytest.mark.parametrize('clone', ['direct', 'deep', 'json'])
 def test_text_edit_and_cold_save(space, expected, flat_input, clone):
     raw = owned_text(space)
-    model = aw.Document(BytesIO(encode(raw) if flat_input else raw)).light_document_model
+    model = dk.Document(BytesIO(encode(raw) if flat_input else raw)).light_document_model
     if clone == 'deep':
         model = model.model_copy(deep=True)
     elif clone == 'json':
@@ -88,13 +88,13 @@ def test_text_edit_and_cold_save(space, expected, flat_input, clone):
     run.text += ' EDITED'
     for _ in range(2):
         raw = LdmDocxWriter().write_to_bytes(model)
-        model = aw.Document(BytesIO(encode(raw) if flat_input else raw)).light_document_model
+        model = dk.Document(BytesIO(encode(raw) if flat_input else raw)).light_document_model
         assert ''.join(r.text for r in model.sections[0].body.paragraphs[0].runs) == expected + ' EDITED'
 
 
 def test_invalid_text_space_is_rejected():
     with pytest.raises(ValueError, match='Invalid xml:space'):
-        aw.Document(BytesIO(owned_text('unexpected')))
+        dk.Document(BytesIO(owned_text('unexpected')))
 
 
 @pytest.mark.parametrize('flat', [False, True])
@@ -114,7 +114,7 @@ def test_carriage_return_survives_edit_and_repeated_save(flat, json_reload):
                 data = ET.tostring(root)
             destination.writestr(name, data)
     raw = output.getvalue()
-    model = aw.Document(BytesIO(encode(raw) if flat else raw)).light_document_model
+    model = dk.Document(BytesIO(encode(raw) if flat else raw)).light_document_model
     assert model.sections[0].body.paragraphs[0].runs[0].text == 'OWNED A\rOWNED B'
     if json_reload:
         model = ldm.Document.model_validate_json(model.model_dump_json())
@@ -123,7 +123,7 @@ def test_carriage_return_survives_edit_and_repeated_save(flat, json_reload):
         raw = LdmDocxWriter().write_to_bytes(model)
         with ZipFile(BytesIO(raw)) as package:
             assert len(ET.fromstring(package.read('word/document.xml')).findall('.//' + W + 'cr')) == 1
-        model = aw.Document(BytesIO(encode(raw) if flat else raw)).light_document_model
+        model = dk.Document(BytesIO(encode(raw) if flat else raw)).light_document_model
         assert ''.join(run.text for run in model.sections[0].body.paragraphs[0].runs) == 'OWNED A\rOWNED B EDITED'
 
 
@@ -146,7 +146,7 @@ def test_part_root_text_space(root_space, local_space, expected):
                 root.set(X + 'space', root_space)
                 data = ET.tostring(root)
             destination.writestr(name, data)
-    model = aw.Document(BytesIO(output.getvalue())).light_document_model
+    model = dk.Document(BytesIO(output.getvalue())).light_document_model
     assert model.sections[0].body.paragraphs[0].runs[0].text == expected
 
 

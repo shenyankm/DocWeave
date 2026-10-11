@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import pytest
 from pydantic import ValidationError
-from aspose.words_foss import light_document_model as ldm
+from dockiln import light_document_model as ldm
 
 
 @pytest.mark.parametrize('child', [{'_type': 'OwnedUnknown', 'text': 'OWNED SECRET'},
@@ -84,7 +84,7 @@ def test_body_unknown_node_is_kept_for_existing_writer_diagnostics():
 @pytest.mark.parametrize('fmt', ['DOCX', 'FLAT_OPC'])
 @pytest.mark.parametrize('via_json', [False, True])
 def test_valid_public_input_survives_repeated_save_and_reload(tmp_path, fmt, via_json):
-    import aspose.words_foss as aw
+    import dockiln as dk
     paragraph = {'_type': 'Paragraph', 'children': [
         {'_type': 'BookmarkStart', 'name': 'owned'},
         {'_type': 'Run', 'text': 'OWNED A '},
@@ -96,12 +96,12 @@ def test_valid_public_input_survives_repeated_save_and_reload(tmp_path, fmt, via
     if via_json:
         model = ldm.Document.model_validate_json(model.model_dump_json())
     assert data == before
-    doc = aw.Document()
+    doc = dk.Document()
     doc._document = model
     for save in (1, 2):
         path = tmp_path / f'{fmt}-{save}.bin'
-        doc.save(path, getattr(aw.SaveFormat, fmt))
-        cold = aw.Document(path)
+        doc.save(path, getattr(dk.SaveFormat, fmt))
+        cold = dk.Document(path)
         p = cold.light_document_model.sections[0].body.paragraphs[0]
         assert p.text == 'OWNED A Ω B'
         assert [type(child) for child in p._children] == [ldm.BookmarkStart, ldm.Run,

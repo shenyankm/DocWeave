@@ -6,7 +6,7 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
+import dockiln as dk
 
 from .test_docx_dom import payloads
 
@@ -16,7 +16,7 @@ CORPUS = Path(__file__).parents[1] / "docs/benchmarks/corpus/style-import-confli
 def documents():
     key = "character-b-True-None-True-False-False-None"
     with ZipFile(CORPUS) as archive:
-        return tuple(aw.DocxDocument(BytesIO(archive.read(key + "/" + phase + ".docx"))) for phase in ("source", "destination"))
+        return tuple(dk.DocxDocument(BytesIO(archive.read(key + "/" + phase + ".docx"))) for phase in ("source", "destination"))
 
 
 @pytest.mark.parametrize("decoration", [b'w:future="keep"', b'><!--keep--></w:b>'])
@@ -80,7 +80,7 @@ def test_custom_styles_part_receives_projection():
     with ZipFile(stream, "w") as archive:
         for part, data in original.items():
             archive.writestr(part, data)
-    target = aw.DocxDocument(BytesIO(stream.getvalue()))
+    target = dk.DocxDocument(BytesIO(stream.getvalue()))
     target.body.append_child(target.import_node(source.body.paragraphs[0], True))
     assert target._package._style_projection_part == name
     assert payloads(target.to_bytes())[name] != original[name]

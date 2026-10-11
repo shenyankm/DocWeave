@@ -5,9 +5,9 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import Document, SaveFormat
-from aspose.words_foss._flat_opc import decode, is_flat_opc
-from aspose.words_foss._opc import resolve_target
+from dockiln import Document, SaveFormat
+from dockiln._flat_opc import decode, is_flat_opc
+from dockiln._opc import resolve_target
 from .test_source_font_table import W, R, TABLE, FONT, archive, owned_parts, relationships_path, rels
 
 

@@ -4,7 +4,7 @@ from io import BytesIO
 
 import pytest
 
-from aspose.words_foss.dom import DocxDocument
+from dockiln.dom import DocxDocument
 from .test_dom_comment_metadata import comment, source_date
 from .test_dom_comment_utc import modern
 

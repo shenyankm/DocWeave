@@ -3,9 +3,9 @@
 import pymupdf
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 from tests.test_pdf_structure_pages import assert_page_tags
 
 
@@ -130,7 +130,7 @@ def test_invalid_body_list_geometry_preserves_output(tmp_path, invalid):
 
 
 def test_default_body_list_levels_indent_first_and_continuation_lines():
-    from aspose.words_foss.pdf_writer.constants import PT_TO_MM
+    from dockiln.writers.pdf.constants import PT_TO_MM
 
     doc = body_list_model()
     for para in doc.sections[0].body.children[:3]:
@@ -152,8 +152,8 @@ def test_default_body_list_levels_indent_first_and_continuation_lines():
 
 def test_public_docx_body_list_hanging_indent_reaches_pdf():
     from io import BytesIO
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
     doc = body_list_model(2)
     doc.lists = [
@@ -168,7 +168,7 @@ def test_public_docx_body_list_hanging_indent_reaches_pdf():
     ]
     options = PdfSaveOptions()
     options.export_document_structure = True
-    raw = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(doc))).to_bytes(options)
+    raw = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(doc))).to_bytes(options)
     with pymupdf.open(stream=raw, filetype="pdf") as pdf:
         words = [word for page in pdf for word in page.get_text("words")]
         for i, level in enumerate([0, 1, 0]):

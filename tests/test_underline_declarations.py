@@ -9,9 +9,9 @@ from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
-from aspose.words_foss import Document, SaveFormat, light_document_model as ldm
-from aspose.words_foss.docx_reader import DocumentReader
-from aspose.words_foss.docx_writer import LdmDocxWriter
+from dockiln import Document, SaveFormat, light_document_model as ldm
+from dockiln.readers.docx import DocumentReader
+from dockiln.writers.docx import LdmDocxWriter
 
 
 def source(scope, value, inherited=False):

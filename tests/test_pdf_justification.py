@@ -3,9 +3,9 @@
 import pymupdf
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 
 
 WORDS = "ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE TEN"
@@ -163,7 +163,7 @@ def test_public_docx_justified_code_reaches_margin(tmp_path):
     from docx.enum.style import WD_STYLE_TYPE
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.shared import Pt
-    import aspose.words_foss as aw
+    import dockiln as dk
 
     document = Document()
     document.styles.add_style("Code", WD_STYLE_TYPE.PARAGRAPH)
@@ -176,7 +176,7 @@ def test_public_docx_justified_code_reaches_margin(tmp_path):
     run.font.size = Pt(12)
     source, target = tmp_path / "justified.docx", tmp_path / "justified.pdf"
     document.save(source)
-    aw.Document(source).save(target)
+    dk.Document(source).save(target)
     with pymupdf.open(target) as pdf:
         rows = lines(pdf[0])
         assert rows[0]["bbox"][2] == pytest.approx(200, abs=0.05)

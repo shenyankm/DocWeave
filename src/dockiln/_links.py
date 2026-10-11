@@ -1,0 +1,47 @@
+"""Shared encoded-link syntax for LDM readers and conversion writers."""
+
+import re
+from string import punctuation
+
+
+def _link_destination(uri):
+    if not uri or not re.search(r"\s", uri):
+        for symbol in ("(", ")", "<", ">"):
+            uri = uri.replace(symbol, "\\" + symbol)
+        return uri
+    return "<" + uri.replace("<", "\\<").replace(">", "\\>") + ">"
+
+
+_ESCAPED_PUNCTUATION = re.compile(r"\\([" + re.escape(punctuation) + r"])")
+
+# Internal hyperlink encoding, including escaped brackets.
+INLINE_LINK_RE = re.compile(
+    r"(?<!!)\[((?:\\.|[^\[\]\\])+)\]"
+    r"\((<[^<>\n]*>|(?:\\.|[^\s()\\]|\((?:\\.|[^()\\])*\))*)"
+    r"((?:[ \t]+(?:\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|\((?:\\.|[^()\\])*\)))?)"
+    r"[ \t]*\)"
+)
+
+
+def _escape_label(label):
+    return "".join("\\" + char if char in punctuation else char for char in label)
+
+
+def format_link(label, target):
+    label = _escape_label(label)
+    target = target.replace("\\", "\\\\").replace("&", "\\&")
+    return f"[{label}]({_link_destination(target)})"
+
+
+def decode_link(match):
+    target = match.group(2)
+    if target.startswith("<") and target.endswith(">"):
+        target = target[1:-1]
+    return tuple(_ESCAPED_PUNCTUATION.sub(r"\1", value) for value in (match.group(1), target))
+
+
+def validate_hyperlink_history(value):
+    """Validate the hyperlink ST_OnOff attribute without exposing its contents."""
+    if value is not None and (not isinstance(value, str) or value not in ("0", "1", "true", "false", "on", "off")):
+        raise RuntimeError("Invalid hyperlink history attribute")
+    return value

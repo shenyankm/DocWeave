@@ -22,7 +22,7 @@ def main():
         import aspose.words as aw
         assert version('aspose-words') == '26.9.0'
     else:
-        from aspose.words_foss import DocxDocument
+        from dockiln import DocxDocument
     values = (None, 0, 1, -1, 1.5, 'false', '', [], {})
     records = []
     with ZipFile(args.root / source['corpus']) as corpus:
@@ -54,7 +54,7 @@ def main():
                     records.append({'field': row['field'], 'target': target, 'input': value,
                                     'error': error, 'before': before, 'after': after})
     assert len(records) == 297
-    report = {'version': version('aspose-words' if native else 'aspose-words-foss-enhanced'),
+    report = {'version': version('aspose-words' if native else 'dockiln'),
               'python': platform.python_version(), 'platform': platform.platform(),
               'licensed': False if native else None, 'records': records}
     args.report.write_text(json.dumps(report, indent=2) + '\n')

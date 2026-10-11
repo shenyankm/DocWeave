@@ -2,9 +2,9 @@
 from datetime import datetime, timezone
 from io import BytesIO
 import pytest
-from aspose.words_foss import NodeType
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.dom.comment_utc import CID, CEX, ROLES, elements
+from dockiln import NodeType
+from dockiln.dom import DocxDocument
+from dockiln.dom.comment_utc import CID, CEX, ROLES, elements
 from .test_dom_comment_utc import modern, REL, CT
 from .test_dom_comment_metadata import comment, source_date
 
@@ -32,7 +32,7 @@ def conflicting(tmp_path, role, first, second, *, reverse=False):
         other.setAttributeNS(CEX, 'm:dateUtc', '2044-01-02T03:04:05Z')
         ext.appendChild(other)
     else:node.setAttributeNS(CEX, 'm:dateUtc', '2044-01-02T03:04:05Z')
-    from aspose.words_foss.utils.xml_helpers import serialize_xml
+    from dockiln.utils.xml_helpers import serialize_xml
     doc._package._commit_parts({'word/owned-second-' + role + '.xml': serialize_xml(part)})
     types = doc._package.tree('[Content_Types].xml').documentElement
     override = types.ownerDocument.createElementNS(CT, 'Override')
@@ -77,7 +77,7 @@ def test_cid_only_does_not_create_extensible_part(tmp_path, operation, flat):
         node = doc.import_node(node, True) if operation == 'import' else node.clone(True)
         doc.body.paragraphs[-1].append_child(node)
     held = node.date_time_utc
-    from aspose.words_foss.dom.comment_metadata import _local_wall
+    from dockiln.dom.comment_metadata import _local_wall
     expected_cold = _local_wall(held.replace(tzinfo=None)).astimezone(timezone.utc) if operation == 'edit' else held
     out = tmp_path / 'result'
     for _ in range(2):
@@ -116,7 +116,7 @@ def test_losing_part_removal_is_atomic_and_visible(tmp_path, flat, monkeypatch):
     assert output.read_bytes() == b'Owned prior output'
     assert held.date_time_utc is held_value and comment(doc) is held
     assert {n: doc._package.payload(n) for n in doc.part_names} == before
-    from aspose.words_foss import _io
+    from dockiln import _io
     with monkeypatch.context() as context:
         context.setattr(_io, 'MAX_EXPANDED_BYTES', 1)
         with pytest.raises(ValueError, match='safety limit'):

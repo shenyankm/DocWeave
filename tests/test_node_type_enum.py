@@ -4,8 +4,8 @@ from io import BytesIO
 
 import pytest
 
-from aspose.words_foss import DocxDocument, NodeType
-from aspose.words_foss import light_document_model as ldm
+from dockiln import DocxDocument, NodeType
+from dockiln import light_document_model as ldm
 from .test_docx_dom import package
 
 NAMES = '''ANY DOCUMENT SECTION BODY HEADER_FOOTER TABLE ROW CELL PARAGRAPH

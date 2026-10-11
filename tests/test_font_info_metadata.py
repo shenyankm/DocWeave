@@ -4,8 +4,8 @@ from io import BytesIO
 
 import pytest
 
-from aspose.words_foss import Document, SaveFormat, fonts
-from aspose.words_foss import light_document_model as ldm
+from dockiln import Document, SaveFormat, fonts
+from dockiln import light_document_model as ldm
 from .test_source_font_table import W, TABLE, FONT, archive, owned_parts, relationships_path
 
 
@@ -95,7 +95,7 @@ def test_edits_two_successful_saves_keep_metadata_resources_and_held_objects(tmp
 
 @pytest.mark.parametrize('failure', ['prepare', 'write', 'publish', 'graph', 'budget'])
 def test_failed_save_keeps_output_snapshot_projection_and_held_objects(tmp_path, monkeypatch, failure):
-    from aspose.words_foss import document as document_module, _io
+    from dockiln import document as document_module, _io
     doc = document(); collection = doc.font_infos; font = collection[0]
     output = tmp_path / 'existing.docx'; doc.save(output)
     font.alt_name = 'Pending'

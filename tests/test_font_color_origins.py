@@ -9,10 +9,10 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import Document, SaveFormat
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+from dockiln import Document, SaveFormat
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.saving import OoxmlSaveOptions
 
 ROOT = Path(__file__).parents[1]
 REPORT = json.loads((ROOT / 'docs/benchmarks/font-color-categories-26.9.json').read_text())
@@ -53,7 +53,7 @@ def test_same_value_color_assignment_is_explicit(copy, color):
         font.color = color
     font = ldm.Font.model_validate_json(font.model_dump_json())
     assert font.color_explicit is True
-    from aspose.words_foss.docx_writer.runs import render_rPr
+    from dockiln.writers.docx.runs import render_rPr
     assert 'w:color' in render_rPr(font, base=ldm.Font(color=color))
 
 
@@ -83,8 +83,8 @@ def test_automatic_run_color_overrides_red_style_in_painted_pdf(tmp_path):
 def test_conditional_table_font_preserves_automatic_color_declaration():
     from xml.etree import ElementTree as ET
 
-    from aspose.words_foss.docx_reader.ldm_builder.definitions import _tsp_build_font
-    from aspose.words_foss.docx_writer.runs import render_rPr
+    from dockiln.readers.docx.ldm_builder.definitions import _tsp_build_font
+    from dockiln.writers.docx.runs import render_rPr
     font = _tsp_build_font(ET.fromstring(
         '<w:rPr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:color w:val="auto"/></w:rPr>'))
     assert font.color == 'Color [Empty]' and font.color_explicit is True

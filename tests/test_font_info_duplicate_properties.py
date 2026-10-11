@@ -3,7 +3,7 @@ from io import BytesIO
 
 import pytest
 
-from aspose.words_foss import Document, SaveFormat, fonts
+from dockiln import Document, SaveFormat, fonts
 from .test_font_info_values import package
 from .test_source_font_table import W, TABLE, archive, owned_parts, relationships_path
 

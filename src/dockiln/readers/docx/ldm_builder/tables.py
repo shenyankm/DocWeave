@@ -1,0 +1,390 @@
+"""Build :class:`ldm.Table`, :class:`ldm.Row`, :class:`ldm.Cell`.
+
+The cell builder defers paragraph and nested-table construction back
+to a caller-supplied :class:`ParagraphBuilder`, which lets the
+paragraph and table builders depend on each other without a cyclic
+import.
+"""
+
+from typing import Callable
+from xml.etree import ElementTree as ET
+
+from dockiln import light_document_model as ldm
+from dockiln._io import MAX_TABLE_COLUMNS
+from dockiln.readers.docx.constants import (
+    W_NS,
+    _ALIGNMENT_MAP,
+    _PCT_DIVISOR,
+    _TWIPS_PER_PT,
+)
+from dockiln.readers.docx.utils import _empty_borders, parse_onoff
+from dockiln.model.enums import CellVerticalAlignment as _CVA
+
+from ._helpers import apply_padding_sides, build_borders, build_shading
+from ._context import ReaderContext
+from .cascading import StyleChainResolver
+
+
+def _read_table_band_size(element: ET.Element) -> int:
+    try:
+        value = int(element.get(f'{W_NS}val', '1'))
+    except ValueError:
+        raise ValueError('Invalid table band size') from None
+    if value <= 0:
+        raise ValueError('Table band size must be positive')
+    return value
+
+
+def _read_table_look(element: ET.Element) -> ldm.TableStyleLook:
+    raw = element.get(f'{W_NS}val')
+    try:
+        bits = int(raw, 16) if raw is not None else 0
+    except ValueError:
+        raise ValueError('Invalid table style look bitmask') from None
+    if not 0 <= bits <= 0xFFFF:
+        raise ValueError('Invalid table style look bitmask')
+    values = {}
+    for attr, field, bit, inverted in (
+        ('firstRow', 'first_row', 0x20, False), ('lastRow', 'last_row', 0x40, False),
+        ('firstColumn', 'first_column', 0x80, False), ('lastColumn', 'last_column', 0x100, False),
+        ('noHBand', 'row_banding', 0x200, True), ('noVBand', 'column_banding', 0x400, True),
+    ):
+        value = element.get(f'{W_NS}{attr}')
+        if value is not None and value not in {'0', '1', 'on', 'off', 'true', 'false'}:
+            raise ValueError('Invalid table style look switch')
+        enabled = bool(bits & bit) if value is None else value in {'1', 'on', 'true'}
+        values[field] = not enabled if inverted else enabled
+    return ldm.TableStyleLook(**values)
+
+
+# Paragraph builder callback signature: (p_elem, image_rels?) -> ldm.Paragraph.
+ParagraphBuilderFn = Callable[..., ldm.Paragraph]
+
+
+_VERT_ALIGN_MAP = {
+    "top": _CVA.TOP,
+    "center": _CVA.CENTER,
+    "bottom": _CVA.BOTTOM,
+}
+
+_TEXT_DIRECTION_MAP: dict[str, int] = {
+    "btLr": 1,
+    "tbRl": 2,
+    "lrTbV": 3,
+    "tbRlV": 4,
+    "tbLrV": 5,
+}
+
+_HEIGHT_RULE_EXACT = 1
+_HEIGHT_RULE_AUTO = 2
+_VMERGE_RESTART = 1
+_VMERGE_CONTINUE = 2
+_FLOATING_TEXT_WRAPPING = 1
+
+_FLOATING_ATTRS: tuple[str, ...] = (
+    "leftFromText", "rightFromText",
+    "topFromText", "bottomFromText",
+    "vertAnchor", "horzAnchor",
+    "tblpX", "tblpXSpec",
+    "tblpY", "tblpYSpec",
+)
+
+
+class TableBuilder:
+    """Build :class:`ldm.Table` from a ``<w:tbl>`` element."""
+
+    def __init__(
+        self,
+        ctx: ReaderContext,
+        paragraph_builder: ParagraphBuilderFn,
+    ):
+        self._ctx = ctx
+        self._paragraph_builder = paragraph_builder
+        self._row_builder = RowBuilder(ctx, paragraph_builder, self)
+        self._default_style_id = next((sid for sid, elem in ctx._style_elem_cache.items()
+            if elem.get(f"{W_NS}type") == "table" and elem.get(f"{W_NS}default") in ("1", "true", "on")), "")
+
+    def build(self, tbl_elem: ET.Element) -> ldm.Table:
+        """Translate one ``<w:tbl>`` into :class:`ldm.Table` (rows + cells inclusive)."""
+        tbl = ldm.Table(source_location=self._ctx._source_locations.get(tbl_elem))
+        tblPr = tbl_elem.find(f"{W_NS}tblPr")
+        table_borders = self._apply_table_properties(tbl, tblPr if tblPr is not None else ET.Element(f"{W_NS}tblPr"))
+
+        self._build_rows(tbl_elem, tbl, table_borders)
+        return tbl
+
+    def _apply_table_properties(
+        self,
+        tbl: ldm.Table,
+        tblPr: ET.Element,
+    ) -> list[ldm.Border]:
+        look = tblPr.find(f"{W_NS}tblLook")
+        if look is not None:
+            tbl.style_look = _read_table_look(look)
+        tblStyle = tblPr.find(f"{W_NS}tblStyle")
+        raw_id = tblStyle.get(f"{W_NS}val", "") if tblStyle is not None else self._default_style_id
+        for sid in StyleChainResolver(self._ctx).chain(raw_id):
+            style = self._ctx._style_elem_cache.get(sid)
+            direction = style.find(f"{W_NS}tblPr/{W_NS}bidiVisual") if style is not None else None
+            if direction is not None:
+                tbl.bidi = parse_onoff(direction)
+            margins = style.find(f"{W_NS}tblPr/{W_NS}tblCellMar") if style is not None else None
+            if margins is not None:
+                apply_padding_sides(tbl, margins)
+        direction = tblPr.find(f"{W_NS}bidiVisual")
+        if direction is not None:
+            tbl.bidi = parse_onoff(direction)
+        if tblStyle is not None:
+            # Resolve the styleId to the style's display name (same as
+            # ``<w:pStyle>`` handling) so the LDM holds a stable
+            # identifier the writer's ``style_id_map`` can map back —
+            # otherwise a ``<w:tblStyle w:val="-11"/>`` reference
+            # against a renamed-on-write styleId becomes a dangling
+            # ref that MS Word rejects on load.
+            raw_id = tblStyle.get(f"{W_NS}val", "")
+            tbl.style_name = self._ctx._resolve_style_name(raw_id) if raw_id else ""
+        jc = tblPr.find(f"{W_NS}jc")
+        if jc is not None:
+            tbl.alignment = _ALIGNMENT_MAP.get(jc.get(f"{W_NS}val", "left"), 0)
+        tblW = tblPr.find(f"{W_NS}tblW")
+        if tblW is not None:
+            tbl.preferred_width = self._parse_preferred_width(tblW)
+        tblInd = tblPr.find(f"{W_NS}tblInd")
+        if tblInd is not None and tblInd.get(f"{W_NS}type", "dxa") == "dxa":
+            tbl.left_indent = int(tblInd.get(f"{W_NS}w", "0")) / _TWIPS_PER_PT
+        borders: list[ldm.Border] = []
+        tblBorders_elem = tblPr.find(f"{W_NS}tblBorders")
+        if tblBorders_elem is not None:
+            borders = build_borders(tblBorders_elem)
+        tblCellMar = tblPr.find(f"{W_NS}tblCellMar")
+        if tblCellMar is not None:
+            apply_padding_sides(tbl, tblCellMar)
+        tblpPr = tblPr.find(f"{W_NS}tblpPr")
+        if tblpPr is not None:
+            self._apply_floating(tbl, tblpPr)
+        caption = tblPr.find(f"{W_NS}tblCaption")
+        if caption is not None:
+            tbl.title = caption.get(f"{W_NS}val", "")
+        desc = tblPr.find(f"{W_NS}tblDescription")
+        if desc is not None:
+            tbl.description = desc.get(f"{W_NS}val", "")
+        return borders
+
+    @staticmethod
+    def _parse_preferred_width(tblW: ET.Element) -> ldm.PreferredWidth:
+        w_type = tblW.get(f"{W_NS}type", "")
+        w_val = tblW.get(f"{W_NS}w", "0")
+        if w_type == "pct":
+            return ldm.PreferredWidth.from_percent(int(w_val) / _PCT_DIVISOR)
+        if w_type == "dxa":
+            return ldm.PreferredWidth.from_points(int(w_val) / _TWIPS_PER_PT)
+        return ldm.PreferredWidth.auto()
+
+    @staticmethod
+    def _apply_floating(tbl: ldm.Table, tblpPr: ET.Element) -> None:
+        attrs: dict[str, str] = {}
+        for attr_name in _FLOATING_ATTRS:
+            value = tblpPr.get(f"{W_NS}{attr_name}", "")
+            if value:
+                attrs[attr_name] = value
+        tbl.text_wrapping = _FLOATING_TEXT_WRAPPING if attrs else 0
+        tbl._tblp_pr_attrs = attrs
+
+    def _build_rows(
+        self,
+        tbl_elem: ET.Element,
+        tbl: ldm.Table,
+        table_borders: list[ldm.Border],
+    ) -> None:
+        ctx = self._ctx
+        previous_style = getattr(ctx, "_current_table_style_id", "")
+        ctx._current_table_style_id = tbl.style_name
+        try:
+            for tr_elem in tbl_elem.findall(f"{W_NS}tr"):
+                row = self._row_builder.build(tr_elem, tbl.style_name or self._default_style_id)
+                if table_borders:
+                    row.row_format.borders = table_borders
+                tbl.rows.append(row)
+        finally:
+            ctx._current_table_style_id = previous_style
+
+
+class RowBuilder:
+    """Build :class:`ldm.Row` from a ``<w:tr>`` element."""
+
+    def __init__(
+        self,
+        ctx: ReaderContext,
+        paragraph_builder: ParagraphBuilderFn,
+        table_builder: TableBuilder,
+    ):
+        self._ctx = ctx
+        self._cell_builder = CellBuilder(ctx, paragraph_builder, table_builder)
+
+    def build(
+        self,
+        tr_elem: ET.Element,
+        style_id: str = "",
+    ) -> ldm.Row:
+        """Translate one ``<w:tr>``."""
+        row = ldm.Row()
+        trPr = tr_elem.find(f"{W_NS}trPr")
+        rf = ldm.RowFormat(height_rule=2, height_explicit=False, allow_break_explicit=False)
+        for sid in StyleChainResolver(self._ctx).chain(style_id):
+            style = self._ctx._style_elem_cache.get(sid)
+            layer = style.find(f"{W_NS}trPr") if style is not None else None
+            if layer is not None:
+                self._apply_height_split(rf, layer, explicit=False)
+        if trPr is not None:
+            direct = self._build_row_format(trPr)
+            if not direct.height_explicit:
+                direct.__dict__.update(height=rf.height, height_rule=rf.height_rule)
+            if not direct.allow_break_explicit:
+                direct.__dict__["allow_break_across_pages"] = rf.allow_break_across_pages
+            rf = direct
+        row.row_format = rf
+        # Per-row override (CT_TblPrExBase); only width carried in the LDM.
+        tblPrEx = tr_elem.find(f"{W_NS}tblPrEx")
+        if tblPrEx is not None:
+            tblW = tblPrEx.find(f"{W_NS}tblW")
+            if tblW is not None:
+                row.preferred_width = TableBuilder._parse_preferred_width(tblW)
+        for tc_elem in tr_elem.findall(f"{W_NS}tc"):
+            row.cells.append(self._cell_builder.build(tc_elem))
+        return row
+
+    @staticmethod
+    def _build_row_format(trPr: ET.Element) -> ldm.RowFormat:
+        rf = ldm.RowFormat(height_rule=2, height_explicit=False, allow_break_explicit=False)
+        RowBuilder._apply_height_split(rf, trPr, explicit=True)
+        if trPr.find(f"{W_NS}tblHeader") is not None:
+            rf.heading_format = True
+        cnf = trPr.find(f"{W_NS}cnfStyle")
+        if cnf is not None:
+            rf.conditional_style = ldm.ConditionalStyleMask.from_val(cnf.get(f"{W_NS}val", ""))
+        return rf
+
+    @staticmethod
+    def _apply_height_split(rf, trPr, *, explicit):
+        from dockiln.utils.table_row import parse_row_height, parse_row_split
+
+        for trHeight in trPr.findall(f"{W_NS}trHeight"):
+            height, rule = parse_row_height(trHeight.get(f"{W_NS}val", ""), trHeight.get(f"{W_NS}hRule", ""))
+            rf.__dict__.update(height=height, height_rule=rule, height_explicit=explicit)
+        for split in trPr.findall(f"{W_NS}cantSplit"):
+            rf.__dict__.update(allow_break_across_pages=parse_row_split(split.get(f"{W_NS}val")), allow_break_explicit=explicit)
+
+
+class CellBuilder:
+    """Build :class:`ldm.Cell` from a ``<w:tc>`` element."""
+
+    def __init__(
+        self,
+        ctx: ReaderContext,
+        paragraph_builder: ParagraphBuilderFn,
+        table_builder: TableBuilder,
+    ):
+        self._ctx = ctx
+        self._paragraph_builder = paragraph_builder
+        self._table_builder = table_builder
+
+    def build(
+        self,
+        tc_elem: ET.Element,
+    ) -> ldm.Cell:
+        """Translate one ``<w:tc>`` without turning inherited margins into direct overrides."""
+        cell = ldm.Cell()
+        tcPr = tc_elem.find(f"{W_NS}tcPr")
+        if tcPr is not None:
+            cell.cell_format = self._build_cell_format(tcPr)
+
+        for child in self._ctx._resolve_body_children(tc_elem):
+            if child.tag == f"{W_NS}p":
+                cell.paragraphs.append(self._paragraph_builder(child))
+                cell.content_order.append("paragraph")
+            elif child.tag == f"{W_NS}tbl":
+                cell.tables.append(self._table_builder.build(child))
+                cell.content_order.append("table")
+        return cell
+
+    def _build_cell_format(
+        self,
+        tcPr: ET.Element,
+    ) -> ldm.CellFormat:
+        cf = ldm.CellFormat()
+        self._apply_width(tcPr, cf)
+        self._apply_vertical_align(tcPr, cf)
+        self._apply_merge(tcPr, cf)
+        self._apply_grid_span(tcPr, cf)
+        tcMar = tcPr.find(f"{W_NS}tcMar")
+        if tcMar is not None:
+            apply_padding_sides(cf, tcMar)
+        shd = tcPr.find(f"{W_NS}shd")
+        if shd is not None:
+            cf.shading = build_shading(shd)
+        tcBorders = tcPr.find(f"{W_NS}tcBorders")
+        cf.borders = build_borders(tcBorders) if tcBorders is not None else _empty_borders()
+        self._apply_text_direction(tcPr, cf)
+        self._apply_no_wrap(tcPr, cf)
+        cnf = tcPr.find(f"{W_NS}cnfStyle")
+        if cnf is not None:
+            cf.conditional_style = ldm.ConditionalStyleMask.from_val(cnf.get(f"{W_NS}val", ""))
+        return cf
+
+    @staticmethod
+    def _apply_width(tcPr: ET.Element, cf: ldm.CellFormat) -> None:
+        tcW = tcPr.find(f"{W_NS}tcW")
+        if tcW is None:
+            return
+        w_type = tcW.get(f"{W_NS}type", "")
+        w_val = tcW.get(f"{W_NS}w", "0")
+        if w_type == "dxa":
+            cf.width = int(w_val) / _TWIPS_PER_PT
+            cf.preferred_width = ldm.PreferredWidth.from_points(cf.width)
+        elif w_type == "pct":
+            cf.preferred_width = ldm.PreferredWidth.from_percent(int(w_val) / _PCT_DIVISOR)
+        elif w_type == "auto":
+            cf.preferred_width = ldm.PreferredWidth.auto()
+
+    @staticmethod
+    def _apply_vertical_align(tcPr: ET.Element, cf: ldm.CellFormat) -> None:
+        vAlign = tcPr.find(f"{W_NS}vAlign")
+        if vAlign is not None:
+            cf.vertical_alignment = _VERT_ALIGN_MAP.get(
+                vAlign.get(f"{W_NS}val", "top"), _CVA.TOP
+            )
+
+    @staticmethod
+    def _apply_merge(tcPr: ET.Element, cf: ldm.CellFormat) -> None:
+        for tag, name in (("vMerge", "vertical_merge"), ("hMerge", "horizontal_merge")):
+            merge = tcPr.find(f"{W_NS}{tag}")
+            if merge is not None:
+                setattr(cf, name, _VMERGE_RESTART if merge.get(f"{W_NS}val", "continue") == "restart"
+                        else _VMERGE_CONTINUE)
+
+    @staticmethod
+    def _apply_grid_span(tcPr: ET.Element, cf: ldm.CellFormat) -> None:
+        gridSpan = tcPr.find(f"{W_NS}gridSpan")
+        if gridSpan is None:
+            return
+        span = int(gridSpan.get(f"{W_NS}val", "1"))
+        if not 1 <= span <= MAX_TABLE_COLUMNS:
+            raise ValueError(f"DOCX gridSpan must be between 1 and {MAX_TABLE_COLUMNS}")
+        cf.grid_span = span
+
+    @staticmethod
+    def _apply_text_direction(tcPr: ET.Element, cf: ldm.CellFormat) -> None:
+        textDirection = tcPr.find(f"{W_NS}textDirection")
+        if textDirection is not None:
+            cf.orientation = _TEXT_DIRECTION_MAP.get(
+                textDirection.get(f"{W_NS}val", ""), 0
+            )
+
+    @staticmethod
+    def _apply_no_wrap(tcPr: ET.Element, cf: ldm.CellFormat) -> None:
+        noWrap = tcPr.find(f"{W_NS}noWrap")
+        if noWrap is None:
+            return
+        val = noWrap.get(f"{W_NS}val")
+        if val is None or val not in ("false", "0"):
+            cf.wrap_text = False

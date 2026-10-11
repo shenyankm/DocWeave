@@ -1,0 +1,749 @@
+"""Generates ``word/styles.xml``.
+
+Emits a minimal but Word-compatible styles part: doc defaults plus the
+nine built-in heading styles so paragraphs that reference
+``HeadingN`` resolve to the expected outline level.  Custom styles
+captured by the LDM are appended after the built-ins.
+"""
+
+
+import re
+from typing import Optional
+
+from dockiln import light_document_model as ldm
+from dockiln.readers.docx.utils import _canonicalize_style_name
+from dockiln.readers.docx.ldm_builder.cascading import FontResolver
+from dockiln.writers.docx.constants import W_URI, pt_to_twips
+from dockiln.writers.docx.paragraphs import pf_to_pPr_children
+from dockiln.writers.docx.runs import color_to_hex, render_rPr
+from dockiln.writers.docx.blank_template import latent_styles
+from dockiln.writers.docx.tables import _table_borders, _by_slot, _TC_BORDER_SIDES
+from dockiln.writers.docx.xml_utils import XML_DECL, el
+from dockiln.model.enums import StyleIdentifier
+from dockiln.model.style_identifiers import IDENTIFIER_TO_STYLE_ID
+from dockiln.writers.docx.paragraphs import _resolve_style_id
+
+# Heading-name regex (reader-side).  Matches trigger a synthesised
+# outline_level + is_heading=True after chain resolve, so re-emitting
+# <w:outlineLvl> here would leak the value into descendants on round-trip.
+_HEADING_NAME_RE = re.compile(r"[Hh]eading\s*(\d+)")
+CHARACTER_FONT_PREFIX = "\0character:"
+DEFAULT_FONT_KEY = "\0defaults"
+
+
+def _effective_default_font(doc: ldm.Document) -> ldm.Font:
+    font = doc.doc_defaults_font.model_copy(deep=True) if doc.doc_defaults_font is not None else ldm.Font()
+    if font.size <= 0:
+        present = doc.doc_defaults_font is not None or doc.doc_defaults_rpr_present is not False
+        font.size = 10.0 if present else 11.0
+    return font
+
+
+def build_style_font_map(doc: ldm.Document) -> dict[str, ldm.Font]:
+    """Paragraph fonts plus sparse character chains for diff-based rPr emission."""
+    out: dict[str, ldm.Font] = {}
+    out[DEFAULT_FONT_KEY] = _effective_default_font(doc)
+    paragraphs = {style.name: style for style in doc.styles if style.type == 1}
+    for style in doc.styles:
+        if style.type != 1 or style.font is None:
+            continue
+        canonical = style.name.replace(" ", "").lower()
+        if canonical:
+            font = style.font.model_copy(deep=True)
+            for field in ldm.FONT_BOOLEAN_FIELDS:
+                current, seen, declared = style.name, set(), False
+                while current in paragraphs and current not in seen:
+                    seen.add(current)
+                    layer = paragraphs[current]
+                    if layer.font is not None:
+                        explicit = getattr(layer.font, field + "_explicit")
+                        if explicit is True or (explicit is None and field in layer.font.model_fields_set):
+                            declared = True
+                            break
+                    current = layer.base_style_name
+                if not declared:
+                    font.__pydantic_fields_set__.discard(field)
+            out[canonical] = font
+    if doc.doc_defaults_rpr_present is not None and "normal" not in out:
+        out["normal"] = _effective_default_font(doc)
+        out["normal"].__pydantic_fields_set__.difference_update(ldm.FONT_BOOLEAN_FIELDS)
+    characters = {style.name: style for style in doc.styles if style.type == 2}
+    for name in characters:
+        chain = []
+        seen = set()
+        current = name
+        while current in characters and current not in seen:
+            key = CHARACTER_FONT_PREFIX + current
+            if key in out:
+                break
+            seen.add(current)
+            chain.append(current)
+            current = characters[current].base_style_name
+        font = out.get(CHARACTER_FONT_PREFIX + current, ldm.Font()).model_copy(deep=True)
+        for current in reversed(chain):
+            if characters[current].font is not None:
+                FontResolver.merge(font, characters[current].font)
+            out[CHARACTER_FONT_PREFIX + current] = font.model_copy(deep=True)
+    return out
+
+
+_NAMELESS_STYLE_PREFIX = "Style"
+
+
+# Word's styleId resolver only matches [A-Za-z0-9_-] even though the
+# schema allows any string — sanitise so <w:pStyle> lookups succeed
+# (otherwise Word silently downgrades to Normal and rejects on strict load).
+def _sanitize_style_id(raw: str) -> str:
+    cleaned = "".join(c for c in raw if c.isalnum() or c in ("-", "_"))
+    if not cleaned or not (cleaned[0].isalpha() or cleaned[0] == "_"):
+        cleaned = "_" + cleaned
+    return cleaned
+
+
+def _render_style_mark_rPr(mark: Optional[ldm.Font], base_mark: Optional[ldm.Font]) -> str:
+    """Style-level wrapper around :func:`render_rPr` for the paragraph mark.
+
+    Mirrors :func:`paragraphs._render_mark_rPr` but lives here to avoid
+    a circular import — ``paragraphs.py`` imports ``styles_part`` for
+    ``build_style_id_map``, so the helper has to land on this side.
+    """
+    if mark is None:
+        return ""
+    rPr = render_rPr(mark, base=base_mark, for_style=True)
+    return rPr or el("w:rPr")
+
+
+def build_style_id_map(doc: ldm.Document) -> dict[str, str]:
+    """Map every LDM style ``name`` → a unique on-disk ``w:styleId``.
+
+    The reader collapses Word's distinct ``styleId``s into the display
+    ``name`` it stored on each :class:`Style`, so two styles named e.g.
+    ``"Body Text 2"`` and ``"BodyText 2"`` both lose their differentiator.
+    The naive ``name.replace(" ", "")`` scheme then assigns them the same
+    id, and our ``seen_ids`` dedup drops the second style on round-trip.
+
+    Resolve collisions by appending ``0`` first (matches Word's own
+    behaviour for the ``Test19075`` fixture), then ``_2``, ``_3``…  The
+    map is built once per document and consulted by every site that
+    needs a styleId — ``_custom_style``, ``basedOn`` / ``next``
+    references, and paragraph-level ``<w:pStyle>``.
+    """
+    out: dict[str, str] = {}
+    used: set[str] = set()
+    nameless_idx = 0
+    for style in doc.styles:
+        name = style.name
+        if not name:
+            if style.built_in and style.style_identifier:
+                canonical_id = IDENTIFIER_TO_STYLE_ID.get(style.style_identifier)
+                if canonical_id and canonical_id not in used:
+                    used.add(canonical_id)
+                    out[f"<nameless:{id(style)}>"] = canonical_id
+                    continue
+            nameless_idx += 1
+            candidate = f"_{_NAMELESS_STYLE_PREFIX}{nameless_idx}"
+            while candidate in used:
+                nameless_idx += 1
+                candidate = f"_{_NAMELESS_STYLE_PREFIX}{nameless_idx}"
+            used.add(candidate)
+            out[f"<nameless:{id(style)}>"] = candidate
+            continue
+        # For built-in styles, use the canonical styleId from the
+        # identifier lookup table (e.g. HEADING_1 → "Heading1").
+        if style.built_in and style.style_identifier:
+            canonical_id = IDENTIFIER_TO_STYLE_ID.get(style.style_identifier)
+            if canonical_id and canonical_id not in used:
+                used.add(canonical_id)
+                out[name] = canonical_id
+                continue
+        candidate = _sanitize_style_id(name.replace(" ", ""))
+        if candidate in used:
+            base = candidate
+            i = 0
+            while candidate in used:
+                i += 1
+                candidate = f"{base}{'0' if i == 1 else f'_{i}'}"
+        used.add(candidate)
+        out[name] = candidate
+    return out
+
+
+def _style_id(style: ldm.Style, style_id_map: dict[str, str]) -> str:
+    """Resolve a style's on-disk id, including the synthesised form for
+    nameless source styles."""
+    if style.name:
+        return style_id_map.get(style.name, _sanitize_style_id(style.name.replace(" ", "")))
+    return style_id_map.get(f"<nameless:{id(style)}>", "_StyleX")
+
+
+def _is_custom_style_name(name: str) -> bool:
+    """Detect whether ``name`` would be capitalized by the reader on read.
+
+    The reader treats unknown lowercase names as built-ins and applies
+    title-casing (``paragraph`` → ``Paragraph``).  We mark any style whose
+    name does not survive that canonicalisation as ``w:customStyle="1"``
+    so the reader leaves the original case alone on the next round-trip.
+    """
+    return _canonicalize_style_name(name) != name
+
+
+# (font name, size pt, bold, italic, kerning pt, keep next) per level,
+# as Aspose's AllStyles2003 resource defines the built-in headings.
+_HEADING_STYLE_LADDER = {
+    1: ("Arial", 16.0, True, False, 16.0, True),
+    2: ("Arial", 14.0, True, True, 0.0, True),
+    3: ("Arial", 13.0, True, False, 0.0, True),
+    4: ("", 14.0, True, False, 0.0, True),
+    5: ("", 13.0, True, True, 0.0, False),
+    6: ("", 11.0, True, False, 0.0, False),
+    7: ("", 0.0, False, False, 0.0, False),
+    8: ("", 0.0, False, True, 0.0, False),
+    9: ("Arial", 11.0, False, False, 0.0, False),
+}
+_HEADING_SPACE_BEFORE = 12.0
+_HEADING_SPACE_AFTER = 3.0
+
+
+def _builtin_heading_formats(level: int) -> tuple[ldm.ParagraphFormat, Optional[ldm.Font]]:
+    name, size, bold, italic, kerning, keep_next = _HEADING_STYLE_LADDER[level]
+    pf = ldm.ParagraphFormat(
+        space_before=_HEADING_SPACE_BEFORE,
+        space_after=_HEADING_SPACE_AFTER,
+        keep_with_next=keep_next,
+        outline_level=level - 1,
+    )
+    font: Optional[ldm.Font] = None
+    if name or size or bold or italic or kerning:
+        font = ldm.Font()
+        if name:
+            font.name = name
+        if size:
+            font.size = size
+        font.bold = bold
+        font.italic = italic
+        if kerning:
+            font.kerning = kerning
+    return pf, font
+
+
+def _heading_style(level: int) -> str:
+    """Built-in ``HeadingN`` paragraph style.
+
+    Outline level encodes the heading level so readers can recover it
+    via ``pPr/outlineLvl`` even without a styles map.
+    """
+    pf, font = _builtin_heading_formats(level)
+    children = [
+        el("w:name", {"w:val": f"heading {level}"}),
+        el("w:basedOn", {"w:val": "Normal"}),
+        el("w:next", {"w:val": "Normal"}),
+        el("w:pPr", None, pf_to_pPr_children(pf)),
+    ]
+    if font is not None:
+        children.append(render_rPr(font, for_style=True) or el("w:rPr"))
+    return el(
+        "w:style",
+        {"w:type": "paragraph", "w:styleId": f"Heading{level}"},
+        children,
+    )
+
+
+def _normal_style(*, is_default: bool = True) -> str:
+    return el(
+        "w:style",
+        {"w:type": "paragraph", "w:default": "1" if is_default else None, "w:styleId": "Normal"},
+        el("w:name", {"w:val": "Normal"}),
+    )
+
+
+def _hyperlink_style() -> str:
+    """Word's built-in ``Hyperlink`` character style: blue + underlined.
+
+    Runs synthesised by the markdown-link rewrite carry
+    ``rStyle="Hyperlink"`` so this row gives them the expected visual
+    treatment without polluting their direct formatting.
+    """
+    rPr = el(
+        "w:rPr",
+        None,
+        [
+            el("w:color", {"w:val": "0563C1"}),
+            el("w:u", {"w:val": "single"}),
+        ],
+    )
+    return el(
+        "w:style",
+        {"w:type": "character", "w:styleId": "Hyperlink"},
+        [
+            el("w:name", {"w:val": "Hyperlink"}),
+            el("w:basedOn", {"w:val": "DefaultParagraphFont"}),
+            el("w:uiPriority", {"w:val": "99"}),
+            el("w:unhideWhenUsed"),
+            rPr,
+        ],
+    )
+
+
+def _custom_style(
+    style: ldm.Style,
+    style_pf_map: dict[str, ldm.ParagraphFormat],
+    docDefaults_pf: Optional[ldm.ParagraphFormat],
+    style_id_map: dict[str, str],
+    style_font_map: dict[str, ldm.Font],
+    doc_defaults_font: Optional[ldm.Font] = None,
+) -> str:
+    """Render an LDM ``Style`` to ``<w:style>``.
+
+    The resolved :class:`ParagraphFormat` is emitted as a *diff* against
+    the basedOn ancestor (or ``docDefaults`` for top-level styles like
+    ``Normal``) so inherited values aren't re-baked into every child on
+    the next read.
+    """
+    style_id = _style_id(style, style_id_map)
+    type_token = {1: "paragraph", 2: "character", 3: "table", 4: "numbering"}.get(
+        style.type, "paragraph"
+    )
+    style_attrs: dict[str, object] = {"w:type": type_token, "w:styleId": style_id}
+    if style.is_default or (style.is_default is None and style.built_in
+                            and style.type == 1 and style.name.lower() == "normal"):
+        style_attrs["w:default"] = "1"
+    if not style.built_in and (
+        _is_custom_style_name(style.name) or style.style_identifier != 0
+    ):
+        style_attrs["w:customStyle"] = "1"
+    pf_source = style.paragraph_format
+    font_source = style.font
+    base_style_name = style.base_style_name
+    next_style_name = style.next_paragraph_style_name
+    if style.built_in and pf_source is None and font_source is None:
+        sid = style.style_identifier
+        if StyleIdentifier.HEADING_1 <= sid <= StyleIdentifier.HEADING_9 and not base_style_name:
+            pf_source, font_source = _builtin_heading_formats(sid)
+            base_style_name = "Normal"
+            next_style_name = next_style_name or "Normal"
+        elif sid == StyleIdentifier.FOOTNOTE_TEXT:
+            font_source = ldm.Font()
+            font_source.size = 10.0
+            base_style_name = base_style_name or "Normal"
+        elif sid == StyleIdentifier.FOOTNOTE_REFERENCE:
+            font_source = ldm.Font()
+            font_source.superscript = True
+    children: list[str] = [el("w:name", {"w:val": style.name})]
+    if base_style_name:
+        base_id = style_id_map.get(
+            base_style_name,
+            _sanitize_style_id(base_style_name.replace(" ", "")),
+        )
+        children.append(el("w:basedOn", {"w:val": base_id}))
+    if next_style_name:
+        next_id = style_id_map.get(
+            next_style_name,
+            _sanitize_style_id(next_style_name.replace(" ", "")),
+        )
+        children.append(el("w:next", {"w:val": next_id}))
+    if style.priority != 99:
+        children.append(el("w:uiPriority", {"w:val": str(style.priority)}))
+    if style.semi_hidden:
+        children.append(el("w:semiHidden"))
+    if style.unhide_when_used:
+        children.append(el("w:unhideWhenUsed"))
+    if style.locked:
+        children.append(el("w:locked"))
+    if pf_source is not None:
+        # Paragraph styles diff against the basedOn chain (resolved pf);
+        # table/character/numbering styles diff against zero (raw pPr).
+        base_pf: Optional[ldm.ParagraphFormat] = None
+        if style.type == 1:
+            if base_style_name:
+                canonical = base_style_name.replace(" ", "").lower()
+                base_pf = style_pf_map.get(canonical)
+            if base_pf is None:
+                base_pf = docDefaults_pf
+        pf = pf_source
+        # Synthesised outline_level (e.g. "Heading 0" → -1) means source
+        # had no <w:outlineLvl>; suppress to avoid descendant is_heading flip.
+        heading_match = _HEADING_NAME_RE.search(style.name)
+        if heading_match:
+            implied = int(heading_match.group(1)) - 1
+            if implied < 0 and pf.outline_level == implied:
+                if base_pf is None:
+                    base_pf = ldm.ParagraphFormat(outline_level=implied)
+                else:
+                    base_pf = base_pf.model_copy(update={"outline_level": implied})
+        pPr_children = pf_to_pPr_children(pf, base=base_pf)
+        # Paragraph-mark rPr (``pPr/rPr``) is style-level formatting for
+        # the bullet/number glyph and pilcrow.  Emit a diff against the
+        # basedOn's mark font so child styles only carry their explicit
+        # overrides instead of duplicating the inherited block.
+        base_mark = base_pf.paragraph_break_font if base_pf else None
+        mark_rPr = _render_style_mark_rPr(pf.paragraph_break_font, base_mark)
+        if mark_rPr:
+            pPr_children.append(mark_rPr)
+        if pPr_children:
+            children.append(el("w:pPr", None, pPr_children))
+        elif style.type != 1:
+            # The reader uses the *presence* of ``<w:pPr>`` to decide
+            # whether to populate ``Style.paragraph_format`` for
+            # non-paragraph styles (table / character / numbering).
+            # Emit an empty placeholder so a style whose source pPr
+            # carried only ``<w:numPr>`` (encoded outside the pf in our
+            # LDM) survives the round-trip.
+            children.append(el("w:pPr"))
+    if font_source is not None:
+        # Mirror the paragraph_format diff strategy: paragraph-style fonts
+        # are reader-resolved through the basedOn chain, so we diff
+        # against the basedOn's resolved font to recover only the explicit
+        # overrides; other style types carry raw rPr fields, so the diff
+        # base is the zero default.  Always emit ``<w:rPr/>`` even when
+        # the diff is empty — the reader uses the element's *presence*
+        # to decide whether to populate ``Style.font`` at all.
+        base_font: Optional[ldm.Font] = None
+        if style.type == 1:
+            if base_style_name:
+                canonical = base_style_name.replace(" ", "").lower()
+                base_font = style_font_map.get(canonical)
+            else:
+                base_font = doc_defaults_font
+        rPr = render_rPr(font_source, base=base_font, for_style=True,
+                        preserve_explicit_off=style.type != 1) or el("w:rPr")
+        children.append(rPr)
+    if style.table_style_format is not None:
+        tblPr = _render_style_tblPr(style.table_style_format)
+        if tblPr:
+            children.append(tblPr)
+    if style.row_format is not None:
+        from .tables import render_row_format
+        properties = render_row_format(style.row_format, for_style=True)
+        if properties:
+            children.append(properties)
+    for tsp in style.table_style_properties:
+        rendered = _render_tblStylePr(tsp)
+        if rendered:
+            children.append(rendered)
+    return el("w:style", style_attrs, children)
+
+
+def _docDefaults(
+    normal_pf: Optional[ldm.ParagraphFormat],
+    doc_defaults_font: Optional[ldm.Font] = None,
+    rpr_default_present: bool = True,
+) -> str:
+    """Document-level defaults.
+
+    The reader treats ``Normal``'s resolved :class:`ParagraphFormat` as the
+    union of ``docDefaults`` + ``Normal``'s own ``<w:pPr>`` (whichever side
+    of the chain set each field).  The LDM doesn't separate the two halves,
+    so on write we put the entire resolved Normal back into ``docDefaults``;
+    that way paragraphs with no ``pStyle`` (and therefore no style chain to
+    walk) still inherit the same spacing they had originally.  Normal's own
+    ``<w:pPr>`` then ends up empty under the diff-vs-basedOn rule.
+
+    ``doc_defaults_font`` is the raw docDefaults-level font (not the
+    cascade-resolved Normal font) so the writer emits the original
+    rPrDefault without mixing in Normal's overrides.
+    """
+    pPrDefault_body: object = ""
+    if normal_pf is not None:
+        pPr_children = pf_to_pPr_children(normal_pf, base=None)
+        if pPr_children:
+            pPrDefault_body = el("w:pPr", None, pPr_children)
+    rPr_body = ""
+    if doc_defaults_font is not None:
+        rPr_body = render_rPr(doc_defaults_font, for_style=True)
+    return el(
+        "w:docDefaults",
+        None,
+        [
+            el("w:rPrDefault", None, rPr_body or el("w:rPr")) if rpr_default_present else "",
+            el("w:pPrDefault", None, pPrDefault_body) if pPrDefault_body else el("w:pPrDefault"),
+        ],
+    )
+
+
+def _render_style_tblPr(tsf: ldm.TableStyleFormat) -> str:
+    """Render ``<w:tblPr>`` for a table style definition."""
+    children: list[str] = []
+    if tsf.bidi is not None:
+        children.append(el("w:bidiVisual", {"w:val": "1" if tsf.bidi else "0"}))
+    for field, tag in (("row_band_size", "tblStyleRowBandSize"),
+                       ("column_band_size", "tblStyleColBandSize")):
+        value = getattr(tsf, field)
+        if value is not None:
+            children.append(el("w:" + tag, {"w:val": str(value)}))
+    if tsf.borders:
+        tbl_borders = _table_borders(tsf.borders)
+        if tbl_borders:
+            children.append(tbl_borders)
+    margins: list[str] = []
+    for side, val in [
+        ("top", tsf.top_padding),
+        ("left", tsf.left_padding),
+        ("bottom", tsf.bottom_padding),
+        ("right", tsf.right_padding),
+    ]:
+        if val is not None:
+            margins.append(el(f"w:{side}", {"w:w": pt_to_twips(val), "w:type": "dxa"}))
+    if margins:
+        children.append(el("w:tblCellMar", None, margins))
+    if tsf.style_look is not None:
+        from .tables import render_table_look
+        children.append(render_table_look(tsf.style_look))
+    if not children:
+        return ""
+    return el("w:tblPr", None, children)
+
+
+def _render_tblStylePr(tsp: ldm.TableStyleProperty) -> str:
+    children: list[str] = []
+    if tsp.paragraph_format is not None:
+        pf_children = pf_to_pPr_children(tsp.paragraph_format)
+        if pf_children:
+            children.append(el("w:pPr", None, pf_children))
+    if tsp.font is not None:
+        rPr = render_rPr(tsp.font, for_style=True, preserve_explicit_off=True)
+        if rPr:
+            children.append(rPr)
+    if tsp.row_format is not None:
+        from .tables import render_row_format
+        properties = render_row_format(tsp.row_format, for_style=True)
+        if properties:
+            children.append(properties)
+    if tsp.shading or tsp.borders:
+        tc_children: list[str] = []
+        if tsp.borders:
+            border_sides = _by_slot(tsp.borders, _TC_BORDER_SIDES)
+            if border_sides:
+                tc_children.append(el("w:tcBorders", None, border_sides))
+        if tsp.shading:
+            shading_hex = color_to_hex(tsp.shading.background_pattern_color)
+            if shading_hex:
+                tc_children.append(
+                    el("w:shd", {"w:val": "clear", "w:color": "auto", "w:fill": shading_hex})
+                )
+        if tc_children:
+            children.append(el("w:tcPr", None, tc_children))
+    return el("w:tblStylePr", {"w:type": tsp.type}, children)
+
+
+def _collect_referenced_style_ids(
+    doc: ldm.Document, style_id_map: dict[str, str]
+) -> set[str]:
+    """Return the set of style IDs that any paragraph in ``doc`` references.
+
+    A style ID is considered referenced when a paragraph's resolved
+    ``style_id`` (heading short form or ``style_name.replace(" ", "")``)
+    appears anywhere — body, headers, footers, or table cells.  Used by
+    :func:`render_styles_xml` to skip fallback emissions for unused
+    built-ins so the LDM round-trip doesn't grow phantom Heading rows.
+    """
+
+    ids: set[str] = set()
+
+    def walk(paragraphs: list[ldm.Paragraph]) -> None:
+        for p in paragraphs:
+            sid = _resolve_style_id(p.paragraph_format, style_id_map=style_id_map)
+            if sid:
+                ids.add(sid)
+
+    walk(doc.header_paragraphs)
+    walk(doc.footer_paragraphs)
+    for sec in doc.sections:
+        for child in sec.body.children:
+            if isinstance(child, ldm.Paragraph):
+                walk([child])
+            elif isinstance(child, ldm.Table):
+                _collect_table_style_ids(child, ids, style_id_map)
+    # Hyperlinks are emitted with rStyle="Hyperlink" by ``_render_hyperlink_run``,
+    # so we need the style def whenever any run carries a markdown link.
+    if _doc_has_hyperlink_runs(doc):
+        ids.add("Hyperlink")
+    return ids
+
+
+def _collect_table_style_ids(
+    table: ldm.Table, ids: set[str], style_id_map: dict[str, str]
+) -> None:
+
+    for row in table.rows:
+        for cell in row.cells:
+            for p in cell.paragraphs:
+                sid = _resolve_style_id(p.paragraph_format, style_id_map=style_id_map)
+                if sid:
+                    ids.add(sid)
+            for nested in cell.tables:
+                _collect_table_style_ids(nested, ids, style_id_map)
+
+
+def _doc_has_hyperlink_runs(doc: ldm.Document) -> bool:
+    """Return True if any run carries the ``Hyperlink`` character style.
+
+    Mirrors the gating in ``runs._render_hyperlink_run`` so the writer
+    only adds the ``Hyperlink`` style fallback when something will
+    actually reference it via ``rStyle``.
+    """
+
+    def runs(paragraphs: list[ldm.Paragraph]):
+        for p in paragraphs:
+            yield from p.runs
+
+    def walk_table(table: ldm.Table):
+        for row in table.rows:
+            for cell in row.cells:
+                yield from runs(cell.paragraphs)
+                for nested in cell.tables:
+                    yield from walk_table(nested)
+
+    def is_hyperlink_run(r: ldm.Run) -> bool:
+        return (r.font.style_name or "").replace(" ", "").lower() == "hyperlink"
+
+    for r in runs(doc.header_paragraphs):
+        if is_hyperlink_run(r):
+            return True
+    for r in runs(doc.footer_paragraphs):
+        if is_hyperlink_run(r):
+            return True
+    for sec in doc.sections:
+        for child in sec.body.children:
+            if isinstance(child, ldm.Paragraph):
+                for r in child.runs:
+                    if is_hyperlink_run(r):
+                        return True
+            elif isinstance(child, ldm.Table):
+                for r in walk_table(child):
+                    if is_hyperlink_run(r):
+                        return True
+    return False
+
+
+def render_styles_xml(doc: ldm.Document) -> str:
+    """Build ``word/styles.xml`` payload.
+
+    LDM-defined styles take priority over the hard-coded built-ins, so a
+    document that round-trips through the reader keeps any per-heading
+    italic/colour overrides defined in its original ``styles.xml``.
+
+    Built-in fallbacks (``Normal``, ``Heading1``…``Heading9``,
+    ``Hyperlink``) are only emitted when a paragraph actually references
+    the corresponding ID.  Without this gate every round-trip would
+    inflate the LDM ``styles`` list with phantom Heading rows the source
+    document never carried.
+    """
+    style_pf_map: dict[str, ldm.ParagraphFormat] = {}
+    for style in doc.styles:
+        if style.type == 1 and style.paragraph_format is not None:
+            canonical = style.name.replace(" ", "").lower()
+            if canonical:
+                style_pf_map[canonical] = style.paragraph_format
+
+    docDefaults_pf = style_pf_map.get("normal")
+    style_id_map = build_style_id_map(doc)
+    style_font_map = build_style_font_map(doc)
+    referenced_ids = _collect_referenced_style_ids(doc, style_id_map)
+
+    rpr_present = doc.doc_defaults_font is not None or doc.doc_defaults_rpr_present is not False
+    effective_defaults = _effective_default_font(doc) if doc.doc_defaults_rpr_present is not None else doc.doc_defaults_font
+    children: list[str] = [_docDefaults(docDefaults_pf, doc.doc_defaults_font, rpr_present), latent_styles()]
+    seen_ids: set[str] = set()
+
+    for style in doc.styles:
+        sid = _style_id(style, style_id_map)
+        if not sid or sid in seen_ids:
+            continue
+        seen_ids.add(sid)
+        children.append(
+            _custom_style(style, style_pf_map, docDefaults_pf, style_id_map, style_font_map, effective_defaults)
+        )
+
+    # Word always wants a Normal style row to exist, even if nothing
+    # references it explicitly — emit the empty placeholder when the LDM
+    # didn't already supply one.
+    if "Normal" not in seen_ids:
+        children.append(_normal_style(is_default=not any(s.type == 1 and s.is_default for s in doc.styles)))
+        seen_ids.add("Normal")
+    for level in range(1, 10):
+        sid = f"Heading{level}"
+        if sid in seen_ids or sid not in referenced_ids:
+            continue
+        seen_ids.add(sid)
+        children.append(_heading_style(level))
+    if "Hyperlink" not in seen_ids and "Hyperlink" in referenced_ids:
+        children.append(_hyperlink_style())
+        seen_ids.add("Hyperlink")
+
+    root = el("w:styles", {"xmlns:w": W_URI}, children)
+    return XML_DECL + root
+
+
+# Re-export so callers don't import from runs just for one helper.
+__all__ = ["render_styles_xml", "color_to_hex"]
+
+
+def apply_reference_styles(generated: str, reference: ldm.Document) -> str:
+    """Overlay reference styles by display name without changing body style IDs."""
+    from xml.etree import ElementTree as ET
+
+    # Reference styles retain their resolved colors under the destination theme.
+    styles = []
+    for style in reference.styles:
+        if style.font is not None and style.font.color_rendering is not None:
+            font = style.font.model_copy(update={'color': style.font.render_color})
+            style = style.model_copy(update={'font': font})
+        styles.append(style)
+    defaults = reference.doc_defaults_font
+    if defaults is not None and defaults.color_rendering is not None:
+        defaults = defaults.model_copy(update={'color': defaults.render_color})
+    reference = reference.model_copy(update={'styles': styles, 'doc_defaults_font': defaults})
+    names = [s.name for s in reference.styles if s.name]
+    if len(names) != len(set(names)):
+        raise ValueError("Reference DOCX contains ambiguous style names")
+    root = ET.fromstring(generated)
+    incoming = ET.fromstring(render_styles_xml(reference))
+    w = "{" + W_URI + "}"
+    default_types = {s.get(w + "type") for s in incoming.findall(w + "style")
+                     if s.get(w + "default") == "1"}
+    for style in root.findall(w + "style"):
+        if style.get(w + "type") in default_types:
+            style.attrib.pop(w + "default", None)
+    originals = {s.find(w + "name").get(w + "val"): s for s in root.findall(w + "style")}
+    used = {s.get(w + "styleId") for s in originals.values()}
+    remap = {}
+    names = set()
+    for style in incoming.findall(w + "style"):
+        name = style.find(w + "name").get(w + "val")
+        if name in names:
+            raise ValueError("Reference DOCX contains ambiguous style names")
+        names.add(name)
+        original = originals.get(name)
+        source_id = style.get(w + "styleId")
+        if original is not None:
+            if original.get(w + "type") != style.get(w + "type"):
+                raise ValueError(f"Reference style type differs for {name!r}")
+            target_id = original.get(w + "styleId")
+        else:
+            target_id = source_id
+            index = 2
+            while target_id in used:
+                target_id = f"{source_id}_{index}"
+                index += 1
+        used.add(target_id)
+        remap[source_id] = target_id
+    for style in incoming.findall(w + "style"):
+        name = style.find(w + "name").get(w + "val")
+        style.set(w + "styleId", remap[style.get(w + "styleId")])
+        for tag in ("basedOn", "next", "link"):
+            relation = style.find(w + tag)
+            if relation is not None:
+                old_id = relation.get(w + "val")
+                target = remap.get(old_id, old_id)
+                if target not in used:
+                    raise ValueError(f"Reference style has unresolved {tag}: {old_id!r}")
+                relation.set(w + "val", target)
+        original = originals.get(name)
+        if original is not None:
+            root.remove(original)
+        root.append(style)
+    defaults = root.find(w + "docDefaults")
+    if defaults is not None:
+        root.remove(defaults)
+    root.insert(0, incoming.find(w + "docDefaults"))
+    return XML_DECL + ET.tostring(root, encoding="unicode")

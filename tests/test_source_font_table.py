@@ -5,11 +5,11 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import Document, SaveFormat
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._opc import resolve_target, relationships_path
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+from dockiln import Document, SaveFormat
+from dockiln import light_document_model as ldm
+from dockiln._opc import resolve_target, relationships_path
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.saving import OoxmlSaveOptions
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
@@ -150,7 +150,7 @@ def test_invalid_snapshot_keeps_existing_output_and_model(tmp_path, damage):
 
 
 def test_budget_checked_before_parsing(monkeypatch, tmp_path):
-    from aspose.words_foss import _io
+    from dockiln import _io
     model = Document(BytesIO(archive(owned_parts()))).light_document_model
     monkeypatch.setattr(_io, 'MAX_INPUT_BYTES', 10)
     output = tmp_path / 'existing.docx'; output.write_bytes(b'existing')

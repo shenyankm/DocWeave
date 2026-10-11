@@ -62,9 +62,9 @@ def main():
     if args.action == 'generate':
         (args.directory / 'input.docx').write_bytes(generate_input())
     elif args.action == 'current':
-        from aspose.words_foss import Document, SaveFormat
-        from aspose.words_foss.docx_writer import LdmDocxWriter
-        from aspose.words_foss.saving import OoxmlSaveOptions
+        from dockiln import Document, SaveFormat
+        from dockiln.writers.docx import LdmDocxWriter
+        from dockiln.saving import OoxmlSaveOptions
         model = Document(args.directory / 'input.docx').light_document_model
         for name, fmt in [('current.docx', SaveFormat.DOCX), ('current.xml', SaveFormat.FLAT_OPC)]:
             (args.directory / name).write_bytes(LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(model))

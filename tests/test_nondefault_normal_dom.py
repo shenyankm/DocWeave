@@ -4,8 +4,8 @@ from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 
 import pytest
-import aspose.words_foss as aw
-from aspose.words_foss.docx_writer import LdmDocxWriter
+import dockiln as dk
+from dockiln.writers.docx import LdmDocxWriter
 from .test_nondefault_normal_paint import owned_model, paint
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
@@ -13,7 +13,7 @@ W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 
 def dom(flag, size, defaults):
     data = LdmDocxWriter().write_to_bytes(owned_model(flag, size, defaults))
-    return aw.DocxDocument(BytesIO(data))
+    return dk.DocxDocument(BytesIO(data))
 
 
 def assert_declarations(document):
@@ -43,7 +43,7 @@ def test_dom_disabled_normal_size_fallback_is_live_and_preserves_source(flag, si
         current = document
         for _ in range(2):
             data = current.to_flat_opc() if flat else current.to_bytes()
-            current = aw.DocxDocument(BytesIO(data))
+            current = dk.DocxDocument(BytesIO(data))
             assert current.body.paragraphs[0].runs[0].effective_font.size == 20
         assert_declarations(current)
         paint(current.to_light_document(), 20)

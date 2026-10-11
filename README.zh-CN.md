@@ -1,6 +1,6 @@
-# DocWeave
+# DocKiln
 
-[项目主页](https://shenyankm.github.io/DocWeave/)
+[项目主页](https://shenyankm.github.io/DocKiln/)
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
@@ -32,17 +32,17 @@
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install "git+https://github.com/shenyankm/DocWeave.git@dev"
+python -m pip install "git+https://github.com/shenyankm/DocKiln.git@dev"
 ```
 
 Windows PowerShell 使用 `.venv\Scripts\Activate.ps1` 激活。需要可复现部署时，将 `@dev` 替换为已验证的完整提交哈希。
 
-当前发行包名为 `aspose-words-foss-enhanced`，导入名为 `aspose.words_foss`，尚无 `docweave` 导入入口。不要与 `aspose-words-foss` 同环境安装：它是另一个发行包，但共享相同模块，安装或卸载任一包都可能覆盖这些模块。
+当前发行包名为 `dockiln`，导入名为 `dockiln`，尚无 `dockiln` 导入入口。不要与 `aspose-words-foss` 同环境安装：它是另一个发行包，但共享相同模块，安装或卸载任一包都可能覆盖这些模块。
 
 运行时依赖会自动安装。可选文字塑形支持：
 
 ```bash
-python -m pip install "aspose-words-foss-enhanced[shaping] @ git+https://github.com/shenyankm/DocWeave.git@dev"
+python -m pip install "dockiln[shaping] @ git+https://github.com/shenyankm/DocKiln.git@dev"
 ```
 
 ## 快速开始
@@ -50,12 +50,12 @@ python -m pip install "aspose-words-foss-enhanced[shaping] @ git+https://github.
 ### 转换文档
 
 ```python
-import aspose.words_foss as aw
+import dockiln as dk
 
-doc = aw.Document("report.docx")
-doc.save("report.md", aw.SaveFormat.MARKDOWN)
-doc.save("report.pdf", aw.SaveFormat.PDF)
-doc.save("report.txt", aw.SaveFormat.TEXT)
+doc = dk.Document("report.docx")
+doc.save("report.md", dk.SaveFormat.MARKDOWN)
+doc.save("report.pdf", dk.SaveFormat.PDF)
+doc.save("report.txt", dk.SaveFormat.TEXT)
 ```
 
 `save(path)` 可根据输出扩展名推断格式。转换会重建受支持的内容，不是 DOCX 无损往返。
@@ -64,12 +64,12 @@ doc.save("report.txt", aw.SaveFormat.TEXT)
 
 ```python
 from io import BytesIO
-import aspose.words_foss as aw
+import dockiln as dk
 
 markdown = "# Report\n\n客户公司\n\n中文 **粗体** and English.\n"
-doc = aw.Document(BytesIO(markdown.encode("utf-8")), aw.MarkdownLoadOptions())
-doc.save("report.docx", aw.SaveFormat.DOCX)
-pdf_bytes = doc.to_bytes(aw.SaveFormat.PDF)
+doc = dk.Document(BytesIO(markdown.encode("utf-8")), dk.MarkdownLoadOptions())
+doc.save("report.docx", dk.SaveFormat.DOCX)
+pdf_bytes = doc.to_bytes(dk.SaveFormat.PDF)
 ```
 
 Markdown 流输入需要显式加载选项。`to_bytes(format_or_options)` 返回内存中的输出，不创建文件。
@@ -77,9 +77,9 @@ Markdown 流输入需要显式加载选项。`to_bytes(format_or_options)` 返�
 ### 不重建文档包的 DOCX 编辑
 
 ```python
-import aspose.words_foss as aw
+import dockiln as dk
 
-editable = aw.DocxDocument("report.docx")
+editable = dk.DocxDocument("report.docx")
 paragraph = editable.body.paragraphs[0]
 paragraph.replace_text("客户公司", "新的客户公司")
 paragraph.range(0, 2).apply_font(bold=True, size=12)
@@ -93,9 +93,9 @@ editable.save("edited.docx")
 ```python
 import json
 from dataclasses import asdict
-import aspose.words_foss as aw
+import dockiln as dk
 
-doc = aw.Document("report.docx")
+doc = dk.Document("report.docx")
 print(doc.get_text())
 print(json.dumps(doc.to_dict(), ensure_ascii=False))
 print([asdict(item) for item in doc.diagnostics])
@@ -108,7 +108,7 @@ print([asdict(item) for item in doc.diagnostics])
 在 **POSIX** 系统上使用带资源限制的转换：
 
 ```bash
-python -m aspose.words_foss.convert report.docx report.pdf --strict --timeout 60 --memory-mb 1024
+python -m dockiln.convert report.docx report.pdf --strict --timeout 60 --memory-mb 1024
 ```
 
 `--strict` 拒绝已检测到的内容损失和缺字，不能发现所有保真问题。普通库调用不提供进程超时或内存隔离；Windows 用户可使用库 API。
@@ -116,7 +116,7 @@ python -m aspose.words_foss.convert report.docx report.pdf --strict --timeout 60
 使用另行安装的 LibreOffice：
 
 ```bash
-python -m aspose.words_foss.convert report.docx native.pdf --backend libreoffice
+python -m dockiln.convert report.docx native.pdf --backend libreoffice
 ```
 
 该后端使用原始输入文件和系统字体，不使用内置 PDF 字体。仅支持输出 PDF，不能与 `--strict`、`--fallback-font` 或 `--text-shaping` 组合使用。
@@ -135,25 +135,25 @@ python -m aspose.words_foss.convert report.docx native.pdf --backend libreoffice
 ## 开发与测试
 
 ```bash
-git clone --branch dev https://github.com/shenyankm/DocWeave.git
-cd DocWeave
+git clone --branch dev https://github.com/shenyankm/DocKiln.git
+cd DocKiln
 python -m pip install -e ".[dev,shaping]" build docxtpl
 python -m pytest tests -q
-python -m pytest ApiExamples -q --rootdir=ApiExamples -c ApiExamples/pytest.ini
+python -m pytest examples -q --rootdir=examples -c examples/pytest.ini
 ```
 
-未安装 LibreOffice 时，原生渲染测试会跳过。当前跨平台结果见 [GitHub Actions](https://github.com/shenyankm/DocWeave/actions)；测试通过不保证与 Word 渲染一致。
+未安装 LibreOffice 时，原生渲染测试会跳过。当前跨平台结果见 [GitHub Actions](https://github.com/shenyankm/DocKiln/actions)；测试通过不保证与 Word 渲染一致。
 
 ## 文档
 
 - [DOCX 编辑指南](docs/docx-dom.md)：文本范围、格式、表格及原包保留规则。
 - [转换与安全说明](docs/enhanced-conversion.md)：保存选项、PDF 字体、诊断、CLI 与 LibreOffice。
-- [示例](ApiExamples/)：加载、转换、图片及可选的 `docxtpl` 模板。
+- [示例](examples/)：加载、转换、图片及可选的 `docxtpl` 模板。
 - [生态对比](docs/ecosystem-adoption.md)与 [API 对齐材料](docs/commercial-alignment-plan.md)。
-- [Issues](https://github.com/shenyankm/DocWeave/issues)：问题反馈与功能需求。
+- [Issues](https://github.com/shenyankm/DocKiln/issues)：问题反馈与功能需求。
 
 ## 许可证与致谢
 
-代码采用 [MIT](LICENSE)；内置字体采用 [SIL OFL-1.1](aspose/words_foss/pdf_writer/fonts/OFL.txt)，来源见 [字体说明](aspose/words_foss/pdf_writer/fonts/README.md)。可选集成组件有各自的许可证。
+代码采用 [MIT](LICENSE)；内置字体采用 [SIL OFL-1.1](src/dockiln/writers/pdf/fonts/OFL.txt)，来源见 [字体说明](src/dockiln/writers/pdf/fonts/README.md)。可选集成组件有各自的许可证。
 
-DocWeave 起源于 [Aspose.Words FOSS for Python](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python)，保留原始版权声明。本项目独立维护，不是 Aspose 官方发布版，也不保证 API 或渲染兼容。
+DocKiln 起源于 [Aspose.Words FOSS for Python](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python)，保留原始版权声明。本项目独立维护，不是 Aspose 官方发布版，也不保证 API 或渲染兼容。

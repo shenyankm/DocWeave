@@ -10,9 +10,9 @@ from PIL import Image
 from pydantic import ValidationError
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
 
 
 def png():
@@ -85,7 +85,7 @@ def test_document_image_json_preserves_order_stories_and_docx_resources(by_alias
     with ZipFile(BytesIO(output)) as archive:
         media = [archive.read(name) for name in archive.namelist() if name.startswith('word/media/')]
     assert media and all(data == payload for data in media)
-    reread = aw.Document(BytesIO(output)).light_document_model
+    reread = dk.Document(BytesIO(output)).light_document_model
     assert len(reread.get_child_nodes(ldm.NodeType.SHAPE, True)) == 5
 
 
@@ -93,7 +93,7 @@ def test_existing_docx_image_corpus_round_trips_complete_model_json():
     paths = sorted((Path(__file__).parent/'data/input').glob('*.docx'))
     assert len(paths) >= 12
     for path in paths:
-        source = aw.Document(path).light_document_model
+        source = dk.Document(path).light_document_model
         before = source.model_dump(by_alias=True)
         restored = ldm.Document.model_validate_json(source.model_dump_json(by_alias=True))
         assert restored.model_dump(by_alias=True) == before, path.name

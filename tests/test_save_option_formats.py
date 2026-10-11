@@ -5,19 +5,21 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.docx_writer import LdmDocxWriter
+from ._word_fixtures import word_document
+
+import dockiln as dk
+from dockiln.writers.docx import LdmDocxWriter
 
 
 def document():
-    return aw.Document(BytesIO(b"FORMAT_SENTINEL"), aw.MarkdownLoadOptions())
+    return word_document(b"FORMAT_SENTINEL")
 
 
-@pytest.mark.parametrize("kind", ["docx", "markdown"])
-@pytest.mark.parametrize("value", ["pdf", aw.SaveFormat.TEXT, 999, None, ".docx"])
+@pytest.mark.parametrize("kind", ["docx"])
+@pytest.mark.parametrize("value", ["pdf", "text", 999, None, ".docx"])
 @pytest.mark.parametrize("path_output", [False, True])
 def test_mismatched_option_format_rejected_before_output(tmp_path, kind, value, path_output):
-    options = aw.saving.OoxmlSaveOptions() if kind == "docx" else aw.saving.MarkdownSaveOptions()
+    options = dk.saving.OoxmlSaveOptions()
     options.save_format = value
     doc = document()
     output = tmp_path / "existing.output"
@@ -31,10 +33,10 @@ def test_mismatched_option_format_rejected_before_output(tmp_path, kind, value, 
     assert list(tmp_path.iterdir()) == [output]
 
 
-@pytest.mark.parametrize("value", ["pdf", aw.SaveFormat.TEXT, 999])
+@pytest.mark.parametrize("value", ["pdf", "text", 999])
 @pytest.mark.parametrize("path_output", [False, True])
 def test_direct_docx_writer_validates_mutated_options_and_recovers(tmp_path, value, path_output):
-    options = aw.saving.OoxmlSaveOptions()
+    options = dk.saving.OoxmlSaveOptions()
     writer = LdmDocxWriter(options)
     options.save_format = value
     output = tmp_path / "existing.docx"
@@ -45,29 +47,28 @@ def test_direct_docx_writer_validates_mutated_options_and_recovers(tmp_path, val
         else:
             writer.write_to_bytes(document().light_document_model)
     assert output.read_bytes() == b"ORIGINAL"
-    options.save_format = aw.SaveFormat.DOCX
-    assert aw.Document(BytesIO(writer.write_to_bytes(document().light_document_model))).get_text().strip() == "FORMAT_SENTINEL"
+    options.save_format = dk.SaveFormat.DOCX
+    assert dk.Document(BytesIO(writer.write_to_bytes(document().light_document_model))).get_text().strip() == "FORMAT_SENTINEL"
 
 
 def test_docx_constructor_none_keeps_default_format():
-    raw = document().to_bytes(aw.saving.OoxmlSaveOptions(None))
-    assert aw.Document(BytesIO(raw)).get_text().strip() == "FORMAT_SENTINEL"
+    raw = document().to_bytes(dk.saving.OoxmlSaveOptions(None))
+    assert dk.Document(BytesIO(raw)).get_text().strip() == "FORMAT_SENTINEL"
 
 
-@pytest.mark.parametrize("value", ["pdf", aw.SaveFormat.TEXT, 999])
+@pytest.mark.parametrize("value", ["pdf", "text", 999])
 def test_docx_constructor_format_is_enforced(value):
     with pytest.raises(ValueError, match="save_format"):
-        document().to_bytes(aw.saving.OoxmlSaveOptions(value))
+        document().to_bytes(dk.saving.OoxmlSaveOptions(value))
 
 
 @pytest.mark.parametrize("kind,values", [
-    ("docx", [aw.SaveFormat.DOCX, int(aw.SaveFormat.DOCX), "docx", "DOCX"]),
-    ("markdown", [aw.SaveFormat.MARKDOWN, int(aw.SaveFormat.MARKDOWN), "markdown", "MD"]),
+    ("docx", [dk.SaveFormat.DOCX, int(dk.SaveFormat.DOCX), "docx", "DOCX"]),
 ])
 def test_supported_option_formats_keep_content(kind, values):
     doc = document()
     for value in values:
-        options = aw.saving.OoxmlSaveOptions(value) if kind == "docx" else aw.saving.MarkdownSaveOptions()
+        options = dk.saving.OoxmlSaveOptions(value)
         options.save_format = value
         raw = doc.to_bytes(options)
         if kind == "docx":

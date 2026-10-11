@@ -6,9 +6,9 @@ import pymupdf
 import pytest
 from pypdf import PdfReader
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 
 
 def leader_model(leader, columns=1, long=False):
@@ -173,8 +173,8 @@ def test_toc_leader_restores_graphics_state_and_keeps_following_text(monkeypatch
 @pytest.mark.parametrize("leader", [1, 2, 3, 4, 5])
 @pytest.mark.parametrize("shaping", [False, True])
 def test_public_docx_toc_leader_is_drawn_without_text_noise(tmp_path, leader, shaping):
-    from aspose.words_foss import Document
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln import Document
+    from dockiln.writers.docx import LdmDocxWriter
 
     source = tmp_path / "leader.docx"
     LdmDocxWriter().write(leader_model(leader), source)

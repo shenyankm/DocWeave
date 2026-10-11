@@ -1,0 +1,446 @@
+"""Builders for the document's style and list definitions.
+
+:class:`StyleBuilder` translates ``<w:styles>`` into a list of
+``ldm.Style`` objects, applying the cascade resolvers for paragraph
+styles so the resulting formats are fully merged.
+
+:class:`ListBuilder` translates ``<w:numbering>`` (abstractNum + num
+elements with their lvlOverride children) into a list of
+``ldm.DocList`` objects.  Both abstract levels and override-inline
+levels share one private builder method so the two ListLevel paths
+stay in sync.
+"""
+
+import re
+from typing import Optional
+from xml.etree import ElementTree as ET
+
+from dockiln import light_document_model as ldm
+from dockiln.readers.docx.constants import (
+    W_NS,
+    _ALIGNMENT_MAP,
+    _NUMBER_STYLE_MAP,
+    _STYLE_TYPE_MAP,
+    _TWIPS_PER_PT,
+)
+from dockiln.readers.docx.field_mappings import LIST_TRAILING_CHARACTER_MAP
+from dockiln.readers.docx.utils import _canonicalize_style_name, parse_onoff
+from dockiln.model.style_identifiers import resolve_style_identifier
+from dockiln.utils.xml_helpers import parse_font_size
+
+from ._context import ReaderContext
+from ._helpers import apply_padding_sides, build_borders, build_shading, parse_int, is_truthy_onoff, read_twip
+from .cascading import (
+    FontBuilder,
+    FontResolver,
+    ParagraphFormatBuilder,
+    ParagraphFormatResolver,
+)
+
+
+_STYLE_TYPE_PARAGRAPH = 1
+_STYLE_TYPE_TABLE = 3
+
+
+def _tsp_build_font(rPr: ET.Element) -> ldm.Font:
+    """Lightweight font builder for ``<w:tblStylePr>`` rPr elements."""
+    from dockiln.readers.docx.field_mappings import RUN_ONOFF_FLAGS
+    from dockiln.readers.docx.utils import apply_onoff_attrs, _hex_to_ldm_color
+    font = ldm.Font()
+    apply_onoff_attrs(font, rPr, RUN_ONOFF_FLAGS)
+    rFonts = rPr.find(f"{W_NS}rFonts")
+    if rFonts is not None:
+        font.name = rFonts.get(f"{W_NS}ascii", "") or rFonts.get(f"{W_NS}hAnsi", "") or ""
+    color_el = rPr.find(f"{W_NS}color")
+    font.color_explicit = color_el is not None
+    if color_el is not None:
+        val = color_el.get(f"{W_NS}val", "")
+        font.color = _hex_to_ldm_color(val)
+        font.source_color = ldm.SourceColor(
+            value=color_el.get(f"{W_NS}val"), theme_color=color_el.get(f"{W_NS}themeColor"),
+            theme_tint=color_el.get(f"{W_NS}themeTint"), theme_shade=color_el.get(f"{W_NS}themeShade"))
+    size = rPr.find(f"{W_NS}sz")
+    if size is not None:
+        font.size = parse_font_size(size.get(f"{W_NS}val", ""))
+        font.size_explicit = True
+    return font
+
+
+_BUILTIN_HEADING_MAX = 9
+
+
+class StyleBuilder:
+    """Translate ``<w:styles>`` into a list of :class:`ldm.Style`."""
+
+    def __init__(
+        self,
+        ctx: ReaderContext,
+        fonts: FontBuilder,
+        font_resolver: FontResolver,
+        pfs: ParagraphFormatBuilder,
+        pf_resolver: ParagraphFormatResolver,
+    ):
+        self._ctx = ctx
+        self._fonts = fonts
+        self._font_resolver = font_resolver
+        self._pfs = pfs
+        self._pf_resolver = pf_resolver
+
+    def build_all(self) -> list[ldm.Style]:
+        """Return one :class:`ldm.Style` per ``<w:style>`` in ``styles.xml``."""
+        styles_xml = self._ctx._styles_xml
+        if styles_xml is None:
+            # Synthesize the default Normal that the writer always emits,
+            # so docs lacking styles.xml round-trip symmetrically.
+            synth = ET.fromstring(
+                f'<w:style xmlns:w="{W_NS.strip("{}")}" '
+                'w:type="paragraph" w:default="1" w:styleId="Normal">'
+                '<w:name w:val="Normal"/></w:style>'
+            )
+            return [self._build_one(synth)]
+        return [self._build_one(elem) for elem in styles_xml.findall(f"{W_NS}style")]
+
+    def _build_one(self, style_elem: ET.Element) -> ldm.Style:
+        s = ldm.Style()
+        is_custom = style_elem.get(f"{W_NS}customStyle", "") == "1"
+        xml_style_id = style_elem.get(f"{W_NS}styleId", "")
+
+        self._apply_name(style_elem, s, is_custom)
+        s.type = _STYLE_TYPE_MAP.get(style_elem.get(f"{W_NS}type", ""), 0)
+        s.is_default = is_truthy_onoff(style_elem.get(f"{W_NS}default", ""))
+        self._apply_identifier(s, xml_style_id, is_custom)
+        self._apply_priority(style_elem, s)
+        self._apply_style_flags(style_elem, s)
+        heading_match = self._apply_heading_flag(s)
+        self._apply_relations(style_elem, s)
+        self._apply_format(style_elem, s, xml_style_id, heading_match)
+        self._apply_table_style_format(style_elem, s)
+        self._apply_row_style_format(style_elem, s)
+        return s
+
+    @staticmethod
+    def _apply_row_style_format(style_elem, style):
+        from .tables import RowBuilder
+
+        if style.type != _STYLE_TYPE_TABLE:
+            return
+        direct = style_elem.find(f"{W_NS}trPr")
+        if direct is not None:
+            style.row_format = RowBuilder._build_row_format(direct)
+        # Conditional row properties are preserved, but do not participate in
+        # the observed 26.9 height/splitting getter cascade.
+        for region in style_elem.findall(f"{W_NS}tblStylePr"):
+            properties = region.find(f"{W_NS}trPr")
+            kind = region.get(f"{W_NS}type", "")
+            if properties is None or not kind:
+                continue
+            target = next((item for item in style.table_style_properties if item.type == kind), None)
+            if target is None:
+                target = ldm.TableStyleProperty(type=kind)
+                style.table_style_properties.append(target)
+            target.row_format = RowBuilder._build_row_format(properties)
+
+    @staticmethod
+    def _apply_name(style_elem: ET.Element, s: ldm.Style, is_custom: bool) -> None:
+        name_elem = style_elem.find(f"{W_NS}name")
+        if name_elem is None:
+            # Real-world DOCX files occasionally declare a style with
+            # a ``<w:styleId>`` but no ``<w:name>``.  Fall back to the
+            # styleId so downstream code (writer's style_id_map,
+            # tblStyle lookup, etc.) has a stable handle that survives
+            # a round-trip — otherwise the writer would emit the style
+            # under a synthesised ``_StyleN`` id while body references
+            # like ``<w:tblStyle w:val="a"/>`` still pointed at the
+            # original ``"a"`` token, leaving a dangling reference.
+            s.name = style_elem.get(f"{W_NS}styleId", "")
+            return
+        raw = name_elem.get(f"{W_NS}val", "")
+        s.name = raw if is_custom else _canonicalize_style_name(raw)
+
+    @staticmethod
+    def _apply_identifier(s: ldm.Style, xml_style_id: str, is_custom: bool) -> None:
+        sid_int = resolve_style_identifier(xml_style_id, s.name)
+        resolved = sid_int >= 0
+        s.style_identifier = sid_int if resolved else 0
+        s.built_in = resolved and not is_custom
+
+    @staticmethod
+    def _apply_priority(style_elem: ET.Element, s: ldm.Style) -> None:
+        ui_pri = style_elem.find(f"{W_NS}uiPriority")
+        if ui_pri is not None:
+            s.priority = parse_int(ui_pri.get(f"{W_NS}val", "99"), 99)
+
+    @staticmethod
+    def _apply_style_flags(style_elem: ET.Element, s: ldm.Style) -> None:
+        if style_elem.find(f"{W_NS}semiHidden") is not None:
+            s.semi_hidden = True
+        if style_elem.find(f"{W_NS}unhideWhenUsed") is not None:
+            s.unhide_when_used = True
+        if style_elem.find(f"{W_NS}locked") is not None:
+            s.locked = True
+
+    @staticmethod
+    def _apply_heading_flag(s: ldm.Style) -> Optional[re.Match[str]]:
+        if 1 <= s.style_identifier <= _BUILTIN_HEADING_MAX:
+            s.is_heading = True
+            return None
+        match = re.search(r"[Hh]eading\s*(\d+)", s.name)
+        s.is_heading = match is not None
+        return match
+
+    def _apply_relations(self, style_elem: ET.Element, s: ldm.Style) -> None:
+        based_on = style_elem.find(f"{W_NS}basedOn")
+        if based_on is not None:
+            s.base_style_name = self._ctx._resolve_style_name(
+                based_on.get(f"{W_NS}val", "")
+            )
+        next_style = style_elem.find(f"{W_NS}next")
+        if next_style is not None:
+            s.next_paragraph_style_name = self._ctx._resolve_style_name(
+                next_style.get(f"{W_NS}val", "")
+            )
+        else:
+            # Word's implicit default: self-reference.
+            s.next_paragraph_style_name = s.name
+
+    def _apply_format(
+        self,
+        style_elem: ET.Element,
+        s: ldm.Style,
+        style_id: str,
+        heading_match: Optional[re.Match[str]],
+    ) -> None:
+        pPr = style_elem.find(f"{W_NS}pPr")
+        rPr = style_elem.find(f"{W_NS}rPr")
+        if s.type == _STYLE_TYPE_PARAGRAPH:
+            s.paragraph_format = self._pf_resolver.resolve(pPr, style_id)
+            s.paragraph_format.style_name = s.name
+            s.paragraph_format.style_identifier = s.style_identifier
+            self._apply_heading_outline(s.paragraph_format, s, heading_match)
+            s.font = self._font_resolver.resolve(rPr, style_id)
+            return
+        if pPr is not None:
+            s.paragraph_format = self._pfs.build(pPr)
+            self._apply_heading_outline(s.paragraph_format, s, heading_match)
+        if rPr is not None:
+            s.font = self._fonts.build(rPr)
+
+    @staticmethod
+    def _apply_heading_outline(
+        pf: ldm.ParagraphFormat,
+        s: ldm.Style,
+        heading_match: Optional[re.Match[str]],
+    ) -> None:
+        if not s.is_heading:
+            return
+        pf.is_heading = True
+        if 1 <= s.style_identifier <= _BUILTIN_HEADING_MAX:
+            pf.outline_level = s.style_identifier - 1
+        elif heading_match:
+            pf.outline_level = int(heading_match.group(1)) - 1
+
+    @staticmethod
+    def _apply_table_style_format(style_elem: ET.Element, s: ldm.Style) -> None:  # noqa: C901
+        if s.type != _STYLE_TYPE_TABLE:
+            return
+        tblPr = style_elem.find(f"{W_NS}tblPr")
+        if tblPr is None:
+            tblPr = ET.Element(f"{W_NS}tblPr")
+        tsf = ldm.TableStyleFormat()
+        from .tables import _read_table_look, _read_table_band_size
+        look = tblPr.find(f"{W_NS}tblLook")
+        if look is not None:
+            tsf.style_look = _read_table_look(look)
+        for tag, field in (("tblStyleRowBandSize", "row_band_size"),
+                           ("tblStyleColBandSize", "column_band_size")):
+            element = tblPr.find(f"{W_NS}{tag}")
+            if element is not None:
+                setattr(tsf, field, _read_table_band_size(element))
+        direction = tblPr.find(f"{W_NS}bidiVisual")
+        if direction is not None:
+            tsf.bidi = parse_onoff(direction)
+        tblBorders = tblPr.find(f"{W_NS}tblBorders")
+        if tblBorders is not None:
+            tsf.borders = build_borders(tblBorders)
+        tblCellMar = tblPr.find(f"{W_NS}tblCellMar")
+        if tblCellMar is not None:
+            apply_padding_sides(tsf, tblCellMar)
+        has_borders = any(
+            b.line_style != 0 or b.line_width != 0.0 for b in tsf.borders
+        )
+        has_padding = any(value is not None for value in
+            (tsf.left_padding, tsf.right_padding, tsf.top_padding, tsf.bottom_padding))
+        if not has_borders:
+            tsf.borders = []
+        if (has_borders or has_padding or tsf.bidi is not None or tsf.style_look is not None
+                or tsf.row_band_size is not None or tsf.column_band_size is not None):
+            s.table_style_format = tsf
+
+        for tsp_el in style_elem.findall(f"{W_NS}tblStylePr"):
+            tsp_type = tsp_el.get(f"{W_NS}type", "")
+            if not tsp_type:
+                continue
+            tsp = ldm.TableStyleProperty(type=tsp_type)
+            rPr = tsp_el.find(f"{W_NS}rPr")
+            if rPr is not None:
+                tsp.font = _tsp_build_font(rPr)
+            pPr = tsp_el.find(f"{W_NS}pPr")
+            if pPr is not None:
+                jc = pPr.find(f"{W_NS}jc")
+                if jc is not None:
+                    from dockiln.readers.docx.constants import _ALIGNMENT_MAP
+                    tsp.paragraph_format = ldm.ParagraphFormat(
+                        alignment=_ALIGNMENT_MAP.get(jc.get(f"{W_NS}val", ""), 0)
+                    )
+            tcPr = tsp_el.find(f"{W_NS}tcPr")
+            if tcPr is not None:
+                shd = tcPr.find(f"{W_NS}shd")
+                if shd is not None:
+                    tsp.shading = build_shading(shd)
+                tcBorders = tcPr.find(f"{W_NS}tcBorders")
+                if tcBorders is not None:
+                    tsp.borders = build_borders(tcBorders)
+            s.table_style_properties.append(tsp)
+
+
+class ListBuilder:
+    """Translate ``<w:numbering>`` into a list of :class:`ldm.DocList`."""
+
+    def __init__(self, ctx: ReaderContext, fonts: FontBuilder):
+        self._ctx = ctx
+        self._fonts = fonts
+
+    def build_all(self) -> list[ldm.DocList]:
+        """Return one :class:`ldm.DocList` per ``<w:num>`` in ``numbering.xml``."""
+        numbering_xml = self._ctx._numbering_xml
+        if numbering_xml is None:
+            return []
+        abstract_defs, abstract_multi = self._parse_abstract_definitions(numbering_xml)
+        return self._parse_concrete_numbers(numbering_xml, abstract_defs, abstract_multi)
+
+    def _parse_abstract_definitions(
+        self, numbering_xml: ET.Element
+    ) -> tuple[dict[int, list[ldm.ListLevel]], dict[int, bool]]:
+        abstract_defs: dict[int, list[ldm.ListLevel]] = {}
+        abstract_multi: dict[int, bool] = {}
+        for abstract in numbering_xml.findall(f".//{W_NS}abstractNum"):
+            abs_id = parse_int(abstract.get(f"{W_NS}abstractNumId", "0"))
+            levels = [self._build_level(lvl) for lvl in abstract.findall(f"{W_NS}lvl")]
+            abstract_defs[abs_id] = levels
+            # ``<w:multiLevelType w:val="...">`` is a child element, not
+            # an attribute on ``<w:abstractNum>`` — use ``find()`` and
+            # read ``w:val`` off the matched element.  The previous
+            # ``abstract.get(...)`` form always returned ``""`` so every
+            # multilevel / hybridMultilevel list was misclassified as
+            # singleLevel, which then made the writer emit
+            # ``multiLevelType="singleLevel"`` alongside nine
+            # ``<w:lvl>`` rows — an Aspose-rejected schema violation.
+            #
+            # When ``<w:multiLevelType>`` is absent (``mlt_val == ""``)
+            # the OOXML spec leaves the type implementation-defined;
+            # Word treats it as multilevel whenever more than one
+            # ``<w:lvl>`` row is present, and we follow suit so the
+            # writer doesn't downgrade these to singleLevel and trip
+            # the same schema violation on the next round-trip.
+            mlt_elem = abstract.find(f"{W_NS}multiLevelType")
+            mlt_val = mlt_elem.get(f"{W_NS}val", "") if mlt_elem is not None else ""
+            abstract_multi[abs_id] = (
+                mlt_val in ("multilevel", "hybridMultilevel")
+                or (mlt_val == "" and len(levels) > 1)
+            )
+        return abstract_defs, abstract_multi
+
+    def _build_level(self, lvl: ET.Element) -> ldm.ListLevel:
+        ll = ldm.ListLevel()
+        self._apply_level_format(lvl, ll)
+        self._apply_level_indent(lvl, ll)
+        self._apply_level_misc(lvl, ll)
+        return ll
+
+    @staticmethod
+    def _apply_level_format(lvl: ET.Element, ll: ldm.ListLevel) -> None:
+        num_fmt = lvl.find(f"{W_NS}numFmt")
+        token = num_fmt.get(f"{W_NS}val", "bullet") if num_fmt is not None else "bullet"
+        ll.number_style = _NUMBER_STYLE_MAP.get(token, 0)
+        lvl_text = lvl.find(f"{W_NS}lvlText")
+        ll.number_format = lvl_text.get(f"{W_NS}val", "") if lvl_text is not None else ""
+        start = lvl.find(f"{W_NS}start")
+        if start is not None:
+            ll.start_at = parse_int(start.get(f"{W_NS}val", "1"), 1)
+        lvl_jc = lvl.find(f"{W_NS}lvlJc")
+        if lvl_jc is not None:
+            ll.alignment = _ALIGNMENT_MAP.get(lvl_jc.get(f"{W_NS}val", "left"), 0)
+
+    @staticmethod
+    def _apply_level_indent(lvl: ET.Element, ll: ldm.ListLevel) -> None:
+        pPr = lvl.find(f"{W_NS}pPr")
+        if pPr is None:
+            return
+        ind = pPr.find(f"{W_NS}ind")
+        if ind is None:
+            return
+        ParagraphFormatBuilder.apply_character_indents(ind, ll)
+        left = read_twip(ind, "left")
+        hanging = read_twip(ind, "hanging")
+        first_line = read_twip(ind, "firstLine")
+        if left is not None:
+            ll.number_position = left
+        if left is not None and hanging is not None:
+            ll.text_position = left
+            # Subtract integer twips before scaling to avoid point-rounding drift.
+            try:
+                ll.number_position = (int(ind.get(f"{W_NS}left")) - int(ind.get(f"{W_NS}hanging"))) / _TWIPS_PER_PT
+            except OverflowError:
+                raise ValueError("OOXML numbering dimensions exceed numeric range") from None
+        elif first_line is not None:
+            ll.text_position = left if left is not None else 0.0
+
+    def _apply_level_misc(self, lvl: ET.Element, ll: ldm.ListLevel) -> None:
+        lvl_rPr = lvl.find(f"{W_NS}rPr")
+        if lvl_rPr is not None:
+            ll.font = self._fonts.build(lvl_rPr)
+        lvl_restart = lvl.find(f"{W_NS}lvlRestart")
+        if lvl_restart is not None:
+            ll.restart_after_level = parse_int(lvl_restart.get(f"{W_NS}val", "-1"), -1)
+        suff = lvl.find(f"{W_NS}suff")
+        if suff is not None:
+            ll.trailing_character = LIST_TRAILING_CHARACTER_MAP.get(
+                suff.get(f"{W_NS}val", "tab"), 0
+            )
+
+    def _parse_concrete_numbers(
+        self,
+        numbering_xml: ET.Element,
+        abstract_defs: dict[int, list[ldm.ListLevel]],
+        abstract_multi: dict[int, bool],
+    ) -> list[ldm.DocList]:
+        lists: list[ldm.DocList] = []
+        for num in numbering_xml.findall(f".//{W_NS}num"):
+            num_id = parse_int(num.get(f"{W_NS}numId", "0"))
+            abs_id_elem = num.find(f"{W_NS}abstractNumId")
+            if abs_id_elem is None:
+                continue
+            abs_id = parse_int(abs_id_elem.get(f"{W_NS}val", "0"))
+            dl = ldm.DocList()
+            dl.list_id = num_id
+            dl.list_levels = list(abstract_defs.get(abs_id, []))
+            dl.is_multi_level = abstract_multi.get(abs_id, False)
+            for ov_elem in num.findall(f"{W_NS}lvlOverride"):
+                dl.overrides.append(self._build_override(ov_elem))
+            lists.append(dl)
+        return lists
+
+    def _build_override(self, ov_elem: ET.Element) -> ldm.ListLevelOverride:
+        ov = ldm.ListLevelOverride()
+        ov.ilvl = parse_int(ov_elem.get(f"{W_NS}ilvl", "0"))
+        start_ov = ov_elem.find(f"{W_NS}startOverride")
+        if start_ov is not None:
+            ov.start_at = parse_int(start_ov.get(f"{W_NS}val", "1"), 1)
+        inner_lvl = ov_elem.find(f"{W_NS}lvl")
+        if inner_lvl is not None:
+            ov.list_level = self._build_level(inner_lvl)
+            # Propagate startOverride into the level when the level
+            # didn't define its own <w:start> (mirrors Aspose behavior).
+            if ov.start_at is not None and inner_lvl.find(f"{W_NS}start") is None:
+                ov.list_level.start_at = ov.start_at
+        return ov

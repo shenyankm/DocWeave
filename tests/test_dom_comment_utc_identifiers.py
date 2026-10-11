@@ -4,8 +4,8 @@ from io import BytesIO
 
 import pytest
 
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.dom.comment_utc import CID, CEX, W14, hex_id
+from dockiln.dom import DocxDocument
+from dockiln.dom.comment_utc import CID, CEX, W14, hex_id
 from .test_dom_comment_utc import modern
 from .test_dom_comment_metadata import comment
 

@@ -6,7 +6,7 @@ from defusedxml.ElementTree import fromstring
 from defusedxml.common import DTDForbidden
 import pytest
 
-from aspose.words_foss.docx_edit import replace_text
+from dockiln.docx_edit import replace_text
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 

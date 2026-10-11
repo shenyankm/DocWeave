@@ -9,7 +9,7 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import DocxDocument, NodeType
+from dockiln import DocxDocument, NodeType
 
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / "docs/benchmarks"

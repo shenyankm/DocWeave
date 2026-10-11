@@ -1,8 +1,8 @@
 """Explicit zero stays sparse zero in the model and paints at half a point."""
 import pymupdf
 import pytest
-from aspose.words_foss import light_document_model as l
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+from dockiln import light_document_model as l
+from dockiln.writers.pdf import LdmPdfWriter
 
 @pytest.mark.parametrize('context',['body','Code','Quote','table'])
 def test_explicit_zero_paints_at_half_point_without_mutating_source(context):
@@ -60,9 +60,9 @@ def test_table_zero_size_keeps_normal_sentinel_and_sparse_source(
     from io import BytesIO
     from zipfile import ZipFile
     from xml.etree import ElementTree as E
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
-    from aspose.words_foss.saving import OoxmlSaveOptions
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
+    from dockiln.saving import OoxmlSaveOptions
     from .test_table_font_size_live import owned_table, target, W
 
     path=owned_table(tmp_path/'zero.docx',normal)
@@ -80,16 +80,16 @@ def test_table_zero_size_keeps_normal_sentinel_and_sparse_source(
     parts['word/styles.xml']=E.tostring(styles)
     with ZipFile(path,'w') as archive:
         for name,data in parts.items():archive.writestr(name,data)
-    model=aw.Document(path).light_document_model
+    model=dk.Document(path).light_document_model
     assert target(model).font.size==expected
     assert target(model).font.size_explicit is False
-    assert aw.DocxDocument(path).body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size==expected
+    assert dk.DocxDocument(path).body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size==expected
     cold_expected = 12 if normal == 12 else expected
-    for fmt in (aw.SaveFormat.DOCX,aw.SaveFormat.FLAT_OPC):
+    for fmt in (dk.SaveFormat.DOCX,dk.SaveFormat.FLAT_OPC):
         current=l.Document.model_validate_json(model.model_dump_json())
         for _ in range(2):
             data=LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current)
-            current=aw.Document(BytesIO(data)).light_document_model
+            current=dk.Document(BytesIO(data)).light_document_model
             assert target(current).font.size==cold_expected
             assert target(current).font.size_explicit is False
-            assert aw.DocxDocument(BytesIO(data)).body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size==cold_expected
+            assert dk.DocxDocument(BytesIO(data)).body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size==cold_expected

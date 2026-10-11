@@ -9,10 +9,10 @@ from fpdf import FPDF
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import PdfFontSubstitutionWarning
-from aspose.words_foss.pdf_writer.writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import PdfFontSubstitutionWarning
+from dockiln.writers.pdf.writer import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 
 
 def document(font_name=''):
@@ -82,7 +82,7 @@ def test_output_failure_closes_readers_and_clears_measurements(monkeypatch, font
 
 
 def test_outline_output_failure_closes_fonts_preserves_file_and_recovers(tmp_path, monkeypatch, font_files):
-    from aspose.words_foss.pdf_writer.outline import OutlineOutputProducer
+    from dockiln.writers.pdf.outline import OutlineOutputProducer
 
     options = PdfSaveOptions()
     options.outline_options.headings_outline_levels = 6

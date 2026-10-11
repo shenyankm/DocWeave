@@ -6,14 +6,14 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._flat_opc import encode
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._flat_opc import encode
 from tests.test_conversion_notes import W, owned_notes, package
 
 
 def document(dom=False):
-    return aw.DocxDocument(BytesIO(owned_notes())) if dom else aw.Document()
+    return dk.DocxDocument(BytesIO(owned_notes())) if dom else dk.Document()
 
 
 @pytest.mark.parametrize('dom', [False, True])
@@ -26,10 +26,10 @@ def test_defaults_and_constructor(kind, dom):
     else:
         opt = getattr(doc, kind + '_options')
         assert opt.start_number == 1
-        assert opt.number_style == (aw.NumberStyle.ARABIC if kind == 'footnote' else aw.NumberStyle.LOWERCASE_ROMAN)
-        assert opt.position == (aw.notes.FootnotePosition.BOTTOM_OF_PAGE if kind == 'footnote' else aw.notes.EndnotePosition.END_OF_DOCUMENT)
-        assert opt.restart_rule == aw.notes.FootnoteNumberingRule.CONTINUOUS
-    cls = aw.notes.FootnoteOptions if kind == 'footnote' else aw.notes.EndnoteOptions
+        assert opt.number_style == (dk.NumberStyle.ARABIC if kind == 'footnote' else dk.NumberStyle.LOWERCASE_ROMAN)
+        assert opt.position == (dk.notes.FootnotePosition.BOTTOM_OF_PAGE if kind == 'footnote' else dk.notes.EndnotePosition.END_OF_DOCUMENT)
+        assert opt.restart_rule == dk.notes.FootnoteNumberingRule.CONTINUOUS
+    cls = dk.notes.FootnoteOptions if kind == 'footnote' else dk.notes.EndnoteOptions
     with pytest.raises(TypeError):
         cls()
     with pytest.raises(TypeError):
@@ -44,7 +44,7 @@ def test_defaults_and_constructor(kind, dom):
     ('start_number', 2**31, OverflowError), ('start_number', -2**31-1, OverflowError),
     ('number_style', 0, TypeError), ('position', 1, TypeError),
     ('restart_rule', 0, TypeError), ('columns', False, TypeError),
-    ('position', aw.notes.EndnotePosition.END_OF_DOCUMENT, TypeError),
+    ('position', dk.notes.EndnotePosition.END_OF_DOCUMENT, TypeError),
 ])
 @pytest.mark.parametrize('dom', [False, True])
 def test_invalid_edit_is_atomic(field, value, error, dom):
@@ -61,19 +61,19 @@ def test_invalid_edit_is_atomic(field, value, error, dom):
         assert doc.light_document_model.model_dump() == original
 
 
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
-@pytest.mark.parametrize('style', list(aw.NumberStyle))
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('style', list(dk.NumberStyle))
 def test_all_number_styles_survive_or_follow_observed_native_projection(style, fmt):
-    doc = aw.Document()
+    doc = dk.Document()
     for kind in ['footnote', 'endnote']:
         getattr(doc, kind + '_options').number_style = style
     for _ in range(2):
         raw = doc.to_bytes(fmt)
         assert doc.footnote_options.number_style == style
         assert doc.endnote_options.number_style == style
-        cold = aw.Document(BytesIO(raw))
-        assert cold.footnote_options.number_style == (aw.NumberStyle.ARABIC if style == aw.NumberStyle.SIMP_CHIN_NUM4 else style)
-        assert cold.endnote_options.number_style == (aw.NumberStyle.LOWERCASE_ROMAN if style == aw.NumberStyle.SIMP_CHIN_NUM4 else style)
+        cold = dk.Document(BytesIO(raw))
+        assert cold.footnote_options.number_style == (dk.NumberStyle.ARABIC if style == dk.NumberStyle.SIMP_CHIN_NUM4 else style)
+        assert cold.endnote_options.number_style == (dk.NumberStyle.LOWERCASE_ROMAN if style == dk.NumberStyle.SIMP_CHIN_NUM4 else style)
 
 
 @pytest.mark.parametrize('dom', [False, True])
@@ -87,7 +87,7 @@ def test_document_setter_replaces_explicit_section_override_and_two_saves(tmp_pa
     E.SubElement(body[0], W + 'pPr').append(deepcopy(body[-1]))
     parts['word/document.xml'] = E.tostring(root)
     raw = package(parts)
-    doc = aw.DocxDocument(BytesIO(encode(raw) if flat else raw)) if dom else aw.Document(BytesIO(raw))
+    doc = dk.DocxDocument(BytesIO(encode(raw) if flat else raw)) if dom else dk.Document(BytesIO(raw))
     section = doc.sections[1].page_setup.footnote_options
     section.start_number = 8
     assert doc.sections[0].page_setup.footnote_options.start_number == 3
@@ -96,8 +96,8 @@ def test_document_setter_replaces_explicit_section_override_and_two_saves(tmp_pa
     assert [s.page_setup.footnote_options.start_number for s in doc.sections] == [4, 4]
     section.start_number = 9
     assert doc.footnote_options.start_number == 4
-    doc.footnote_options.position = aw.notes.FootnotePosition.BENEATH_TEXT
-    doc.footnote_options.restart_rule = aw.notes.FootnoteNumberingRule.RESTART_PAGE
+    doc.footnote_options.position = dk.notes.FootnotePosition.BENEATH_TEXT
+    doc.footnote_options.restart_rule = dk.notes.FootnoteNumberingRule.RESTART_PAGE
     if not dom:
         doc._document = ldm.Document.model_validate_json(doc.light_document_model.model_dump_json())
         assert doc.sections[1].page_setup.footnote_options.start_number == 9
@@ -109,12 +109,12 @@ def test_document_setter_replaces_explicit_section_override_and_two_saves(tmp_pa
         if dom:
             (doc.save_flat_opc if flat else doc.save)(target)
         else:
-            doc.save(target, aw.SaveFormat.FLAT_OPC if flat else aw.SaveFormat.DOCX)
-        cold = aw.Document(target)
+            doc.save(target, dk.SaveFormat.FLAT_OPC if flat else dk.SaveFormat.DOCX)
+        cold = dk.Document(target)
         assert cold.footnote_options.start_number == 4
         assert [s.page_setup.footnote_options.start_number for s in cold.sections] == [4, 9]
-        assert cold.footnote_options.restart_rule == aw.notes.FootnoteNumberingRule.RESTART_PAGE
-        assert cold.footnote_options.position == aw.notes.FootnotePosition.BENEATH_TEXT
+        assert cold.footnote_options.restart_rule == dk.notes.FootnoteNumberingRule.RESTART_PAGE
+        assert cold.footnote_options.position == dk.notes.FootnotePosition.BENEATH_TEXT
 
 
 @pytest.mark.parametrize('dom', [False, True])
@@ -127,8 +127,8 @@ def test_columns_are_editable_warm_and_not_claimed_to_be_persisted(tmp_path, dom
     target = tmp_path / 'options.docx'
     doc.save(target)
     assert doc.first_section.page_setup.footnote_options.columns == 3
-    assert aw.Document(target).footnote_options.columns == 0
-    assert aw.DocxDocument(target).first_section.page_setup.footnote_options.columns == 0
+    assert dk.Document(target).footnote_options.columns == 0
+    assert dk.DocxDocument(target).first_section.page_setup.footnote_options.columns == 0
 
 
 @pytest.mark.parametrize('kind', ['footnote', 'endnote'])
@@ -140,7 +140,7 @@ def test_raw_start_number_recovery(kind, value, expected):
     root = E.fromstring(parts['word/settings.xml'])
     root.find(W + kind + 'Pr').find(W + 'numStart').set(W + 'val', value)
     parts['word/settings.xml'] = E.tostring(root)
-    for cls in [aw.Document, aw.DocxDocument]:
+    for cls in [dk.Document, dk.DocxDocument]:
         doc = cls(BytesIO(package(parts)))
         assert getattr(doc, kind + '_options').start_number == expected
 
@@ -164,7 +164,7 @@ def test_section_reads_related_document_defaults_after_reader_population():
     sect = root.find(W + 'body').find(W + 'sectPr')
     sect.remove(sect.find(W + 'footnotePr'))
     parts['word/document.xml'] = E.tostring(root)
-    for cls in [aw.Document, aw.DocxDocument]:
+    for cls in [dk.Document, dk.DocxDocument]:
         doc = cls(BytesIO(package(parts)))
         assert doc.first_section.page_setup.footnote_options.start_number == 7
 
@@ -174,26 +174,26 @@ def test_section_endnote_position_setter_updates_document_and_all_sections(dom):
     doc = document(dom)
     if not dom:
         doc.light_document_model.sections.append(ldm.Section())
-        from aspose.words_foss.notes import bind_note_options
+        from dockiln.notes import bind_note_options
         bind_note_options(doc.light_document_model)
-    doc.sections[-1].page_setup.endnote_options.position = aw.notes.EndnotePosition.END_OF_SECTION
-    assert doc.endnote_options.position == aw.notes.EndnotePosition.END_OF_SECTION
-    assert all(s.page_setup.endnote_options.position == aw.notes.EndnotePosition.END_OF_SECTION for s in doc.sections)
+    doc.sections[-1].page_setup.endnote_options.position = dk.notes.EndnotePosition.END_OF_SECTION
+    assert doc.endnote_options.position == dk.notes.EndnotePosition.END_OF_SECTION
+    assert all(s.page_setup.endnote_options.position == dk.notes.EndnotePosition.END_OF_SECTION for s in doc.sections)
 
 
 @pytest.mark.parametrize('version,expected', [
-    (aw.settings.MsWordVersion.WORD2007, 0),
-    (aw.settings.MsWordVersion.WORD2010, 0),
-    (aw.settings.MsWordVersion.WORD2013, 3),
-    (aw.settings.MsWordVersion.WORD2016, 3),
+    (dk.settings.MsWordVersion.WORD2007, 0),
+    (dk.settings.MsWordVersion.WORD2010, 0),
+    (dk.settings.MsWordVersion.WORD2013, 3),
+    (dk.settings.MsWordVersion.WORD2016, 3),
 ])
 @pytest.mark.parametrize('dom', [False, True])
 @pytest.mark.parametrize('flat', [False, True])
 def test_columns_persist_in_modern_section_properties(tmp_path, version, expected, dom, flat):
-    d = aw.Document(BytesIO(owned_notes()))
+    d = dk.Document(BytesIO(owned_notes()))
     d.compatibility_options.optimize_for(version)
-    source = d.to_bytes(aw.SaveFormat.DOCX)
-    doc = aw.DocxDocument(BytesIO(source)) if dom else aw.Document(BytesIO(source))
+    source = d.to_bytes(dk.SaveFormat.DOCX)
+    doc = dk.DocxDocument(BytesIO(source)) if dom else dk.Document(BytesIO(source))
     doc.footnote_options.columns = 3
     assert doc.footnote_options.columns == 3
     for _ in range(2):
@@ -201,9 +201,9 @@ def test_columns_persist_in_modern_section_properties(tmp_path, version, expecte
         if dom:
             (doc.save_flat_opc if flat else doc.save)(target)
         else:
-            doc.save(target, aw.SaveFormat.FLAT_OPC if flat else aw.SaveFormat.DOCX)
+            doc.save(target, dk.SaveFormat.FLAT_OPC if flat else dk.SaveFormat.DOCX)
         assert doc.footnote_options.columns == 3
-        for cls in [aw.Document, aw.DocxDocument]:
+        for cls in [dk.Document, dk.DocxDocument]:
             cold = cls(target)
             assert cold.footnote_options.columns == 0
             assert cold.first_section.page_setup.footnote_options.columns == expected
@@ -217,7 +217,7 @@ def test_dom_option_edits_preserve_unrelated_xml_parts_and_existing_nodes(tmp_pa
     props = settings.find(W + 'footnotePr')
     E.SubElement(props, '{urn:owned}option', {'token': 'unchanged'})
     parts['word/settings.xml'] = E.tostring(settings)
-    doc = aw.DocxDocument(BytesIO(package(parts)))
+    doc = dk.DocxDocument(BytesIO(package(parts)))
     paragraph = doc.body.child_nodes[0]
     element = paragraph._element
     doc.footnote_options.start_number = 9
@@ -242,22 +242,22 @@ def test_endnote_imported_bad_position_recovers_document_and_section_defaults():
     props = root.find(W + 'body').find(W + 'sectPr').find(W + 'endnotePr')
     E.SubElement(props, W + 'pos', {W + 'val': 'bad'})
     parts['word/document.xml'] = E.tostring(root)
-    for cls in [aw.Document, aw.DocxDocument]:
+    for cls in [dk.Document, dk.DocxDocument]:
         doc = cls(BytesIO(package(parts)))
-        assert doc.endnote_options.position == aw.notes.EndnotePosition.END_OF_DOCUMENT
-        assert doc.first_section.page_setup.endnote_options.position == aw.notes.EndnotePosition.END_OF_DOCUMENT
+        assert doc.endnote_options.position == dk.notes.EndnotePosition.END_OF_DOCUMENT
+        assert doc.first_section.page_setup.endnote_options.position == dk.notes.EndnotePosition.END_OF_DOCUMENT
 
 
 @pytest.mark.parametrize('extension', ['txt', 'md'])
 def test_text_reader_binds_section_options_and_json_preserves_value_equality(tmp_path, extension):
     source = tmp_path / ('input.' + extension)
     source.write_text('OWNED_NOTE_OPTIONS')
-    doc = aw.Document(source)
+    doc = dk.Document(source)
     model = doc.light_document_model
     page = doc.first_section.page_setup
     assert page._note_defaults is model.note_properties
-    page.endnote_options.position = aw.notes.EndnotePosition.END_OF_SECTION
-    assert doc.endnote_options.position == aw.notes.EndnotePosition.END_OF_SECTION
+    page.endnote_options.position = dk.notes.EndnotePosition.END_OF_SECTION
+    assert doc.endnote_options.position == dk.notes.EndnotePosition.END_OF_SECTION
     restored = ldm.Document.model_validate_json(model.model_dump_json())
     assert restored.sections[0].page_setup == page
     assert restored.model_copy(deep=True).sections[0].page_setup == page
@@ -273,13 +273,13 @@ def test_text_reader_binds_section_options_and_json_preserves_value_equality(tmp
 @pytest.mark.parametrize('dom', [False, True])
 @pytest.mark.parametrize('kind', ['footnote', 'endnote'])
 def test_option_setters_preserve_schema_order_before_separator_identifiers(dom, kind):
-    doc = (aw.DocxDocument if dom else aw.Document)(BytesIO(owned_notes(kind)))
+    doc = (dk.DocxDocument if dom else dk.Document)(BytesIO(owned_notes(kind)))
     options = getattr(doc, kind + '_options')
-    options.restart_rule = aw.notes.FootnoteNumberingRule.RESTART_SECTION
+    options.restart_rule = dk.notes.FootnoteNumberingRule.RESTART_SECTION
     options.start_number = 8
-    options.number_style = aw.NumberStyle.UPPERCASE_ROMAN
-    options.position = (aw.notes.FootnotePosition.BENEATH_TEXT if kind == 'footnote'
-                        else aw.notes.EndnotePosition.END_OF_SECTION)
+    options.number_style = dk.NumberStyle.UPPERCASE_ROMAN
+    options.position = (dk.notes.FootnotePosition.BENEATH_TEXT if kind == 'footnote'
+                        else dk.notes.EndnotePosition.END_OF_SECTION)
     if dom:
         settings = E.fromstring(doc._package.payload('word/settings.xml'))
         nodes = list(settings.find(W + kind + 'Pr'))
@@ -299,11 +299,11 @@ def test_invalid_endnote_position_recovers_valid_enum_and_can_be_set_back(value,
     settings = E.fromstring(parts['word/settings.xml'])
     settings.find(W + 'endnotePr').find(W + 'pos').set(W + 'val', value)
     parts['word/settings.xml'] = E.tostring(settings)
-    doc = (aw.DocxDocument if dom else aw.Document)(BytesIO(package(parts)))
+    doc = (dk.DocxDocument if dom else dk.Document)(BytesIO(package(parts)))
     options = doc.endnote_options
-    assert options.position is aw.notes.EndnotePosition.END_OF_DOCUMENT
+    assert options.position is dk.notes.EndnotePosition.END_OF_DOCUMENT
     options.position = options.position
-    assert options.position is aw.notes.EndnotePosition.END_OF_DOCUMENT
+    assert options.position is dk.notes.EndnotePosition.END_OF_DOCUMENT
 
 
 @pytest.mark.parametrize('json_roundtrip', [False, True])
@@ -331,7 +331,7 @@ def test_shallow_copy_option_defaults_keep_original_owner_context(json_roundtrip
 @pytest.mark.parametrize('dom', [False, True])
 @pytest.mark.parametrize('kind', ['footnote', 'endnote'])
 def test_default_numbering_rule_alias_is_accessible_and_roundtrips(tmp_path, dom, kind):
-    rule = aw.notes.FootnoteNumberingRule
+    rule = dk.notes.FootnoteNumberingRule
     assert rule.DEFAULT is rule.CONTINUOUS
     assert int(rule.DEFAULT) == 0
     assert rule.__members__['DEFAULT'] is rule.CONTINUOUS
@@ -343,13 +343,13 @@ def test_default_numbering_rule_alias_is_accessible_and_roundtrips(tmp_path, dom
     if not dom:
         doc._document = ldm.Document.model_validate_json(doc.light_document_model.model_dump_json())
         assert getattr(doc, kind + '_options').restart_rule is rule.DEFAULT
-    for format, extension in [(aw.SaveFormat.DOCX, 'docx'), (aw.SaveFormat.FLAT_OPC, 'xml')]:
+    for format, extension in [(dk.SaveFormat.DOCX, 'docx'), (dk.SaveFormat.FLAT_OPC, 'xml')]:
         target = tmp_path / ('default.' + extension)
         if dom:
             (doc.save if extension == 'docx' else doc.save_flat_opc)(target)
         else:
             doc.save(target, format)
-        cold = aw.Document(target)
+        cold = dk.Document(target)
         assert getattr(cold, kind + '_options').restart_rule is rule.DEFAULT
 
 
@@ -412,10 +412,10 @@ def test_document_deep_model_copy_rebinds_note_owner_views():
         assert section.page_setup._note_defaults is copied.note_properties
         assert section.page_setup._note_targets[0] is copied.note_properties
         assert section.page_setup.endnote_options.start_number == 5
-    copied.sections[0].page_setup.endnote_options.position = aw.notes.EndnotePosition.END_OF_SECTION
-    assert copied.endnote_options.position is aw.notes.EndnotePosition.END_OF_SECTION
-    assert all(s.page_setup.endnote_options.position is aw.notes.EndnotePosition.END_OF_SECTION
+    copied.sections[0].page_setup.endnote_options.position = dk.notes.EndnotePosition.END_OF_SECTION
+    assert copied.endnote_options.position is dk.notes.EndnotePosition.END_OF_SECTION
+    assert all(s.page_setup.endnote_options.position is dk.notes.EndnotePosition.END_OF_SECTION
                for s in copied.sections)
-    assert original.endnote_options.position is aw.notes.EndnotePosition.END_OF_DOCUMENT
-    assert all(s.page_setup.endnote_options.position is aw.notes.EndnotePosition.END_OF_DOCUMENT
+    assert original.endnote_options.position is dk.notes.EndnotePosition.END_OF_DOCUMENT
+    assert all(s.page_setup.endnote_options.position is dk.notes.EndnotePosition.END_OF_DOCUMENT
                for s in original.sections)

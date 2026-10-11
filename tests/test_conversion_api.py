@@ -10,12 +10,14 @@ from zipfile import ZipFile
 import pytest
 from pypdf import PdfReader
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import DocxWriterLossyWarning, LdmDocxWriter
-from aspose.words_foss.diagnostics import collect_diagnostics, warn
-from aspose.words_foss.pdf_writer import PdfMissingGlyphWarning
-from aspose.words_foss.rtf_reader import RtfFileReader
+from ._word_fixtures import word_document
+
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import DocxWriterLossyWarning, LdmDocxWriter
+from dockiln.diagnostics import collect_diagnostics, warn
+from dockiln.writers.pdf import PdfMissingGlyphWarning
+from dockiln.readers.rtf import RtfFileReader
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -29,7 +31,7 @@ def package(body):
 
 
 def document(text="中文 **粗体** [链接](https://example.com)"):
-    return aw.Document(BytesIO(text.encode()), aw.MarkdownLoadOptions())
+    return word_document(text)
 
 
 @pytest.mark.parametrize("mode", ["path", "stream", "bytes", "reader_path", "reader_stream", "reader_bytes"])
@@ -40,12 +42,12 @@ def test_standard_text_rtf_has_actionable_error(tmp_path, mode):
     reader = RtfFileReader()
     with pytest.raises(ValueError, match="Standard text RTF.*libreoffice"):
         if mode == "path":
-            aw.Document(path)
+            dk.Document(path)
         elif mode == "stream":
-            aw.Document(BytesIO(raw))
+            dk.Document(BytesIO(raw))
         elif mode == "bytes":
             with pytest.warns(DeprecationWarning):
-                aw.Document(data=raw)
+                dk.Document(data=raw)
         else:
             getattr(reader, "load_file" if mode == "reader_path" else "load_" + mode.removeprefix("reader_"))(
                 path if mode == "reader_path" else BytesIO(raw) if mode == "reader_stream" else raw)
@@ -54,8 +56,8 @@ def test_standard_text_rtf_has_actionable_error(tmp_path, mode):
 @pytest.mark.parametrize("tag", ["fldSimple", "ins", "del", "sdt", "oMath"])
 def test_load_loss_is_recorded_even_when_warning_is_ignored(tag):
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore", aw.loading.DocumentLoadWarning)
-        doc = aw.Document(BytesIO(package(f"<w:p><w:{tag}/></w:p>")))
+        warnings.simplefilter("ignore", dk.loading.DocumentLoadWarning)
+        doc = dk.Document(BytesIO(package(f"<w:p><w:{tag}/></w:p>")))
     assert len(doc.diagnostics) == 1
     item = asdict(doc.diagnostics[0])
     assert item["code"] == "load.content_loss" and tag in item["message"]
@@ -70,8 +72,8 @@ def test_missing_header_footer_resource_is_reported(kind, variant):
                 f'<w:sectPr><w:{kind} w:type="default" r:id="r2"/></w:sectPr>')
     else:
         body = f'<w:sectPr><w:{kind} w:type="{variant}" r:id="r1"/></w:sectPr>'
-    with pytest.warns(aw.loading.DocumentLoadWarning, match="Missing header/footer resource"):
-        doc = aw.Document(BytesIO(package(body)))
+    with pytest.warns(dk.loading.DocumentLoadWarning, match="Missing header/footer resource"):
+        doc = dk.Document(BytesIO(package(body)))
     assert doc.diagnostics[0].code == "load.missing_header_footer"
 
 
@@ -79,12 +81,12 @@ def test_distinct_model_headers_are_saved_and_unknown_nodes_warn():
     doc = document()
     doc.sections[0].headers_footers = [ldm.HeaderFooter(header_footer_type=0, children=[ldm.Paragraph(children=[ldm.Run(text="A")])])]
     doc.sections.append(ldm.Section(headers_footers=[ldm.HeaderFooter(header_footer_type=0, children=[ldm.Paragraph(children=[ldm.Run(text="B")])])]))
-    cold = aw.Document(BytesIO(doc.to_bytes(aw.SaveFormat.DOCX))).light_document_model
+    cold = dk.Document(BytesIO(doc.to_bytes(dk.SaveFormat.DOCX))).light_document_model
     assert [[p.text for h in s.headers_footers for p in h.paragraphs] for s in cold.sections] == [["A"], ["B"]]
     assert not any(d.code == "docx.header_footer_flattened" for d in doc.diagnostics)
     doc.sections[0].body.children.append(ldm.UnknownNode(_type="not_supported"))
     with pytest.warns(DocxWriterLossyWarning):
-        doc.to_bytes(aw.SaveFormat.DOCX)
+        doc.to_bytes(dk.SaveFormat.DOCX)
     assert any(item.code == "docx.unknown_node" for item in doc.diagnostics)
 
 
@@ -98,22 +100,22 @@ def test_complex_fields_are_retained_not_misreported():
         xml = archive.read("word/document.xml").decode()
     assert "instrText" in xml and " DATE " in xml and "2026-01-01" in xml
     assert all(f'w:fldCharType="{part}"' in xml for part in ("begin", "separate", "end"))
-    doc = aw.Document(BytesIO(raw))
+    doc = dk.Document(BytesIO(raw))
     assert not doc.diagnostics
     assert "instrText" in ZipFile(BytesIO(doc.to_bytes("docx"))).read("word/document.xml").decode()
 
 
-@pytest.mark.parametrize("fmt", [aw.SaveFormat.DOCX, aw.SaveFormat.PDF, aw.SaveFormat.TEXT, aw.SaveFormat.MARKDOWN])
+@pytest.mark.parametrize("fmt", [dk.SaveFormat.DOCX, dk.SaveFormat.PDF])
 def test_memory_output_matches_path_content(tmp_path, fmt):
     doc = document()
     raw = doc.to_bytes(fmt)
     output = tmp_path / f"report.{fmt.name.lower()}"
     doc.save(output, fmt)
-    if fmt == aw.SaveFormat.DOCX:
+    if fmt == dk.SaveFormat.DOCX:
         with ZipFile(BytesIO(raw)) as memory, ZipFile(output) as disk:
             assert {n: memory.read(n) for n in memory.namelist()} == {n: disk.read(n) for n in disk.namelist()}
-        assert "中文" in aw.Document(BytesIO(raw)).get_text()
-    elif fmt == aw.SaveFormat.PDF:
+        assert "中文" in dk.Document(BytesIO(raw)).get_text()
+    elif fmt == dk.SaveFormat.PDF:
         assert "中文" in "".join(p.extract_text() for p in PdfReader(BytesIO(raw)).pages)
         assert "".join(p.extract_text() for p in PdfReader(BytesIO(raw)).pages) == "".join(p.extract_text() for p in PdfReader(output).pages)
     else:
@@ -122,16 +124,10 @@ def test_memory_output_matches_path_content(tmp_path, fmt):
 
 
 def test_memory_options_and_validation(tmp_path):
-    opts = aw.saving.MarkdownSaveOptions()
-    opts.encoding = "utf-8-sig"
-    assert document().to_bytes(opts).startswith(b"\xef\xbb\xbf")
-    opts.images_folder = str(tmp_path / "images")
-    with pytest.raises(ValueError, match="require save"):
-        document().to_bytes(opts)
-    assert not list(tmp_path.iterdir())
-    for fmt in (None, "unknown", aw.SaveFormat.DOC):
+    for fmt in (None, "unknown", "text", "md", dk.SaveFormat.DOC):
         with pytest.raises(ValueError, match="Unsupported"):
             document().to_bytes(fmt)
+    assert not list(tmp_path.iterdir())
 
 
 def test_error_filtered_warning_is_recorded_and_output_preserved(tmp_path):
@@ -150,15 +146,19 @@ def test_diagnostic_collection_is_context_local():
     def collect(number):
         target = []
         with collect_diagnostics(target), warnings.catch_warnings():
-            warnings.simplefilter("ignore", aw.loading.DocumentLoadWarning)
-            warn(str(number), aw.loading.DocumentLoadWarning)
+            warnings.simplefilter("ignore", dk.loading.DocumentLoadWarning)
+            warn(str(number), dk.loading.DocumentLoadWarning)
         return [item.message for item in target]
     with ThreadPoolExecutor(max_workers=4) as pool:
         assert list(pool.map(collect, range(12))) == [[str(n)] for n in range(12)]
 
 
 def test_structure_export_marks_links_and_excludes_hidden_text():
-    doc = document("[公开链接](https://example.com)")
+    doc = document("公开链接")
+    from dockiln._links import format_link
+    run = doc.sections[0].body.children[0].runs[0]
+    run.text = format_link("公开链接", "https://example.com")
+    run.is_hyperlink = True
     doc.sections[0].body.children[0]._children.append(ldm.Run(text="hidden", font=ldm.Font(hidden=True)))
     block = doc.to_dict()["blocks"][0]
     assert block["text"] == "公开链接"
@@ -167,7 +167,19 @@ def test_structure_export_marks_links_and_excludes_hidden_text():
 
 
 def test_structure_export_keeps_body_order_and_locations():
-    doc = document("# 标题\n\n正文\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n\n结尾")
+    from docx import Document
+    source = Document()
+    source.add_heading("标题", 1)
+    source.add_paragraph("正文")
+    source.add_paragraph()
+    table = source.add_table(rows=2, cols=2)
+    for row, values in zip(table.rows, (("A", "B"), ("1", "2"))):
+        for cell, value in zip(row.cells, values):
+            cell.text = value
+    source.add_paragraph("结尾")
+    stream = BytesIO()
+    source.save(stream)
+    doc = dk.Document(BytesIO(stream.getvalue()))
     result = json.loads(json.dumps(doc.to_dict(), ensure_ascii=False))
     assert result["schema_version"] == 1
     assert [block["type"] for block in result["blocks"]] == ["paragraph", "paragraph", "paragraph", "table", "paragraph"]

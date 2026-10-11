@@ -12,9 +12,9 @@ from zipfile import ZipFile
 
 import pymupdf
 
-from aspose.words_foss import Document
-from aspose.words_foss._flat_opc import decode
-from aspose.words_foss._opc import (
+from dockiln import Document
+from dockiln._flat_opc import decode
+from dockiln._opc import (
     related_part_snapshot,
     relationships_path,
     resolve_target,
@@ -164,8 +164,8 @@ def verify_theme_resources(base):
     import hashlib
     import json
 
-    from aspose.words_foss._flat_opc import decode
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln._flat_opc import decode
+    from dockiln.writers.docx import LdmDocxWriter
 
     report = json.loads((base / 'font-theme-resources-26.9.json').read_text())
     assert report['version'] == '26.9.0' and report['license'] == 'official trial, no license'

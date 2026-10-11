@@ -7,8 +7,8 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import DocxDocument
-from aspose.words_foss.light_document_model import NodeType
+from dockiln import DocxDocument
+from dockiln.light_document_model import NodeType
 
 from .test_docx_dom import payloads
 from .test_docx_dom_styles import style_doc

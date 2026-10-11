@@ -3,7 +3,7 @@ from io import BytesIO
 
 import pytest
 
-import aspose.words_foss as aw
+import dockiln as dk
 from .test_docx_dom_styles import style_doc
 from .test_docx_dom_ranges import paragraph_doc
 
@@ -32,7 +32,7 @@ def test_zero_size_survives_edit_and_two_saves(tmp_path, scope, format_name):
     for generation in range(2):
         path = tmp_path / f"{generation}.bin"
         (document.save if format_name == "DOCX" else document.save_flat_opc)(path)
-        document = aw.DocxDocument(path)
+        document = dk.DocxDocument(path)
         run = document.body.paragraphs[0].runs[0]
         assert run.effective_font.size == 0
         assert run.font.size == (0 if scope == "run" else None)
@@ -49,5 +49,5 @@ def test_zero_range_font_splits_only_the_selection(tmp_path):
     paragraph.range(1, 4).apply_font(size=0)
     assert [run.text for run in paragraph.runs] == ["a", "bcd", "ef"]
     assert [run.font.size for run in paragraph.runs] == [12, 0, 12]
-    cold = aw.DocxDocument(BytesIO(document.to_bytes())).body.paragraphs[0]
+    cold = dk.DocxDocument(BytesIO(document.to_bytes())).body.paragraphs[0]
     assert [run.effective_font.size for run in cold.runs] == [12, 0, 12]

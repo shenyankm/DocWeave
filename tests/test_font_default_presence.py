@@ -8,10 +8,10 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import Document, DocxDocument, SaveFormat
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+from dockiln import Document, DocxDocument, SaveFormat
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.saving import OoxmlSaveOptions
 
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / 'docs/benchmarks'

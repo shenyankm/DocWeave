@@ -2,8 +2,7 @@
 
 import pytest
 
-from aspose.words_foss import saving
-from aspose.words_foss.models import ConversionOptions
+from dockiln import saving
 
 FIELDS = [
     (saving.PdfSaveOptions, "compliance", saving.PdfCompliance),
@@ -16,11 +15,6 @@ FIELDS = [
     (saving.OoxmlSaveOptions, "compliance", saving.OoxmlCompliance),
     (saving.OoxmlSaveOptions, "compression_level", saving.CompressionLevel),
     (saving.OoxmlSaveOptions, "zip_64_mode", saving.Zip64Mode),
-    (saving.MarkdownSaveOptions, "table_content_alignment", saving.TableContentAlignment),
-    (saving.MarkdownSaveOptions, "list_export_mode", saving.MarkdownListExportMode),
-    (saving.MarkdownSaveOptions, "link_export_mode", saving.MarkdownLinkExportMode),
-    (saving.MarkdownSaveOptions, "export_as_html", saving.MarkdownExportAsHtml),
-    (saving.MarkdownSaveOptions, "empty_paragraph_export_mode", saving.MarkdownEmptyParagraphExportMode),
 ]
 
 
@@ -43,8 +37,3 @@ def test_all_known_enum_members_and_legacy_values_still_normalize(options_type, 
             assert getattr(options, name) is member
 
 
-@pytest.mark.parametrize("name", ["table_content_alignment", "list_export_mode", "link_export_mode",
-                                 "export_as_html", "empty_paragraph_export_mode"])
-def test_conversion_options_constructor_uses_same_boundary(name):
-    with pytest.raises(ValueError, match="value"):
-        ConversionOptions(**{name: "not_a_mode"})

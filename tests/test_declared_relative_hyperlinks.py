@@ -9,11 +9,11 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.opc.constants import RELATIONSHIP_TYPE
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._flat_opc import decode, encode
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._flat_opc import decode, encode
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.saving import OoxmlSaveOptions
 
 
 def linked_source(target):
@@ -35,10 +35,10 @@ def linked_source(target):
 @pytest.mark.parametrize('target', ['relative/path#', 'note', 'folder/report.docx?x=1&y=2', 'résumé.docx'])
 @pytest.mark.parametrize('flat_input', [False, True])
 @pytest.mark.parametrize('json_copy', [False, True])
-@pytest.mark.parametrize('save_format', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('save_format', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_declared_relative_link_retains_relationship_and_display_text(target, flat_input, json_copy, save_format):
     source = linked_source(target)
-    model = aw.Document(BytesIO(encode(source) if flat_input else source)).light_document_model
+    model = dk.Document(BytesIO(encode(source) if flat_input else source)).light_document_model
     if json_copy:
         model = ldm.Document.model_validate_json(model.model_dump_json())
     held = model.get_child_nodes(ldm.NodeType.RUN, True)[0]
@@ -46,7 +46,7 @@ def test_declared_relative_link_retains_relationship_and_display_text(target, fl
     original_text = held.text
     for _ in range(2):
         output = LdmDocxWriter(OoxmlSaveOptions(save_format)).write_to_bytes(model)
-        package = decode(output) if save_format == aw.SaveFormat.FLAT_OPC else output
+        package = decode(output) if save_format == dk.SaveFormat.FLAT_OPC else output
         with ZipFile(BytesIO(package)) as archive:
             body = fromstring(archive.read('word/document.xml'))
             links = body.findall('.//' + qn('w:hyperlink'))
@@ -56,16 +56,16 @@ def test_declared_relative_link_retains_relationship_and_display_text(target, fl
             relationship = next(node for node in relationships if node.get('Id') == links[0].get(qn('r:id')))
             assert relationship.get('Target') == target
             assert relationship.get('TargetMode') == 'External'
-        cold = aw.Document(BytesIO(output)).light_document_model.get_child_nodes(ldm.NodeType.RUN, True)[0]
+        cold = dk.Document(BytesIO(output)).light_document_model.get_child_nodes(ldm.NodeType.RUN, True)[0]
         assert cold.is_hyperlink and cold.text == original_text
         assert held.text == original_text
 
 
-@pytest.mark.parametrize('save_format', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('save_format', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 @pytest.mark.parametrize('text, marked', [('[1](note)', False), ('[1]()', True), ('[1](<>)', True)])
 def test_unmarked_relative_or_empty_target_pattern_remains_literal(save_format, text, marked):
     model = ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[
         ldm.Paragraph(children=[ldm.Run(text=text, is_hyperlink=marked)])]))])
     output = LdmDocxWriter(OoxmlSaveOptions(save_format)).write_to_bytes(model)
-    cold = aw.Document(BytesIO(output)).light_document_model.get_child_nodes(ldm.NodeType.RUN, True)[0]
+    cold = dk.Document(BytesIO(output)).light_document_model.get_child_nodes(ldm.NodeType.RUN, True)[0]
     assert cold.text == text and not cold.is_hyperlink

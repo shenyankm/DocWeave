@@ -20,8 +20,8 @@ CASES = ("small", "hundred_pages", "image_table", "repeated_images", "mixed_styl
 
 def fixtures(directory):
     from PIL import Image
-    from aspose.words_foss import light_document_model as ldm
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln import light_document_model as ldm
+    from dockiln.writers.docx import LdmDocxWriter
 
     def para(text, **font):
         return ldm.Paragraph(children=[ldm.Run(text=text, font=ldm.Font(**font))])
@@ -60,12 +60,12 @@ def fixtures(directory):
 
 def measure(path):
     start = perf_counter()
-    import aspose.words_foss as aw
-    from aspose.words_foss._io import atomic_output
-    from aspose.words_foss.pdf_writer import LdmPdfWriter
+    import dockiln as dk
+    from dockiln._io import atomic_output
+    from dockiln.writers.pdf import LdmPdfWriter
 
     imported = perf_counter()
-    document = aw.Document(path)
+    document = dk.Document(path)
     parsed = perf_counter()
     with ExitStack() as cleanup:
         pdf = LdmPdfWriter()._render_pdf(document.light_document_model, cleanup)

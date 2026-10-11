@@ -7,13 +7,13 @@ import pymupdf
 import pytest
 from docx import Document
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._comments import _comment_story_nodes
-from aspose.words_foss.diagnostics import document_nodes
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._comments import _comment_story_nodes
+from dockiln.diagnostics import document_nodes
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import OoxmlSaveOptions
 from tests.test_conversion_comments import owned_comment
 from tests.test_conversion_notes import W, owned_notes, package
 
@@ -64,17 +64,17 @@ def target(model, kind):
 @pytest.mark.parametrize('size', [None, 0, 16])
 @pytest.mark.parametrize('route', ['original', 'json', 'deep'])
 def test_unknown_paragraph_size_fallback_edits_and_roundtrips(kind, size, route):
-    model = aw.Document(BytesIO(source(kind, size))).light_document_model
+    model = dk.Document(BytesIO(source(kind, size))).light_document_model
     if route == 'json': model = ldm.Document.model_validate_json(model.model_dump_json())
     if route == 'deep': model = model.model_copy(deep=True)
     held = target(model, kind)
     assert held.size == (11 if size is None else size)
     next(s for s in model.styles if s.name == 'Normal').font.size = 28
     assert held.size == held.render_size == 28
-    for fmt in (aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC):
+    for fmt in (dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC):
         current = model.model_copy(deep=True)
         for _ in range(2):
-            current = aw.Document(BytesIO(LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current))).light_document_model
+            current = dk.Document(BytesIO(LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current))).light_document_model
             assert target(current, kind).size == 28
             assert any(p.paragraph_format.style_name == 'OwnedMissing' for p in document_nodes(current)
                        if isinstance(p, ldm.Paragraph))
@@ -83,7 +83,7 @@ def test_unknown_paragraph_size_fallback_edits_and_roundtrips(kind, size, route)
 
 @pytest.mark.parametrize('size', [None, 0, 16])
 def test_dom_unknown_style_validation_remains_explicit(size):
-    document = aw.DocxDocument(BytesIO(source('body', size)))
+    document = dk.DocxDocument(BytesIO(source('body', size)))
     before = document.to_bytes()
     with pytest.raises(ValueError, match='Missing style'):
         _ = document.body.paragraphs[0].runs[0].effective_font.size
@@ -93,7 +93,7 @@ def test_dom_unknown_style_validation_remains_explicit(size):
 @pytest.mark.parametrize('kind', ['body', 'header'])
 @pytest.mark.parametrize('size', [None, 0, 16])
 def test_unknown_paragraph_size_reaches_actual_pdf(kind, size):
-    model = aw.Document(BytesIO(source(kind, size))).light_document_model
+    model = dk.Document(BytesIO(source(kind, size))).light_document_model
     for expected in (11 if size is None else size, 28):
         if expected == 28: next(s for s in model.styles if s.name == 'Normal').font.size = 28
         with pymupdf.open(stream=LdmPdfWriter().write_to_bytes(model), filetype='pdf') as pdf:

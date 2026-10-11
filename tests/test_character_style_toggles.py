@@ -7,9 +7,9 @@ from docx import Document
 from docx.enum.style import WD_STYLE_TYPE
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer.styles_part import render_styles_xml
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx.styles_part import render_styles_xml
 
 
 @pytest.mark.parametrize('attribute', ['bold', 'italic', 'hidden', 'all_caps', 'small_caps', 'strike'])
@@ -23,7 +23,7 @@ def test_character_style_explicit_off_is_not_dropped(attribute):
     source.add_paragraph().add_run('TEXT').style = child
     stream = BytesIO()
     source.save(stream)
-    doc = aw.Document(BytesIO(stream.getvalue()))
+    doc = dk.Document(BytesIO(stream.getvalue()))
     font = doc.light_document_model.sections[0].body.paragraphs[0].runs[0].font
     model_attribute = 'strike_through' if attribute == 'strike' else attribute
     assert getattr(font, model_attribute) is False
@@ -38,7 +38,7 @@ def test_unset_character_style_bold_stays_unset():
     source.add_paragraph().add_run('TEXT').style = source.styles['Brand Child']
     stream = BytesIO()
     source.save(stream)
-    result = Document(BytesIO(aw.Document(BytesIO(stream.getvalue())).to_bytes('docx')))
+    result = Document(BytesIO(dk.Document(BytesIO(stream.getvalue())).to_bytes('docx')))
     assert result.styles['Brand Child'].font.bold is None
 
 
@@ -57,7 +57,7 @@ def test_sparse_character_style_keeps_paragraph_font_and_run_off_override(paragr
     direct.font.bold = False
     stream = BytesIO()
     source.save(stream)
-    doc = aw.Document(BytesIO(stream.getvalue()))
+    doc = dk.Document(BytesIO(stream.getvalue()))
     actual = doc.light_document_model.sections[0].body.paragraphs[0].runs
     assert [run.font.bold for run in actual] == [True, False]
     assert all(run.font.italic for run in actual)

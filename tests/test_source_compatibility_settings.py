@@ -4,11 +4,11 @@ from zipfile import ZipFile
 from xml.etree import ElementTree as E
 from defusedxml.common import DefusedXmlException
 import pytest
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.docx_writer.settings_part import render_settings_xml
-from aspose.words_foss.saving import OoxmlSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.docx.settings_part import render_settings_xml
+from dockiln.saving import OoxmlSaveOptions
 from tests.test_settings_relationship_loading import settings_package
 W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 
@@ -22,7 +22,7 @@ def document(compat):
             if name=='word/settings.xml':
                 data=('<w:settings xmlns:w="'+W[1:-1]+'">'+compat+'</w:settings>').encode()
             target.writestr(name,data)
-    return aw.Document(BytesIO(out.getvalue())).light_document_model
+    return dk.Document(BytesIO(out.getvalue())).light_document_model
 
 
 def declarations(model):
@@ -35,10 +35,10 @@ def test_loaded_source_json_and_two_cold_saves_keep_compatibility_declarations(c
     model=document(compat);before=model.model_dump_json();expected=declarations(model)
     assert expected is None or not any(e[0]==W+'useWord2002TableStyleRules'for e in expected)
     for value in [model,ldm.Document.model_validate_json(before)]:
-        for fmt in [aw.SaveFormat.DOCX,aw.SaveFormat.FLAT_OPC]:
+        for fmt in [dk.SaveFormat.DOCX,dk.SaveFormat.FLAT_OPC]:
             for _ in range(2):
                 raw=LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(value)
-                value=aw.Document(BytesIO(raw)).light_document_model
+                value=dk.Document(BytesIO(raw)).light_document_model
                 assert declarations(value)==expected
     assert model.model_dump_json()==before
 
@@ -63,7 +63,7 @@ def test_programmatic_document_retains_its_separate_template_baseline():
     assert W+'useWord2002TableStyleRules' in [tag for tag,attrs in declarations(ldm.Document())]
 
 
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 @pytest.mark.parametrize('failure', ['malformed', 'publication'])
 def test_failed_compatibility_save_preserves_source_model_and_destination(tmp_path, monkeypatch, fmt, failure):
     model=document('<w:compat><w:useFELayout/></w:compat>')
@@ -71,7 +71,7 @@ def test_failed_compatibility_save_preserves_source_model_and_destination(tmp_pa
         model.source_settings=ldm.SourceSettings(data=b'<broken')
     source=model.source_settings
     before=model.model_dump_json()
-    doc=aw.Document();doc._document=model
+    doc=dk.Document();doc._document=model
     destination=tmp_path/'owned.bin'
     destination.write_bytes(b'owned previous output')
     if failure == 'publication':
@@ -95,7 +95,7 @@ def test_compatibility_snapshot_is_immutable_and_old_json_has_no_source():
     assert ldm.Document.model_validate_json('{"_type":"Document"}').source_settings is None
 
 
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_unknown_compatibility_extension_survives_json_and_two_saves(fmt):
     model=document('<w:compat xmlns:o="urn:owned" o:source="owned"><o:extra o:key="1">'
                    '<o:child>Owned retained</o:child></o:extra></w:compat>')
@@ -103,7 +103,7 @@ def test_unknown_compatibility_extension_survives_json_and_two_saves(fmt):
     model=ldm.Document.model_validate_json(model.model_dump_json())
     for _ in range(2):
         raw=LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(model)
-        model=aw.Document(BytesIO(raw)).light_document_model
+        model=dk.Document(BytesIO(raw)).light_document_model
         actual=E.fromstring(model.source_settings.data)
         assert actual.attrib==expected.attrib
         assert E.tostring(actual)==E.tostring(expected)

@@ -10,10 +10,10 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Pt
 
-from aspose.words_foss import Document
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_reader.ldm_builder.cascading import ParagraphFormatResolver
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+from dockiln import Document
+from dockiln import light_document_model as ldm
+from dockiln.readers.docx.ldm_builder.cascading import ParagraphFormatResolver
+from dockiln.writers.pdf import LdmPdfWriter
 
 
 def source_document(kind, mark):

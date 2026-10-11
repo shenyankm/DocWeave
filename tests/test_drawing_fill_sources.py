@@ -5,9 +5,9 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import Document, SaveFormat, light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter, PdfContentLossWarning
+from dockiln import Document, SaveFormat, light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter, PdfContentLossWarning
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 A = 'http://schemas.openxmlformats.org/drawingml/2006/main'

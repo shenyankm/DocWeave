@@ -4,8 +4,8 @@ from copy import deepcopy
 import pytest
 from pydantic import ValidationError
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
+import dockiln as dk
+from dockiln import light_document_model as ldm
 
 
 def paragraph(text):
@@ -80,12 +80,12 @@ def test_legacy_content_survives_two_public_saves(tmp_path, fmt, via_json):
                          footer_paragraphs=[paragraph('OWNED FOOTER Ω')])
     if via_json:
         model = ldm.Document.model_validate_json(model.model_dump_json())
-    doc = aw.Document()
+    doc = dk.Document()
     doc._document = model
     for step in (1, 2):
         path = tmp_path / f'{fmt}-{step}.bin'
-        doc.save(path, getattr(aw.SaveFormat, fmt))
-        doc = aw.Document(path)
+        doc.save(path, getattr(dk.SaveFormat, fmt))
+        doc = dk.Document(path)
         cold = doc.light_document_model
         assert [p.text for p in cold.header_paragraphs] == ['OWNED HEADER Ω']
         assert [p.text for p in cold.footer_paragraphs] == ['OWNED FOOTER Ω']
@@ -93,15 +93,15 @@ def test_legacy_content_survives_two_public_saves(tmp_path, fmt, via_json):
         assert cold.footer_paragraphs[0]._children[0].font.bold is True
 
 
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_loaded_bound_header_fonts_keep_legacy_mirrors_equal(tmp_path, fmt):
     model = ldm.Document(header_paragraphs=[paragraph('OWNED HEADER Ω')],
                          footer_paragraphs=[paragraph('OWNED FOOTER Ω')])
-    document = aw.Document()
+    document = dk.Document()
     document._document = model
     path = tmp_path / 'owned'
     document.save(path, fmt)
-    current = aw.Document(path).light_document_model
+    current = dk.Document(path).light_document_model
     held = current.header_paragraphs[0]._children[0].font
     for _ in range(2):
         data = current.model_dump()

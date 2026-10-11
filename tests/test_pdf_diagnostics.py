@@ -10,19 +10,19 @@ from fontTools import subset
 from pypdf import PdfReader
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import (
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import (
     LdmPdfWriter,
     PdfFontSubstitutionWarning,
     PdfMissingGlyphWarning,
     PdfUnsupportedOptionWarning,
 )
-from aspose.words_foss.pdf_writer.font import register_fonts
-from aspose.words_foss.pdf_writer.constants import DEFAULT_FONT_NAME
-from aspose.words_foss.pdf_writer.diagnostics import warn_about_conversion
+from dockiln.writers.pdf.font import register_fonts
+from dockiln.writers.pdf.constants import DEFAULT_FONT_NAME
+from dockiln.writers.pdf.diagnostics import warn_about_conversion
 
-FONTS = Path(__file__).resolve().parents[1] / "aspose/words_foss/pdf_writer/fonts"
+FONTS = Path(__file__).resolve().parents[1] / "src/dockiln/writers/pdf/fonts"
 
 
 def plain_document(text="中文", **font):
@@ -96,15 +96,15 @@ def test_default_pdf_options_do_not_warn(tmp_path):
     ],
 )
 def test_explicit_unsupported_options_warn(tmp_path, option, value):
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     setattr(options, option, value)
     with pytest.warns(PdfUnsupportedOptionWarning, match=option):
         LdmPdfWriter(options).write(plain_document(), tmp_path / "options.pdf")
 
 
 def test_pdf_archival_compliance_is_not_silently_claimed(tmp_path):
-    options = aw.saving.PdfSaveOptions()
-    options.compliance = aw.saving.PdfCompliance.PDF_A1B
+    options = dk.saving.PdfSaveOptions()
+    options.compliance = dk.saving.PdfCompliance.PDF_A1B
     with pytest.warns(PdfUnsupportedOptionWarning, match="conformance is not implemented"):
         LdmPdfWriter(options).write(plain_document(), tmp_path / "archival.pdf")
 
@@ -148,7 +148,7 @@ def test_glyph_diagnostics_do_not_scan_primary_font_cmap(bold, fallback):
     paragraph.list_label = ldm.ListLabel(label_string=chr(0xE123) + chr(0x1FAE0))
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        warn_about_conversion(pdf, document, aw.saving.PdfSaveOptions(),
+        warn_about_conversion(pdf, document, dk.saving.PdfSaveOptions(),
                               ["Fallback0"] if fallback else [])
     missing = [w for w in caught if issubclass(w.category, PdfMissingGlyphWarning)]
     assert len(missing) == 1
@@ -182,7 +182,7 @@ def test_fallback_font_fills_missing_character(tmp_path, bold):
     fallback = tmp_path / "fallback.ttf"
     font.flavor = None
     font.save(fallback)
-    save_options = aw.saving.PdfSaveOptions()
+    save_options = dk.saving.PdfSaveOptions()
     save_options.fallback_fonts = [str(fallback)]
     output = tmp_path / "fallback.pdf"
     with warnings.catch_warnings(record=True) as caught:

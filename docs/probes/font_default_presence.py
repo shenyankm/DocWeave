@@ -33,10 +33,10 @@ def main():
     parser.add_argument('--outputs', type=Path, required=True)
     args = parser.parse_args()
     if args.action == 'current':
-        from aspose.words_foss import Document, SaveFormat
-        from aspose.words_foss import light_document_model as ldm
-        from aspose.words_foss.docx_writer import LdmDocxWriter
-        from aspose.words_foss.saving import OoxmlSaveOptions
+        from dockiln import Document, SaveFormat
+        from dockiln import light_document_model as ldm
+        from dockiln.writers.docx import LdmDocxWriter
+        from dockiln.saving import OoxmlSaveOptions
 
         records = []
         with ZipFile(args.outputs, 'w', compression=ZIP_DEFLATED) as archive:
@@ -54,7 +54,7 @@ def main():
                                         'output_sha256': hashlib.sha256(output).hexdigest(),
                                         'rpr_default_present': model.doc_defaults_rpr_present,
                                         'expected_run_size': expected['run_size'], 'expected_style_size': expected['style_size']})
-        report = {'version': version('aspose-words-foss-enhanced'), 'python': platform.python_version(),
+        report = {'version': version('dockiln'), 'python': platform.python_version(),
                   'platform': platform.platform(), 'sources': list(SOURCES),
                   'outputs': 'corpus/' + args.outputs.name,
                   'outputs_sha256': hashlib.sha256(args.outputs.read_bytes()).hexdigest(), 'records': records,

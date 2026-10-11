@@ -9,8 +9,8 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.dom.styles import _style_stories
+import dockiln as dk
+from dockiln.dom.styles import _style_stories
 
 from .test_docx_dom import payloads
 
@@ -44,7 +44,7 @@ def test_style_import_live_and_projected_formats(matrix, row, tmp_path):
     assert all(hashlib.sha256(value).hexdigest() == row["inputs"][phase] for phase, value in data.items())
     native_report = json.loads((BENCHMARKS / matrix["native"]["file"]).read_text())["reports"][matrix["native"]["report_index"]]
     native = next(item for item in native_report["records"] if item["case"] == row["case"])
-    source, target = (aw.DocxDocument(BytesIO(data[phase])) for phase in ("source", "destination"))
+    source, target = (dk.DocxDocument(BytesIO(data[phase])) for phase in ("source", "destination"))
     node = source.body.paragraphs[0]
     copied = target.import_node(node, True)
     assert copied.owner_document is target and copied.parent_node is None

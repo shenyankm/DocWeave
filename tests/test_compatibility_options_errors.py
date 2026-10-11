@@ -1,7 +1,7 @@
 """Strict public type contracts independently calibrated against 26.9."""
 from enum import IntEnum
 import pytest
-import aspose.words_foss as aw
+import dockiln as dk
 
 FLAGS = (
     'adjust_line_height_in_table',
@@ -81,7 +81,7 @@ FLAGS = (
 @pytest.mark.parametrize('name', FLAGS)
 @pytest.mark.parametrize('value', [0, 1, None, 'false', 1.0, object()])
 def test_all_flags_reject_non_bool_without_creating_or_mutating_state(name, value):
-    doc = aw.Document()
+    doc = dk.Document()
     held = doc.compatibility_options
     before = doc.light_document_model.model_dump_json()
     with pytest.raises(TypeError):
@@ -93,7 +93,7 @@ def test_all_flags_reject_non_bool_without_creating_or_mutating_state(name, valu
 @pytest.mark.parametrize('name', FLAGS)
 @pytest.mark.parametrize('value', [False, True])
 def test_all_flags_accept_only_actual_bools(name, value):
-    doc = aw.Document()
+    doc = dk.Document()
     held = doc.compatibility_options
     setattr(held, name, value)
     assert getattr(held, name) is value
@@ -107,7 +107,7 @@ class OtherVersion(IntEnum):
 @pytest.mark.parametrize('value', [0, 1, -1, 8, None, 'WORD2019', 1.0, object(),
                                  False, True, OtherVersion.ZERO, [], {}, b'WORD2019'])
 def test_optimization_rejects_non_word_version_enum_without_mutation(value):
-    doc = aw.Document()
+    doc = dk.Document()
     held = doc.compatibility_options
     before = doc.light_document_model.model_dump_json()
     with pytest.raises(TypeError):
@@ -118,16 +118,16 @@ def test_optimization_rejects_non_word_version_enum_without_mutation(value):
 
 @pytest.mark.parametrize('name', ['compatibility_mode', 'owned_undeclared'])
 def test_undeclared_attributes_reject_read_and_write(name):
-    options = aw.Document().compatibility_options
+    options = dk.Document().compatibility_options
     with pytest.raises(AttributeError):
         getattr(options, name)
     with pytest.raises(AttributeError):
         setattr(options, name, True)
 
 
-@pytest.mark.parametrize('args', [(), (aw.settings.MsWordVersion.WORD2019, 0)])
+@pytest.mark.parametrize('args', [(), (dk.settings.MsWordVersion.WORD2019, 0)])
 def test_optimization_arity_errors_preserve_model(args):
-    doc = aw.Document()
+    doc = dk.Document()
     held = doc.compatibility_options
     before = doc.light_document_model.model_dump_json()
     with pytest.raises(TypeError):

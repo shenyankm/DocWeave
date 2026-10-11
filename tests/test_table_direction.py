@@ -10,11 +10,9 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Pt
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.saving import (
-    MarkdownExportAsHtml,
-    MarkdownSaveOptions,
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.saving import (
     OoxmlSaveOptions,
     PdfSaveOptions,
 )
@@ -94,7 +92,7 @@ def positions(document, shaping=False):
 @pytest.mark.parametrize("bidi", [False, True])
 @pytest.mark.parametrize("scope", ["table", "cell", "style"])
 def test_logical_margins_and_unequal_columns_survive_roundtrip(shaping, bidi, scope):
-    document = aw.Document(BytesIO(source_docx(bidi=bidi, scope=scope)))
+    document = dk.Document(BytesIO(source_docx(bidi=bidi, scope=scope)))
     model = document.light_document_model
     table = model.sections[0].body.tables[0]
     fmt = table.rows[0].cells[0].cell_format if scope == "cell" else table
@@ -103,7 +101,7 @@ def test_logical_margins_and_unequal_columns_survive_roundtrip(shaping, bidi, sc
     snapshot = model.model_dump()
     expected = {"ONE": 156, "TWO": 56} if bidi else {"ONE": 26, "TWO": 76}
     assert positions(document, shaping) == pytest.approx(expected, abs=0.05)
-    loaded = aw.Document(BytesIO(document.to_bytes(OoxmlSaveOptions())))
+    loaded = dk.Document(BytesIO(document.to_bytes(OoxmlSaveOptions())))
     assert loaded.light_document_model.sections[0].body.tables[0].bidi is bidi
     assert positions(loaded, shaping) == pytest.approx(expected, abs=0.05)
     assert (
@@ -131,7 +129,7 @@ def test_logical_margins_and_unequal_columns_survive_roundtrip(shaping, bidi, sc
     ],
 )
 def test_source_table_direction_boolean_forms(value, expected):
-    document = aw.Document(BytesIO(source_docx(bidi=value)))
+    document = dk.Document(BytesIO(source_docx(bidi=value)))
     assert document.light_document_model.sections[0].body.tables[0].bidi is expected
 
 
@@ -139,7 +137,7 @@ def test_source_table_direction_boolean_forms(value, expected):
 @pytest.mark.parametrize("alignment", [0, 1, 2])
 @pytest.mark.parametrize("indent", [0, 24])
 def test_direction_mirrors_alignment_and_leading_indent(bidi, alignment, indent):
-    document = aw.Document(
+    document = dk.Document(
         BytesIO(source_docx(bidi=bidi, alignment=alignment, indent=indent))
     )
     physical_alignment = 2 - alignment if bidi else alignment
@@ -163,11 +161,11 @@ def test_legacy_rtl_table_offset_uses_left_margin(mode, indent, shaping):
     setting.set(qn("w:val"), str(mode))
     output = BytesIO()
     source.save(output)
-    document = aw.Document(BytesIO(output.getvalue()))
+    document = dk.Document(BytesIO(output.getvalue()))
     assert document.light_document_model.compatibility_mode == mode
     expected = {"ONE": 162 - indent, "TWO": 62 - indent}
     assert positions(document, shaping) == pytest.approx(expected, abs=0.05)
-    restored = aw.Document(BytesIO(document.to_bytes(OoxmlSaveOptions())))
+    restored = dk.Document(BytesIO(document.to_bytes(OoxmlSaveOptions())))
     assert positions(restored, shaping) == pytest.approx(expected, abs=0.05)
 
 
@@ -183,7 +181,7 @@ def test_style_only_direction_and_explicit_false_override_survive(direction):
         document.styles["Margin Zero"].element.find(qn("w:tblPr")).insert(0, entry)
     output = BytesIO()
     document.save(output)
-    loaded = aw.Document(BytesIO(output.getvalue()))
+    loaded = dk.Document(BytesIO(output.getvalue()))
     assert loaded.light_document_model.sections[0].body.tables[0].bidi is direction
     assert (
         next(
@@ -191,7 +189,7 @@ def test_style_only_direction_and_explicit_false_override_survive(direction):
         ).table_style_format.bidi
         is True
     )
-    roundtrip = aw.Document(BytesIO(loaded.to_bytes(OoxmlSaveOptions())))
+    roundtrip = dk.Document(BytesIO(loaded.to_bytes(OoxmlSaveOptions())))
     assert roundtrip.light_document_model.sections[0].body.tables[0].bidi is direction
     assert (
         next(
@@ -201,14 +199,6 @@ def test_style_only_direction_and_explicit_false_override_survive(direction):
     )
 
 
-def test_markdown_reports_direction_loss_and_html_preserves_direction():
-    document = aw.Document(BytesIO(source_docx()))
-    with pytest.warns(aw.ContentLossWarning, match="right-to-left"):
-        assert b"ONE" in document.to_bytes(aw.SaveFormat.MARKDOWN)
-    assert any(d.code == "markdown.table_direction" for d in document.diagnostics)
-    options = MarkdownSaveOptions()
-    options.export_as_html = MarkdownExportAsHtml.TABLES
-    assert b'<table dir="rtl">' in document.to_bytes(options)
 
 
 def test_rtl_border_sides_are_mirrored_with_unequal_columns():
@@ -224,7 +214,7 @@ def test_rtl_border_sides_are_mirrored_with_unequal_columns():
     output = BytesIO()
     document.save(output)
     with pymupdf.open(
-        stream=aw.Document(BytesIO(output.getvalue())).to_bytes(PdfSaveOptions()),
+        stream=dk.Document(BytesIO(output.getvalue())).to_bytes(PdfSaveOptions()),
         filetype="pdf",
     ) as pdf:
         lines = pdf[0].get_drawings()
@@ -250,7 +240,7 @@ def test_nested_table_direction_is_independent_of_outer_table(bidi):
         cell.paragraphs[0].runs[0].font.size = Pt(8)
     output = BytesIO()
     document.save(output)
-    result = positions(aw.Document(BytesIO(output.getvalue())))
+    result = positions(dk.Document(BytesIO(output.getvalue())))
     assert (result["ALPHA"] < result["BETA"]) is bidi
 
 
@@ -268,7 +258,7 @@ def test_rtl_spanning_cell_and_repeated_headers_keep_logical_order():
             cell.paragraphs[0].runs[0].font.size = Pt(8)
     output = BytesIO()
     document.save(output)
-    source = aw.Document(BytesIO(output.getvalue()))
+    source = dk.Document(BytesIO(output.getvalue()))
     with pymupdf.open(stream=source.to_bytes(PdfSaveOptions()), filetype="pdf") as pdf:
         assert len(pdf) > 1
         labels = []
@@ -297,7 +287,7 @@ def test_explicit_zero_logical_margins_override_legacy_aliases(bidi):
         )
     output = BytesIO()
     document.save(output)
-    loaded = aw.Document(BytesIO(output.getvalue()))
+    loaded = dk.Document(BytesIO(output.getvalue()))
     assert positions(loaded) == pytest.approx(
         {"ONE": 150, "TWO": 50} if bidi else {"ONE": 20, "TWO": 70}, abs=0.05
     )
@@ -319,7 +309,7 @@ def test_unsupported_logical_margin_units_do_not_override_valid_legacy_margin(un
     margin.set(qn("w:w"), "ignored")
     output = BytesIO()
     document.save(output)
-    loaded = aw.Document(BytesIO(output.getvalue()))
+    loaded = dk.Document(BytesIO(output.getvalue()))
     assert loaded.light_document_model.sections[0].body.tables[0].left_padding == 3
 
 
@@ -339,7 +329,7 @@ def test_negative_logical_margin_is_rejected(scope):
     output = BytesIO()
     document.save(output)
     with pytest.raises(ValueError, match="margins must be nonnegative"):
-        aw.Document(BytesIO(output.getvalue()))
+        dk.Document(BytesIO(output.getvalue()))
 
 
 @pytest.mark.parametrize("direction", [True, False])
@@ -355,12 +345,12 @@ def test_direction_only_table_style_is_retained(direction):
     pr.append(entry)
     output = BytesIO()
     document.save(output)
-    loaded = aw.Document(BytesIO(output.getvalue()))
+    loaded = dk.Document(BytesIO(output.getvalue()))
     assert (
         next(
             s for s in loaded.light_document_model.styles if s.name == "Margin Zero"
         ).table_style_format.bidi
         is direction
     )
-    roundtrip = aw.Document(BytesIO(loaded.to_bytes(OoxmlSaveOptions())))
+    roundtrip = dk.Document(BytesIO(loaded.to_bytes(OoxmlSaveOptions())))
     assert roundtrip.light_document_model.sections[0].body.tables[0].bidi is direction

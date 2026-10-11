@@ -31,7 +31,7 @@ def main():
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
     baseline = json.loads(args.baseline.read_text())
-    root = importlib.import_module("aspose.words_foss")
+    root = importlib.import_module("dockiln")
     rows = compare(baseline["enums"], root)
     result = {"schema": 1, "baseline_version": baseline["version"], "current_version": root.__version__,
               "scope": "direct public path and integer constants only; aliases, constructors and behavior not certified",

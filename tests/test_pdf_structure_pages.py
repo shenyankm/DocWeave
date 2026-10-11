@@ -5,9 +5,9 @@ import pymupdf
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 
 
 def model(style='Normal', bands=False, columns=1):
@@ -77,7 +77,7 @@ def test_multi_page_tags_are_balanced_and_keep_rendered_content(style, bands, co
 @pytest.mark.parametrize('content', ['paragraph', 'table'])
 def test_tag_page_hook_restores_after_failure_and_writer_recovers(tmp_path, monkeypatch, failure, content):
     from fpdf import FPDF
-    from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
+    from dockiln.writers.pdf.run_renderer import RunRenderer
 
     options = PdfSaveOptions()
     options.export_document_structure = True
@@ -292,7 +292,7 @@ def test_table_structure_handles_empty_images_aliases_and_page_bands(kind):
 
 def test_native_link_structure_does_not_shift_marked_content_parent_indices():
     from fpdf import FPDF
-    from aspose.words_foss.pdf_writer.structure import TableStructureBuilder
+    from dockiln.writers.pdf.structure import TableStructureBuilder
 
     pdf = FPDF()
     pdf.struct_builder = TableStructureBuilder(pdf)
@@ -422,7 +422,7 @@ def test_invalid_vertical_continuations_are_not_attached_to_unrelated_cells(inva
 
 
 def test_merge_attributes_follow_model_changes_between_writer_calls(monkeypatch):
-    from aspose.words_foss.pdf_writer import structure
+    from dockiln.writers.pdf import structure
 
     doc, _, _, _ = merged_table_model('combined', paginate=True)
     original = structure.iter_grid_cells
@@ -450,12 +450,12 @@ def test_merge_attributes_follow_model_changes_between_writer_calls(monkeypatch)
 
 
 def test_public_docx_conversion_keeps_combined_cell_spans():
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
     doc, _, _, _ = merged_table_model('combined')
     source = LdmDocxWriter().write_to_bytes(doc)
-    document = aw.Document(BytesIO(source))
+    document = dk.Document(BytesIO(source))
     options = PdfSaveOptions()
     options.export_document_structure = True
     raw = document.to_bytes(options)
@@ -508,7 +508,7 @@ def test_reused_body_paragraph_is_two_logical_occurrences():
 @pytest.mark.parametrize('failure', ['drawing', 'closing'])
 def test_cross_page_continuation_failure_preserves_output_and_recovers(tmp_path, monkeypatch, failure):
     from fpdf import FPDF
-    from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
+    from dockiln.writers.pdf.run_renderer import RunRenderer
 
     options = PdfSaveOptions(); options.export_document_structure = True
     writer = LdmPdfWriter(options)
@@ -544,11 +544,11 @@ def test_cross_page_continuation_failure_preserves_output_and_recovers(tmp_path,
 
 
 def test_public_docx_cross_page_body_is_one_logical_paragraph():
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
     options = PdfSaveOptions(); options.export_document_structure = True
-    document = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(model(bands=True, columns=2))))
+    document = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(model(bands=True, columns=2))))
     reader = assert_page_tags(document.to_bytes(options))
     root = reader.trailer['/Root']['/StructTreeRoot']['/K'][0].get_object()
     assert len(root['/K']) == 1 and root['/K'][0].get_object()['/S'] == '/P'

@@ -3,8 +3,8 @@
 import pymupdf
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
 
 
 def band_origin(distance, band):

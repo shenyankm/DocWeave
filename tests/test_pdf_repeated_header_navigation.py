@@ -6,9 +6,9 @@ import pymupdf
 from pypdf import PdfReader, PdfWriter
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 
 
 def repeated_header_model(kind, nested=False):
@@ -78,11 +78,11 @@ def test_cell_heading_outline_excludes_neighboring_paragraphs_and_hidden_runs(vi
 
 
 def test_public_docx_save_keeps_repeated_header_bookmark_at_first_appearance():
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
     source = LdmDocxWriter().write_to_bytes(repeated_header_model('bookmark', nested=True))
-    document = aw.Document(BytesIO(source))
+    document = dk.Document(BytesIO(source))
     options = PdfSaveOptions()
     options.outline_options.bookmarks_outline_levels = {'Target': 1}
     raw = document.to_bytes(options)
@@ -187,7 +187,7 @@ def test_repeated_headers_are_artifacts_with_one_logical_appearance(nested, imag
 @pytest.mark.parametrize('failure', ['drawing', 'closing'])
 def test_repeated_header_artifact_failure_restores_state_and_writer_recovers(tmp_path, monkeypatch, failure):
     from fpdf import FPDF
-    from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
+    from dockiln.writers.pdf.run_renderer import RunRenderer
 
     model = repeated_header_model('heading', nested=True)
     options = PdfSaveOptions()
@@ -258,7 +258,7 @@ def test_nested_artifact_restores_existing_flag_when_closing_fails(monkeypatch):
 
 
 def page_band_model(kind='plain', columns=1, skip_first=False):
-    from aspose.words_foss.docx_reader import PAGE_FIELD_SENTINEL
+    from dockiln.readers.docx import PAGE_FIELD_SENTINEL
     from PIL import Image
 
     doc = repeated_header_model('bookmark')
@@ -376,7 +376,7 @@ def test_page_band_artifact_properties_respect_pdf_version(version):
 @pytest.mark.parametrize('repeated', [False, True])
 def test_page_band_artifact_failure_preserves_output_and_writer_recovers(tmp_path, monkeypatch, band, failure, repeated):
     from fpdf import FPDF
-    from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
+    from dockiln.writers.pdf.run_renderer import RunRenderer
 
     model = page_band_model()
     options = PdfSaveOptions()
@@ -427,11 +427,11 @@ def test_page_band_artifact_failure_preserves_output_and_writer_recovers(tmp_pat
 
 @pytest.mark.parametrize('kind', ['plain', 'table'])
 def test_public_docx_conversion_keeps_page_bands_out_of_body_structure(kind):
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
     source = LdmDocxWriter().write_to_bytes(page_band_model(kind))
-    document = aw.Document(BytesIO(source))
+    document = dk.Document(BytesIO(source))
     snapshot = document.light_document_model.model_dump()
     options = PdfSaveOptions()
     options.export_document_structure = True
@@ -520,14 +520,14 @@ def test_page_band_navigation_resets_when_writer_reused():
 
 @pytest.mark.parametrize('layout', ['plain', 'nested'])
 def test_public_docx_page_band_bookmarks_keep_first_page(layout):
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
     source = LdmDocxWriter().write_to_bytes(page_band_navigation_model(layout=layout, skip_first=True))
     options = PdfSaveOptions()
     options.export_document_structure = True
     options.outline_options.bookmarks_outline_levels = {'HeaderTarget': 1, 'FooterTarget': 1}
-    raw = aw.Document(BytesIO(source)).to_bytes(options)
+    raw = dk.Document(BytesIO(source)).to_bytes(options)
     reader = PdfReader(BytesIO(raw))
     targets = [item for item in reader.outline if item.title in ('HeaderTarget', 'FooterTarget')]
     assert len(targets) == 2

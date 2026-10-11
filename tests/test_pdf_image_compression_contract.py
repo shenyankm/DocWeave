@@ -9,9 +9,11 @@ from docx import Document as NativeDocument
 from PIL import Image
 from pypdf import PdfReader
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+from ._word_fixtures import word_document
+
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
 
 
 def picture(mode):
@@ -42,7 +44,7 @@ def document(mode="RGBA", location="body"):
     native.add_picture(BytesIO(picture(mode)))
     source = BytesIO()
     native.save(source)
-    doc = aw.Document(BytesIO(source.getvalue()))
+    doc = dk.Document(BytesIO(source.getvalue()))
     paragraph = doc.sections[0].body.children[0]
     if location == "table":
         doc.sections[0].body.children = [ldm.Table(rows=[ldm.Row(cells=[ldm.Cell(paragraphs=[paragraph])])])]
@@ -60,7 +62,7 @@ def document(mode="RGBA", location="body"):
 def test_auto_low_quality_preserves_transparency(mode, location):
     doc = document(mode, location)
     before = doc.light_document_model.model_dump()
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.jpeg_quality = 80
     actual = doc.to_bytes(options)
     reference = doc.to_bytes("pdf")
@@ -77,9 +79,9 @@ def test_auto_low_quality_preserves_transparency(mode, location):
 @pytest.mark.parametrize("location", ["body", "table", "header", "footer", "anchored"])
 def test_explicit_jpeg_flattens_against_white_and_diagnoses_loss(mode, location):
     doc = document(mode, location)
-    options = aw.saving.PdfSaveOptions()
-    options.image_compression = aw.saving.PdfImageCompression.JPEG
-    with pytest.warns(aw.ContentLossWarning, match="transparency"):
+    options = dk.saving.PdfSaveOptions()
+    options.image_compression = dk.saving.PdfImageCompression.JPEG
+    with pytest.warns(dk.ContentLossWarning, match="transparency"):
         raw = doc.to_bytes(options)
     assert any(item.code == "pdf.image_transparency_lost" for item in doc.diagnostics)
     with pymupdf.open(stream=raw, filetype="pdf") as pdf:
@@ -93,11 +95,11 @@ def test_strict_jpeg_loss_preserves_original_output(tmp_path):
     target = tmp_path / "original.pdf"
     target.write_bytes(b"ORIGINAL")
     doc = document()
-    options = aw.saving.PdfSaveOptions()
-    options.image_compression = aw.saving.PdfImageCompression.JPEG
+    options = dk.saving.PdfSaveOptions()
+    options.image_compression = dk.saving.PdfImageCompression.JPEG
     with warnings.catch_warnings():
-        warnings.simplefilter("error", aw.ContentLossWarning)
-        with pytest.raises(aw.ContentLossWarning):
+        warnings.simplefilter("error", dk.ContentLossWarning)
+        with pytest.raises(dk.ContentLossWarning):
             doc.save(target, options)
     assert target.read_bytes() == b"ORIGINAL"
     assert list(tmp_path.iterdir()) == [target]
@@ -106,8 +108,8 @@ def test_strict_jpeg_loss_preserves_original_output(tmp_path):
 @pytest.mark.parametrize("quality", [-1, 101, 1.5, "80", None, True, float("nan"), float("inf")])
 @pytest.mark.parametrize("entry", ["memory", "path", "writer"])
 def test_invalid_quality_rejected_before_output(tmp_path, quality, entry):
-    doc = aw.Document(BytesIO(b"BODY"), aw.MarkdownLoadOptions())
-    options = aw.saving.PdfSaveOptions()
+    doc = word_document(b"BODY")
+    options = dk.saving.PdfSaveOptions()
     options.jpeg_quality = quality
     target = tmp_path / "original.pdf"
     target.write_bytes(b"ORIGINAL")
@@ -125,25 +127,25 @@ def test_invalid_quality_rejected_before_output(tmp_path, quality, entry):
 @pytest.mark.parametrize("quality", [0, 1, 80, 100])
 def test_valid_jpeg_quality_embeds_jpeg(quality):
     doc = document()
-    options = aw.saving.PdfSaveOptions()
-    options.image_compression = aw.saving.PdfImageCompression.JPEG
+    options = dk.saving.PdfSaveOptions()
+    options.image_compression = dk.saving.PdfImageCompression.JPEG
     options.jpeg_quality = quality
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore", aw.ContentLossWarning)
+        warnings.simplefilter("ignore", dk.ContentLossWarning)
         raw = doc.to_bytes(options)
     reader = PdfReader(BytesIO(raw))
     resources = reader.pages[0]["/Resources"]["/XObject"]
     assert any(obj.get_object().get("/Filter") == "/DCTDecode" for obj in resources.values())
 
 
-@pytest.mark.parametrize("compression", [aw.saving.PdfImageCompression.AUTO, aw.saving.PdfImageCompression.JPEG])
+@pytest.mark.parametrize("compression", [dk.saving.PdfImageCompression.AUTO, dk.saving.PdfImageCompression.JPEG])
 def test_opaque_alpha_image_still_uses_jpeg_without_loss_diagnostic(compression):
     doc = document()
     data = BytesIO()
     Image.new("RGBA", (20, 20), (0, 0, 255, 255)).save(data, format="PNG")
     shape = next(child for child in doc.sections[0].body.children[0]._children if isinstance(child, ldm.Shape))
     shape.image_data.image_bytes = data.getvalue()
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.image_compression = compression
     options.jpeg_quality = 80
     raw = doc.to_bytes(options)

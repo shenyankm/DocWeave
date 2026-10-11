@@ -6,9 +6,9 @@ import pymupdf
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 from tests.test_pdf_cell_lists import cell_list_model
 from tests.test_pdf_structure_pages import assert_page_tags
 
@@ -84,7 +84,7 @@ def test_explicit_hanging_indent_has_aligned_continuations(long, shaping):
 
 @pytest.mark.parametrize("alignment", [1, 2])
 def test_aligned_lists_keep_markers_separate_and_respect_right_indent(alignment):
-    from aspose.words_foss.pdf_writer.constants import (
+    from dockiln.writers.pdf.constants import (
         DEFAULT_CELL_PAD_LEFT_MM,
         PT_TO_MM,
     )
@@ -117,10 +117,10 @@ def test_default_cell_list_levels_have_visible_indentation():
 
 
 def test_public_docx_hanging_indent_reaches_pdf():
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
-    doc = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(indent_model())))
+    doc = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(indent_model())))
     options = PdfSaveOptions()
     options.export_document_structure = True
     raw = doc.to_bytes(options)
@@ -139,7 +139,7 @@ def test_public_docx_hanging_indent_reaches_pdf():
 @pytest.mark.parametrize("shaping", [False, True])
 def test_list_image_fits_indented_text_area(shaping):
     from PIL import Image
-    from aspose.words_foss.pdf_writer.constants import (
+    from dockiln.writers.pdf.constants import (
         DEFAULT_CELL_PAD_LEFT_MM,
         PT_TO_MM,
     )

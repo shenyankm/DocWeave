@@ -18,10 +18,10 @@ def main():
     parser.add_argument('--outputs', type=Path, required=True)
     args = parser.parse_args()
     if args.action == 'current':
-        from aspose.words_foss import Document, SaveFormat
-        from aspose.words_foss import light_document_model as ldm
-        from aspose.words_foss.docx_writer import LdmDocxWriter
-        from aspose.words_foss.saving import OoxmlSaveOptions
+        from dockiln import Document, SaveFormat
+        from dockiln import light_document_model as ldm
+        from dockiln.writers.docx import LdmDocxWriter
+        from dockiln.saving import OoxmlSaveOptions
 
         source = json.loads((args.root / 'style-toggles-26.9.json').read_text())
         corpus = args.root / 'corpus/style-toggles-26.9.zip'
@@ -43,7 +43,7 @@ def main():
                                     'output_sha256': hashlib.sha256(data).hexdigest(),
                                     'expected_bold': row['bold'], 'expected_italic': row['italic']})
         assert len(records) == 1490
-        report = {'version': version('aspose-words-foss-enhanced'), 'python': platform.python_version(),
+        report = {'version': version('dockiln'), 'python': platform.python_version(),
                   'platform': platform.platform(), 'source_report': 'style-toggles-26.9.json',
                   'source_corpus_sha256': source['corpus_sha256'], 'outputs': 'corpus/' + args.outputs.name,
                   'outputs_sha256': hashlib.sha256(args.outputs.read_bytes()).hexdigest(),

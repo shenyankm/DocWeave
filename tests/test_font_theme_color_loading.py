@@ -8,9 +8,9 @@ from zipfile import ZipFile
 import pymupdf
 import pytest
 
-from aspose.words_foss import Document
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_reader.ldm_builder.cascading import FontResolver
+from dockiln import Document
+from dockiln import light_document_model as ldm
+from dockiln.readers.docx.ldm_builder.cascading import FontResolver
 
 ROOT = Path(__file__).parents[1] / 'docs/benchmarks'
 REPORT = json.loads((ROOT / 'font-theme-colors-26.9.json').read_text())
@@ -34,7 +34,7 @@ def test_theme_raw_color_getters_and_all_modifiers_render(row, json_roundtrip):
     assert font.color == getter(row['getter']) and font.color_explicit is True
     combined = 'themeTint' in row['modifiers'] and 'themeShade' in row['modifiers']
     assert (font.color_rendering is None) is combined
-    from aspose.words_foss.pdf_writer import LdmPdfWriter
+    from dockiln.writers.pdf import LdmPdfWriter
     raw = LdmPdfWriter().write_to_bytes(model)
     with pymupdf.open(stream=raw, filetype='pdf') as pdf:
         colors = [s['color'] for p in pdf for b in p.get_text('dict')['blocks']
@@ -66,9 +66,9 @@ def test_direct_rgb_clears_inherited_theme_but_absent_color_keeps_it():
 @pytest.mark.parametrize('format', ['docx', 'flat_opc'])
 @pytest.mark.parametrize('json_roundtrip', [False, True])
 def test_saved_theme_declarations_and_layout_survive_json(row, format, json_roundtrip):
-    from aspose.words_foss import SaveFormat
-    from aspose.words_foss.docx_writer import LdmDocxWriter
-    from aspose.words_foss.saving import OoxmlSaveOptions
+    from dockiln import SaveFormat
+    from dockiln.writers.docx import LdmDocxWriter
+    from dockiln.saving import OoxmlSaveOptions
     with ZipFile(ROOT / REPORT['corpus']) as archive:
         model = Document(BytesIO(archive.read(row['input']))).light_document_model
     source = model.sections[0].body.paragraphs[0].runs[0].font.source_color
@@ -93,7 +93,7 @@ def test_saved_theme_declarations_and_layout_survive_json(row, format, json_roun
 @pytest.mark.parametrize('raw', [b'<private/>', b'<broken PRIVATE_THEME_VALUE',
                                b'<!DOCTYPE theme [<!ENTITY secret "PRIVATE_THEME_VALUE">]><theme>&secret;</theme>'])
 def test_invalid_theme_fails_before_replacing_output(tmp_path, raw):
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln.writers.docx import LdmDocxWriter
     model = ldm.Document(source_theme=ldm.SourceTheme(data=raw))
     output = tmp_path / 'existing.docx'
     output.write_bytes(b'existing')
@@ -104,7 +104,7 @@ def test_invalid_theme_fails_before_replacing_output(tmp_path, raw):
 
 
 def test_theme_relationship_resources_fail_explicitly_before_output(tmp_path):
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln.writers.docx import LdmDocxWriter
     with ZipFile(ROOT / REPORT['corpus']) as archive:
         model = Document(BytesIO(archive.read(ROWS[0]['input']))).light_document_model
     relationships = b'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="image" Type="image" Target="../media/image.png"/></Relationships>'

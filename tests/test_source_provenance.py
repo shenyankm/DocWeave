@@ -7,10 +7,10 @@ import warnings
 from defusedxml.ElementTree import fromstring
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_reader import DocumentReader
-from aspose.words_foss.docx_writer import LdmDocxWriter
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.readers.docx import DocumentReader
+from dockiln.writers.docx import LdmDocxWriter
 from .test_content_integrity import source_package, load_with_loss, interleaved_document
 
 
@@ -49,7 +49,7 @@ def verify_locations(raw, exported):
 
 def test_body_and_nested_table_provenance_resolves_to_original_elements():
     raw = LdmDocxWriter().write_to_bytes(interleaved_document())
-    doc = aw.Document(BytesIO(raw))
+    doc = dk.Document(BytesIO(raw))
     assert verify_locations(raw, doc.to_dict()) == 5
     restored = ldm.Document.model_validate_json(doc.light_document_model.model_dump_json(by_alias=True))
     doc._document = restored
@@ -61,10 +61,10 @@ def test_notes_and_nonstandard_header_part_locations_and_reader_reuse():
     assert verify_locations(raw, load_with_loss(raw).to_dict()) >= 6
     reader = DocumentReader()
     with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter("always", aw.ContentLossWarning)
+        warnings.simplefilter("always", dk.ContentLossWarning)
         reader.load_bytes(raw)
     first = reader.to_light_document()
-    assert not any(issubclass(item.category, aw.ContentLossWarning) for item in caught)
+    assert not any(issubclass(item.category, dk.ContentLossWarning) for item in caught)
     assert {(story.kind, story.identifier): ''.join(p.text for p in story.children)
             for story in first.source_stories if story.kind in {'footnote', 'endnote'}} == {
         ('footnote', '-1'): 'separator', ('footnote', '7'): 'footnote text',
@@ -79,7 +79,7 @@ def test_notes_and_nonstandard_header_part_locations_and_reader_reuse():
 
 
 def test_plain_text_has_no_invented_xml_provenance():
-    doc = aw.Document(BytesIO(b'plain text'))
+    doc = dk.Document(BytesIO(b'plain text'))
     assert doc.to_dict()['blocks'][0]['provenance'] is None
 
 
@@ -92,7 +92,7 @@ def test_unmatched_note_still_warns_and_cannot_be_saved_as_retained_content():
         for name, content in parts.items():
             archive.writestr(name, content)
     reader = DocumentReader()
-    with pytest.warns(aw.ContentLossWarning, match='footnoteReference'):
+    with pytest.warns(dk.ContentLossWarning, match='footnoteReference'):
         reader.load_bytes(stream.getvalue())
     with pytest.raises(ValueError, match='matching normal story'):
         LdmDocxWriter().write_to_bytes(reader.to_light_document())

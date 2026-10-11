@@ -11,11 +11,11 @@ import pytest
 from docx import Document as IndependentDocument
 from docx.oxml.ns import qn
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.diagnostics import ContentLossWarning, collect_diagnostics
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.diagnostics import ContentLossWarning, collect_diagnostics
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
 
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / "docs/benchmarks"
@@ -28,7 +28,7 @@ source = runpy.run_path(str(ROOT / "tests/test_character_indent_diagnostics.py")
 def load(raw):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", ContentLossWarning)
-        return aw.Document(BytesIO(raw))
+        return dk.Document(BytesIO(raw))
 
 
 def units(document):
@@ -37,7 +37,7 @@ def units(document):
 
 
 @pytest.mark.parametrize("row", REPORT["records"], ids=lambda row: f'{row["input"]}-{row["value"]}-{row["layout"]}')
-@pytest.mark.parametrize("format", [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize("format", [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_native_character_units_survive_model_json_and_ooxml_output(row, format):
     with ZipFile(BENCHMARKS / REPORT["outputs"]) as archive:
         document = load(archive.read(row["output"]))
@@ -48,9 +48,9 @@ def test_native_character_units_survive_model_json_and_ooxml_output(row, format)
     assert rebuilt.model_dump() == model.model_dump()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", ContentLossWarning)
-        saved = LdmDocxWriter(aw.saving.OoxmlSaveOptions(format)).write_to_bytes(rebuilt)
+        saved = LdmDocxWriter(dk.saving.OoxmlSaveOptions(format)).write_to_bytes(rebuilt)
     assert units(load(saved)) == expected
-    if format == aw.SaveFormat.DOCX:
+    if format == dk.SaveFormat.DOCX:
         independent = IndependentDocument(BytesIO(saved))
         paragraph = next(p for p in independent.paragraphs if "IMPORT" in p.text)
         ind = paragraph._p.find(qn("w:pPr") + "/" + qn("w:ind"))
@@ -76,7 +76,7 @@ def test_alias_units_and_explicit_zero_survive_supported_contexts(attribute, kin
     assert found(document.light_document_model.model_dump())
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", ContentLossWarning)
-        saved = document.to_bytes(aw.SaveFormat.DOCX)
+        saved = document.to_bytes(dk.SaveFormat.DOCX)
     assert found(load(saved).light_document_model.model_dump())
     with ZipFile(BytesIO(saved)) as archive:
         assert any((('Chars="' + value + '"').encode() in archive.read(name)) for name in archive.namelist() if name.endswith('.xml'))
@@ -136,7 +136,7 @@ def test_native_character_alias_order_is_retained_in_model(attrs, field, expecte
     helper = runpy.run_path(str(ROOT / "docs/probes/style_toggles.py"))["document"]
     document = load(helper("", f"<w:ind {attrs}/>", ""))
     assert units(document)[field] == expected
-    assert units(load(document.to_bytes(aw.SaveFormat.DOCX)))[field] == expected
+    assert units(load(document.to_bytes(dk.SaveFormat.DOCX)))[field] == expected
 
 
 def test_character_style_clear_and_zero_have_distinct_inheritance():
@@ -146,8 +146,8 @@ def test_character_style_clear_and_zero_have_distinct_inheritance():
     zero = load(helper(styles, '<w:pStyle w:val="P"/><w:ind w:leftChars="0"/>', ""))
     assert units(inherited)[FIELDS[0]] == 1.13
     assert units(zero)[FIELDS[0]] == 0
-    assert units(load(inherited.to_bytes(aw.SaveFormat.DOCX)))[FIELDS[0]] == 1.13
-    assert units(load(zero.to_bytes(aw.SaveFormat.DOCX)))[FIELDS[0]] == 0
+    assert units(load(inherited.to_bytes(dk.SaveFormat.DOCX)))[FIELDS[0]] == 1.13
+    assert units(load(zero.to_bytes(dk.SaveFormat.DOCX)))[FIELDS[0]] == 0
 
 
 @pytest.mark.parametrize("field", FIELDS)
@@ -205,7 +205,7 @@ def test_direct_model_style_character_edit_has_pdf_loss_diagnostic(tmp_path):
 def test_character_hundredths_do_not_depend_on_caller_decimal_precision(field):
     from decimal import localcontext
 
-    from aspose.words_foss.docx_writer.constants import character_indent_attrs
+    from dockiln.writers.docx.constants import character_indent_attrs
 
     for value in (1.13, -1.13):
         format = ldm.ParagraphFormat(**{field: value})

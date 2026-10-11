@@ -7,9 +7,9 @@ from xml.etree import ElementTree as ET
 from docx import Document
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.docx_reader.constants import PAGE_FIELD_SENTINEL
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.readers.docx.constants import PAGE_FIELD_SENTINEL
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 

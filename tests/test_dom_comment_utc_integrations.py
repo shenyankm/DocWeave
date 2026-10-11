@@ -7,9 +7,9 @@ from xml.etree import ElementTree as E
 
 import pytest
 
-from aspose.words_foss import NodeType
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss._flat_opc import decode
+from dockiln import NodeType
+from dockiln.dom import DocxDocument
+from dockiln._flat_opc import decode
 from .test_dom_comment_utc import modern, W, W14, CID, CEX, REL, CT
 
 
@@ -101,7 +101,7 @@ def test_duplicate_content_utc_and_theme_publish_once_after_atomic_failures(tmp_
     if donor is not None:
         assert snapshot(donor, source) == donor_before
     with monkeypatch.context() as context:
-        context.setattr('aspose.words_foss._io.MAX_PART_BYTES', 1)
+        context.setattr('dockiln._io.MAX_PART_BYTES', 1)
         with pytest.raises(ValueError, match='safety limit'):
             save(output)
     assert snapshot(doc, held) == before and output.read_bytes() == b'previous-owned-output'
@@ -136,7 +136,7 @@ def test_duplicate_content_utc_and_theme_publish_once_after_atomic_failures(tmp_
 @pytest.mark.parametrize('flat', [False, True])
 @pytest.mark.parametrize('extension', ['xml', 'bin'])
 def test_new_header_override_theme_reference_is_projected_without_source_mutation(tmp_path, flat, extension):
-    from aspose.words_foss._flat_opc import encode
+    from dockiln._flat_opc import encode
     doc, _, _ = fixture(tmp_path)
     package = doc._package
     # The reference only exists in a newly added part, never in the source package.
@@ -175,7 +175,7 @@ def test_new_header_override_theme_reference_is_projected_without_source_mutatio
 
 @pytest.mark.parametrize('flat', [False, True])
 def test_binary_content_type_with_xml_name_remains_opaque(tmp_path, flat):
-    from aspose.words_foss._flat_opc import encode
+    from dockiln._flat_opc import encode
     doc, _, _ = fixture(tmp_path)
     package = doc._package
     name, payload = 'word/opaque.xml', b'Owned non-XML bytes\x00\xff'

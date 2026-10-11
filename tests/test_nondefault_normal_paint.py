@@ -7,11 +7,11 @@ from docx.shared import Pt
 import pymupdf
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import OoxmlSaveOptions
 
 
 def owned_model(flag, size, defaults):
@@ -24,7 +24,7 @@ def owned_model(flag, size, defaults):
     source.add_paragraph('OWNED_FONT')
     stream = BytesIO()
     source.save(stream)
-    return aw.Document(BytesIO(stream.getvalue())).light_document_model
+    return dk.Document(BytesIO(stream.getvalue())).light_document_model
 
 
 def target(model):
@@ -57,11 +57,11 @@ def test_disabled_normal_fallback_reaches_actual_pdf_and_roundtrip(flag, size, d
     paint(model, size)
     assert held.size == size
     assert model.model_dump_json() == snapshot
-    for fmt in (aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC):
+    for fmt in (dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC):
         current = model.model_copy(deep=True)
         for _ in range(2):
             data = LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current)
-            current = aw.Document(BytesIO(data)).light_document_model
+            current = dk.Document(BytesIO(data)).light_document_model
             assert target(current).size == size
             assert target(current).size_explicit is False
         paint(current, size)

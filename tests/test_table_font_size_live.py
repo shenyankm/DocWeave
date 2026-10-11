@@ -4,10 +4,10 @@ from xml.etree import ElementTree as E
 from zipfile import ZipFile
 
 import pytest
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.saving import OoxmlSaveOptions
 from .test_docx_dom import package
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
@@ -43,25 +43,25 @@ def target(model):
 @pytest.mark.parametrize('copy', ['direct', 'deep', 'json'])
 def test_sparse_table_size_survives_copies_and_two_saves(tmp_path, normal, expected, copy):
     path = owned_table(tmp_path / 'owned.docx', normal)
-    model = aw.Document(path).light_document_model
+    model = dk.Document(path).light_document_model
     run = target(model)
     assert run.font.size == expected
     assert run.font.size_explicit is False
-    assert aw.DocxDocument(path).body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size == expected
+    assert dk.DocxDocument(path).body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size == expected
     before = model.model_dump_json()
     value = (model if copy == 'direct' else model.model_copy(deep=True) if copy == 'deep'
              else ldm.Document.model_validate_json(before))
     cold_expected = 12 if normal == 12 else expected
-    for fmt in (aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC):
+    for fmt in (dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC):
         current = value
         for _ in range(2):
             data = LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current)
-            current = aw.Document(BytesIO(data)).light_document_model
+            current = dk.Document(BytesIO(data)).light_document_model
             assert target(current).font.size == cold_expected
             assert target(current).font.size_explicit is False
-            dom = aw.DocxDocument(BytesIO(data))
+            dom = dk.DocxDocument(BytesIO(data))
             assert dom.body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size == cold_expected
-            if fmt == aw.SaveFormat.DOCX:
+            if fmt == dk.SaveFormat.DOCX:
                 with ZipFile(BytesIO(data)) as archive:
                     tree = E.fromstring(archive.read('word/document.xml'))
                 assert tree.find('.//{' + W + '}rPr/{' + W + '}sz') is None
@@ -69,7 +69,7 @@ def test_sparse_table_size_survives_copies_and_two_saves(tmp_path, normal, expec
 
 
 def test_held_size_follows_region_edit_and_direct_zero(tmp_path):
-    model = aw.Document(owned_table(tmp_path / 'owned.docx', None)).light_document_model
+    model = dk.Document(owned_table(tmp_path / 'owned.docx', None)).light_document_model
     font = target(model).font
     region = next(s for s in model.styles if s.type == 3).table_style_properties[0]
     assert font.size == 22
@@ -78,12 +78,12 @@ def test_held_size_follows_region_edit_and_direct_zero(tmp_path):
     font.size = 0
     assert font.size == 0
     assert font.size_explicit is True
-    cold = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(model)))
+    cold = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(model)))
     assert target(cold.light_document_model).font.size == 0
 
 
 def test_size_copy_does_not_retain_original_document_binding(tmp_path):
-    model = aw.Document(owned_table(tmp_path / 'owned.docx', None)).light_document_model
+    model = dk.Document(owned_table(tmp_path / 'owned.docx', None)).light_document_model
     clone = model.model_copy(deep=True)
     next(s for s in clone.styles if s.type == 3).table_style_properties[0].font.size = 36
     assert target(clone).font.size == 36
@@ -105,20 +105,20 @@ def test_inherited_look_only_style_survives_json_and_cold_saves(tmp_path):
     with ZipFile(path, 'w') as archive:
         for name, value in parts.items():
             archive.writestr(name, value)
-    model = aw.Document(path).light_document_model
+    model = dk.Document(path).light_document_model
     assert target(model).font.size == 22
     assert model.get_child_nodes(ldm.NodeType.TABLE, True)[0].style_look is None
-    for fmt in (aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC):
+    for fmt in (dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC):
         current = ldm.Document.model_validate_json(model.model_dump_json())
         for _ in range(2):
             data = LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current)
-            current = aw.Document(BytesIO(data)).light_document_model
+            current = dk.Document(BytesIO(data)).light_document_model
             assert target(current).font.size == 22
-            assert aw.DocxDocument(BytesIO(data)).body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size == 22
+            assert dk.DocxDocument(BytesIO(data)).body.tables[0].rows[0].cells[0].paragraphs[0].runs[0].effective_font.size == 22
 
 
 @pytest.mark.parametrize('route', ['direct', 'deep', 'json'])
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_conditional_size_with_classic_comment_image(tmp_path, route, fmt):
     from docx import Document as NativeDocument
     from docx.enum.style import WD_STYLE_TYPE
@@ -140,7 +140,7 @@ def test_conditional_size_with_classic_comment_image(tmp_path, route, fmt):
     rpr = OxmlElement('w:rPr'); size = OxmlElement('w:sz'); size.set(qn('w:val'), '44')
     rpr.append(size); region.append(rpr); style.append(region)
     output = BytesIO(); native.save(output)
-    model = aw.Document(BytesIO(output.getvalue())).light_document_model
+    model = dk.Document(BytesIO(output.getvalue())).light_document_model
     held = target(model).font
     assert held.size == 22
     next(s for s in model.styles if s.name == 'OwnedTable').table_style_properties[0].font.size = 36
@@ -149,25 +149,25 @@ def test_conditional_size_with_classic_comment_image(tmp_path, route, fmt):
                else ldm.Document.model_validate_json(model.model_dump_json()))
     for _ in range(2):
         data = LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current)
-        current = aw.Document(BytesIO(data)).light_document_model
+        current = dk.Document(BytesIO(data)).light_document_model
         assert target(current).font.size == 36
         assert target(current).font.size_explicit is False
         story = next(s for s in current.source_stories if s.kind == 'comment')
         assert story.comment_metadata.author == 'Owned'
         assert any('OWNED COMMENT' in p.text for p in story.children if isinstance(p, ldm.Paragraph))
         raw = data
-        if fmt == aw.SaveFormat.FLAT_OPC:
-            from aspose.words_foss._flat_opc import decode
+        if fmt == dk.SaveFormat.FLAT_OPC:
+            from dockiln._flat_opc import decode
             raw = decode(raw)
         with ZipFile(BytesIO(raw)) as archive:
             images = [n for n in archive.namelist() if n.startswith('word/media/')]
             assert len(images) == 1 and archive.read(images[0]) == picture.getvalue()
 
 
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 @pytest.mark.parametrize('destination', ['path', 'stream', 'writer'])
 def test_successful_save_updates_held_size_without_replacing_source(tmp_path, fmt, destination):
-    document = aw.Document(owned_table(tmp_path / 'source.docx'))
+    document = dk.Document(owned_table(tmp_path / 'source.docx'))
     model = document.light_document_model
     source = model.source_settings
     source_bytes = source.data
@@ -188,20 +188,20 @@ def test_successful_save_updates_held_size_without_replacing_source(tmp_path, fm
         document.save(path, fmt)
         data = path.read_bytes()
     assert held.size == 12
-    assert target(aw.Document(BytesIO(data)).light_document_model).font.size == 12
+    assert target(dk.Document(BytesIO(data)).light_document_model).font.size == 12
     assert model.source_settings is source and source.data == source_bytes
     assert model.current_compatibility_settings is not None
     for copied in (model.model_copy(deep=True), ldm.Document.model_validate_json(model.model_dump_json())):
         assert target(copied).font.size == 12
 
 
-@pytest.mark.parametrize('fmt', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('fmt', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_failed_save_does_not_commit_compatibility_view(tmp_path, fmt):
     class FailedStream(BytesIO):
         def write(self, data):
             raise OSError('Owned failure')
 
-    document = aw.Document(owned_table(tmp_path / 'source.docx'))
+    document = dk.Document(owned_table(tmp_path / 'source.docx'))
     model = document.light_document_model
     source = model.source_settings
     for destination in (FailedStream(), tmp_path):
@@ -213,12 +213,12 @@ def test_failed_save_does_not_commit_compatibility_view(tmp_path, fmt):
 
 
 def test_programmatic_save_preserves_unset_source_and_public_preferences(tmp_path):
-    document = aw.Document()
+    document = dk.Document()
     model = document.light_document_model
     model.source_settings = None
     document.compatibility_options.do_not_expand_shift_return = True
     before = dict(model.compatibility_options_state.flags)
-    document.save(BytesIO(), aw.SaveFormat.DOCX)
+    document.save(BytesIO(), dk.SaveFormat.DOCX)
     assert model.source_settings is None
     assert model.current_compatibility_settings is not None
     assert model.compatibility_options_state.flags == before
@@ -247,25 +247,25 @@ def test_typed_document_inputs_do_not_rebind_caller_or_previous_document():
 @pytest.mark.parametrize('version', range(8))
 @pytest.mark.parametrize('preload', [False, True])
 def test_optimize_profile_updates_warm_size_then_actual_saved_view(tmp_path, version, preload):
-    from aspose.words_foss.settings import MsWordVersion
-    document = aw.Document(owned_table(tmp_path / 'source.docx'))
+    from dockiln.settings import MsWordVersion
+    document = dk.Document(owned_table(tmp_path / 'source.docx'))
     model = document.light_document_model
     snapshot = model.source_settings
     held = target(model).font
     if preload:
-        document.save(BytesIO(), aw.SaveFormat.DOCX)
+        document.save(BytesIO(), dk.SaveFormat.DOCX)
         assert held.size == 12
     document.compatibility_options.optimize_for(MsWordVersion(version))
     assert held.size == (11 if version < 4 else 12)
     for copied in (model.model_copy(deep=True), ldm.Document.model_validate_json(model.model_dump_json())):
         assert target(copied).font.size == held.size
-    document.to_bytes(aw.SaveFormat.DOCX)
+    document.to_bytes(dk.SaveFormat.DOCX)
     assert held.size == (11 if version < 4 else 12)
     stream = BytesIO()
-    document.save(stream, aw.SaveFormat.DOCX)
+    document.save(stream, dk.SaveFormat.DOCX)
     expected = 11 if version == 3 else 12
     assert held.size == expected
-    assert target(aw.Document(BytesIO(stream.getvalue())).light_document_model).font.size == expected
+    assert target(dk.Document(BytesIO(stream.getvalue())).light_document_model).font.size == expected
     assert model.source_settings is snapshot
 
 
@@ -299,7 +299,7 @@ def test_shallow_document_copy_keeps_shared_font_binding():
 
 
 def test_reference_style_projection_does_not_rebind_source_runs():
-    from aspose.words_foss.docx_writer.styles_part import apply_reference_styles, render_styles_xml
+    from dockiln.writers.docx.styles_part import apply_reference_styles, render_styles_xml
     run = ldm.Run(text="OWNED")
     source = ldm.Document(sections=[ldm.Section(body=ldm.Body(
         children=[ldm.Paragraph(children=[run])]))], doc_defaults_font=ldm.Font(size=20))

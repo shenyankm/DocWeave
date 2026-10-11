@@ -10,12 +10,12 @@ import pymupdf
 from pypdf import PdfReader
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import PdfMissingGlyphWarning
-from aspose.words_foss.pdf_writer.writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.constants import PT_TO_MM
-from aspose.words_foss.pdf_writer.font import close_fonts, register_fonts
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import PdfMissingGlyphWarning
+from dockiln.writers.pdf.writer import LdmPdfWriter
+from dockiln.writers.pdf.constants import PT_TO_MM
+from dockiln.writers.pdf.font import close_fonts, register_fonts
 
 
 def arabic_font():
@@ -39,10 +39,10 @@ def test_shaped_arabic_embeds_real_contextual_glyph_outlines():
     original = TTFont(font_path)
     expected = [original["glyf"][original.getGlyphOrder()[info.codepoint]].getCoordinates(original["glyf"])[0]
                 for info in buffer.glyph_infos]
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.text_shaping = True
     options.fallback_fonts = [str(font_path)]
-    doc = aw.Document(BytesIO(source.encode()))
+    doc = dk.Document(BytesIO(source.encode()))
     with warnings.catch_warnings():
         warnings.simplefilter("error", PdfMissingGlyphWarning)
         raw = doc.to_bytes(options)
@@ -63,7 +63,7 @@ def test_shaped_arabic_embeds_real_contextual_glyph_outlines():
 @pytest.mark.parametrize("alignment,highlight", [(0, False), (1, True), (2, False)])
 def test_shaping_measurement_matches_real_wrapped_mixed_text(alignment, highlight):
     pytest.importorskip("uharfbuzz")
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.text_shaping = True
     options.fallback_fonts = [str(arabic_font())]
     para = ldm.Paragraph(children=[ldm.Run(text="中文 hello سلام " * 18,
@@ -99,7 +99,7 @@ def test_shaping_measurement_matches_real_wrapped_mixed_text(alignment, highligh
 @pytest.mark.parametrize('parts', [('س', 'لام'), ('A', 'V', 'A', 'T', 'A', 'R')])
 def test_identical_style_run_boundaries_preserve_shaped_pixels(parts, alignment):
     pytest.importorskip('uharfbuzz')
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.text_shaping = True
     options.fallback_fonts = [str(arabic_font())]
     pixels = []
@@ -121,7 +121,7 @@ def test_identical_style_run_boundaries_preserve_shaped_pixels(parts, alignment)
 def test_latin_after_fallback_font_is_visible_and_extractable(shaping, in_table, split):
     if shaping:
         pytest.importorskip('uharfbuzz')
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.text_shaping = shaping
     options.fallback_fonts = [str(arabic_font())]
     parts = ('سلام ', 'ABC ', 'عالم ', 'DEF ', '123 ', 'نهاية')
@@ -140,7 +140,7 @@ def test_latin_after_fallback_font_is_visible_and_extractable(shaping, in_table,
 
 def test_shaping_preserves_distinct_styles_and_link_targets():
     pytest.importorskip('uharfbuzz')
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.text_shaping = True
     para = ldm.Paragraph(children=[
         ldm.Run(text='[LEFT](https://left.example)', is_hyperlink=True,
@@ -169,7 +169,7 @@ def test_shaping_preserves_distinct_styles_and_link_targets():
 def test_shaped_rtl_punctuation_matches_native_glyph_positions():
     pytest.importorskip('uharfbuzz')
     text = 'سلام (123) عالم'
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.text_shaping = True
     options.fallback_fonts = [str(arabic_font())]
     model = ldm.Document(sections=[ldm.Section(page_setup=ldm.PageSetup(
@@ -207,9 +207,9 @@ def test_shaped_rtl_punctuation_matches_native_glyph_positions():
 @pytest.mark.parametrize('bold,italic', [(False, False), (True, False), (False, True), (True, True)])
 def test_raw_font_tables_preserve_native_shaped_output(monkeypatch, bold, italic):
     pytest.importorskip('uharfbuzz')
-    import aspose.words_foss.pdf_writer.writer as writer_module
+    import dockiln.writers.pdf.writer as writer_module
 
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     options.text_shaping = True
     model = ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[ldm.Paragraph(
         children=[ldm.Run(text='AVATAR office e\u0301 中文繁體 12345 !?',

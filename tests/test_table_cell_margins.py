@@ -14,12 +14,12 @@ from PIL import Image
 import pymupdf
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.constants import POST_TABLE_SPACING_MM, PT_TO_MM
-from aspose.words_foss.saving import OoxmlSaveOptions, PdfSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.constants import POST_TABLE_SPACING_MM, PT_TO_MM
+from dockiln.saving import OoxmlSaveOptions, PdfSaveOptions
 
 
 def margins(parent, tag, values):
@@ -84,13 +84,13 @@ def geometry(document, shaping=False):
 def test_cell_zero_overrides_table_and_survives_docx_roundtrip(shaping, override):
     source = source_docx(table={'left': 8, 'right': 8, 'top': 6, 'bottom': 6},
         cell=None if override is None else {side: override for side in ('left','right','top','bottom')})
-    document = aw.Document(BytesIO(source))
+    document = dk.Document(BytesIO(source))
     model = document.light_document_model
     snapshot = model.model_dump()
     expected = (28, 26, 192) if override is None else (20 + override, 20 + override, 200 - override)
     assert geometry(document, shaping) == pytest.approx(expected, abs=0.05)
     raw = document.to_bytes(OoxmlSaveOptions())
-    loaded = aw.Document(BytesIO(raw))
+    loaded = dk.Document(BytesIO(raw))
     assert geometry(loaded, shaping) == pytest.approx(expected, abs=0.05)
     cell_format = loaded.light_document_model.sections[0].body.tables[0].rows[0].cells[0].cell_format
     assert cell_format.left_padding == override
@@ -99,19 +99,19 @@ def test_cell_zero_overrides_table_and_survives_docx_roundtrip(shaping, override
 
 @pytest.mark.parametrize('shaping', [False, True])
 def test_zero_table_margin_overrides_style_chain_and_zero_style_is_retained(shaping):
-    document = aw.Document(BytesIO(source_docx(styled=True, table={'right': 0})))
+    document = dk.Document(BytesIO(source_docx(styled=True, table={'right': 0})))
     assert geometry(document, shaping) == pytest.approx((20, 20, 200), abs=0.05)
     style = next(style for style in document.light_document_model.styles if style.name == 'Margin Zero')
     assert style.table_style_format.left_padding == 0
     assert style.table_style_format.right_padding is None
-    loaded = aw.Document(BytesIO(document.to_bytes(OoxmlSaveOptions())))
+    loaded = dk.Document(BytesIO(document.to_bytes(OoxmlSaveOptions())))
     assert geometry(loaded, shaping) == pytest.approx((20, 20, 200), abs=0.05)
     assert next(style for style in loaded.light_document_model.styles if style.name == 'Margin Zero').table_style_format.left_padding == 0
 
 
 @pytest.mark.parametrize('shaping', [False, True])
 def test_implicit_default_table_style_is_used(shaping):
-    document = aw.Document(BytesIO(source_docx()))
+    document = dk.Document(BytesIO(source_docx()))
     table = document.light_document_model.sections[0].body.tables[0]
     assert table.left_padding == pytest.approx(5.4)
     assert table.top_padding == 0
@@ -132,7 +132,7 @@ def test_missing_property_block_still_inherits_default_table_style(tag):
                         parent.remove(child)
                 data = ET.tostring(root)
             target.writestr(name, data)
-    document = aw.Document(BytesIO(output.getvalue()))
+    document = dk.Document(BytesIO(output.getvalue()))
     assert geometry(document) == pytest.approx((25.4,20,194.6),abs=0.05)
 
 
@@ -167,7 +167,7 @@ def test_source_rejects_negative_margins(scope):
     else:
         raw = source_docx(**kwargs)
     with pytest.raises(ValueError, match='margins must be nonnegative'):
-        aw.Document(BytesIO(raw))
+        dk.Document(BytesIO(raw))
 
 
 @pytest.mark.parametrize('margin_type', ['pct','auto','nil'])
@@ -181,7 +181,7 @@ def test_unsupported_cell_margin_units_do_not_override_parent(margin_type):
                 data = data.replace(b'<w:tcMar><w:left w:type="dxa" w:w="0"',
                     ('<w:tcMar><w:left w:type="'+margin_type+'" w:w="ignored"').encode())
             target.writestr(name, data)
-    document = aw.Document(BytesIO(output.getvalue()))
+    document = dk.Document(BytesIO(output.getvalue()))
     assert geometry(document) == pytest.approx((28,20,192),abs=0.05)
 
 
@@ -211,7 +211,7 @@ def test_zero_margin_picture_uses_full_width_after_json_and_docx_roundtrip():
         page_width=220,page_height=180,left_margin=20,right_margin=20,top_margin=20,bottom_margin=20),
         body=ldm.Body(children=[table]))])
     for document in (model,ldm.Document.model_validate_json(model.model_dump_json()),
-                     aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(model))).light_document_model):
+                     dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(model))).light_document_model):
         with pymupdf.open(stream=LdmPdfWriter().write_to_bytes(document),filetype='pdf') as pdf:
             rect = pdf[0].get_image_rects(pdf[0].get_images()[0][0])[0]
             assert tuple(rect) == pytest.approx((20,20,200,110),abs=0.05)

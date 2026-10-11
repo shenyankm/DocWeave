@@ -3,8 +3,8 @@
 import pymupdf
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
 
 
 def default_tab_model(step=36, count=1, indent=0, location=2, columns=1):
@@ -78,8 +78,8 @@ def test_default_grid_applies_after_last_explicit_stop():
 
 @pytest.mark.parametrize("step", [36, 54])
 def test_public_docx_default_tab_setting_reaches_pdf(tmp_path, step):
-    from aspose.words_foss import Document, SaveFormat
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln import Document, SaveFormat
+    from dockiln.writers.docx import LdmDocxWriter
 
     path = tmp_path / "default-tabs.docx"
     LdmDocxWriter().write(default_tab_model(step), path)

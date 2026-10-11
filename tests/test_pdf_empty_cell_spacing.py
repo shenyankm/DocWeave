@@ -10,10 +10,10 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Pt
 
-from aspose.words_foss import Document
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.constants import POST_TABLE_SPACING_MM, PT_TO_MM
+from dockiln import Document
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.constants import POST_TABLE_SPACING_MM, PT_TO_MM
 
 
 def empty_table(paragraphs, padding=0):

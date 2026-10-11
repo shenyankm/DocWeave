@@ -95,7 +95,7 @@ def main():
         parser.error("--output is required for observations")
     args.output.mkdir(parents=True, exist_ok=True)
     commercial = args.action != "current"
-    module = "aspose.words" if commercial else "aspose.words_foss"
+    module = "aspose.words" if commercial else "dockiln"
     aw = importlib.import_module(module)
 
     def load(data):
@@ -105,7 +105,7 @@ def main():
         if commercial:
             return next(node.as_paragraph() for node in doc.get_child_nodes(aw.NodeType.PARAGRAPH, True)
                         if node.get_text().strip() == label)
-        from aspose.words_foss.dom.styles import _style_stories
+        from dockiln.dom.styles import _style_stories
 
         for root in _style_stories(doc._package):
             part = next(name for name, tree in doc._package._trees.items() if tree.documentElement is root)
@@ -181,7 +181,7 @@ def main():
             if row["outcome"] == "returned":
                 row["reopened_format"] = formatting(paragraph(load(path.read_bytes())))
             records.append(row)
-    report = {"module": module, "version": version("aspose-words" if commercial else "aspose-words-foss-enhanced"),
+    report = {"module": module, "version": version("aspose-words" if commercial else "dockiln"),
               "python": platform.python_version(), "platform": platform.platform(),
               "corpus_sha256": hashlib.sha256(raw).hexdigest(), "records": records,
               "scope": f"{len(keys)} new paragraph/character style conflicts; default mode, deep paragraph import; b/i/size/alignment getters",

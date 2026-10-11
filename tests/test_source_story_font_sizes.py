@@ -7,12 +7,12 @@ from zipfile import ZipFile
 import pymupdf
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._comments import _comment_story_nodes
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import OoxmlSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._comments import _comment_story_nodes
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import OoxmlSaveOptions
 from tests.test_conversion_notes import W, owned_notes, package
 
 
@@ -26,7 +26,7 @@ def owned_model(kind, size):
         props = ET.SubElement(normal, W + 'rPr')
         ET.SubElement(props, W + 'sz', {W + 'val': str(size * 2)})
     parts['word/styles.xml'] = ET.tostring(styles)
-    return aw.Document(BytesIO(package(parts))).light_document_model
+    return dk.Document(BytesIO(package(parts))).light_document_model
 
 
 def story(model):
@@ -58,11 +58,11 @@ def test_note_size_views_edit_and_two_real_cold_generations(kind, size, route):
     assert model.model_dump_json() == snapshot
     next(s for s in model.styles if s.name == 'Normal').font.size = 28
     assert {f.size for f in held} == {28}
-    for fmt in (aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC):
+    for fmt in (dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC):
         current = model.model_copy(deep=True)
         for _ in range(2):
             raw = LdmDocxWriter(OoxmlSaveOptions(fmt)).write_to_bytes(current)
-            current = aw.Document(BytesIO(raw)).light_document_model
+            current = dk.Document(BytesIO(raw)).light_document_model
             assert {f.size for f in fonts(current)} == {28}
     assert {f.size for f in held} == {28}
 
@@ -117,7 +117,7 @@ def test_held_note_run_follows_move_to_body_and_back(kind):
     note._children.remove(node)
     destination._children.append(node)
     assert held.size == held.render_size == 22
-    with pytest.warns(aw.ContentLossWarning, match='Footnotes/endnotes'):
+    with pytest.warns(dk.ContentLossWarning, match='Footnotes/endnotes'):
         raw = LdmPdfWriter().write_to_bytes(model)
     with pymupdf.open(stream=raw, filetype='pdf') as pdf:
         spans = [span for page in pdf for span in page.get_texttrace()
@@ -179,15 +179,15 @@ def test_held_note_table_run_uses_live_table_context(kind):
 
 @pytest.mark.parametrize('kind', ['footnote', 'endnote'])
 def test_failed_save_keeps_note_size_views_and_declarations(kind, tmp_path, monkeypatch):
-    document = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(owned_model(kind, 16))))
+    document = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(owned_model(kind, 16))))
     held = fonts(document.light_document_model)
     next(s for s in document.styles if s.name == 'Normal').font.size = 28
     snapshot = document.light_document_model.model_dump_json()
     def fail(*args, **kwargs):
         raise OSError('owned failure')
-    monkeypatch.setattr('aspose.words_foss.docx_writer.writer.LdmDocxWriter.write_to_bytes', fail)
+    monkeypatch.setattr('dockiln.writers.docx.writer.LdmDocxWriter.write_to_bytes', fail)
     with pytest.raises(OSError, match='owned failure'):
-        document.save(str(tmp_path / 'failed.docx'), aw.SaveFormat.DOCX)
+        document.save(str(tmp_path / 'failed.docx'), dk.SaveFormat.DOCX)
     assert not (tmp_path / 'failed.docx').exists()
     assert document.light_document_model.model_dump_json() == snapshot
     assert {f.size for f in held} == {28}

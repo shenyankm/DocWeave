@@ -10,8 +10,8 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Pt, RGBColor
 
-from aspose.words_foss.docx_reader.document_reader import DocumentReader
-from aspose.words_foss.docx_writer.runs import color_to_hex
+from dockiln.readers.docx.document_reader import DocumentReader
+from dockiln.writers.docx.runs import color_to_hex
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 

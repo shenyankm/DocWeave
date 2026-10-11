@@ -4,10 +4,10 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.model.enums import HeightRule
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.dom import DocxDocument
+from dockiln.model.enums import HeightRule
 from .test_docx_dom import package
 
 
@@ -51,7 +51,7 @@ def test_source_measure_shared_between_dom_and_ldm(tmp_path, value, expected, ru
     path, _ = row_document(tmp_path, f'<w:trHeight w:val="{value}" w:hRule="{rule}"/>')
     expected_rule = 2 if expected == 0 else 1 if rule == 'exact' else 0
     assert values(DocxDocument(path).body.tables[0].rows[0].row_format) == (expected, expected_rule, True)
-    assert values(ldm_row(aw.Document(path)).row_format) == (expected, expected_rule, True)
+    assert values(ldm_row(dk.Document(path)).row_format) == (expected, expected_rule, True)
 
 
 @pytest.mark.parametrize('value,allowed', [('', False), ('on', False), ('1', False), ('true', False),
@@ -59,7 +59,7 @@ def test_source_measure_shared_between_dom_and_ldm(tmp_path, value, expected, ru
 def test_split_value_not_element_presence(tmp_path, value, allowed):
     path, _ = row_document(tmp_path, f'<w:cantSplit w:val="{value}"/>')
     assert DocxDocument(path).body.tables[0].rows[0].row_format.allow_break_across_pages is allowed
-    assert ldm_row(aw.Document(path)).row_format.allow_break_across_pages is allowed
+    assert ldm_row(dk.Document(path)).row_format.allow_break_across_pages is allowed
 
 
 @pytest.mark.parametrize('declaration', ['<w:cantSplit w:val="TRUE"/>', '<w:cantSplit w:val="unknown"/>',
@@ -67,7 +67,7 @@ def test_split_value_not_element_presence(tmp_path, value, allowed):
                                        '<w:cantSplit w:val="unknown"/><w:cantSplit w:val="1"/>'])
 def test_invalid_source_is_rejected_without_echoing_value(tmp_path, declaration):
     path, _ = row_document(tmp_path, declaration)
-    for constructor in (DocxDocument, aw.Document):
+    for constructor in (DocxDocument, dk.Document):
         with pytest.raises(RuntimeError, match='Invalid row-') as error:
             constructor(path)
         assert str(path) not in str(error.value)
@@ -125,18 +125,18 @@ def test_zero_rule_warm_is_not_cold_projection(tmp_path, rule, flat):
 def test_inherited_style_preserved_without_direct_height(tmp_path, default, height):
     direct = f'<w:trPr><w:cantSplit/><w:trHeight w:val="{height * 20}" w:hRule="exact"/></w:trPr>'
     path, _ = row_document(tmp_path, style_properties=direct, default=default)
-    document = aw.Document(path)
+    document = dk.Document(path)
     row = ldm_row(document)
     assert values(row.row_format) == (height, 1, False)
     assert row.row_format.height_explicit is False
     cloned = ldm.Document.model_validate_json(document.light_document_model.model_dump_json())
     assert values(ldm_row(cloned).row_format) == (height, 1, False)
-    for format_ in (aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC):
-        destination = tmp_path / ('style.docx' if format_ == aw.SaveFormat.DOCX else 'style.xml')
+    for format_ in (dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC):
+        destination = tmp_path / ('style.docx' if format_ == dk.SaveFormat.DOCX else 'style.xml')
         document.save(destination, format_)
         assert values(row.row_format) == (height, 1, False)
         assert values(DocxDocument(destination).body.tables[0].rows[0].row_format) == (height, 1, False)
-        assert values(ldm_row(aw.Document(destination)).row_format) == (height, 1, False)
+        assert values(ldm_row(dk.Document(destination)).row_format) == (height, 1, False)
     row.row_format.height = 3
     row.row_format.allow_break_across_pages = True
     assert row.row_format.height_explicit is True
@@ -157,7 +157,7 @@ def test_direct_overrides_and_conditional_metadata_survive(tmp_path, flat):
     destination = tmp_path / ('edited.xml' if flat else 'edited.docx')
     (document.save_flat_opc if flat else document.save)(destination)
     assert values(DocxDocument(destination).body.tables[0].rows[0].row_format) == (-1, 1, False)
-    assert values(ldm_row(aw.Document(destination)).row_format) == (-1, 1, False)
+    assert values(ldm_row(dk.Document(destination)).row_format) == (-1, 1, False)
     with ZipFile(BytesIO(document.to_bytes())) as archive:
         assert archive.read('customXml/item.xml') == original['customXml/item.xml']
     snapshot = document.to_light_document()
@@ -170,14 +170,14 @@ def test_direct_overrides_and_conditional_metadata_survive(tmp_path, flat):
 @pytest.mark.parametrize('flat', [False, True])
 def test_save_clamp_is_success_only_and_identity_preserving(tmp_path, monkeypatch, legacy, flat):
     path, _ = row_document(tmp_path, '<w:trHeight w:val="40" w:hRule="exact"/>')
-    document = aw.Document(path) if legacy else DocxDocument(path)
+    document = dk.Document(path) if legacy else DocxDocument(path)
     properties = ldm_row(document).row_format if legacy else document.body.tables[0].rows[0].row_format
     properties.height = 2000
     before = values(properties)
     destination = tmp_path / ('result.xml' if flat else 'result.docx')
     destination.write_bytes(b'old output')
-    save = (lambda p: document.save(p, aw.SaveFormat.FLAT_OPC if flat else aw.SaveFormat.DOCX)) if legacy else (document.save_flat_opc if flat else document.save)
-    from aspose.words_foss import _io
+    save = (lambda p: document.save(p, dk.SaveFormat.FLAT_OPC if flat else dk.SaveFormat.DOCX)) if legacy else (document.save_flat_opc if flat else document.save)
+    from dockiln import _io
     replace = _io.os.replace
     monkeypatch.setattr(_io.os, 'replace', lambda *args: (_ for _ in ()).throw(OSError('owned failure')))
     with pytest.raises(OSError):
@@ -198,7 +198,7 @@ def test_duplicate_height_last_wins_and_setter_canonicalizes(tmp_path):
     document = DocxDocument(path)
     properties = document.body.tables[0].rows[0].row_format
     assert properties.height == 4
-    assert ldm_row(aw.Document(path)).row_format.height == 4
+    assert ldm_row(dk.Document(path)).row_format.height == 4
     properties.height = 5
     assert properties.height == 5
     assert document.part_xml('word/document.xml').count('trHeight') == 1
@@ -208,17 +208,17 @@ def test_duplicate_height_last_wins_and_setter_canonicalizes(tmp_path):
 @pytest.mark.parametrize('flat', [False, True])
 def test_pure_export_and_budget_failure_keep_original_owner(tmp_path, monkeypatch, legacy, flat):
     path, _ = row_document(tmp_path, '<w:trHeight w:val="40" w:hRule="exact"/>')
-    document = aw.Document(path) if legacy else DocxDocument(path)
+    document = dk.Document(path) if legacy else DocxDocument(path)
     properties = ldm_row(document).row_format if legacy else document.body.tables[0].rows[0].row_format
     properties.height = 2000
-    format_ = aw.SaveFormat.FLAT_OPC if flat else aw.SaveFormat.DOCX
+    format_ = dk.SaveFormat.FLAT_OPC if flat else dk.SaveFormat.DOCX
     data = document.to_bytes(format_) if legacy else (document.to_flat_opc() if flat else document.to_bytes())
     assert properties.height == 2000
     assert DocxDocument(BytesIO(data)).body.tables[0].rows[0].row_format.height == 1584
     source = document.light_document_model.source_font_table if legacy else document.part_xml('word/document.xml')
     destination = tmp_path / 'budget-result.docx'
     destination.write_bytes(b'original')
-    from aspose.words_foss import _io
+    from dockiln import _io
     monkeypatch.setattr(_io, 'MAX_PART_BYTES', 32)
     with pytest.raises(ValueError):
         document.save(destination, format_) if legacy else (document.save_flat_opc(destination) if flat else document.save(destination))
@@ -238,10 +238,10 @@ def test_legacy_json_and_copy_edits_keep_internal_integer_rules():
     assert values(inherited) == (20, 1, True)
 
 
-@pytest.mark.parametrize('format_', [aw.SaveFormat.DOCX, aw.SaveFormat.FLAT_OPC])
+@pytest.mark.parametrize('format_', [dk.SaveFormat.DOCX, dk.SaveFormat.FLAT_OPC])
 def test_bad_resource_graph_does_not_commit_font_or_height(tmp_path, format_):
     from .test_source_font_table import archive, owned_parts, FONT
-    document = aw.Document(BytesIO(archive(owned_parts())))
+    document = dk.Document(BytesIO(archive(owned_parts())))
     model = document.light_document_model
     properties = ldm.RowFormat(height=2000, height_rule=1)
     model.sections[0].body.children.append(ldm.Table(rows=[ldm.Row(row_format=properties,

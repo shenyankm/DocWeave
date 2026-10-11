@@ -6,9 +6,9 @@ from xml.etree.ElementTree import fromstring
 
 import pytest
 
-from aspose.words_foss import NodeType
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.dom.importing import ImportFormatMode
+from dockiln import NodeType
+from dockiln.dom import DocxDocument
+from dockiln.dom.importing import ImportFormatMode
 from .test_dom_note_lifecycle import document
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
@@ -160,7 +160,7 @@ def test_date_cache_does_not_mask_direct_xml_changes_or_wrong_identity(tmp_path)
 
 @pytest.mark.parametrize('flat', [False, True])
 def test_failed_date_save_preserves_warm_metadata_and_original_file(tmp_path, monkeypatch, flat):
-    from aspose.words_foss import _io
+    from dockiln import _io
     doc = source_date(tmp_path, '2026-10-11T12:34:56.123456Z');node = comment(doc)
     node.date_time = datetime(2026, 10, 12, 12, 34, 56, 654321)
     held = node.date_time;before = node._element.toxml();output = tmp_path / 'result';output.write_bytes(b'Owned existing output')

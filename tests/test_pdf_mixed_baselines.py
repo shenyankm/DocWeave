@@ -5,10 +5,10 @@ import pytest
 from fpdf import FPDF
 from fpdf.enums import CharVPos
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.baseline import baseline_scope
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.baseline import baseline_scope
+from dockiln.saving import PdfSaveOptions
 
 
 def baseline_model(align=0, location="body", long=False, tabs=False):

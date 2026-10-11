@@ -11,9 +11,9 @@ from docx.oxml.ns import qn
 from docx.shared import Pt
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer.styles_part import apply_reference_styles, render_styles_xml
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx.styles_part import apply_reference_styles, render_styles_xml
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 
@@ -21,7 +21,7 @@ W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 def load(source):
     stream = BytesIO()
     source.save(stream)
-    return aw.Document(BytesIO(stream.getvalue()))
+    return dk.Document(BytesIO(stream.getvalue()))
 
 
 @pytest.mark.parametrize('location', ['body', 'table', 'header', 'footer'])
@@ -164,7 +164,7 @@ def test_default_style_inherits_numbering_from_its_base():
     assert paras[0].list_format.list_id == paras[1].list_format.list_id > 0
     markdown = doc.to_bytes('md').decode()
     assert markdown.splitlines() == ['1. FIRST', '1. SECOND']
-    result = aw.Document(BytesIO(doc.to_bytes('docx')))
+    result = dk.Document(BytesIO(doc.to_bytes('docx')))
     assert all(p.list_format.is_list_item for p in result.light_document_model.sections[0].body.paragraphs)
 
 
@@ -224,7 +224,7 @@ def test_last_enabled_default_of_matching_type_wins(location, flag):
 
     check(document.light_document_model)
     output = document.to_bytes('docx')
-    check(aw.Document(BytesIO(output)).light_document_model)
+    check(dk.Document(BytesIO(output)).light_document_model)
     with ZipFile(BytesIO(output)) as archive:
         styles = ET.fromstring(archive.read('word/styles.xml'))
     defaults = [style.find(W+'name').get(W+'val') for style in styles.findall(W+'style')

@@ -5,9 +5,9 @@ import pymupdf
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 from .test_pdf_shaping import arabic_font
 
 
@@ -71,8 +71,8 @@ def test_format_boundaries_keep_global_bidi_positions(parts, links, wrapped):
 def test_bold_bidi_boundaries_match_native_paragraph():
     pytest.importorskip('uharfbuzz')
     from fpdf import FPDF
-    from aspose.words_foss.pdf_writer.constants import PT_TO_MM
-    from aspose.words_foss.pdf_writer.font import close_fonts, register_fonts
+    from dockiln.writers.pdf.constants import PT_TO_MM
+    from dockiln.writers.pdf.font import close_fonts, register_fonts
 
     options = PdfSaveOptions()
     options.text_shaping = True
@@ -133,7 +133,7 @@ def test_public_docx_color_boundaries_preserve_bidi_layout():
     pytest.importorskip('uharfbuzz')
     from docx import Document
     from docx.shared import Pt, RGBColor
-    import aspose.words_foss as aw
+    import dockiln as dk
 
     options = PdfSaveOptions()
     options.text_shaping = True
@@ -151,7 +151,7 @@ def test_public_docx_color_boundaries_preserve_bidi_layout():
         source = BytesIO()
         doc.save(source)
         source.seek(0)
-        outputs.append(aw.Document(source).to_bytes(options))
+        outputs.append(dk.Document(source).to_bytes(options))
     reference, actual = map(glyphs, outputs)
     assert [item[0] for item in actual] == [item[0] for item in reference]
     for item, target in zip(actual, reference, strict=True):
@@ -253,7 +253,7 @@ def test_repeated_joining_letters_wrap_consistently_across_links(in_table):
 
 def test_contextual_paragraph_measurement_matches_drawn_baselines():
     pytest.importorskip('uharfbuzz')
-    from aspose.words_foss.pdf_writer.constants import PT_TO_MM
+    from dockiln.writers.pdf.constants import PT_TO_MM
 
     options = PdfSaveOptions()
     options.text_shaping = True

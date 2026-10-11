@@ -7,7 +7,7 @@ from zipfile import ZipFile
 
 import pytest
 
-from aspose.words_foss import DocxDocument
+from dockiln import DocxDocument
 
 ROOT = Path(__file__).parents[1]
 BENCHMARKS = ROOT / "docs/benchmarks"
@@ -150,7 +150,7 @@ RENDER_REPORT = json.loads((BENCHMARKS / "paragraph-dimensions-rendering-26.9.js
 def test_dimension_style_edit_reaches_native_pdf_geometry(row):
     import runpy
 
-    from aspose.words_foss.pdf_writer import LdmPdfWriter
+    from dockiln.writers.pdf import LdmPdfWriter
 
     probe = runpy.run_path(str(ROOT / "docs/probes/pagination_rendering.py"))
     with ZipFile(BENCHMARKS / RENDER_REPORT["corpus"]) as archive:

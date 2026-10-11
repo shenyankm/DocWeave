@@ -5,9 +5,9 @@ from xml.etree.ElementTree import fromstring, tostring
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import _io
-from aspose.words_foss.dom import DocxDocument
+import dockiln as dk
+from dockiln import _io
+from dockiln.dom import DocxDocument
 from .test_docx_dom import package, payloads
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
@@ -45,7 +45,7 @@ def story_package(path, kind, *, custom=False, properties=None, inherited=False)
 
 
 def row_format(document, name):
-    return document.story(name).get_child_nodes(aw.NodeType.ROW, True)[0].row_format
+    return document.story(name).get_child_nodes(dk.NodeType.ROW, True)[0].row_format
 
 
 @pytest.mark.parametrize('kind', ['header', 'footer'])
@@ -69,7 +69,7 @@ def test_projection_includes_unvisited_linked_stories(tmp_path, kind, custom, fl
     assert row_format(document, name).height == 1584
     cold = DocxDocument(out)
     assert row_format(cold, name).height == 1584
-    assert row_format(cold, name).height_rule is aw.HeightRule.EXACTLY
+    assert row_format(cold, name).height_rule is dk.HeightRule.EXACTLY
     for opaque in ['customXml/opaque.xml', 'word/styles.xml', 'word/media/image.bin']:
         actual = cold._package.payload(opaque)
         if flat and opaque.endswith('.xml'):

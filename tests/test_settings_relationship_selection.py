@@ -4,11 +4,11 @@ from zipfile import ZipFile
 from xml.etree import ElementTree as E
 
 import pytest
-import aspose.words_foss as aw
-from aspose.words_foss._flat_opc import encode, decode
-from aspose.words_foss._opc import ordered_relationships
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.docx_writer.constants import CT_SETTINGS, REL_SETTINGS, PKG_RELS_URI
+import dockiln as dk
+from dockiln._flat_opc import encode, decode
+from dockiln._opc import ordered_relationships
+from dockiln.dom import DocxDocument
+from dockiln.writers.docx.constants import CT_SETTINGS, REL_SETTINGS, PKG_RELS_URI
 from tests.test_settings_relationship_loading import settings_package, W, CT
 
 REL = 'word/_rels/document.xml.rels'
@@ -72,7 +72,7 @@ CASES = [
 def test_selection_and_twice_saved_cold(tmp_path, records, expected, flat, model):
     raw = package(records)
     raw = encode(raw) if flat else raw
-    factory = aw.Document if model == 'conversion' else DocxDocument
+    factory = dk.Document if model == 'conversion' else DocxDocument
     if expected is None:
         with pytest.raises(ValueError, match='identifier'):
             factory(BytesIO(raw))
@@ -87,13 +87,13 @@ def test_selection_and_twice_saved_cold(tmp_path, records, expected, flat, model
         value = expected if number == 1 else 42.1
         destination = tmp_path / f'owned-{number}.bin'
         if model == 'conversion':
-            doc.save(destination, aw.SaveFormat.FLAT_OPC if flat else aw.SaveFormat.DOCX)
+            doc.save(destination, dk.SaveFormat.FLAT_OPC if flat else dk.SaveFormat.DOCX)
         elif flat:
             doc.save_flat_opc(destination)
         else:
             doc.save(destination)
         assert doc.default_tab_stop == value
-        assert aw.Document(destination).default_tab_stop == value
+        assert dk.Document(destination).default_tab_stop == value
         assert DocxDocument(destination).default_tab_stop == value
         with ZipFile(BytesIO(decode(destination.read_bytes()) if flat else destination.read_bytes())) as archive:
             links = E.fromstring(archive.read(REL))
@@ -129,7 +129,7 @@ def test_projection_keeps_live_parts_and_held_nodes_until_success(tmp_path, monk
     destination.write_bytes(b'owned previous output')
     with monkeypatch.context() as patch:
         if failure == 'budget':
-            from aspose.words_foss import _io
+            from dockiln import _io
             patch.setattr(_io, 'MAX_EXPANDED_BYTES', 1)
         else:
             import os
@@ -147,7 +147,7 @@ def test_projection_keeps_live_parts_and_held_nodes_until_success(tmp_path, monk
 
 
 @pytest.mark.parametrize('first', [b'<broken', b'<!DOCTYPE settings [<!ENTITY secret "owned">]><settings/>'])
-@pytest.mark.parametrize('model', [aw.Document, DocxDocument])
+@pytest.mark.parametrize('model', [dk.Document, DocxDocument])
 def test_selected_malformed_settings_fail_at_construction(first, model):
     from xml.parsers.expat import ExpatError
     from defusedxml.common import DefusedXmlException
@@ -187,7 +187,7 @@ def test_generic_main_resource_relationship_ids_remain_strict(kind, invalid):
     else:
         records.append(link('owned'))
     with pytest.raises(ValueError, match='relationship (ID|identifier)'):
-        aw.Document(BytesIO(package(records)))
+        dk.Document(BytesIO(package(records)))
 
 
 @pytest.mark.parametrize('conflict', ['wrong', 'duplicate'])
@@ -216,7 +216,7 @@ def test_projection_content_type_failure_preserves_output_and_source(tmp_path, c
 
 
 def test_normalization_diagnostic_and_report_do_not_include_source_data():
-    from aspose.words_foss.diagnostics import collect_diagnostics
+    from dockiln.diagnostics import collect_diagnostics
     doc = DocxDocument(BytesIO(package([link('owned-private-identifier'), link('z', 'settings.xml')])))
     diagnostics = []
     with collect_diagnostics(diagnostics):
@@ -233,7 +233,7 @@ def test_normalization_diagnostic_and_report_do_not_include_source_data():
 def test_settings_choice_is_frozen_before_other_role_projection(tmp_path, monkeypatch, role, last, flat):
     from tests.test_dom_comment_utc import modern
     from tests.test_dom_comment_metadata import comment
-    from aspose.words_foss.dom.comment_utc import ROLES
+    from dockiln.dom.comment_utc import ROLES
     source = modern(tmp_path)
     parts = {name: source._package.payload(name) for name in source.part_names}
     links = E.fromstring(parts[REL])
@@ -329,20 +329,20 @@ def test_unresolved_settings_uri_is_ignored_without_io(tmp_path, monkeypatch, ta
         raise AssertionError('Settings must not open a network connection')
     monkeypatch.setattr(socket, 'create_connection', network)
     raw = package([link('a', target, **({'TargetMode': mode} if mode else {})), link('z', 'settings.xml')])
-    factory = aw.Document if model == 'conversion' else DocxDocument
+    factory = dk.Document if model == 'conversion' else DocxDocument
     doc = factory(BytesIO(encode(raw) if flat else raw))
     assert doc.default_tab_stop == 36
     output = tmp_path / 'owned.bin'
     for value in [36, 42.1]:
         doc.default_tab_stop = value
         if model == 'conversion':
-            doc.save(output, aw.SaveFormat.FLAT_OPC if flat else aw.SaveFormat.DOCX)
+            doc.save(output, dk.SaveFormat.FLAT_OPC if flat else dk.SaveFormat.DOCX)
         elif flat:
             doc.save_flat_opc(output)
         else:
             doc.save(output)
         assert doc.default_tab_stop == factory(output).default_tab_stop == value
     # Generic package resolution still rejects remote/absolute URIs.
-    from aspose.words_foss._opc import resolve_target
+    from dockiln._opc import resolve_target
     with pytest.raises(ValueError):
         resolve_target('word/document.xml', target)

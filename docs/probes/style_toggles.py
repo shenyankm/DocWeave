@@ -85,7 +85,7 @@ def main():
     if args.output is None:
         parser.error("--output is required for observations")
     commercial = args.action == "commercial"
-    module = "aspose.words" if commercial else "aspose.words_foss"
+    module = "aspose.words" if commercial else "dockiln"
     aw = importlib.import_module(module)
     raw = args.corpus.read_bytes()
     records = []
@@ -104,7 +104,7 @@ def main():
                 font = doc.body.paragraphs[0].runs[0].effective_font
             records.append({"input": name, "sha256": hashlib.sha256(data).hexdigest(), "bold": font.bold, "italic": font.italic})
     assert len(records) == 745
-    report = {"module": module, "version": version("aspose-words" if commercial else "aspose-words-foss-enhanced"),
+    report = {"module": module, "version": version("aspose-words" if commercial else "dockiln"),
               "python": platform.python_version(), "platform": platform.platform(),
               "corpus_sha256": hashlib.sha256(raw).hexdigest(), "records": records,
               "scope": "b/i getters on owned six-level and default-character-style inputs; no saved output or render acceptance",

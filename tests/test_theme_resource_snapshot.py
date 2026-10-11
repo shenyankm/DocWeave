@@ -9,9 +9,9 @@ from zipfile import ZIP_DEFLATED, ZipFile
 import pytest
 from defusedxml.common import DefusedXmlException
 
-from aspose.words_foss import Document
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._opc import related_part_snapshot
+from dockiln import Document
+from dockiln import light_document_model as ldm
+from dockiln._opc import related_part_snapshot
 
 CT = 'http://schemas.openxmlformats.org/package/2006/content-types'
 RELS = 'http://schemas.openxmlformats.org/package/2006/relationships'
@@ -116,10 +116,10 @@ def test_invalid_dependency_graph_is_rejected(kind):
 @pytest.mark.parametrize('format', ['docx', 'flat_opc'])
 @pytest.mark.parametrize('json_roundtrip', [False, True])
 def test_graph_is_rebound_and_retained_through_saving(format, json_roundtrip):
-    from aspose.words_foss import SaveFormat
-    from aspose.words_foss._opc import resolve_target
-    from aspose.words_foss.docx_writer import LdmDocxWriter
-    from aspose.words_foss.saving import OoxmlSaveOptions
+    from dockiln import SaveFormat
+    from dockiln._opc import resolve_target
+    from dockiln.writers.docx import LdmDocxWriter
+    from dockiln.saving import OoxmlSaveOptions
     model = Document(BytesIO(archive_bytes(package_parts()))).light_document_model
     if json_roundtrip:
         model = ldm.Document.model_validate_json(model.model_dump_json())
@@ -145,7 +145,7 @@ def test_graph_is_rebound_and_retained_through_saving(format, json_roundtrip):
 
 @pytest.mark.parametrize('damage', ['missing', 'duplicate', 'dangling-id', 'escape'])
 def test_damaged_snapshot_does_not_replace_existing_output(tmp_path, damage):
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln.writers.docx import LdmDocxWriter
     model = Document(BytesIO(archive_bytes(package_parts()))).light_document_model
     theme = model.source_theme
     parts = list(theme.parts)
@@ -170,7 +170,7 @@ def test_damaged_snapshot_does_not_replace_existing_output(tmp_path, damage):
 
 
 def test_resource_directory_collision_uses_an_unused_name():
-    from aspose.words_foss.docx_writer.package import _import_theme_resources
+    from dockiln.writers.docx.package import _import_theme_resources
     model = Document(BytesIO(archive_bytes(package_parts()))).light_document_model
     text = [('[Content_Types].xml', f'<Types xmlns="{CT}"/>')]
     binary = [('word/theme/resources1/custom/assets/owned.bin', b'existing')]
@@ -201,10 +201,10 @@ def test_dependency_parse_errors_do_not_echo_private_entity_names(part):
 def test_encoded_resource_names_preserve_literal_names_and_content_types(filename, format):
     from urllib.parse import quote
 
-    from aspose.words_foss import SaveFormat
-    from aspose.words_foss._opc import relationships_path
-    from aspose.words_foss.docx_writer import LdmDocxWriter
-    from aspose.words_foss.saving import OoxmlSaveOptions
+    from dockiln import SaveFormat
+    from dockiln._opc import relationships_path
+    from dockiln.writers.docx import LdmDocxWriter
+    from dockiln.saving import OoxmlSaveOptions
 
     parts = package_parts()
     name = 'custom/assets/' + filename

@@ -265,7 +265,7 @@ DOCX／Flat OPC 读取和保存分别保留每节显式页眉／页脚，缺少�
 LDM 的 `compatibility_mode` 默认 15；DOCX 按官方 URI 读取并写出兼容模式，缺失/格式无效时按 12。
 
 `Document.compatibility_options` 提供 71 个布尔偏好的读取与编辑，以及
-`optimize_for(aw.settings.MsWordVersion.WORD2010)` 等八个 Word 版本配置。
+`optimize_for(dk.settings.MsWordVersion.WORD2010)` 等八个 Word 版本配置。
 配置会更新兼容声明，并联动现有手动换行对齐及表格兼容模式调用；`ul_trail_space` 保留原值。
 新建 `Document()` 使用已有空白模板的兼容声明，缺省模式为 12；直接构造 LDM 的旧默认值不变。
 原始 `SourceSettings` 快照保持不变，已识别的重复布尔声明在保存时取末项，false 声明省略并产生通用规范化诊断。
@@ -308,13 +308,13 @@ Word 与 LibreOffice 对照及边界见[方向验收](benchmarks/table-direction
 
 ```python
 import warnings
-import aspose.words_foss as aw
-from aspose.words_foss.pdf_writer import PdfMissingGlyphWarning
+import dockiln as dk
+from dockiln.writers.pdf import PdfMissingGlyphWarning
 
 warnings.simplefilter("error", PdfMissingGlyphWarning)  # 不接受缺字 PDF
-options = aw.saving.PdfSaveOptions()
+options = dk.saving.PdfSaveOptions()
 options.fallback_fonts = ["/trusted/fonts/extra-unicode.ttf"]
-aw.Document("report.docx").save("report.pdf", options)
+dk.Document("report.docx").save("report.pdf", options)
 ```
 
 字体文件由应用部署和信任；库不会联网下载字体。fallback 按列表顺序尝试，使用 regular face，
@@ -328,9 +328,9 @@ aw.Document("report.docx").save("report.pdf", options)
 | `PdfFontSubstitutionWarning` | 源字体被 Document Sans SC 替代，可能改变布局 |
 | `PdfUnsupportedOptionWarning` | 显式设置尚未实现的 PDF 选项，或请求 PDF/A、PDF/UA 合规 |
 | `PdfContentLossWarning` | 未知模型节点、页眉页脚变体、超高不可拆行等已知内容或布局降级；未启用塑形的复杂文字也会提示 |
-| `aw.loading.DocumentLoadWarning` | 缺失脚注/尾注正文、对象、altChunk、修订、简单字段、内容控件、公式等尚未完整保留的构造 |
+| `dk.loading.DocumentLoadWarning` | 缺失脚注/尾注正文、对象、altChunk、修订、简单字段、内容控件、公式等尚未完整保留的构造 |
 | `DocxWriterLossyWarning` | 未知模型节点等已知写出损失；无对应正文、冲突 ID 或不支持位置的注释会在发布输出前明确拒绝 |
-| `aw.ContentLossWarning` | 已知内容/布局损失的公共基类；用于统一过滤加载、DOCX、Markdown、PDF 的已知损失 |
+| `dk.ContentLossWarning` | 已知内容/布局损失的公共基类；用于统一过滤加载、DOCX、Markdown、PDF 的已知损失 |
 
 默认值不会仅因选项尚未实现而报警；显式赋值即使等于默认值也会提示。
 这些诊断只覆盖已检测到的情况，不是全面的 Word 兼容性检查。可用 Python `warnings` 分类过滤或升级为错误。
@@ -441,9 +441,9 @@ PDF writer 对模型中的字符值另发 `pdf.character_indents_ignored`；错�
 Markdown 默认不读取本地图片，仍支持内嵌 base64 图片。可信文件需要本地图片时显式开启：
 
 ```python
-options = aw.MarkdownLoadOptions()
+options = dk.MarkdownLoadOptions()
 options.allow_local_images = True
-aw.Document("documents/report.md", options).save("report.pdf")
+dk.Document("documents/report.md", options).save("report.pdf")
 ```
 
 开启后图片必须位于文档目录内，绝对路径、`..` 或符号链接不能逃出该目录；不会自动下载 HTTP 图片。
@@ -456,7 +456,7 @@ Markdown 导出的独立图片不是多文件事务；原子替换也不等于�
 ## 有界单任务 CLI
 
 ```bash
-python -m aspose.words_foss.convert report.docx report.pdf \
+python -m dockiln.convert report.docx report.pdf \
   --strict --timeout 60 --memory-mb 1024
 ```
 
@@ -470,7 +470,7 @@ RSS watchdog，约每 0.1 秒检查，**可能短暂超过阈值，不是硬内�
 `--text-shaping` 需安装 `[shaping]` 并部署可信字体：
 
 ```bash
-python -m pip install "aspose-words-foss-enhanced[shaping] @ git+https://github.com/shenyankm/DocWeave.git@dev"
+python -m pip install "dockiln[shaping] @ git+https://github.com/shenyankm/DocKiln.git@dev"
 ```
 
 实际绘制和行宽/行高测量同时启用 shaping。实现使用 fpdf2 内部 bidi/断行 API，升级 fpdf2 后须复验。
@@ -480,7 +480,7 @@ CLI 不是 Web 服务、队列或全局并发控制器；应用需限制同时�
 ## 可选 LibreOffice 原文件路径
 
 ```python
-from aspose.words_foss.libreoffice import convert_to_pdf
+from dockiln.libreoffice import convert_to_pdf
 
 convert_to_pdf("report.docx", "report.pdf", timeout=60)
 ```
@@ -488,7 +488,7 @@ convert_to_pdf("report.docx", "report.pdf", timeout=60)
 或者通过同一个受限 CLI：
 
 ```bash
-python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
+python -m dockiln.convert report.docx report.pdf --backend libreoffice
 ```
 
 需自行安装 LibreOffice，`soffice`/`libreoffice` 在 PATH 上；也识别 macOS 标准应用安装位置。
@@ -531,9 +531,9 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 | `outline_options` | 下表六项；不是完整 Word TOC 契约 | [test_pdf_outline_options.py](../tests/test_pdf_outline_options.py) |
 | `preserve_form_fields` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
 | `memory_optimization` | 未实现；显式赋值有 PDF unsupported_option 警告 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
-| `zoom_factor` | ZOOM_FACTOR 下使用：有限非负 int/float（拒绝 bool），0 保留默认打开行为；正值按百分比写成普通十进制，PDF 数字最长 47 字符。内存/文件/直接 writer、错误原文件保留及独立解析已验证；实际阅读器打开行为未验收 | [缩放契约](benchmarks/pdf-zoom-contract.json)、[writer](../aspose/words_foss/pdf_writer/writer.py) |
-| `zoom_behavior` | PDF 打开动作；部分行为在序列化后改写 | [aspose/words_foss/pdf_writer/writer.py](../aspose/words_foss/pdf_writer/writer.py) |
-| `display_doc_title` | PDF viewer preference；阅读器可忽略 | [aspose/words_foss/pdf_writer/writer.py](../aspose/words_foss/pdf_writer/writer.py) |
+| `zoom_factor` | ZOOM_FACTOR 下使用：有限非负 int/float（拒绝 bool），0 保留默认打开行为；正值按百分比写成普通十进制，PDF 数字最长 47 字符。内存/文件/直接 writer、错误原文件保留及独立解析已验证；实际阅读器打开行为未验收 | [缩放契约](benchmarks/pdf-zoom-contract.json)、[writer](../src/dockiln/writers/pdf/writer.py) |
+| `zoom_behavior` | PDF 打开动作；部分行为在序列化后改写 | [src/dockiln/writers/pdf/writer.py](../src/dockiln/writers/pdf/writer.py) |
+| `display_doc_title` | PDF viewer preference；阅读器可忽略 | [src/dockiln/writers/pdf/writer.py](../src/dockiln/writers/pdf/writer.py) |
 | `fallback_fonts` | 可信字体路径；覆盖、塑形及源字体替代有独立限制 | [test_pdf_diagnostics.py](../tests/test_pdf_diagnostics.py) |
 | `text_shaping` | 可选 HarfBuzz 塑形；依赖/字体及格式边界有限制 | [test_pdf_shaping.py](../tests/test_pdf_shaping.py) |
 
@@ -543,28 +543,28 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 |---|---|---|
 | `save_format` | 支持 DOCX 和四种 Flat OPC 变体；其他值在输出前拒绝 | [test_save_option_formats.py](../tests/test_save_option_formats.py) |
 | `compliance` | ECMA376_2006 与 ISO29500_2008_TRANSITIONAL 使用同一输出；Strict 抛出 NotImplementedError | [test_bounded_conversion.py](../tests/test_bounded_conversion.py) |
-| `compression_level` | 四档 ZIP deflate；不是内容精简 | [ApiExamples/working_with_ooxml_save_options.py](../ApiExamples/working_with_ooxml_save_options.py) |
+| `compression_level` | 四档 ZIP deflate；不是内容精简 | [examples/working_with_ooxml_save_options.py](../examples/working_with_ooxml_save_options.py) |
 | `zip_64_mode` | NEVER/IF_NECESSARY；ALWAYS 仍等同按需，但现在警告 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |
-| `pretty_format` | XML 缩进；语义与全部部件仍待矩阵复核 | [ApiExamples/working_with_ooxml_save_options.py](../ApiExamples/working_with_ooxml_save_options.py) |
+| `pretty_format` | XML 缩进；语义与全部部件仍待矩阵复核 | [examples/working_with_ooxml_save_options.py](../examples/working_with_ooxml_save_options.py) |
 | `reference_docx` | 导入参考样式，非参考正文/资源/页面设置 | [test_reference_styles.py](../tests/test_reference_styles.py) |
 
 ### MarkdownSaveOptions
 
 | 字段 | 当前行为/限制 | 证据或复验入口 |
 |---|---|---|
-| `table_content_alignment` | 表格对齐覆盖 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
-| `list_export_mode` | Markdown 列表或纯文本路径 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
+| `table_content_alignment` | 表格对齐覆盖 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
+| `list_export_mode` | Markdown 列表或纯文本路径 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
 | `export_images_as_base64` | 无 images_folder 时始终内联；有目录时选择内联/外部 | [test_conversion_api.py](../tests/test_conversion_api.py) |
 | `images_folder` | 同名不同内容分配序号，已有文件及目标符号链接保留；普通失败回滚新图片，占用标记保护待提交图片；非断电安全多文件事务；链接使用编码 URI 路径 | [test_markdown_image_rollback.py](../tests/test_markdown_image_rollback.py)、[test_markdown_image_collisions.py](../tests/test_markdown_image_collisions.py) |
 | `images_folder_alias` | URL 前缀：编码文件名追加到 path，保留 query/fragment；激活时拒绝非字符串/原始 ASCII 控制字符及非法 URL | [图片 URI 契约](benchmarks/markdown-image-links.json)、[独立解析](../tests/test_markdown_image_links.py) |
-| `export_underline_formatting` | 普通 Markdown 使用 `++` 扩展标记，HTML 表格使用 u 标签；不是所有 Markdown 阅读器都支持该扩展 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py)、[实际输出](../tests/test_boolean_save_contract.py) |
-| `link_export_mode` | 自动/内联/引用链接 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
+| `export_underline_formatting` | 普通 Markdown 使用 `++` 扩展标记，HTML 表格使用 u 标签；不是所有 Markdown 阅读器都支持该扩展 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py)、[实际输出](../tests/test_boolean_save_contract.py) |
+| `link_export_mode` | 自动/内联/引用链接 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
 | `export_as_html` | TABLES 走已有 HTML 路径；NON_COMPATIBLE_TABLES 仍等同 NONE，但现在警告 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |
-| `empty_paragraph_export_mode` | 空行、HTML br 或省略 | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
+| `empty_paragraph_export_mode` | 空行、HTML br 或省略 | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
 | `image_resolution` | 未重采样；非默认 96 请求现在警告，源图片字节保留 | [test_unsupported_save_requests.py](../tests/test_unsupported_save_requests.py) |
 | `save_format` | 只支持 MARKDOWN；其他值在输出前拒绝 | [test_save_option_formats.py](../tests/test_save_option_formats.py) |
 | `encoding` | 文本编码；编码失败在主输出写入前发生 | [test_conversion_api.py](../tests/test_conversion_api.py) |
-| `paragraph_break` | 顶层块分隔；内部换行仍为 LF | [ApiExamples/working_with_markdown_save_options.py](../ApiExamples/working_with_markdown_save_options.py) |
+| `paragraph_break` | 顶层块分隔；内部换行仍为 LF | [examples/working_with_markdown_save_options.py](../examples/working_with_markdown_save_options.py) |
 | `style_map` | 精确样式名映射为支持的语义样式 | [test_ecosystem_semantics.py](../tests/test_ecosystem_semantics.py) |
 | `export_notes` | 可见注锚点、定义与回链；缺失/不支持位置有诊断 | [test_markdown_notes.py](../tests/test_markdown_notes.py) |
 
@@ -625,18 +625,18 @@ ZIP64 强制输出、选择性 HTML 表格及图片重采样仍未实现；诊�
 
 ## 可编辑脚注、尾注选项
 
-`aw.notes.FootnoteOptions` 提供 `number_style`、`position`、`restart_rule`、
+`dk.notes.FootnoteOptions` 提供 `number_style`、`position`、`restart_rule`、
 `start_number`、`columns`；`EndnoteOptions` 提供前四项。它们是文档或页面设置的关联视图，
 不能直接构造。转换入口和 `DocxDocument` DOM 入口提供相同配置链路。
 
 ```python
-import aspose.words_foss as aw
+import dockiln as dk
 
-doc = aw.Document("input.docx")
-doc.footnote_options.number_style = aw.NumberStyle.LOWERCASE_ROMAN
-doc.footnote_options.restart_rule = aw.notes.FootnoteNumberingRule.RESTART_SECTION
+doc = dk.Document("input.docx")
+doc.footnote_options.number_style = dk.NumberStyle.LOWERCASE_ROMAN
+doc.footnote_options.restart_rule = dk.notes.FootnoteNumberingRule.RESTART_SECTION
 doc.first_section.page_setup.footnote_options.start_number = 3
-doc.endnote_options.position = aw.notes.EndnotePosition.END_OF_SECTION
+doc.endnote_options.position = dk.notes.EndnotePosition.END_OF_SECTION
 doc.save("output.docx")
 ```
 
@@ -653,14 +653,14 @@ doc.save("output.docx")
 文档末尾、连续编号、起始编号 1。转换模型 JSON 和文档的 `model_copy(deep=True)`
 保留选项，并建立副本自己的关联关系。单独深复制 `PageSetup` 时只保留声明值，
 不携带原文档的关联；加入目标转换模型后重新绑定。
-`aw.NumberStyle` 现在是整数兼容枚举，旧 `KANJI_TRADITIONAL_2` 拼写仍保留，
+`dk.NumberStyle` 现在是整数兼容枚举，旧 `KANJI_TRADITIONAL_2` 拼写仍保留，
 同时提供 `KANJI_TRADITIONAL2`。
 
 脚注 `columns` 在编辑状态下保留 setter 的值。Word 2013 及更新兼容模式
 （`compatibility_mode >= 15`）只把正值写入各节的 `w15:footnoteColumns`。
 重新载入后，文档级栏数为 0，节级栏数来自文件；较旧模式和非正值不写出。
 如需使用此文件能力，在转换入口先调用
-`doc.compatibility_options.optimize_for(aw.settings.MsWordVersion.WORD2013)`。
+`doc.compatibility_options.optimize_for(dk.settings.MsWordVersion.WORD2013)`。
 DOM 入口沿用原文件的兼容模式。
 
 `NumberStyle.SIMP_CHIN_NUM4` 可以编辑，DOCX/Flat OPC 没有该值的编号格式投影，

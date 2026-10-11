@@ -7,10 +7,12 @@ from PIL import Image
 import pymupdf
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
+from ._word_fixtures import word_bytes
+
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf.diagnostics import PdfContentLossWarning
 
 
 def paragraph(text, **font):
@@ -38,7 +40,7 @@ def convert(grid, *before, page_height=360):
                                left_margin=24, right_margin=24, top_margin=24, bottom_margin=24),
         body=ldm.Body(children=[*before, grid]),
     )])
-    doc = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(model)))
+    doc = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(model)))
     return doc, pymupdf.open(stream=doc.to_bytes("pdf"), filetype="pdf")
 
 
@@ -179,14 +181,14 @@ def test_untrusted_grid_span_is_bounded(span):
                 payload = payload.replace(b'<w:gridSpan w:val="2"', f'<w:gridSpan w:val="{span}"'.encode())
             output.writestr(name, payload)
     with pytest.raises(ValueError, match="gridSpan"):
-        aw.Document(BytesIO(source.getvalue()))
+        dk.Document(BytesIO(source.getvalue()))
 
 
 def test_text_after_grid_uses_a_valid_font_and_is_not_clipped():
     model = ldm.Document(sections=[ldm.Section(body=ldm.Body(children=[
         table(row(cell("表格A"), cell("表格B"))), paragraph("表后正文"),
     ]))])
-    doc = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(model)))
+    doc = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(model)))
     with pymupdf.open(stream=doc.to_bytes("pdf"), filetype="pdf") as pdf:
         assert "表后正文" in pdf[0].get_text()
         assert_in_bounds(pdf)
@@ -215,9 +217,9 @@ def test_rotated_cell_excludes_hidden_text(orientation):
 
 
 def test_impossible_header_fails_without_destroying_output(tmp_path):
-    source = tmp_path / "source.md"
-    source.write_text("text", encoding="utf-8")
-    doc = aw.Document(source)
+    source = tmp_path / "source.docx"
+    source.write_bytes(word_bytes("text"))
+    doc = dk.Document(source)
     doc.sections[0].body.children = [table(row(cell("text", top_padding=900), heading=True))]
     output = tmp_path / "existing.pdf"
     output.write_bytes(b"old")

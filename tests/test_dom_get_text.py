@@ -5,11 +5,11 @@ from zipfile import ZipFile
 
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._flat_opc import encode
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.dom import DocxDocument
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln._flat_opc import encode
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.dom import DocxDocument
 from tests.test_comment_threads import owned_import_thread
 from tests.test_conversion_comments import W, owned_comment, package
 
@@ -60,7 +60,7 @@ def test_last_paragraph_section_and_cell_terminators():
 @pytest.mark.parametrize('flat', [False, True])
 def test_inline_comment_content_edits_and_getter_is_not_raw_text(flat):
     document = DocxDocument(BytesIO(owned_comment()))
-    comment = document.get_child_nodes(aw.NodeType.COMMENT, True)[0]
+    comment = document.get_child_nodes(dk.NodeType.COMMENT, True)[0]
     assert comment.get_text() == '\x05OWNED COMMENT α\r'
     assert 'OWNED COMMENT α' not in document.body.paragraphs[0].text
     comment.paragraphs[0].runs[-1].text = 'OWNED EDITED'
@@ -172,7 +172,7 @@ def test_getter_preserves_bound_nodes_and_package_payloads(unknown):
     raw = controlled_document('<w:customUnknown><w:r><w:t>SENSITIVE BODY</w:t></w:r></w:customUnknown>') if unknown else owned_comment()
     document = DocxDocument(BytesIO(raw))
     # Existing annotation binding normalizes logical nodes; text reading adds no mutation.
-    nodes = tuple(document.get_child_nodes(aw.NodeType.ANY, True))
+    nodes = tuple(document.get_child_nodes(dk.NodeType.ANY, True))
     before = tuple((node.part_name, node.node_type, node.xml) for node in nodes)
     payloads = dict(document._package._payloads)
     dirty = set(document._package._dirty)

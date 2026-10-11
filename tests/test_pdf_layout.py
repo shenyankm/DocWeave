@@ -5,11 +5,11 @@ import pytest
 from fpdf import FPDF
 from fpdf.enums import MethodReturnValue
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.font import register_fonts
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.font import register_fonts
 
 
 @pytest.mark.parametrize("alignment,highlight", [(0, True), (1, False), (2, False)])
@@ -40,7 +40,7 @@ def test_long_chinese_runs_wrap_inside_margins(tmp_path, alignment, highlight):
     docx = tmp_path / "long.docx"
     LdmDocxWriter().write(model, docx)
     output = tmp_path / "long.pdf"
-    aw.Document(docx).save(output)
+    dk.Document(docx).save(output)
     with pymupdf.open(output) as pdf:
         actual = "".join(page.get_text() for page in pdf).replace("\n", "").replace(" ", "")
         assert actual == text

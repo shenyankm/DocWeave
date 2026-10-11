@@ -4,10 +4,10 @@ from zipfile import ZipFile
 from xml.etree import ElementTree as E
 
 import pytest
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss._flat_opc import encode
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln._flat_opc import encode
 
 R = 'http://schemas.openxmlformats.org/package/2006/relationships'
 CT = 'http://schemas.openxmlformats.org/package/2006/content-types'
@@ -59,7 +59,7 @@ def test_only_related_settings_change_default_tabs(tmp_path, mode, flat):
     raw = settings_package(mode)
     raw = encode(raw) if flat else raw
     (tmp_path / (mode + ('.xml' if flat else '.docx'))).write_bytes(raw)
-    doc = aw.Document(BytesIO(raw))
+    doc = dk.Document(BytesIO(raw))
     assert doc.get_text().strip() == 'Owned settings'
     assert doc.light_document_model.default_tab_stop == (61.7 if mode in {'external', 'internal', 'custom'} else 36)
     assert doc.light_document_model.compatibility_mode == (15 if mode in {'external', 'internal', 'custom'} else 12)
@@ -70,4 +70,4 @@ def test_only_related_settings_change_default_tabs(tmp_path, mode, flat):
 def test_malformed_settings_remains_rejected(mode, malformed):
     from defusedxml.common import DefusedXmlException
     with pytest.raises((E.ParseError, DefusedXmlException)):
-        aw.Document(BytesIO(settings_package(mode, malformed=malformed)))
+        dk.Document(BytesIO(settings_package(mode, malformed=malformed)))

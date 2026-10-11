@@ -12,7 +12,7 @@ local `aspose` namespace may shadow the commercial package):
 
 ```python
 from zipfile import ZipFile, ZIP_DEFLATED
-import aspose.words as aw
+import aspose.words as dk
 
 source = "/absolute/path/to/docs/benchmarks/corpus/commercial-26.9-dom.docx"
 names = ("FLAT_OPC", "FLAT_OPC_MACRO_ENABLED", "FLAT_OPC_TEMPLATE",
@@ -20,7 +20,7 @@ names = ("FLAT_OPC", "FLAT_OPC_MACRO_ENABLED", "FLAT_OPC_TEMPLATE",
 with ZipFile("flat-opc-26.9.zip", "w", compression=ZIP_DEFLATED) as archive:
     for name in names:
         output = "/tmp/" + name + ".xml"
-        aw.Document(source).save(output, getattr(aw.SaveFormat, name))
+        dk.Document(source).save(output, getattr(dk.SaveFormat, name))
         archive.write(output, name + ".xml")
 ```
 

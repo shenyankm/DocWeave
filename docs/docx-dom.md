@@ -1,6 +1,6 @@
 # 原包保真的 DOCX DOM（资源关系与受限水平合并）
 
-新增入口 `aspose.words_foss.DocxDocument`，与现有 `Document → LDM → writer` 转换路径并行。
+新增入口 `dockiln.DocxDocument`，与现有 `Document → LDM → writer` 转换路径并行。
 它以原始 OOXML 为唯一权威状态，节点是 XML 的类型化视图，不维护另一份同步模型。
 **这是可逐步扩展的基础 DOM，不是完整 Aspose.Words DOM，也不是 Word 排版引擎。**
 
@@ -32,7 +32,7 @@
 ## 单文本节点字面替换
 
 ```python
-from aspose.words_foss.docx_edit import replace_text
+from dockiln.docx_edit import replace_text
 
 count = replace_text("original.docx", "edited.docx", {"客户公司": "新的客户公司"})
 ```
@@ -47,9 +47,9 @@ count = replace_text("original.docx", "edited.docx", {"客户公司": "新的客
 ## 读取、格式与跨 Run 替换
 
 ```python
-import aspose.words_foss as aw
+import dockiln as dk
 
-editable = aw.DocxDocument("original.docx")
+editable = dk.DocxDocument("original.docx")
 paragraph = editable.body.paragraphs[0]
 
 print(paragraph.text)
@@ -59,7 +59,7 @@ print(paragraph.xml)  # 只读 XML 快照，不暴露可绕过修改检查的公
 count = paragraph.replace_text("客户公司", "新的客户公司")
 if count:
     paragraph.runs[0].font.bold = True
-paragraph.paragraph_format.alignment = "center"  # OOXML 值，不是 aw.ParagraphAlignment 枚举
+paragraph.paragraph_format.alignment = "center"  # OOXML 值，不是 dk.ParagraphAlignment 枚举
 
 editable.save("edited.docx")
 raw_bytes = editable.to_bytes()
@@ -311,7 +311,7 @@ cell.append_child(editable.create_table(1, 1))  # 插在单元格最后一个段
 for node in cell.child_nodes:
     print(node.node_type, node.part_name)
 
-runs = editable.get_child_nodes(aw.NodeType.RUN, deep=True)
+runs = editable.get_child_nodes(dk.NodeType.RUN, deep=True)
 ```
 
 - `child_nodes` 是有序 tuple；`paragraphs`、`runs`、`tables`、`rows`、`cells` 是过滤视图。
@@ -420,21 +420,21 @@ ldm_snapshot = editable.to_light_document()
 `character_unit_*_indent` 字段中；正文、表格、默认页眉页脚、样式和编号的受测路径可写回
 DOCX/Flat OPC，尚不用于 PDF 点值和字号换算。快照可用于现有 Markdown/PDF writer；
 **修改快照不会反写 DOM**，并且旧 reader 的内容损失警告和限制仍然适用。
-也可以将 `editable.to_bytes()` 交给 `aw.Document(BytesIO(...))` 继续现有转换。
+也可以将 `editable.to_bytes()` 交给 `dk.Document(BytesIO(...))` 继续现有转换。
 
-现有 `aw.Document`、`Document.light_document_model`、`Document.save()` 以及
+现有 `dk.Document`、`Document.light_document_model`、`Document.save()` 以及
 内容顺序、提取和结构化输出契约见 [项目 README](../README.zh-CN.md#结构化内容与诊断)。
 不能把转换路径的保存当作原包保真保存。
 
 ## 保存契约与安全边界
 
 `DocxDocument.body.tables[0].rows[0].row_format` 提供活的 `height`（pt）、
-`height_rule`（`aw.HeightRule`）和 `allow_break_across_pages`（bool）。读取包含
+`height_rule`（`dk.HeightRule`）和 `allow_break_across_pages`（bool）。读取包含
 表格样式及 basedOn 的直属行属性；条件区域的行属性保留，但不参与这三个属性的继承。
 赋值使用直属行格式的本地值，而非 getter 的有效继承值：未设直属高度时，
 设置非零 height 采用 AtLeast；单独设置 height_rule 使用本地高度 0。
 赋值写入直属格式，保留原包其他资源；转换快照和 JSON 区分直属与继承来源。
-这是 canonical DOM 入口；旧 `aw.Document` 的 LDM 行格式仍接受内部整数规则，
+这是 canonical DOM 入口；旧 `dk.Document` 的 LDM 行格式仍接受内部整数规则，
 不能据此认为旧入口或整个 RowFormat 已实现商业 API 类型契约。
 
 数值按有符号 twip 量化。直属正行高大于 1584pt 时，保存投影限制到 1584pt，

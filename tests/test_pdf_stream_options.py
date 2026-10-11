@@ -6,15 +6,15 @@ import warnings
 from pypdf import PdfReader
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss.pdf_writer import PdfUnsupportedOptionWarning
-from aspose.words_foss.saving import PdfPageMode, PdfSaveOptions, PdfTextCompression
+from ._word_fixtures import word_document
+
+import dockiln as dk
+from dockiln.writers.pdf import PdfUnsupportedOptionWarning
+from dockiln.saving import PdfPageMode, PdfSaveOptions, PdfTextCompression
 
 
 def document():
-    options = aw.LoadOptions()
-    options.load_format = aw.LoadFormat.TEXT
-    return aw.Document(BytesIO(("中文 PDF compression test. " * 250).encode()), options)
+    return word_document("中文 PDF compression test. " * 250)
 
 
 def test_compression_changes_streams_without_changing_content():

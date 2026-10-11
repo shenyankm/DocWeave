@@ -39,10 +39,10 @@ def main():
                 rows.append({**row, 'getter': observed(doc, True), 'theme_color': int(font.theme_color),
                              'tint_and_shade': font.tint_and_shade})
     else:
-        from aspose.words_foss import Document, SaveFormat
-        from aspose.words_foss import light_document_model as ldm
-        from aspose.words_foss.docx_writer import LdmDocxWriter
-        from aspose.words_foss.saving import OoxmlSaveOptions
+        from dockiln import Document, SaveFormat
+        from dockiln import light_document_model as ldm
+        from dockiln.writers.docx import LdmDocxWriter
+        from dockiln.saving import OoxmlSaveOptions
         inputs = runpy.run_path(str(Path(__file__).with_name('font_theme_colors.py')))['inputs']
         with ZipFile(args.corpus) as sources, ZipFile(args.outputs, 'w', ZIP_DEFLATED) as outputs:
             for name, _, _ in inputs():
@@ -56,7 +56,7 @@ def main():
                         rows.append({'input': name, 'json_roundtrip': phase, 'format': label, 'output': output,
                                      'output_sha256': hashlib.sha256(raw).hexdigest()})
     assert len(rows) == 128
-    args.report.write_text(json.dumps({'version': version('aspose-words' if native else 'aspose-words-foss-enhanced'),
+    args.report.write_text(json.dumps({'version': version('aspose-words' if native else 'dockiln'),
                                       'python': platform.python_version(), 'platform': platform.platform(),
                                       'licensed': False if native else None, 'records': rows,
                                       'full_Font_acceptance': False, 'rendering_acceptance': False}, indent=2) + '\n')

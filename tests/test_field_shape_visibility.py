@@ -13,9 +13,11 @@ from docx.shared import Pt
 from PIL import Image
 from pypdf import PdfReader
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.model.wrap_type import WrapType
+from ._word_fixtures import word_document
+
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.model.wrap_type import WrapType
 
 
 def image_shape(color):
@@ -41,7 +43,7 @@ def document(location, shape_kind, instructions=True):
         children = [ldm.FieldStart(), ldm.Run(text="SECRET_CODE"), secret,
                     ldm.FieldSeparator(), *children, ldm.FieldEnd()]
     para = ldm.Paragraph(children=children)
-    doc = aw.Document(BytesIO(b"BODY"), aw.MarkdownLoadOptions())
+    doc = word_document(b"BODY")
     if location == "body":
         doc.sections[0].body.children = [para]
     elif location == "table":
@@ -54,12 +56,12 @@ def document(location, shape_kind, instructions=True):
 
 def render(doc, options):
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore", aw.ContentLossWarning)
+        warnings.simplefilter("ignore", dk.ContentLossWarning)
         return doc.to_bytes(options)
 
 
 def test_instruction_image_does_not_change_page_break_classification():
-    from aspose.words_foss.pdf_writer.text import is_pure_page_break
+    from dockiln.writers.pdf.text import is_pure_page_break
 
     para = ldm.Paragraph(children=[ldm.FieldStart(), image_shape("red"),
         ldm.FieldSeparator(), ldm.Run(text="\f"), ldm.FieldEnd()])
@@ -85,30 +87,6 @@ def test_instruction_only_table_paragraph_matches_empty_control(format):
                 assert page.get_pixmap().samples == reference.get_pixmap().samples
 
 
-@pytest.mark.parametrize("location", ["body", "table", "header", "footer"])
-@pytest.mark.parametrize("external", [False, True])
-def test_markdown_exports_only_result_images(tmp_path, location, external):
-    doc, secret, visible = document(location, "inline")
-    before = doc.light_document_model.model_dump()
-    options = aw.saving.MarkdownSaveOptions()
-    if external:
-        options.images_folder = str(tmp_path / "images")
-        path = tmp_path / "result.md"
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", aw.ContentLossWarning)
-            doc.save(path, options)
-        result = path.read_text()
-    else:
-        result = render(doc, options).decode()
-    assert "SECRET" not in result
-    if external:
-        images = list((tmp_path / "images").iterdir())
-        assert len(images) == 1
-        assert images[0].read_bytes() == visible.image_data.image_bytes
-    else:
-        assert base64.b64encode(secret.image_data.image_bytes).decode() not in result
-        assert base64.b64encode(visible.image_data.image_bytes).decode() in result
-    assert doc.light_document_model.model_dump() == before
 
 
 @pytest.mark.parametrize("location", ["body", "table", "header", "footer"])
@@ -139,7 +117,7 @@ def test_real_docx_field_images(location, format):
     marker("end")
     source = BytesIO()
     native.save(source)
-    doc = aw.Document(BytesIO(source.getvalue()))
+    doc = dk.Document(BytesIO(source.getvalue()))
     result = render(doc, format)
     if format == "md":
         assert base64.b64encode(secret.image_data.image_bytes) not in result

@@ -13,10 +13,10 @@ from docx.shared import Pt
 import pymupdf
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 from .test_pdf_justification import justified_model, lines, WORDS
 
 
@@ -46,7 +46,7 @@ def source_docx(value=None, *, style="Code", trailing=False):
 @pytest.mark.parametrize("style", ["Normal", "Code"])
 @pytest.mark.parametrize("shaping", [False, True])
 def test_public_docx_settings_render_and_round_trip(value, disabled, style, shaping):
-    source = aw.Document(BytesIO(source_docx(value, style=style)))
+    source = dk.Document(BytesIO(source_docx(value, style=style)))
     assert source.light_document_model.do_not_expand_shift_return is disabled
     snapshot = source.light_document_model.model_dump()
     options = PdfSaveOptions()
@@ -66,12 +66,12 @@ def test_public_docx_settings_render_and_round_trip(value, disabled, style, shap
             assert [word[4] for word in words] == ["SHORT", "LINE"] + WORDS.split()
 
     check(source)
-    raw = source.to_bytes(aw.saving.OoxmlSaveOptions())
+    raw = source.to_bytes(dk.saving.OoxmlSaveOptions())
     with ZipFile(BytesIO(raw)) as archive:
         settings = ET.fromstring(archive.read("word/settings.xml"))
         flags = settings.findall(qn("w:compat") + "/" + qn("w:doNotExpandShiftReturn"))
         assert len(flags) == int(disabled)
-    loaded = aw.Document(BytesIO(raw))
+    loaded = dk.Document(BytesIO(raw))
     assert loaded.light_document_model.do_not_expand_shift_return is disabled
     check(loaded)
     assert source.light_document_model.model_dump() == snapshot
@@ -80,7 +80,7 @@ def test_public_docx_settings_render_and_round_trip(value, disabled, style, shap
 @pytest.mark.parametrize("disabled", [False, True])
 @pytest.mark.parametrize("shaping", [False, True])
 def test_trailing_manual_break_still_follows_setting(disabled, shaping):
-    source = aw.Document(BytesIO(source_docx("on" if disabled else None, trailing=True)))
+    source = dk.Document(BytesIO(source_docx("on" if disabled else None, trailing=True)))
     options = PdfSaveOptions()
     options.text_shaping = shaping
     with pymupdf.open(stream=source.to_bytes(options), filetype="pdf") as pdf:
@@ -107,7 +107,7 @@ def test_absent_settings_part_uses_word_default():
         for name in source.namelist():
             if name != "word/settings.xml":
                 target.writestr(name, source.read(name))
-    assert aw.Document(BytesIO(output.getvalue())).light_document_model.do_not_expand_shift_return is False
+    assert dk.Document(BytesIO(output.getvalue())).light_document_model.do_not_expand_shift_return is False
 
 
 def test_off_disables_inherited_run_and_paragraph_flags():
@@ -123,6 +123,6 @@ def test_off_disables_inherited_run_and_paragraph_flags():
         parent.append(flag)
     raw = BytesIO()
     document.save(raw)
-    loaded = aw.Document(BytesIO(raw.getvalue())).light_document_model.sections[0].body.paragraphs[0]
+    loaded = dk.Document(BytesIO(raw.getvalue())).light_document_model.sections[0].body.paragraphs[0]
     assert loaded.runs[0].font.bold is False
     assert loaded.paragraph_format.keep_with_next is False

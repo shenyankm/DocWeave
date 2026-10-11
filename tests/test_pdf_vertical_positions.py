@@ -5,11 +5,11 @@ import pytest
 from fpdf import FPDF
 from fpdf.enums import CharVPos
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.font import apply_run_font, register_fonts
-from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.font import apply_run_font, register_fonts
+from dockiln.writers.pdf.run_renderer import RunRenderer
+from dockiln.saving import PdfSaveOptions
 
 
 def script_model(location="body", *, widow=True, size=20):
@@ -129,8 +129,8 @@ def test_superscript_precedence_matches_docx_writer():
 def test_public_docx_script_flags_reach_pdf(tmp_path, location, shaping):
     from docx import Document as Docx
 
-    from aspose.words_foss import Document
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln import Document
+    from dockiln.writers.docx import LdmDocxWriter
 
     model, _ = script_model(location)
     path = tmp_path / "scripts.docx"
@@ -175,7 +175,7 @@ def test_wrapped_scripts_keep_all_glyphs_inside_page_regions(location, columns, 
 
 
 def test_unimplemented_rotated_script_layout_is_reported():
-    from aspose.words_foss.pdf_writer.diagnostics import PdfContentLossWarning
+    from dockiln.writers.pdf.diagnostics import PdfContentLossWarning
 
     model, _ = script_model("table")
     model.sections[0].body.children[0].rows[0].cells[0].cell_format.orientation = 1

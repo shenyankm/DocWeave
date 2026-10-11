@@ -49,7 +49,7 @@ def main():
     if args.output is None or args.outputs is None:
         parser.error('--output and --outputs are required')
     if args.action == 'current':
-        from aspose.words_foss import Document
+        from dockiln import Document
 
         report = json.loads(args.output.read_text())
         records = []
@@ -60,13 +60,13 @@ def main():
                 raw = Document(BytesIO(source.read(row['input']))).to_bytes('docx')
                 outputs.writestr(ZipInfo(row['input'], (2020, 1, 1, 0, 0, 0)), raw, compress_type=ZIP_DEFLATED)
                 records.append({'input': row['input'], 'output_sha256': hashlib.sha256(raw).hexdigest()})
-        report['docweave_roundtrip'] = {'version': version('aspose-words-foss-enhanced'),
+        report['dockiln_roundtrip'] = {'version': version('dockiln'),
                                        'python': platform.python_version(), 'platform': platform.platform(),
                                        'outputs': 'corpus/' + args.outputs.name,
                                        'outputs_sha256': hashlib.sha256(args.outputs.read_bytes()).hexdigest(),
                                        'records': records, 'full_acceptance': False}
         args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
-        print(json.dumps({'docweave_outputs': len(records)}))
+        print(json.dumps({'dockiln_outputs': len(records)}))
         return
     import aspose.words as aw
 
@@ -80,11 +80,11 @@ def main():
         report = json.loads(args.output.read_text())
         observed = []
         with ZipFile(args.outputs) as archive:
-            for row in report['docweave_roundtrip']['records']:
+            for row in report['dockiln_roundtrip']['records']:
                 raw = archive.read(row['input'])
                 assert hashlib.sha256(raw).hexdigest() == row['output_sha256']
                 observed.append({'input': row['input'], **snapshot(aw.Document(BytesIO(raw)))})
-        report['docweave_roundtrip']['native_reread'] = {
+        report['dockiln_roundtrip']['native_reread'] = {
             'version': version('aspose-words'), 'python': platform.python_version(),
             'platform': platform.platform(), 'licensed': False, 'records': observed}
         args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')

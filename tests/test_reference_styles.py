@@ -9,11 +9,13 @@ from docx.enum.style import WD_STYLE_TYPE
 from docx.shared import Pt, RGBColor
 import pytest
 
-import aspose.words_foss as aw
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.docx_writer.runs import color_to_hex
-from aspose.words_foss.docx_writer.styles_part import apply_reference_styles, render_styles_xml
+from ._word_fixtures import word_document
+
+import dockiln as dk
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.docx.runs import color_to_hex
+from dockiln.writers.docx.styles_part import apply_reference_styles, render_styles_xml
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 
@@ -32,12 +34,17 @@ def reference(tmp_path):
     return path
 
 
-def test_reference_styles_affect_markdown_heading_and_keep_source_model(tmp_path):
+def test_reference_styles_affect_word_heading_and_keep_source_model(tmp_path):
     path = reference(tmp_path)
     before = path.read_bytes()
-    doc = aw.Document(BytesIO(b'# Report\n\nBody\n'), aw.MarkdownLoadOptions())
+    source = Document()
+    source.add_heading("Report", 1)
+    source.add_paragraph("Body")
+    stream = BytesIO()
+    source.save(stream)
+    doc = dk.Document(BytesIO(stream.getvalue()))
     original = doc.light_document_model.model_dump()
-    opts = aw.saving.OoxmlSaveOptions()
+    opts = dk.saving.OoxmlSaveOptions()
     opts.reference_docx = path
     raw = doc.to_bytes(opts)
     independent = Document(BytesIO(raw))
@@ -48,7 +55,7 @@ def test_reference_styles_affect_markdown_heading_and_keep_source_model(tmp_path
     assert 'REFERENCE BODY' not in '\n'.join(p.text for p in independent.paragraphs)
     assert independent.paragraphs[0].style.name == 'Heading 1'
     # Verify effective formatting with another read, not just a style row in styles.xml.
-    reread = aw.Document(BytesIO(raw))
+    reread = dk.Document(BytesIO(raw))
     assert reread.light_document_model.sections[0].body.paragraphs[0].runs[0].font.size == 30
     assert doc.light_document_model.model_dump() == original
     assert path.read_bytes() == before
@@ -61,10 +68,10 @@ def test_direct_formatting_still_overrides_reference_and_links_survive(tmp_path)
     source.add_paragraph('Body')
     stream = BytesIO()
     source.save(stream)
-    retained = aw.DocxDocument(BytesIO(stream.getvalue()))
+    retained = dk.DocxDocument(BytesIO(stream.getvalue()))
     retained.body.paragraphs[1].add_hyperlink('Link', 'https://example.com')
-    doc = aw.Document(BytesIO(retained.to_bytes()))
-    opts = aw.saving.OoxmlSaveOptions()
+    doc = dk.Document(BytesIO(retained.to_bytes()))
+    opts = dk.saving.OoxmlSaveOptions()
     opts.reference_docx = reference(tmp_path)
     raw = doc.to_bytes(opts)
     independent = Document(BytesIO(raw))
@@ -104,10 +111,10 @@ def test_ambiguous_reference_names_are_rejected_before_normalization():
 def test_invalid_reference_does_not_replace_output(tmp_path):
     target = tmp_path / 'existing.docx'
     target.write_bytes(b'unchanged')
-    opts = aw.saving.OoxmlSaveOptions()
+    opts = dk.saving.OoxmlSaveOptions()
     opts.reference_docx = tmp_path / 'missing.docx'
     with pytest.raises(FileNotFoundError):
-        aw.Document(BytesIO(b'Body')).save(target, opts)
+        dk.Document(BytesIO(b'Body')).save(target, opts)
     assert target.read_bytes() == b'unchanged'
     opts.reference_docx = b'not a path'
     with pytest.raises(ValueError, match='path'):
@@ -138,9 +145,9 @@ def test_reference_character_chain_is_not_flattened_to_direct_format(tmp_path, l
     base.font.color.rgb = RGBColor.from_string('FF0000')
     reference_path = tmp_path / 'character-reference.docx'
     source.save(reference_path)
-    opts = aw.saving.OoxmlSaveOptions()
+    opts = dk.saving.OoxmlSaveOptions()
     opts.reference_docx = reference_path
-    doc = aw.Document(BytesIO(stream.getvalue()))
+    doc = dk.Document(BytesIO(stream.getvalue()))
     fonts = []
     def collect_fonts(node):
         if isinstance(node, ldm.Paragraph):
@@ -173,7 +180,7 @@ def test_reference_character_chain_is_not_flattened_to_direct_format(tmp_path, l
     assert actual.runs[0].style.base_style.font.size.pt == 24
     assert str(actual.runs[0].style.base_style.font.color.rgb) == 'FF0000'
     fonts.clear()
-    for section in aw.Document(BytesIO(raw)).light_document_model.sections:
+    for section in dk.Document(BytesIO(raw)).light_document_model.sections:
         collect_fonts(section)
     assert [font.size for font in fonts] == [24, 21]
     assert all(color_to_hex(font.color) == 'FF0000' for font in fonts)
@@ -195,7 +202,7 @@ def test_character_inheritance_reaches_pdf_and_direct_overrides_win():
     direct.font.size = Pt(21)
     stream = BytesIO()
     source.save(stream)
-    doc = aw.Document(BytesIO(stream.getvalue()))
+    doc = dk.Document(BytesIO(stream.getvalue()))
     with fitz.open(stream=doc.to_bytes('pdf'), filetype='pdf') as pdf:
         spans = [span for page in pdf for block in page.get_text('dict')['blocks']
                  for line in block.get('lines', []) for span in line['spans']]

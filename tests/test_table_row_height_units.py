@@ -3,10 +3,10 @@
 import pymupdf
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.constants import POST_TABLE_SPACING_MM, PT_TO_MM
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.constants import POST_TABLE_SPACING_MM, PT_TO_MM
+from dockiln.saving import PdfSaveOptions
 
 
 def render_table(size, *, padding=0, orientation=0, text="SMALL", height=0):

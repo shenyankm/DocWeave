@@ -6,9 +6,9 @@ import pymupdf
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 from tests.test_pdf_structure_pages import assert_page_tags
 
 
@@ -132,11 +132,11 @@ def test_cell_list_markers_hierarchy_and_page_mapping(long, explicit, shaping):
 
 
 def test_public_docx_cell_numbering_reaches_pdf():
-    import aspose.words_foss as aw
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    import dockiln as dk
+    from dockiln.writers.docx import LdmDocxWriter
 
     original = cell_list_model(explicit=False)
-    doc = aw.Document(BytesIO(LdmDocxWriter().write_to_bytes(original)))
+    doc = dk.Document(BytesIO(LdmDocxWriter().write_to_bytes(original)))
     options = PdfSaveOptions()
     options.export_document_structure = True
     raw = doc.to_bytes(options)
@@ -311,7 +311,7 @@ def test_cell_list_failure_preserves_output_and_recovers(
     tmp_path, monkeypatch, failure
 ):
     from fpdf import FPDF
-    from aspose.words_foss.pdf_writer.run_renderer import RunRenderer
+    from dockiln.writers.pdf.run_renderer import RunRenderer
 
     options = PdfSaveOptions()
     options.export_document_structure = True

@@ -11,10 +11,10 @@ const features = [
 
 export default function Home() {
   return (
-    <Layout title="Python 文档处理" description="DocWeave：独立维护的 Python 文档工具库，用于转换、中文 PDF、结构化提取与 DOCX 编辑。">
+    <Layout title="Python 文档处理" description="DocKiln：独立维护的 Python 文档工具库，用于转换、中文 PDF、结构化提取与 DOCX 编辑。">
       <header className="hero hero--primary">
         <div className="container text--center">
-          <h1 className="hero__title">DocWeave</h1>
+          <h1 className="hero__title">DocKiln</h1>
           <p className="hero__subtitle">让文档进入你的 Python 工作流</p>
           <p>转换、提取、编辑 · Python 3.10–3.14 · 无需 Microsoft Word</p>
           <Link className="button button--secondary button--lg" to="/docs/enhanced-conversion">阅读文档 →</Link>
@@ -29,17 +29,17 @@ export default function Home() {
         <section className="row margin-bottom--xl">
           <div className="col col--5">
             <h2>从一次转换开始</h2>
-            <p>在干净的虚拟环境中安装。发行包名为 <code>aspose-words-foss-enhanced</code>，导入名为 <code>aspose.words_foss</code>。</p>
+            <p>在干净的虚拟环境中安装。发行包名为 <code>dockiln</code>，导入名为 <code>dockiln</code>。</p>
             <p>需要可复现部署时，将 <code>@dev</code> 替换为已验证的完整提交哈希。请勿与共享导入模块的 <code>aspose-words-foss</code> 同环境安装。</p>
-            <Link to="https://github.com/shenyankm/DocWeave/blob/dev/README.zh-CN.md#安装">完整安装与使用说明 ↗</Link>
+            <Link to="https://github.com/shenyankm/DocKiln/blob/dev/README.zh-CN.md#安装">完整安装与使用说明 ↗</Link>
           </div>
           <div className="col col--7">
-            <CodeBlock language="bash">{'python -m pip install "git+https://github.com/shenyankm/DocWeave.git@dev"'}</CodeBlock>
-            <CodeBlock language="python">{`import aspose.words_foss as aw
+            <CodeBlock language="bash">{'python -m pip install "git+https://github.com/shenyankm/DocKiln.git@dev"'}</CodeBlock>
+            <CodeBlock language="python">{`import dockiln as dk
 
-doc = aw.Document("report.docx")
-doc.save("report.pdf", aw.SaveFormat.PDF)
-doc.save("report.md", aw.SaveFormat.MARKDOWN)
+doc = dk.Document("report.docx")
+doc.save("report.pdf", dk.SaveFormat.PDF)
+doc.save("report.md", dk.SaveFormat.MARKDOWN)
 data = doc.to_dict()`}</CodeBlock>
           </div>
         </section>

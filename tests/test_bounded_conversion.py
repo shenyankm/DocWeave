@@ -9,8 +9,8 @@ from pathlib import Path
 import pytest
 from pypdf import PdfReader
 
-from aspose.words_foss import _process, libreoffice
-from aspose.words_foss._process import run_process
+from dockiln import _process, libreoffice
+from dockiln._process import run_process
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "tests/data/input/chinese_pdf.docx"
@@ -80,7 +80,7 @@ def test_libreoffice_failure_preserves_output(tmp_path, monkeypatch, failure):
 def test_bounded_cli_converts_chinese(tmp_path):
     output = tmp_path / "report.pdf"
     result = subprocess.run(
-        [sys.executable, "-m", "aspose.words_foss.convert", str(SOURCE), str(output), "--strict"],
+        [sys.executable, "-m", "dockiln.convert", str(SOURCE), str(output), "--strict"],
         capture_output=True,
         text=True,
         timeout=20,
@@ -93,8 +93,8 @@ def test_bounded_cli_converts_chinese(tmp_path):
 @pytest.mark.skipif(os.name != "posix", reason="Bounded CLI requires process groups")
 @pytest.mark.parametrize("mode", ["strict", "timeout", "memory"])
 def test_bounded_cli_failure_preserves_output(tmp_path, mode):
-    source = tmp_path / "source.txt"
-    source.write_text("中文 " + chr(0x1FAE0))
+    source = tmp_path / "source.docx"
+    source.write_bytes(word_bytes("中文 " + chr(0x1FAE0)))
     output = tmp_path / "report.pdf"
     output.write_bytes(b"existing output")
     options = {
@@ -103,20 +103,20 @@ def test_bounded_cli_failure_preserves_output(tmp_path, mode):
         "memory": ["--memory-mb", "1"],
     }[mode]
     result = subprocess.run(
-        [sys.executable, "-m", "aspose.words_foss.convert", str(source), str(output), *options],
+        [sys.executable, "-m", "dockiln.convert", str(source), str(output), *options],
         capture_output=True,
         text=True,
         timeout=20,
     )
     assert result.returncode != 0
     assert output.read_bytes() == b"existing output"
-    assert sorted(p.name for p in tmp_path.iterdir()) == ["report.pdf", "source.txt"]
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["report.pdf", "source.docx"]
 
 
 @pytest.mark.skipif(os.name != "posix", reason="Bounded CLI requires process groups")
 def test_strict_cli_rejects_known_table_write_loss(tmp_path):
-    from aspose.words_foss import light_document_model as ldm
-    from aspose.words_foss.docx_writer import LdmDocxWriter
+    from dockiln import light_document_model as ldm
+    from dockiln.writers.docx import LdmDocxWriter
     paragraph = ldm.Paragraph(children=[ldm.Run(text="中文" * 200)])
     grid = ldm.Table(rows=[ldm.Row(cells=[ldm.Cell(paragraphs=[paragraph])],
                                  row_format=ldm.RowFormat(allow_break_across_pages=False))])
@@ -126,7 +126,7 @@ def test_strict_cli_rejects_known_table_write_loss(tmp_path):
     LdmDocxWriter().write(model, source)
     output = tmp_path / "existing.pdf"
     output.write_bytes(b"old document")
-    run = subprocess.run([sys.executable, "-m", "aspose.words_foss.convert", str(source), str(output), "--strict"],
+    run = subprocess.run([sys.executable, "-m", "dockiln.convert", str(source), str(output), "--strict"],
                          capture_output=True, text=True, timeout=20)
     assert run.returncode != 0 and "cantSplit" in run.stderr
     assert output.read_bytes() == b"old document"

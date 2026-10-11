@@ -1,8 +1,8 @@
 """Owned regressions for External metadata referencing package members."""
 from io import BytesIO
 import pytest
-from aspose.words_foss.dom import DocxDocument
-from aspose.words_foss.dom.comment_utc import ROLES,elements,REL
+from dockiln.dom import DocxDocument
+from dockiln.dom.comment_utc import ROLES,elements,REL
 from .test_dom_comment_metadata_relationships import conflicting
 from .test_dom_comment_metadata import comment
 
@@ -38,7 +38,7 @@ def test_relative_external_metadata_preserves_selected_date(tmp_path, role, flat
                                   'file:///outside.xml', 'comments.xml#fragment'])
 def test_external_invalid_target_does_not_resolve_outside_package(target):
     from xml.dom.minidom import Document
-    from aspose.words_foss.dom.comment_utc import package_target
+    from dockiln.dom.comment_utc import package_target
     link = Document().createElementNS(REL, 'Relationship')
     link.setAttribute('Target', target)
     link.setAttribute('TargetMode', 'External')

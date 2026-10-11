@@ -7,12 +7,12 @@ import pymupdf
 import pytest
 from pypdf import PdfReader
 
-from aspose.words_foss import Document
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.docx_writer import LdmDocxWriter
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.pdf_writer.constants import PT_TO_MM
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import Document
+from dockiln import light_document_model as ldm
+from dockiln.writers.docx import LdmDocxWriter
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.writers.pdf.constants import PT_TO_MM
+from dockiln.saving import PdfSaveOptions
 
 
 def long_toc_model(columns=1, chinese=False, count=48, page_height=180):

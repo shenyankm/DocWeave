@@ -6,9 +6,9 @@ import pymupdf
 from pypdf import PdfReader
 import pytest
 
-from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss.pdf_writer import LdmPdfWriter
-from aspose.words_foss.saving import PdfSaveOptions
+from dockiln import light_document_model as ldm
+from dockiln.writers.pdf import LdmPdfWriter
+from dockiln.saving import PdfSaveOptions
 from .test_pdf_justification import WORDS, lines
 
 
@@ -255,7 +255,7 @@ def test_public_docx_cell_justification_uses_cell_padding(tmp_path):
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
     from docx.shared import Pt
-    import aspose.words_foss as aw
+    import dockiln as dk
 
     document = Document()
     section = document.sections[0]
@@ -277,7 +277,7 @@ def test_public_docx_cell_justification_uses_cell_padding(tmp_path):
     paragraph.add_run(WORDS).font.size = Pt(12)
     source, target = tmp_path / "cell.docx", tmp_path / "cell.pdf"
     document.save(source)
-    loaded = aw.Document(source)
+    loaded = dk.Document(source)
     assert loaded.light_document_model.compatibility_mode == 14
     assert loaded.light_document_model.sections[0].body.tables[0].rows[0].cells[0].cell_format.left_padding == 8
     loaded.save(target)

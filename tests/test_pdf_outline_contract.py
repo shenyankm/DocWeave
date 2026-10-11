@@ -9,8 +9,10 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from pypdf import PdfReader
 
-import aspose.words_foss as aw
-from aspose.words_foss.pdf_writer import LdmPdfWriter
+from ._word_fixtures import word_document
+
+import dockiln as dk
+from dockiln.writers.pdf import LdmPdfWriter
 
 INVALID = [
     (field, value)
@@ -29,8 +31,8 @@ INVALID = [
 @pytest.mark.parametrize("field,value", INVALID)
 @pytest.mark.parametrize("entry", ["memory", "path", "writer"])
 def test_invalid_outline_options_fail_before_rendering(tmp_path, monkeypatch, field, value, entry):
-    doc = aw.Document(BytesIO(b"Untouched body"), aw.MarkdownLoadOptions())
-    options = aw.saving.PdfSaveOptions()
+    doc = word_document(b"Untouched body")
+    options = dk.saving.PdfSaveOptions()
     writer = LdmPdfWriter(options)
     options.outline_options.create_missing_outline_levels = True
     setattr(options.outline_options, field, value)
@@ -70,7 +72,7 @@ def native_document():
     source = BytesIO()
     doc.save(source)
     source.seek(0)
-    return aw.Document(source)
+    return dk.Document(source)
 
 
 def outline_entries(reader):
@@ -88,7 +90,7 @@ def outline_entries(reader):
 @pytest.mark.parametrize("headings", [6, 10**100])
 def test_valid_real_docx_navigation_keeps_body_and_bounded_depth(fill, headings):
     doc = native_document()
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     oo = options.outline_options
     oo.headings_outline_levels = headings
     oo.default_bookmarks_outline_level = 9
@@ -107,7 +109,7 @@ def test_valid_real_docx_navigation_keeps_body_and_bounded_depth(fill, headings)
 
 
 def test_mapping_mutation_is_validated_on_each_save_and_writer_recovers():
-    options = aw.saving.PdfSaveOptions()
+    options = dk.saving.PdfSaveOptions()
     writer = LdmPdfWriter(options)
     doc = native_document()
     levels = options.outline_options.bookmarks_outline_levels
