@@ -61,6 +61,8 @@ def _sectPr(
     # ``<w:type>`` (section break kind) sits between footnote/endnote
     # properties and ``pgSz`` per CT_SectPr — emitting it after cols
     # produced a schema-invalid order that Aspose / Word would flag.
+    from aspose.words_foss._notes import render_properties
+    children.extend(render_properties(page_setup.note_properties))
     sect_token = _SECTION_START_TOKEN.get(page_setup.section_start)
     if sect_token and page_setup.section_start != 2:
         # ``nextPage`` is the OOXML default — omit to keep the round-trip

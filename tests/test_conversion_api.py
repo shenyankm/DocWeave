@@ -51,7 +51,7 @@ def test_standard_text_rtf_has_actionable_error(tmp_path, mode):
                 path if mode == "reader_path" else BytesIO(raw) if mode == "reader_stream" else raw)
 
 
-@pytest.mark.parametrize("tag", ["footnoteReference", "fldSimple", "ins", "del", "sdt", "oMath"])
+@pytest.mark.parametrize("tag", ["fldSimple", "ins", "del", "sdt", "oMath"])
 def test_load_loss_is_recorded_even_when_warning_is_ignored(tag):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", aw.loading.DocumentLoadWarning)

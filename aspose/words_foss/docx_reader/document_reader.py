@@ -271,6 +271,9 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 parts = self._header_data if kind == "header" else self._footer_data
                 parts.append((root, image_rels))
             else:
+                if kind in {"footnotes", "endnotes"}:
+                    if root.tag != W_NS + kind or any(child.tag != W_NS + kind[:-1] for child in root):
+                        raise ValueError("Invalid note story root or entry")
                 if kind == "comments":
                     if root.tag != W_NS + "comments":
                         raise ValueError("Invalid comments root")
@@ -284,9 +287,17 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                     if kind == "comments":
                         from aspose.words_foss.dom.notes import annotation_id
                         identifier = str(annotation_id(identifier))
-                    elif note.get(W_NS + "type", "normal") != "normal" or identifier.startswith("-"):
-                        continue
-                    if (kind != "comments" and not identifier.isdecimal()) or identifier in identifiers:
+                    else:
+                        from aspose.words_foss._notes import note_id
+                        if not identifier:
+                            raise ValueError("Missing note story identifier")
+                        identifier = note_id(identifier)
+                        if note.get(W_NS + "type", "normal") not in {
+                                "normal", "separator", "continuationSeparator", "continuationNotice"}:
+                            raise ValueError("Invalid note story type")
+                        if any(child.tag not in {W_NS + "p", W_NS + "tbl"} for child in note):
+                            raise NotImplementedError("Unsupported note story container")
+                    if identifier in identifiers:
                         raise ValueError("Invalid or duplicate note ID")
                     identifiers.add(identifier)
                     if kind == "comments" and any(key not in {W_NS + field for field in ("id", "author", "initials", "date")}
@@ -310,10 +321,18 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 self._media[name] = data
 
         unsupported = {W_NS + name for name in (
-            "footnoteReference", "endnoteReference", "object", "altChunk",
+            "object", "altChunk",
             "ins", "del", "moveFrom", "moveTo", "fldSimple", "sdt", "oMath", "oMathPara"
         )}
         roots = [self._document_xml] + [item[3] for item in self._source_story_data]
+        from aspose.words_foss._notes import note_id
+        normal_notes = {(kind, identifier) for kind, _, identifier, root, _ in self._source_story_data
+                        if kind in {"footnote", "endnote"} and root.get(W_NS + "type", "normal") == "normal"}
+        for root in roots:
+            for node in root.iter():
+                if node.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference"}:
+                    if (node.tag[len(W_NS):-9], note_id(node.get(W_NS + "id", ""))) not in normal_notes:
+                        unsupported.add(node.tag)
         found = {node.tag[len(W_NS):] for root in roots for node in root.iter()
                  if node.tag in unsupported}
         if found:

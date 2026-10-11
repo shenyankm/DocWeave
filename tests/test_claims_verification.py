@@ -354,8 +354,7 @@ def test_real_libreoffice_conversion_if_installed(tmp_path):
         for name, data in parts.items():
             archive.writestr(name, data)
     original = source.read_bytes()
-    with pytest.warns(aw.loading.DocumentLoadWarning, match="footnoteReference"):
-        lossy = aw.Document(source)
+    lossy = aw.Document(source)
     assert note not in lossy.get_text()
     convert_to_pdf(source, output)
     assert source.read_bytes() == original

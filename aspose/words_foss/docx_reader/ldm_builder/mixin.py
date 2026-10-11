@@ -43,6 +43,8 @@ class LdmBuilderMixin:
         doc = ldm.Document()
         doc.source_theme = self._source_theme
         doc.source_font_table = self._source_font_table
+        from aspose.words_foss._notes import read_properties
+        doc.note_properties = read_properties(self._settings_xml)
         doc.page_color = self._get_page_color()
         doc.default_tab_stop = self._get_default_tab_stop()
         doc.compatibility_mode = 12
@@ -103,6 +105,8 @@ class LdmBuilderMixin:
         from aspose.words_foss._comments import validate_comments, validate_source_anchors
         validate_comments(doc)
         validate_source_anchors(self, doc)
+        from aspose.words_foss._notes import validate_source_notes
+        validate_source_notes(self, doc)
         from aspose.words_foss._font_sizes import bind_font_sizes
         bind_font_sizes(doc)
         return doc
@@ -217,6 +221,7 @@ class LdmBuilderMixin:
             doc.source_stories.append(ldm.SourceStory(
                 kind=kind, part_name=name, identifier=identifier,
                 references=references, children=children,
+                note_type=root.get(W_NS + "type", "normal") if kind in {"footnote", "endnote"} else "normal",
                 comment_metadata=(ldm.CommentMetadata(author=root.get(W_NS + "author"),
                                   initial=root.get(W_NS + "initials"), date=root.get(W_NS + "date"),
                                   **self._comment_threads.get(identifier, {}))

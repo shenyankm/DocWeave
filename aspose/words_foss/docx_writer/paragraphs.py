@@ -684,7 +684,23 @@ def render_paragraph(
         return sum(1 for seen in field_separator_seen if not seen)
 
     def render_extra(extra) -> Optional[str]:
-        if isinstance(extra, ldm.CommentMarker):
+        if isinstance(extra, (ldm.NoteReference, ldm.NoteMarker)):
+            from aspose.words_foss._notes import note_id
+            attributes = {}
+            if isinstance(extra, ldm.NoteReference):
+                tag = extra.kind + "Reference"
+                attributes["w:id"] = note_id(extra.identifier)
+                if extra.custom_mark_follows is not None:
+                    attributes["w:customMarkFollows"] = "1" if extra.custom_mark_follows else "0"
+                font = extra.font if extra.font is not None else ldm.Font(hidden=extra.hidden)
+            else:
+                tag, font = extra.kind, extra.font
+            content = [render_rPr(font, style_id_map=style_id_map) if font is not None else "", el("w:" + tag, attributes)]
+            if isinstance(extra, ldm.NoteReference) and extra.reference_mark is not None:
+                from aspose.words_foss.docx_writer.xml_utils import escape_text
+                content.append(el("w:t", {"xml:space": "preserve"}, escape_text(extra.reference_mark).replace("\r", "&#13;")))
+            return el("w:r", None, content)
+        elif isinstance(extra, ldm.CommentMarker):
             if extra.kind in {"reference", "annotation"}:
                 return el("w:r", None, [render_rPr(extra.font, style_id_map=style_id_map) if extra.font is not None else "",
                                         el("w:annotationRef") if extra.kind == "annotation" else el("w:commentReference", {"w:id": extra.identifier})])

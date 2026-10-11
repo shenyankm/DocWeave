@@ -84,7 +84,7 @@ def test_missing_note_body_reports_specific_location():
 def test_duplicate_note_ids_fail_before_atomic_publish(tmp_path):
     doc = note_document()
     doc.light_document_model.source_stories.append(next(
-        story for story in doc.light_document_model.source_stories if story.kind == 'footnote'))
+        story for story in doc.light_document_model.source_stories if story.kind == 'footnote' and story.note_type == 'normal'))
     output = tmp_path / 'notes.md'
     output.write_bytes(b'original')
     with pytest.raises(ValueError, match='Duplicate note'):

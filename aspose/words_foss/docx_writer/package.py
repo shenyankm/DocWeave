@@ -483,6 +483,7 @@ def _build_parts(
     hyperlinks: dict[str, str],
     images: list[ImageEntry],
     header_footer_parts: list | None = None,
+    note_parts: list | None = None,
     theme_xml: bytes | None = None,
     source_theme: SourceTheme | None = None,
     source_font_table: SourceFontTable | None = None,
@@ -511,6 +512,7 @@ def _build_parts(
     has_settings = bool(settings_xml)
     all_images = images + header_images + footer_images + list(comment_images or [])
     all_images += [image for part in header_footer_parts or [] for image in part[5]]
+    all_images += [image for part in note_parts or [] for image in part[5]]
     image_extensions = {image.media_path.rsplit(".", 1)[1].lower() for image in all_images}
     text_parts: list[tuple[str, str]] = [
         (
@@ -525,16 +527,18 @@ def _build_parts(
         ),
         ("word/styles.xml", styles_xml),
     ]
-    if header_footer_parts:
+    if header_footer_parts or note_parts:
         types = fromstring(text_parts[0][1])
         index = next(i for i, part in enumerate(text_parts) if part[0] == "word/_rels/document.xml.rels")
         relations = fromstring(text_parts[index][1])
-        for target, rid, role, xml, links, part_images in header_footer_parts:
+        for target, rid, role, xml, links, part_images in [*(header_footer_parts or []), *(note_parts or [])]:
             types.append(ET.Element("{" + CT_URI + "}Override", {
                 "PartName": "/word/" + target,
-                "ContentType": CT_HEADER if role == "header" else CT_FOOTER}))
+                "ContentType": (CT_HEADER if role == "header" else CT_FOOTER if role == "footer" else
+                                "application/vnd.openxmlformats-officedocument.wordprocessingml." + role + "+xml")}))
             relations.append(ET.Element("{" + PKG_RELS_URI + "}Relationship", {
-                "Id": rid, "Type": REL_HEADER if role == "header" else REL_FOOTER,
+                "Id": rid, "Type": (REL_HEADER if role == "header" else REL_FOOTER if role == "footer" else
+                                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/" + role),
                 "Target": target}))
             text_parts.append(("word/" + target, xml))
             if links or part_images:
@@ -643,6 +647,7 @@ def write_docx_package(
     hyperlinks: dict[str, str],
     images: Optional[list[ImageEntry]] = None,
     header_footer_parts: list | None = None,
+    note_parts: list | None = None,
     header_xml: Optional[str] = None,
     header_hyperlinks: Optional[dict[str, str]] = None,
     header_images: Optional[list[ImageEntry]] = None,
@@ -680,6 +685,7 @@ def write_docx_package(
         numbering_xml=numbering_xml,
         settings_xml=settings_xml,
         header_footer_parts=header_footer_parts,
+        note_parts=note_parts,
         header_xml=header_xml,
         header_hyperlinks=header_hyperlinks or {},
         header_images=list(header_images or []),

@@ -976,7 +976,18 @@ class NoteReference(BaseModel):
     kind: Literal["footnote", "endnote"]
     identifier: str
     hidden: bool = False
+    font: Font | None = None
+    custom_mark_follows: bool | None = None
+    reference_mark: str | None = None
 
+    model_config = {"populate_by_name": True}
+
+class NoteMarker(BaseModel):
+    """An ordered note-body reference or separator mark."""
+
+    type: Literal["NoteMarker"] = Field(default="NoteMarker", alias="_type")
+    kind: Literal["footnoteRef", "endnoteRef", "separator", "continuationSeparator"]
+    font: Font | None = None
     model_config = {"populate_by_name": True}
 
 class CommentMarker(BaseModel):
@@ -1003,12 +1014,12 @@ class CommentMetadata(BaseModel):
     date: str | None = None
 
 
-ChildNode = Union[Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference, CommentMarker]
+ChildNode = Union[Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference, NoteMarker, CommentMarker]
 
 _CHILD_NODE_CLASSES: tuple[type, ...] = (
-    Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference, CommentMarker,
+    Run, Shape, FieldStart, FieldSeparator, FieldEnd, BookmarkStart, BookmarkEnd, NoteReference, NoteMarker, CommentMarker,
 )
-_CHILD_NODE_TYPE_TAGS = {"Run", "Shape", "FieldStart", "FieldSeparator", "FieldEnd", "BookmarkStart", "BookmarkEnd", "NoteReference", "CommentMarker"}
+_CHILD_NODE_TYPE_TAGS = {"Run", "Shape", "FieldStart", "FieldSeparator", "FieldEnd", "BookmarkStart", "BookmarkEnd", "NoteReference", "NoteMarker", "CommentMarker"}
 
 
 def _coerce_child_node(item: Any) -> ChildNode:
@@ -1038,6 +1049,8 @@ def _coerce_child_node(item: Any) -> ChildNode:
             return CommentMarker.model_validate(item)
         if t == "NoteReference":
             return NoteReference.model_validate(item)
+        if t == "NoteMarker":
+            return NoteMarker.model_validate(item)
     raise ValueError("Unsupported paragraph child type")
 
 
@@ -1097,6 +1110,16 @@ class Paragraph(BaseModel, NodeCastMixin):
         instance: "Paragraph" = handler(data)
         if children is not None:
             instance._children = children
+            anchors = [child for child in children if isinstance(child, NoteReference)]
+            if anchors:
+                from aspose.words_foss._notes import note_id
+                mirrors = instance.note_references
+                if mirrors and (len(mirrors) != len(anchors) or any(
+                        (old.kind, note_id(old.identifier)) != (anchor.kind, note_id(anchor.identifier)) or
+                        old.model_dump(exclude={"identifier"}) != anchor.model_dump(exclude={"identifier"})
+                        for old, anchor in zip(mirrors, anchors))):
+                    raise ValueError("Note reference mirror disagrees with ordered anchors")
+                instance.note_references = anchors
         return instance
 
     @model_serializer(mode="wrap")
@@ -1454,7 +1477,21 @@ class TextColumns(BaseModel):
 # ─────────────────────────────────────────────
 
 
+class NoteProperty(BaseModel):
+    """A typed WordprocessingML note option, in its source order."""
+
+    kind: Literal["pos", "numFmt", "numStart", "numRestart", "footnote", "endnote"]
+    value: str
+    format: str | None = None
+
+
+class NoteProperties(BaseModel):
+    kind: Literal["footnote", "endnote"]
+    children: list[NoteProperty] = Field(default_factory=list)
+
+
 class PageSetup(BaseModel):
+    note_properties: list[NoteProperties] = Field(default_factory=list)
     paper_size: int = 1
     # ``model.enums.Orientation``; unrelated to ``CellFormat.orientation``,
     # which is a text-direction enum.
@@ -1662,6 +1699,7 @@ class SourceStory(BaseModel):
     part_name: str
     identifier: str | None = None
     comment_metadata: CommentMetadata | None = None
+    note_type: Literal["normal", "separator", "continuationSeparator", "continuationNotice"] = "normal"
     references: list[dict[str, Any]] = Field(default_factory=list)
     children: list[BodyChild] = Field(default_factory=list)
 
@@ -1686,6 +1724,7 @@ class Document(BaseModel):
     lists: list[DocList] = Field(default_factory=list)
     sections: list[Section] = Field(default_factory=list)
     source_stories: list[SourceStory] = Field(default_factory=list)
+    note_properties: list[NoteProperties] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True, "hide_input_in_errors": True}
 

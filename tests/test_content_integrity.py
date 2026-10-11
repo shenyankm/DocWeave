@@ -156,18 +156,19 @@ def test_source_stories_have_note_ids_links_and_section_variant_inheritance():
                for story in result["source_stories"]}
     assert stories["footnote", "7"]["blocks"][0]["text"] == "footnote text"
     assert stories["endnote", "9"]["blocks"][0]["text"] == "endnote text"
-    assert not any(story["identifier"] == "-1" for story in stories.values())
+    assert stories["footnote", "-1"]["note_type"] == "separator"
+    assert stories["footnote", "-1"]["blocks"][0]["text"] == "separator"
     assert result["blocks"][0]["note_references"] == [
         {"kind": "footnote", "identifier": "7"}, {"kind": "endnote", "identifier": "9"}]
     first = stories["header", "word/headers/first.xml"]
-    assert first["references"] == [{"section": 0, "variant": "first", "inherited": False},
-                                    {"section": 1, "variant": "first", "inherited": True}]
+    assert first["references"] == [{"section": 0, "variant": "first", "inherited": False, "kind": "header"},
+                                    {"section": 1, "variant": "first", "inherited": True, "kind": "header"}]
     assert first["blocks"][1]["runs"][0]["link"] == "https://example.com/header"
     assert stories["header", "word/headers/primary.xml"]["references"] == [
-        {"section": 1, "variant": "default", "inherited": False}]
+        {"section": 1, "variant": "default", "inherited": False, "kind": "header"}]
 
 
-@pytest.mark.parametrize("fmt", ["docx", "pdf", "md", "text"])
+@pytest.mark.parametrize("fmt", ["pdf", "md", "text"])
 def test_extraction_is_not_misrepresented_as_note_rendering(fmt):
     doc = load_with_loss(source_package())
     with pytest.warns(aw.ContentLossWarning, match="Footnotes/endnotes"):
@@ -176,7 +177,7 @@ def test_extraction_is_not_misrepresented_as_note_rendering(fmt):
     assert any(item.code == prefix + ".notes_omitted" for item in doc.diagnostics)
 
 
-@pytest.mark.parametrize("fmt", ["docx", "pdf", "md", "text"])
+@pytest.mark.parametrize("fmt", ["pdf", "md", "text"])
 def test_reference_only_notes_also_warn_on_output(fmt):
     model = interleaved_document()
     model.tables[0].rows[0].cells[0].paragraphs[0].note_references = [

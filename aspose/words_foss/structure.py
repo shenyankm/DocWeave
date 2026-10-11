@@ -18,7 +18,7 @@ def _paragraph(node: ldm.Paragraph, location: str) -> dict:
         "heading_level": pf.outline_level + 1 if pf.is_heading else None,
         "list": node.list_format.model_dump() if node.list_format else None,
         "runs": runs,
-        "note_references": [reference.model_dump(exclude={"type"}, exclude_defaults=True)
+        "note_references": [reference.model_dump(exclude={"type", "font"}, exclude_defaults=True)
                             for reference in node.note_references],
         "images": [{"alternative_text": item.alternative_text,
                     "width_pt": item.width, "height_pt": item.height}
@@ -69,6 +69,7 @@ def export_document(doc: ldm.Document, source: str | None) -> dict:
             })
     source_stories = [{
         "kind": story.kind, "part_name": story.part_name, "identifier": story.identifier,
+        **({"note_type": story.note_type} if story.kind in {"footnote", "endnote"} else {}),
         "references": story.references,
         "blocks": [_block(node, f"source_stories[{i}].children[{j}]")
                    for j, node in enumerate(story.children)],

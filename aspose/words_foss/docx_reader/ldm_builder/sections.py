@@ -75,6 +75,8 @@ class PageSetupBuilder:
         """Translate one ``<w:sectPr>`` into :class:`ldm.PageSetup`."""
         ps = ldm.PageSetup(page_width=_LETTER_WIDTH_PT, page_height=_LETTER_HEIGHT_PT,
                            paper_size=_PAPER_LETTER)
+        from aspose.words_foss._notes import read_properties
+        ps.note_properties = read_properties(sect_pr)
         self._apply_size(sect_pr, ps)
         self._apply_margins(sect_pr, ps)
         self._apply_section_type(sect_pr, ps)

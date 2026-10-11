@@ -12,7 +12,7 @@ def serialize_xml(node) -> bytes:
     """Serialize DOM attributes with XML-safe characters and explicit whitespace references."""
     from io import StringIO
     from xml.dom import Node
-    from aspose.words_foss.docx_writer.xml_utils import escape_attr
+    from aspose.words_foss.docx_writer.xml_utils import escape_attr, escape_text, _is_xml_char
 
     output = StringIO()
 
@@ -33,6 +33,10 @@ def serialize_xml(node) -> bytes:
                 output.write('</' + current.tagName + '>')
             else:
                 output.write('/>')
+        elif current.nodeType in (Node.TEXT_NODE, Node.CDATA_SECTION_NODE):
+            if not all(_is_xml_char(char) for char in current.data):
+                raise ValueError("Invalid XML text")
+            output.write(escape_text(current.data).replace("\r", "&#13;"))
         else:
             current.writexml(output)
 

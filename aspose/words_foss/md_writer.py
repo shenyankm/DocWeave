@@ -237,8 +237,11 @@ class LdmMarkdownWriter:
         self._note_queue.clear()
         self._referenced_notes.clear()
         if self.options.export_notes:
+            if any(story.kind in {"footnote", "endnote"} and story.note_type != "normal" for story in doc.source_stories):
+                warn("Markdown omits note separator and continuation stories", ContentLossWarning,
+                     code="markdown.note_separators_omitted")
             for story in doc.source_stories:
-                if story.kind not in {"footnote", "endnote"}:
+                if story.kind not in {"footnote", "endnote"} or story.note_type != "normal":
                     continue
                 key = (story.kind, story.identifier)
                 if key in self._notes:

@@ -229,12 +229,14 @@ def _complete_compatibility_settings(compat: str) -> str:
 def render_settings_xml(doc: ldm.Document) -> str:
     """Build ``word/settings.xml`` payload."""
     children: list[str] = []
+    from aspose.words_foss._notes import render_properties
     if any(section.page_setup.odd_and_even_pages_header_footer for section in doc.sections):
         children.append(el("w:evenAndOddHeaders"))
     if abs(doc.default_tab_stop - _DEFAULT_TAB_STOP_PT) > 0.01:
         children.append(
             el("w:defaultTabStop", {"w:val": pt_to_twips(doc.default_tab_stop)})
         )
+    children.extend(render_properties(doc.note_properties))
     if doc.source_settings is not None:
         compat = _render_source_compat(doc)
     else:

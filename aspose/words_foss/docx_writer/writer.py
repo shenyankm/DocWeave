@@ -51,8 +51,8 @@ def _warn_about_unsupported_constructs(doc: ldm.Document) -> None:
         warn("Unknown document nodes are omitted from DOCX", DocxWriterLossyWarning,
              stacklevel=3, code="docx.unknown_node")
     for code, message in (*header_footer_losses(doc), *source_story_losses(doc)):
-        if code in {"comments_omitted", "header_footer_flattened", "header_footer_variant"}:
-            continue  # DOCX/Flat OPC emit classic comment stories and ordered anchors.
+        if code in {"comments_omitted", "notes_omitted", "header_footer_flattened", "header_footer_variant"}:
+            continue  # DOCX/Flat OPC emit these source stories and ordered anchors.
         warn(message, DocxWriterLossyWarning, stacklevel=3, code="docx." + code)
 
 
@@ -130,6 +130,7 @@ class LdmDocxWriter:
             warn("DOCX zip_64_mode=ALWAYS does not force ZIP64 records; behaves like IF_NECESSARY",
                  ConversionWarning, code="docx.unsupported_option")
         _warn_about_unsupported_constructs(doc)
+        from aspose.words_foss._notes import render_notes
         # The hyperlink table and image state are mutated by :mod:`runs`
         # / :mod:`paragraphs` while rendering the document body; gather
         # them first, then build dependents.
@@ -151,6 +152,7 @@ class LdmDocxWriter:
         style_pf_map = _build_style_pf_map(doc)
         style_id_map = build_style_id_map(doc)
         style_font_map = build_style_font_map(doc)
+        note_parts = render_notes(doc, style_pf_map, style_id_map, style_font_map)
         header_footer_parts, section_refs = render_section_stories(
             doc, style_pf_map, style_id_map, style_font_map)
         document_xml = render_document_xml(doc, hyperlinks, image_state=image_state,
@@ -167,6 +169,7 @@ class LdmDocxWriter:
                 from aspose.words_foss._comment_threads import extension_xml
                 comments_xml, comments_extended_xml = extension_xml(comments_xml, values)
         return _RenderedParts(
+            note_parts=note_parts,
             comments_extended_xml=comments_extended_xml,
             comments_xml=comments_xml, comment_hyperlinks=comment_hyperlinks, comment_images=comment_images,
             theme_xml=doc.source_theme.data if doc.source_theme is not None else None,
@@ -240,6 +243,7 @@ class _RenderedParts:
     hyperlinks: dict[str, str]
     images: list[ImageEntry]
     header_footer_parts: list
+    note_parts: list
     header_xml: Optional[str]
     header_hyperlinks: dict[str, str]
     header_images: list[ImageEntry]
@@ -265,6 +269,7 @@ class _RenderedParts:
             "hyperlinks": self.hyperlinks,
             "images": self.images,
             "header_footer_parts": self.header_footer_parts,
+            "note_parts": self.note_parts,
             "header_xml": self.header_xml,
             "header_hyperlinks": self.header_hyperlinks,
             "header_images": self.header_images,

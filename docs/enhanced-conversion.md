@@ -328,8 +328,8 @@ aw.Document("report.docx").save("report.pdf", options)
 | `PdfFontSubstitutionWarning` | 源字体被 Document Sans SC 替代，可能改变布局 |
 | `PdfUnsupportedOptionWarning` | 显式设置尚未实现的 PDF 选项，或请求 PDF/A、PDF/UA 合规 |
 | `PdfContentLossWarning` | 未知模型节点、页眉页脚变体、超高不可拆行等已知内容或布局降级；未启用塑形的复杂文字也会提示 |
-| `aw.loading.DocumentLoadWarning` | 脚注/尾注、评论、对象、altChunk、修订、简单字段、内容控件、公式以及多种页眉页脚不能完整保留 |
-| `DocxWriterLossyWarning` | 未知模型节点、不同章节或不支持类型的页眉页脚不能完整写回 |
+| `aw.loading.DocumentLoadWarning` | 缺失脚注/尾注正文、对象、altChunk、修订、简单字段、内容控件、公式等尚未完整保留的构造 |
+| `DocxWriterLossyWarning` | 未知模型节点等已知写出损失；无对应正文、冲突 ID 或不支持位置的注释会在发布输出前明确拒绝 |
 | `aw.ContentLossWarning` | 已知内容/布局损失的公共基类；用于统一过滤加载、DOCX、Markdown、PDF 的已知损失 |
 
 默认值不会仅因选项尚未实现而报警；显式赋值即使等于默认值也会提示。
@@ -427,7 +427,7 @@ DOCX/Flat OPC 的字符单位缩进保留到模型，但尚未换算为排版点
 `ParagraphFormat` 和编号 `ListLevel` 保留 `character_unit_left_indent`、`character_unit_right_indent`
 和 `character_unit_first_line_indent`，
 以字符为单位；`None` 表示未设置，`0` 保留显式零值。样式继承、编号定义/覆盖、DOCX/Flat OPC
-及模型 JSON 保留已支持路径中的这些值（脚注/尾注等输出限制仍适用），输出归一为 `leftChars/rightChars/firstLineChars` 或 `hangingChars`。
+及模型 JSON 保留已支持路径中的这些值（各输出格式的排版限制仍适用），输出归一为 `leftChars/rightChars/firstLineChars` 或 `hangingChars`。
 直接修改转换模型后保存 OOXML 会写入整数百分之一字符；非有限值、错误类型及超出有符号
 32 位百分之一字符范围的值在输出前拒绝。整数换算不依赖调用方的 Decimal 精度；
 损坏的字符属性错误不在异常链中暴露原始值。原包 DOM 已支持字符直接值和样式继承值的只读 getter；
@@ -496,8 +496,7 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 这是独立可选入口，不改变 `Document.save()` 默认后端。高保真仍受 LibreOffice 兼容性和部署的
 **系统字体**影响；它不直接使用本库 WOFF 字体。`--strict`、`--fallback-font` 和 `--text-shaping` 不适用于该后端。
 本仓库既测试协议/异常，也提供真实渲染测试。已在 macOS / LibreOffice 26.2.6 验证中文 DOCX、标准文本 RTF、
-原始 DOCX 脚注和受限 CLI；脚注可提取到 `source_stories`，但轻量模型的转换输出仍会丢失，
-原文件转换中可保留。另有新增 DOM 图片、超链接与水平合并的真实 LibreOffice 渲染用例。未安装 LibreOffice 的环境跳过真实测试。
+原始 DOCX 脚注和受限 CLI；原文件转换中可保留脚注，内置 PDF 路径仍会报告脚注/尾注省略。另有新增 DOM 图片、超链接与水平合并的真实 LibreOffice 渲染用例。未安装 LibreOffice 的环境跳过真实测试。
 这些用例证明入口可用和已测内容保留，不证明所有文档与 Microsoft Word 视觉一致。
 
 **私有 profile 与资源限制不是安全沙箱。** 原生 Office 解析器、宏、外部链接与文件系统访问必须由
@@ -588,3 +587,30 @@ ZIP64 强制输出、选择性 HTML 表格及图片重采样仍未实现；诊�
 设置关系选择先跳过空目标，再按跨类型重复 Id 的最后记录、UTF-16 顺序和准确 settings 类型选择首项。选中目标缺失、无法解析为包内路径或非 Word 设置根时使用默认值，与 `TargetMode` 无关，不回退到后续关系；相对 External 目标仅在包内解析，不执行网络或外部文件读取。图片、超链接及其它资源的既有验证不因此放宽。
 
 加载的兼容性声明单独保存为不可变 `SourceSettings` 来源，区分缺少 `w:compat`、显式空块及原有未知扩展。JSON 往返和两种 OOXML 输出不再无条件添加模板兼容性开关；编辑已支持的模式/手动换行标志只替换其对应声明，新建模型仍沿用原模板基线。此来源只覆盖兼容性块，不代表完整 settings 资源保真。
+
+
+## DOCX / Flat OPC 脚注与尾注
+
+转换模型以有序 `NoteReference` 保存正文锚点，以 `SourceStory` 保存脚注/尾注正文；
+`note_type` 区分普通注释、分隔线、延续分隔线和延续通知。普通负 ID 不再被当成分隔线丢弃。
+段落与表格的顺序、受支持图片和超链接分别写入 footnotes/endnotes 部件及其关系侧车；
+模型 JSON、DOCX 与 Flat OPC 连续保存保留这些值。`NoteMarker` 保留注释内的引用符号及分隔线符号，
+`custom_mark_follows` / `reference_mark` 将定制标记写在锚点所在的同一个 run 中，保留其中的 CR、LF 与制表符。
+`note_references` 是有序锚点的同对象视图；JSON 和深拷贝恢复共享对象，因此通过此列表编辑标记/格式会写回。
+分别提供两组不一致的引用、替换成不同元数据的独立镜像或只清空一组时明确报错，须同步其位置和内容。
+
+文档的 `note_properties` 和节的 `page_setup.note_properties` 分别保留 `footnotePr/endnotePr`
+中的位置、编号格式（含 format）、起始编号、重启规则及分隔线 ID，按原顺序写回；
+这不是完整的商业 `FootnoteOptions` / `EndnoteOptions` API，也不证明分页或脚注布局等价。
+不能表示的属性或容器明确拒绝，避免悄悄舍弃设置。
+
+注释 ID 按已校准的数值读取规则归一：ASCII 浮点值截断，超出有符号 64 位范围时饱和，
+再按有符号 32 位值关联正文；错误词法和非 ASCII 数字映射到 0。
+同角色归一后重复 ID、缺失正文、普通锚点指向特殊注释、未放入有序子节点的旧引用列表、
+缺失的分隔线设置目标和循环正文都在输出前报错，已有输出文件保持原样。
+这些明确拒绝与商业实现对部分损坏输入的恢复行为不同；不将拒绝计为成功保留。
+
+内置 PDF 和纯文本仍提示注释省略。Markdown 的 `export_notes` 只输出普通注释定义，
+不将分隔线/延续通知误当成另一条注释，并提示这些特殊 story 省略。
+标记 Font 在本阶段保留受测声明与格式；动态字号继承、表格条件及零字号标记尚未验收。受测往返见
+[test_conversion_notes.py](../tests/test_conversion_notes.py)；未覆盖的 Word 结构与视觉布局不在本阶段保真声明内。

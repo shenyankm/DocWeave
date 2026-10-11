@@ -274,9 +274,11 @@ class ParagraphBuilder:
         if tracker.suppress_cached:
             return
         self._extract_drawings(child, para, image_rels)
-        if any(item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference", W_NS + "commentReference", W_NS + "annotationRef"} for item in child):
+        note_marks = {W_NS + name for name in ("footnoteRef", "endnoteRef", "separator", "continuationSeparator")}
+        if any(item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference", W_NS + "commentReference", W_NS + "annotationRef"} | note_marks for item in child):
             source_run = self._run_builder.build(child, para_style_id, implicit_paragraph_style)
             fragment = ET.Element(W_NS + "r")
+            custom_anchor = None
             def flush():
                 text = _collect_run_text(fragment)
                 if text:
@@ -294,14 +296,26 @@ class ParagraphBuilder:
                                                            font=source_run.font.model_copy(deep=True)))
                 elif item.tag in {W_NS + "footnoteReference", W_NS + "endnoteReference"}:
                     flush()
-                    identifier = item.get(W_NS + "id", "")
-                    if identifier:
-                        anchor = ldm.NoteReference(kind=item.tag[len(W_NS):-9], identifier=identifier,
-                                                   hidden=source_run.font.hidden)
-                        para.note_references.append(anchor)
-                        para._children.append(anchor)
+                    from aspose.words_foss._notes import note_id
+                    identifier = note_id(item.get(W_NS + "id", ""))
+                    flag = item.get(W_NS + "customMarkFollows")
+                    if flag is not None and flag not in {"true", "false", "1", "0", "on", "off"}:
+                        raise ValueError("Invalid custom note mark flag")
+                    anchor = ldm.NoteReference(kind=item.tag[len(W_NS):-9], identifier=identifier,
+                        hidden=source_run.font.hidden, font=source_run.font.model_copy(deep=True),
+                        custom_mark_follows=(flag in {"true", "1", "on"}) if flag is not None else None)
+                    para.note_references.append(anchor)
+                    para._children.append(anchor)
+                    custom_anchor = anchor if anchor.custom_mark_follows else None
+                elif item.tag in note_marks:
+                    flush()
+                    para._children.append(ldm.NoteMarker(kind=item.tag[len(W_NS):], font=source_run.font.model_copy(deep=True)))
                 else:
-                    fragment.append(item)
+                    if custom_anchor is not None and item.tag == W_NS + "t":
+                        custom_anchor.reference_mark = item.text or ""
+                        custom_anchor = None
+                    else:
+                        fragment.append(item)
             flush()
             return
         run = self._run_builder.build(child, para_style_id, implicit_paragraph_style)
@@ -373,7 +387,8 @@ class ParagraphBuilder:
     ) -> None:
         url = self._resolve_hyperlink_url(child)
         history = validate_hyperlink_history(child.get(W_NS + "history"))
-        comment_tags = {W_NS + tag for tag in ("commentRangeStart", "commentRangeEnd", "commentReference", "annotationRef")}
+        comment_tags = {W_NS + tag for tag in ("commentRangeStart", "commentRangeEnd", "commentReference", "annotationRef",
+            "footnoteReference", "endnoteReference", "footnoteRef", "endnoteRef", "separator", "continuationSeparator")}
         if any(element.tag in comment_tags for element in child.iter()):
             after_tab = False
             for element in self._ctx._resolve_paragraph_children(child):
