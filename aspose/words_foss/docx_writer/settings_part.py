@@ -16,6 +16,76 @@ from xml.etree import ElementTree as ET
 
 _DEFAULT_TAB_STOP_PT = 36.0
 
+# The recognized on/off compatibility declarations in WordprocessingML.
+_COMPAT_BOOLEAN_TAGS = (
+    'adjustLineHeightInTable',
+    'alignTablesRowByRow',
+    'allowSpaceOfSameStyleInTable',
+    'applyBreakingRules',
+    'autoSpaceLikeWord95',
+    'autofitToFirstFixedWidthCell',
+    'balanceSingleByteDoubleByteWidth',
+    'cachedColBalance',
+    'convMailMergeEsc',
+    'displayHangulFixedWidth',
+    'doNotAutofitConstrainedTables',
+    'doNotBreakConstrainedForcedTable',
+    'doNotBreakWrappedTables',
+    'doNotExpandShiftReturn',
+    'doNotLeaveBackslashAlone',
+    'doNotSnapToGridInCell',
+    'doNotSuppressIndentation',
+    'doNotSuppressParagraphBorders',
+    'doNotUseEastAsianBreakRules',
+    'doNotUseHTMLParagraphAutoSpacing',
+    'doNotUseIndentAsNumberingTabStop',
+    'doNotVertAlignCellWithSp',
+    'doNotVertAlignInTxbx',
+    'doNotWrapTextWithPunct',
+    'footnoteLayoutLikeWW8',
+    'forgetLastTabAlignment',
+    'growAutofit',
+    'layoutRawTableWidth',
+    'layoutTableRowsApart',
+    'lineWrapLikeWord6',
+    'mwSmallCaps',
+    'noColumnBalance',
+    'noExtraLineSpacing',
+    'noLeading',
+    'noSpaceRaiseLower',
+    'noTabHangInd',
+    'printBodyTextBeforeHeader',
+    'printColBlack',
+    'selectFldWithFirstOrLastChar',
+    'shapeLayoutLikeWW8',
+    'showBreaksInFrames',
+    'spaceForUL',
+    'spacingInWholePoints',
+    'splitPgBreakAndParaMark',
+    'subFontBySize',
+    'suppressBottomSpacing',
+    'suppressSpBfAfterPgBrk',
+    'suppressSpacingAtTopOfPage',
+    'suppressTopSpacing',
+    'suppressTopSpacingWP',
+    'swapBordersFacingPages',
+    'truncateFontHeightsLikeWP6',
+    'ulTrailSpace',
+    'underlineTabInNumList',
+    'useAltKinsokuLineBreakRules',
+    'useAnsiKerningPairs',
+    'useFELayout',
+    'useNormalStyleForList',
+    'usePrinterMetrics',
+    'useSingleBorderforContiguousCells',
+    'useWord2002TableStyleRules',
+    'useWord97LineBreakRules',
+    'wpJustification',
+    'wpSpaceWidth',
+    'wrapTrailSpaces',
+)
+
+
 
 def _render_source_compat(doc: ldm.Document) -> str:
     source = doc.source_settings
@@ -49,6 +119,31 @@ def needs_settings(doc: ldm.Document) -> bool:
     return True
 
 
+def _normalize_boolean_declarations(compat: str) -> str:
+    """Project native last-winner/false omission without changing the snapshot."""
+    from aspose.words_foss.docx_reader.utils import parse_onoff
+    from aspose.words_foss.diagnostics import ContentLossWarning, warn
+
+    wrapper = fromstring('<root xmlns:w="' + W_URI + '">' + compat + '</root>', forbid_dtd=True)
+    if not len(wrapper):
+        return compat
+    block = wrapper[0]
+    removed = False
+    for tag in _COMPAT_BOOLEAN_TAGS:
+        nodes = block.findall('{' + W_URI + '}' + tag)
+        if not nodes:
+            continue
+        winner = nodes[-1] if parse_onoff(nodes[-1]) else None
+        for node in nodes:
+            if node is not winner:
+                block.remove(node)
+                removed = True
+    if removed:
+        warn('Compatibility declarations were normalized for saving.', ContentLossWarning,
+             code='settings.compatibility_options_normalized')
+    return ET.tostring(block, encoding='unicode')
+
+
 def render_settings_xml(doc: ldm.Document) -> str:
     """Build ``word/settings.xml`` payload."""
     children: list[str] = []
@@ -65,7 +160,7 @@ def render_settings_xml(doc: ldm.Document) -> str:
         if doc.do_not_expand_shift_return:
             tracked += el("w:doNotExpandShiftReturn")
         compat = (compat or "<w:compat></w:compat>").replace("</w:compat>", tracked + "</w:compat>")
-    children.append(compat)
+    children.append(_normalize_boolean_declarations(compat))
     if doc.font_embedding is not None:
         for field, tag in [('embed_true_type_fonts', 'embedTrueTypeFonts'),
                            ('do_not_embed_system_fonts', 'doNotEmbedSystemFonts'),

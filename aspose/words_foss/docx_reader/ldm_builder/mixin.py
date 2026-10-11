@@ -57,8 +57,10 @@ class LdmBuilderMixin:
                     flags[field] = parse_onoff(flag)
             if flags:
                 doc.font_embedding = ldm.FontEmbeddingSettings(**flags)
+            shift_return_flags = self._settings_xml.findall(
+                f"{W_NS}compat/{W_NS}doNotExpandShiftReturn")
             doc.do_not_expand_shift_return = parse_onoff(
-                self._settings_xml.find(f"{W_NS}compat/{W_NS}doNotExpandShiftReturn"))
+                shift_return_flags[-1] if shift_return_flags else None)
             for setting in self._settings_xml.findall(f"{W_NS}compat/{W_NS}compatSetting"):
                 if (setting.get(f"{W_NS}name") == "compatibilityMode" and
                         setting.get(f"{W_NS}uri") == "http://schemas.microsoft.com/office/word"):
