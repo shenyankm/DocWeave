@@ -1,5 +1,7 @@
 """Style and numbering enums."""
 
+from enum import IntEnum
+
 
 class StyleIdentifier:
     """Locale-independent built-in style identifier.
@@ -439,7 +441,7 @@ class StyleType:
     LIST = 4
 
 
-class NumberStyle:
+class NumberStyle(IntEnum):
     """Specifies the number style for a list, footnotes, endnotes,
     page numbers.
     """
@@ -461,7 +463,8 @@ class NumberStyle:
     ARABIC_FULL_WIDTH = 14
     ARABIC_HALF_WIDTH = 15
     KANJI_TRADITIONAL = 16
-    KANJI_TRADITIONAL_2 = 17
+    KANJI_TRADITIONAL2 = 17
+    KANJI_TRADITIONAL_2 = 17  # Retained spelling for existing callers.
     NUMBER_IN_CIRCLE = 18
     DECIMAL_FULL_WIDTH = 19
     AIUEO = 20

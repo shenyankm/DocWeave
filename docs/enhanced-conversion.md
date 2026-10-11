@@ -603,7 +603,8 @@ ZIP64 强制输出、选择性 HTML 表格及图片重采样仍未实现；诊�
 
 文档的 `note_properties` 和节的 `page_setup.note_properties` 分别保留 `footnotePr/endnotePr`
 中的位置、编号格式（含 format）、起始编号、重启规则及分隔线 ID，按原顺序写回；
-这不是完整的商业 `FootnoteOptions` / `EndnoteOptions` API，也不证明分页或脚注布局等价。
+公开选项通过 `document.footnote_options/endnote_options` 与
+`section.page_setup.footnote_options/endnote_options` 编辑，见下节；这不证明分页或脚注布局等价。
 不能表示的属性或容器明确拒绝，避免悄悄舍弃设置。
 
 注释 ID 按已校准的数值读取规则归一：ASCII 浮点值截断，超出有符号 64 位范围时饱和，
@@ -616,3 +617,51 @@ ZIP64 强制输出、选择性 HTML 表格及图片重采样仍未实现；诊�
 不将分隔线/延续通知误当成另一条注释，并提示这些特殊 story 省略。
 标记 Font 在本阶段保留受测声明与格式；动态字号继承、表格条件及零字号标记尚未验收。受测往返见
 [test_conversion_notes.py](../tests/test_conversion_notes.py)；未覆盖的 Word 结构与视觉布局不在本阶段保真声明内。
+
+
+## 可编辑脚注、尾注选项
+
+`aw.notes.FootnoteOptions` 提供 `number_style`、`position`、`restart_rule`、
+`start_number`、`columns`；`EndnoteOptions` 提供前四项。它们是文档或页面设置的关联视图，
+不能直接构造。转换入口和 `DocxDocument` DOM 入口提供相同配置链路。
+
+```python
+import aspose.words_foss as aw
+
+doc = aw.Document("input.docx")
+doc.footnote_options.number_style = aw.NumberStyle.LOWERCASE_ROMAN
+doc.footnote_options.restart_rule = aw.notes.FootnoteNumberingRule.RESTART_SECTION
+doc.first_section.page_setup.footnote_options.start_number = 3
+doc.endnote_options.position = aw.notes.EndnotePosition.END_OF_SECTION
+doc.save("output.docx")
+```
+
+编号、位置、重启规则必须使用对应枚举；裸整数、布尔值和其他枚举会报 `TypeError`。
+`start_number` 和脚注 `columns` 接受带符号 32 位整数，越界报 `OverflowError`。
+这些 setter 在验证失败时保留原值和文件内容。起始编号的零与负值可以编辑，
+不把 setter 接受范围误当成有意义的排版范围。
+
+文档级 setter 更新所有节的同名配置，包括已单独设置的节。节级 setter 通常只更新该节；
+尾注 `position` 的公开 setter 是例外，从任何节调用都会更新文档和全部节。
+载入的原始节位置声明仍可与文档声明不同；读取不会把它们强制合并。
+
+默认脚注为阿拉伯数字、页底、连续编号、起始编号 1、栏数 0；默认尾注为小写罗马数字、
+文档末尾、连续编号、起始编号 1。转换模型 JSON 和深拷贝保留选项及关联关系。
+`aw.NumberStyle` 现在是整数兼容枚举，旧 `KANJI_TRADITIONAL_2` 拼写仍保留，
+同时提供 `KANJI_TRADITIONAL2`。
+
+脚注 `columns` 在编辑状态下保留 setter 的值。Word 2013 及更新兼容模式
+（`compatibility_mode >= 15`）只把正值写入各节的 `w15:footnoteColumns`。
+重新载入后，文档级栏数为 0，节级栏数来自文件；较旧模式和非正值不写出。
+如需使用此文件能力，在转换入口先调用
+`doc.compatibility_options.optimize_for(aw.settings.MsWordVersion.WORD2013)`。
+DOM 入口沿用原文件的兼容模式。
+
+`NumberStyle.SIMP_CHIN_NUM4` 可以编辑，DOCX/Flat OPC 没有该值的编号格式投影，
+保存时省略该格式，重载后回到对应文档或节的默认/继承值。其他公开编号样式写入对应格式。
+这两种编辑值与文件值的区别遵循实际保存行为；不承诺它们在旧格式中全部持久化。
+
+`get_type()` 属于商业包的 CLR 反射接口，本实现明确报 `NotImplementedError`；
+没有伪造商业运行时类型。选项保存覆盖 DOCX 与 Flat OPC 的声明与关联，
+不代表视觉分页、实际重启编号的排版、PDF 脚注布局或完整商业 API 已等价。
+回归入口：[test_note_options.py](../tests/test_note_options.py)。

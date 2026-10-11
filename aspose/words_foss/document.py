@@ -284,6 +284,9 @@ class Document:
             self._document.source_settings = ldm.SourceSettings(
                 data=ET.tostring(_source_compat(self._document)), compatibility_mode=12)
 
+        from aspose.words_foss.notes import bind_note_options
+        bind_note_options(self._document)
+
     @staticmethod
     def _apply_load_options(reader: object, load_options: Optional[LoadOptions]) -> None:
         if load_options and hasattr(reader, "allow_local_images"):
@@ -371,6 +374,14 @@ class Document:
     def default_tab_stop(self) -> float:
         """Default tab interval in points, stored at twip precision."""
         return self.light_document_model.default_tab_stop
+
+    @property
+    def footnote_options(self):
+        return self.light_document_model.footnote_options
+
+    @property
+    def endnote_options(self):
+        return self.light_document_model.endnote_options
 
     @property
     def compatibility_options(self):

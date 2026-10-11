@@ -593,3 +593,17 @@ CID-only 来源在编辑、复制及跨文档导入后仍只输出 CID，不自�
 默认制表位可通过 `DocxDocument.default_tab_stop` 以点读取和修改，数值校验与转换 `Document` 一致。读取按 settings 关系选择；孤立设置只验证 XML，不应用其值。编辑保留其它设置及无关部件；缺少关联设置时原子添加 settings、关系和内容类型，保留孤立原部件；既有 settings 外部/失效关系会保留 Id、改为指向新建包内部件。源码重复制表位取最后声明，空值/无效数字取零，并支持已验证的通用测量单位及有符号32位恢复。未验证的设置与特殊制表值排版仍不属于完整兼容保证。
 
 默认制表位的 settings 选择与转换入口共享关系顺序规则。DOCX/Flat OPC 导出把已校准的 settings 角色归一为一个包内关系，并诊断移除非选中关系及无人引用的、已声明为 Word settings 的部件。原始源包在纯导出及失败保存后保持不变；只有发布成功才提交该投影。其它关系仍引用的设置、foreign 根及未知内容保持原有包保留边界，这与商业包可能额外清理未知内容的输出策略不同；不代表完整设置 API 或任意关系恢复已验收。
+
+
+### 脚注、尾注选项视图
+
+`DocxDocument.footnote_options/endnote_options` 和
+`document.sections[index].page_setup.footnote_options/endnote_options`
+提供可编辑配置。`first_section` 是第一节的选项视图；这组节视图只提供 `page_setup`
+中的脚注、尾注选项，没有补齐整个商业 `Section`/`PageSetup` DOM API。
+选项编辑保留未知设置、非目标关系、节内其他属性和已有普通节点对象。
+setter 的类型验证与文档/节关联规则见
+[转换说明](enhanced-conversion.md#可编辑脚注尾注选项)。
+
+脚注栏数的写出取决于原文件的 Word 兼容模式。DOM 不通过删除未知 XML 来重建设置；
+缺失或无效的设置角色会按现有设置部件规则建立安全的内部关联。

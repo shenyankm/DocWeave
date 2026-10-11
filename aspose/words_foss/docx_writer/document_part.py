@@ -44,6 +44,7 @@ def _sectPr(
     *,
     header_ref: Optional[str] = None,
     footer_ref: Optional[str] = None,
+    compatibility_mode: int | None = 12,
 ) -> str:
     """Build ``<w:sectPr>`` honouring the ECMA-376 CT_SectPr child order:
 
@@ -125,6 +126,10 @@ def _sectPr(
     if page_setup.different_first_page_header_footer:
         children.append(el("w:titlePg"))
 
+    from aspose.words_foss.notes import render_columns
+    columns = render_columns(page_setup.note_properties, compatibility_mode)
+    if columns is not None:
+        children.append(columns)
     if not children:
         return el("w:sectPr")
     return el("w:sectPr", None, children)
@@ -195,6 +200,7 @@ def _render_section(
     has_header: bool,
     has_footer: bool,
     header_footer_refs: str | None = None,
+    compatibility_mode: int | None = 12,
 ) -> list[str]:
     """Render one section's body content.
 
@@ -212,7 +218,7 @@ def _render_section(
     footer_ref = footer_reference(FOOTER_REL_ID) if has_footer else None
     if header_footer_refs is not None:
         header_ref, footer_ref = header_footer_refs, None
-    sectPr_xml = _sectPr(section.page_setup, header_ref=header_ref, footer_ref=footer_ref)
+    sectPr_xml = _sectPr(section.page_setup, header_ref=header_ref, footer_ref=footer_ref, compatibility_mode=compatibility_mode)
     children = list(section.body.children)
     image_state.set_section_margins(section.page_setup)
 
@@ -367,6 +373,7 @@ def _render_body(
                 style_font_map=style_font_map,
                 has_header=has_header,
                 has_footer=has_footer,
+                compatibility_mode=doc.compatibility_mode,
                 header_footer_refs=(section_header_footer_refs[i]
                                     if section_header_footer_refs is not None else None),
             )

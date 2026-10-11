@@ -17,7 +17,7 @@ from math import floor, isfinite
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
-    BaseModel, BeforeValidator, ConfigDict, Field, PrivateAttr, StrictStr, TypeAdapter, field_serializer, field_validator,
+    BaseModel, BeforeValidator, ConfigDict, Field, PrivateAttr, StrictInt, StrictStr, TypeAdapter, field_serializer, field_validator,
     model_serializer, model_validator,
 )
 
@@ -1486,11 +1486,33 @@ class NoteProperty(BaseModel):
 
 
 class NoteProperties(BaseModel):
+    # Warm-only values accepted by native setters but omitted from DOCX/Flat OPC.
+    columns: StrictInt | None = Field(default=None, ge=-(1 << 31), lt=(1 << 31))
+    number_style_override: Literal[40] | None = None
     kind: Literal["footnote", "endnote"]
     children: list[NoteProperty] = Field(default_factory=list)
 
 
 class PageSetup(BaseModel):
+    _note_defaults: Any = PrivateAttr(default=None)
+    _note_targets: Any = PrivateAttr(default=None)
+
+    def __eq__(self, other):
+        # Owner associations are context, not section property values.
+        if type(other) is not type(self):
+            return NotImplemented
+        return self.__dict__ == other.__dict__ and self.__pydantic_extra__ == other.__pydantic_extra__
+
+    @property
+    def footnote_options(self):
+        from aspose.words_foss.notes import FootnoteOptions
+        return FootnoteOptions._for_owner(self, "footnote")
+
+    @property
+    def endnote_options(self):
+        from aspose.words_foss.notes import EndnoteOptions
+        return EndnoteOptions._for_owner(self, "endnote")
+
     note_properties: list[NoteProperties] = Field(default_factory=list)
     paper_size: int = 1
     # ``model.enums.Orientation``; unrelated to ``CellFormat.orientation``,
@@ -1728,11 +1750,28 @@ class Document(BaseModel):
 
     model_config = {"populate_by_name": True, "hide_input_in_errors": True}
 
+    @property
+    def footnote_options(self):
+        from aspose.words_foss.notes import FootnoteOptions
+        return FootnoteOptions._for_owner(self, "footnote")
+
+    @property
+    def endnote_options(self):
+        from aspose.words_foss.notes import EndnoteOptions
+        return EndnoteOptions._for_owner(self, "endnote")
+
     def model_copy(self, *, update=None, deep=False):
         if deep and update is not None:
             from copy import deepcopy
             update = deepcopy(update)
         result = super().model_copy(update=update, deep=deep)
+        if not deep:
+            # Owner views cannot share their private context across document copies.
+            # The body and declared mutable values retain normal shallow sharing.
+            result.sections = [section.model_copy(update={
+                "page_setup": section.page_setup.model_copy()}) for section in result.sections]
+        from aspose.words_foss.notes import bind_note_options
+        bind_note_options(result)
         if deep:
             from aspose.words_foss._font_sizes import bind_font_sizes
             bind_font_sizes(result)
@@ -1757,8 +1796,9 @@ class Document(BaseModel):
                 if id(value) in seen:
                     continue
                 seen.add(id(value))
-                if isinstance(value, Font) and value.__pydantic_private__.get("_size_resolver") is not None:
-                    # Already-bound nodes must not replace another document's size views.
+                if (isinstance(value, Font) and value.__pydantic_private__.get("_size_resolver") is not None or
+                        isinstance(value, PageSetup) and value._note_defaults is not None):
+                    # Already-bound nodes must not replace another document's live views.
                     from copy import deepcopy
                     data = deepcopy(data)
                     break
@@ -1793,6 +1833,8 @@ class Document(BaseModel):
                 HeaderFooter(header_footer_type=kind, children=paras))
         from aspose.words_foss._font_sizes import bind_font_sizes
         bind_font_sizes(instance)
+        from aspose.words_foss.notes import bind_note_options
+        bind_note_options(instance)
         return instance
 
     @model_serializer(mode="wrap")

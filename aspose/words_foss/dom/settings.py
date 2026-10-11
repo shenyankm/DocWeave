@@ -1,10 +1,24 @@
 """Edit related settings without rebuilding unrelated package parts."""
 from defusedxml.minidom import parseString
-from aspose.words_foss._opc import ordered_relationships, resolve_target, relationships_path, resolve_settings_target
-from aspose.words_foss.docx_writer.constants import CT_URI, CT_SETTINGS, REL_SETTINGS, PKG_RELS_URI
-from aspose.words_foss.dom.nodes import W, XMLNS, _elements, _is, _new
+
+from aspose.words_foss._opc import (
+    ordered_relationships,
+    relationships_path,
+    resolve_settings_target,
+    resolve_target,
+)
+from aspose.words_foss.docx_writer.constants import (
+    CT_SETTINGS,
+    CT_URI,
+    PKG_RELS_URI,
+    REL_SETTINGS,
+)
+from aspose.words_foss.dom.nodes import XMLNS, W, _elements, _is, _new
 from aspose.words_foss.dom.resources import add_relationship
-from aspose.words_foss.utils.tab_stops import coerce_default_tab_stop, parse_default_tab_stop
+from aspose.words_foss.utils.tab_stops import (
+    coerce_default_tab_stop,
+    parse_default_tab_stop,
+)
 from aspose.words_foss.utils.xml_helpers import serialize_xml
 
 
@@ -48,8 +62,8 @@ def get_default_tab_stop(package):
     return parse_default_tab_stop(values[-1]) if values else 36.0
 
 
-def set_default_tab_stop(package, value):
-    value = coerce_default_tab_stop(value)
+def edit_settings(package, edit, *, commit=True):
+    """Prepare a selected settings edit while preserving unknown XML and links."""
     name = settings_target(package)
     parts = {}
     if name is not None and not _is(package.tree(name).documentElement, 'settings'):
@@ -87,17 +101,30 @@ def set_default_tab_stop(package, value):
             item.setAttribute('ContentType', CT_SETTINGS)
             types.appendChild(item)
         parts['[Content_Types].xml'] = serialize_xml(types)
-    for item in list(_elements(root)):
-        if _is(item, 'defaultTabStop'):
-            root.removeChild(item)
-    item = _new(root, 'defaultTabStop')
-    prefix = root.prefix or 'w'
-    if not root.prefix:
-        item.setAttributeNS(XMLNS, 'xmlns:w', W)
-    item.setAttributeNS(W, prefix + ':val', str(round(value * 20)))
-    root.appendChild(item)
+    edit(root)
     parts[name] = serialize_xml(root)
-    package.set_parts(parts)
+    package.validate_parts(parts)
+    if commit:
+        package.set_parts(parts)
+    return parts
+
+
+def set_default_tab_stop(package, value):
+    value = coerce_default_tab_stop(value)
+
+    def edit(root):
+        for item in list(_elements(root)):
+            if _is(item, 'defaultTabStop'):
+                root.removeChild(item)
+        item = _new(root, 'defaultTabStop')
+        prefix = root.prefix or 'w'
+        if not root.prefix:
+            item.setAttributeNS(XMLNS, 'xmlns:w', W)
+        item.setAttributeNS(W, prefix + ':val', str(round(value * 20)))
+        root.appendChild(item)
+
+    edit_settings(package, edit)
+
 
 def prepare_settings_projection(package, overrides):
     """Prepare the selected settings role; publish source changes only after IO."""
@@ -174,6 +201,7 @@ def prepare_settings_projection(package, overrides):
     candidates = {node.getAttribute('PartName').lstrip('/') for node in declarations} - {name}
     retained = set()
     import posixpath
+
     from aspose.words_foss.docx_writer.constants import CT_RELS
     content_types = {node.getAttribute('PartName').lstrip('/'): node.getAttribute('ContentType')
                      for node in _elements(types) if node.namespaceURI == CT_URI and node.localName == 'Override'}

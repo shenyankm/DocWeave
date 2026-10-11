@@ -68,6 +68,28 @@ class DocxDocument:
         return self._wrap("word/document.xml", _find(root, "body"))
 
     @property
+    def footnote_options(self):
+        from aspose.words_foss.dom.note_options import NoteBackend
+        from aspose.words_foss.notes import FootnoteOptions
+        return FootnoteOptions._for_owner(NoteBackend(self), "footnote", dom=True)
+
+    @property
+    def endnote_options(self):
+        from aspose.words_foss.dom.note_options import NoteBackend
+        from aspose.words_foss.notes import EndnoteOptions
+        return EndnoteOptions._for_owner(NoteBackend(self), "endnote", dom=True)
+
+    @property
+    def sections(self):
+        """Section option views; other section DOM operations are not implemented."""
+        from aspose.words_foss.dom.note_options import Section, section_roots
+        return tuple(Section(self, index) for index in range(len(section_roots(self))))
+
+    @property
+    def first_section(self):
+        return self.sections[0]
+
+    @property
     def styles(self):
         from aspose.words_foss.dom.styles import StyleCollection
 

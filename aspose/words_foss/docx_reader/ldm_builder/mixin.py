@@ -109,6 +109,8 @@ class LdmBuilderMixin:
         validate_source_notes(self, doc)
         from aspose.words_foss._font_sizes import bind_font_sizes
         bind_font_sizes(doc)
+        from aspose.words_foss.notes import bind_note_options
+        bind_note_options(doc)
         return doc
 
     # -- Reader-side state helpers ---------------------------------------------
