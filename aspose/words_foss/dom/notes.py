@@ -583,14 +583,14 @@ class NoteGraph:
             for source, target in zip(_elements(tree.documentElement), _elements(projected.documentElement)):
                 if _is(source, 'comment') and source.getAttributeNS(W, 'type') in {'', 'normal'}:
                     changed = project_date(source, target) or changed
-            if not changed and not self.utc.parts:
+            if not changed and not self.utc.parts and not self.utc.links:
                 return {}, lambda: None
             from aspose.words_foss.dom.row_format import projected_row_tree
             trees = {name: projected}
             mapping = dict(zip(_elements(tree.documentElement), _elements(projected.documentElement)))
             commit_utc = self.utc.project(trees, mapping)
-            payloads = {n: serialize_xml(projected_row_tree(t)) for n, t in trees.items()}
-            package.validate_parts(payloads)
+            payloads = {n: serialize_xml(projected_row_tree(t)) if t is not None else None for n, t in trees.items()}
+            package.validate_parts(payloads, _allow_removed=True)
             return payloads, commit_utc
         names = {'word/document.xml', *self.parts.values(),
                  *(self.anchor_part(anchor) for anchor in self.anchors.values())}
@@ -714,9 +714,10 @@ class NoteGraph:
         from aspose.words_foss.dom.row_format import projected_row_tree, validate_row_properties
         commit_utc = self.utc.project(trees, mapping)
         for tree in trees.values():
-            validate_row_properties(tree)
-        payloads = {name: serialize_xml(projected_row_tree(tree)) for name, tree in trees.items()}
-        package.validate_parts(payloads)
+            if tree is not None:
+                validate_row_properties(tree)
+        payloads = {name: serialize_xml(projected_row_tree(tree)) if tree is not None else None for name, tree in trees.items()}
+        package.validate_parts(payloads, _allow_removed=True)
         def commit():
             self._next_comment_id = next_comment
             for action, entry, value in commits:

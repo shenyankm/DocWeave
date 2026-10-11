@@ -83,6 +83,9 @@ def get_utc(element):
 
 
 def copy_utc(source, target):
+    roles = getattr(source, '_comment_metadata_roles', None)
+    if roles is not None and roles[0] is source:
+        target._comment_metadata_roles = (target, roles[1])
     state = getattr(source, '_comment_utc_source', None)
     if state is not None and state[0] is source and state[1] == source.getAttributeNS(W, 'date'):
         target._comment_utc_source = (target, state[1], state[2])
@@ -105,30 +108,55 @@ def source_link(entry, ids):
     return next((node for identifier, node in reversed(ids.items()) if identifier in identifiers), None)
 
 
-def typed_parts(package):
+def metadata_links(package):
+    name = 'word/_rels/document.xml.rels'
+    if name not in package.part_names:
+        return []
+    types = {value[2] for value in ROLES.values()}
+    return [node for node in elements(package.tree(name).documentElement, REL, 'Relationship')
+            if node.getAttribute('Type') in types]
+
+
+def selected_links(package):
     name = 'word/_rels/document.xml.rels'
     if name not in package.part_names:
         return {}
-    types = package.tree('[Content_Types].xml').documentElement
-    overrides = {resolve_target('', n.getAttribute('PartName')): n.getAttribute('ContentType')
-                 for n in elements(types, CT, 'Override')}
-    defaults = {n.getAttribute('Extension').lower(): n.getAttribute('ContentType') for n in elements(types, CT, 'Default')}
-    result = {}
+    # 26.9 chooses the first ordinal relationship ID, after duplicate-ID overwrite.
+    links = {}
     for link in elements(package.tree(name).documentElement, REL, 'Relationship'):
-        role = next((r for r, (_, _, t) in ROLES.items() if link.getAttribute('Type') == t), None)
-        if role is None or link.getAttribute('TargetMode') == 'External':
+        if not link.getAttribute('Target'):
             continue
-        part = resolve_target('word/document.xml', link.getAttribute('Target'))
-        if link.getAttribute('TargetMode') not in {'', 'Internal'} or part not in package.part_names:
-            raise ValueError('Expected an available internal comment metadata part')
-        content = overrides.get(part, defaults.get(part.rsplit('.', 1)[-1].lower()))
-        if content not in {'application/vnd.openxmlformats-officedocument.wordprocessingml.' + role + '+xml',
-                           'application/vnd.ms-word.' + role + '+xml'}:
-            raise ValueError('Expected a comment metadata content type')
+        identifier = link.getAttribute('Id')
+        if not identifier:
+            raise ValueError('Expected a non-empty relationship identifier')
+        links[identifier] = link
+    selected = {}
+    for identifier in sorted(links, key=lambda value: value.encode('utf-16-be')):
+        link = links[identifier]
+        role = next((r for r, (_, _, t) in ROLES.items() if link.getAttribute('Type') == t), None)
+        if role is not None and role not in selected:
+            selected[role] = link
+    return selected
+
+
+def package_target(link, owner):
+    try:
+        return resolve_target(owner, link.getAttribute('Target'))
+    except ValueError:
+        if link.getAttribute('TargetMode') == 'External':
+            return None
+        raise
+
+
+def typed_parts(package):
+    result = {}
+    for role, link in selected_links(package).items():
+        part = package_target(link, 'word/document.xml')
+        if part not in package.part_names:
+            continue
         root = package.tree(part).documentElement
-        if root.namespaceURI != ROLES[role][0] or root.localName != role or role in result:
-            raise ValueError('Expected one typed comment metadata part')
-        result[role] = part
+        if root.namespaceURI == ROLES[role][0] and root.localName == role:
+            result[role] = part
     return result
 
 
@@ -143,10 +171,14 @@ class CommentUtc:
         self.entries = entries
         self.source_comments = {entry for (role, _), entry in entries.items() if role == 'comments'}
         self.parts = typed_parts(package)
+        self.links = metadata_links(package)
+        self.roles = {role for role, link in selected_links(package).items()
+                      if package_target(link, 'word/document.xml') in package.part_names}
         self.ids, self.ext = self._maps()
         for (role, _), entry in entries.items():
             if role != 'comments':
                 continue
+            entry._comment_metadata_roles = (entry, frozenset(self.roles))
             link = source_link(entry, self.ids)
             extension = self.ext.get(durable_id(link, CID)) if link is not None else None
             value = utc_date(extension.getAttributeNS(CEX, 'dateUtc')) if extension is not None else None
@@ -170,8 +202,17 @@ class CommentUtc:
         entries = [(source, target) for source, target in mapping.items()
                    if source.nodeType == source.ELEMENT_NODE and source.namespaceURI == W
                    and source.localName == 'comment' and source in known and target.parentNode is not None]
-        if not self.parts and not any(getattr(s, '_comment_utc_source', None) for s, _ in entries):
+        if not self.links and not self.parts and not any(getattr(s, '_comment_utc_source', None) or getattr(s, '_comment_metadata_roles', (None, ()))[1] for s, _ in entries):
             return lambda: None
+        active_roles = set(self.roles)
+        for source, _ in entries:
+            provenance = getattr(source, '_comment_metadata_roles', None)
+            if provenance is not None and provenance[0] is source:
+                active_roles.update(provenance[1])
+            if getattr(source, '_comment_utc_source', None):
+                active_roles.add('commentsExtensible')
+        if active_roles:
+            active_roles.add('commentsIds')
         ids, ext = self._maps()
         selected_ids = {source_link(source, ids) for source, _ in entries} - {None}
         selected_ext = {ext.get(durable_id(node, CID)) for node in selected_ids} - {None}
@@ -183,6 +224,8 @@ class CommentUtc:
                 elements(self.package.tree(self.parts['commentsIds']).documentElement, CID, 'commentId')}
         names = dict(self.parts)
         for role, (ns, _, rel_type) in ROLES.items():
+            if role not in active_roles:
+                continue
             name = names.get(role)
             if name is None:
                 name = 'word/' + role + '.xml'
@@ -193,17 +236,12 @@ class CommentUtc:
                 tree = Document();root = tree.createElementNS(ns, 'm:' + role)
                 root.setAttribute('xmlns:m', ns);tree.appendChild(root)
                 trees[name] = tree
-                for part_name in ['word/_rels/document.xml.rels', '[Content_Types].xml']:
-                    if part_name not in trees:trees[part_name] = self.package.tree(part_name).cloneNode(True)
-                rels = trees['word/_rels/document.xml.rels'].documentElement
-                relationship_ids = {n.getAttribute('Id') for n in elements(rels, REL, 'Relationship')}
-                rid = 'comment-metadata-' + role
-                while rid in relationship_ids:rid += '-1'
-                link = rels.ownerDocument.createElementNS(REL, 'Relationship')
-                link.setAttribute('xmlns', REL)
-                for key, value in [('Id', rid), ('Type', rel_type), ('Target', name.removeprefix('word/'))]:link.setAttribute(key, value)
-                rels.appendChild(link)
+                if '[Content_Types].xml' not in trees:
+                    trees['[Content_Types].xml'] = self.package.tree('[Content_Types].xml').cloneNode(True)
                 types = trees['[Content_Types].xml'].documentElement
+                for override in list(elements(types, CT, 'Override')):
+                    if resolve_target('', override.getAttribute('PartName')) == name:
+                        types.removeChild(override)
                 link = types.ownerDocument.createElementNS(CT, 'Override');link.setAttribute('xmlns', CT)
                 link.setAttribute('PartName', '/' + name);link.setAttribute('ContentType', 'application/vnd.openxmlformats-officedocument.wordprocessingml.' + role + '+xml');types.appendChild(link)
             elif name not in trees:
@@ -215,6 +253,70 @@ class CommentUtc:
                 selected = selected_ids if role == 'commentsIds' else selected_ext
                 discarded_records += sum(original not in selected for original in originals)
                 for copy in copies:root.removeChild(copy)
+        rel_name = 'word/_rels/document.xml.rels'
+        if rel_name not in trees:
+            trees[rel_name] = self.package.tree(rel_name).cloneNode(True)
+        rels = trees[rel_name].documentElement
+        modern_types = {value[2] for value in ROLES.values()}
+        for link in list(elements(rels, REL, 'Relationship')):
+            if link.getAttribute('Type') in modern_types:
+                rels.removeChild(link)
+        relationship_ids = {link.getAttribute('Id') for link in elements(rels, REL, 'Relationship')}
+        selected = selected_links(self.package)
+        for role, name in names.items():
+            original = selected.get(role)
+            if original is not None and package_target(original, 'word/document.xml') != name:
+                original = None
+            rid = 'comment-metadata-' + role
+            if original is not None and original.getAttribute('Id') not in relationship_ids:
+                rid = original.getAttribute('Id')
+            while rid in relationship_ids:
+                rid += '-1'
+            relationship_ids.add(rid)
+            link = rels.ownerDocument.importNode(original, True) if original is not None else rels.ownerDocument.createElementNS(REL, 'Relationship')
+            link.setAttribute('xmlns', REL)
+            if link.hasAttribute('TargetMode'):
+                link.removeAttribute('TargetMode')
+            for key, value in [('Id', rid), ('Type', ROLES[role][2]), ('Target', name.removeprefix('word/'))]:
+                link.setAttribute(key, value)
+            rels.appendChild(link)
+        # Only recognized losing metadata roots are eligible for package removal.
+        candidates = set()
+        for link in self.links:
+            if not link.getAttribute('Target'):
+                continue
+            name = package_target(link, 'word/document.xml')
+            if name in names.values() or name not in self.package.part_names:
+                continue
+            root = self.package.tree(name).documentElement
+            if any(root.namespaceURI == ns and root.localName == role for role, (ns, _, _) in ROLES.items()):
+                candidates.add(name)
+        from aspose.words_foss._opc import relationships_path
+        import posixpath
+        retained = set()
+        for name in self.package.part_names:
+            if not name.endswith('.rels') or name in {relationships_path(n) for n in candidates}:
+                continue
+            directory, filename = posixpath.split(name)
+            owner = posixpath.join(posixpath.dirname(directory), filename[:-5])
+            tree = trees.get(name, self.package.tree(name))
+            for link in elements(tree.documentElement, REL, 'Relationship'):
+                if link.getAttribute('Target'):
+                    retained.add(package_target(link, owner))
+        removed = candidates - retained
+        for name in removed:
+            trees[name] = None
+            related = relationships_path(name)
+            if related in self.package.part_names:
+                trees[related] = None
+        if removed:
+            if '[Content_Types].xml' not in trees:
+                trees['[Content_Types].xml'] = self.package.tree('[Content_Types].xml').cloneNode(True)
+            types = trees['[Content_Types].xml'].documentElement
+            for override in list(elements(types, CT, 'Override')):
+                if resolve_target('', override.getAttribute('PartName')) in {n for n, tree in trees.items() if tree is None}:
+                    types.removeChild(override)
+        discarded_records += max(0, len(self.links) - len(names)) + len(removed)
         reserved = reserved_para | {hex_id(p.getAttributeNS(W14, 'paraId')) for _, t in entries for p in paragraphs(t)}
         used_para = set()
         used_durable, edits = set(), []
@@ -243,6 +345,8 @@ class CommentUtc:
             if old_paragraphs:edits.append((old_paragraphs[-1], f'{pid:08X}'))
             for role, ns, local, old_node in [('commentsIds', CID, 'commentId', old_link),
                      ('commentsExtensible', CEX, 'commentExtensible', ext.get(durable_id(old_link, CID)) if old_link is not None else None)]:
+                if role not in active_roles:
+                    continue
                 root = trees[names[role]].documentElement
                 node = root.ownerDocument.importNode(old_node, True) if old_node is not None else root.ownerDocument.createElementNS(ns, 'm:' + local)
                 set_attr(node, ns, 'm', 'durableId', f'{did:08X}')
@@ -260,10 +364,13 @@ class CommentUtc:
             warn('Unassociated or non-winning modern comment metadata records are omitted',
                  ContentLossWarning, code='comment.utc_metadata_normalized')
         from aspose.words_foss.utils.xml_helpers import serialize_xml
-        payloads = {name: serialize_xml(trees[name]) for name in set(names.values()) | (set(trees) & {'word/_rels/document.xml.rels', '[Content_Types].xml'})}
+        payloads = {name: serialize_xml(trees[name]) if trees[name] is not None else None for name in set(names.values()) | {n for n, tree in trees.items() if tree is None} | (set(trees) & {'word/_rels/document.xml.rels', '[Content_Types].xml'})}
+        prepared_links = [link for link in elements(rels, REL, 'Relationship') if link.getAttribute('Type') in modern_types]
         def commit():
             self.package._commit_parts(payloads)
             self.parts = names
+            self.roles = set(names)
+            self.links = prepared_links
             self.source_comments |= known
             for node, value in edits:set_attr(node, W14, 'w14', 'paraId', value)
         return commit

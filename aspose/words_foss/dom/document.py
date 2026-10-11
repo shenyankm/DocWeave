@@ -35,6 +35,9 @@ class DocxDocument:
         self._package = DocxPackage(source)
         self._nodes = {}
         self._note_graph = None
+        from aspose.words_foss.dom.comment_utc import metadata_links, typed_parts
+        if metadata_links(self._package):
+            typed_parts(self._package)
         root = self._package.tree("word/document.xml").documentElement
         if not _is(root, "document") or _find(root, "body") is None:
             raise ValueError("Expected a Transitional Word document with a body")
@@ -215,8 +218,8 @@ class DocxDocument:
         return StyleResolver(self).has_style(style_id, style_type)
 
     def _prepare_note_projection(self):
-        from aspose.words_foss.dom.comment_utc import typed_parts
-        if self._note_graph is None and typed_parts(self._package):
+        from aspose.words_foss.dom.comment_utc import metadata_links
+        if self._note_graph is None and metadata_links(self._package):
             self._annotations()
         return self._note_graph.prepare_projection() if self._note_graph is not None else ({}, lambda: None)
 

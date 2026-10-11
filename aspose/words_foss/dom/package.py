@@ -153,7 +153,9 @@ class DocxPackage:
         overrides = overrides or {}
         report = {"added": [], "modified": [], "removed": [], "unchanged": []}
         for name in sorted(set(self._original_hashes) | set(self._payloads) | set(overrides)):
-            if name not in self._original_hashes and name in overrides:
+            if name in overrides and overrides[name] is None:
+                state = "removed"
+            elif name not in self._original_hashes and name in overrides:
                 state = "added"
             elif name not in self._payloads:
                 state = "removed"
@@ -166,15 +168,20 @@ class DocxPackage:
             report[state].append(name)
         return report
 
-    def validate_parts(self, parts):
+    def validate_parts(self, parts, *, _allow_removed=False):
         """Validate a prospective complete part update without changing live XML."""
         for name, data in parts.items():
+            if _allow_removed and data is None:
+                if name not in self._payloads:
+                    raise ValueError("Expected an existing part for removal")
+                continue
             if (not name or name.startswith("/") or ".." in name.split("/") or
                     "\\" in name or not isinstance(data, bytes)):
                 raise ValueError("Unsafe DOCX part")
             if len(data) > _io.MAX_PART_BYTES:
                 raise ValueError("DOCX part exceeds the safety limit")
-        names = set(self._payloads) | set(parts)
+        removed = {name for name, data in parts.items() if data is None}
+        names = (set(self._payloads) | set(parts)) - removed
         if len(names) > _io.MAX_ZIP_ENTRIES:
             raise ValueError("DOCX has too many ZIP entries")
         size = sum(len(parts[name] if name in parts else self.payload(name)) for name in names)
@@ -188,6 +195,12 @@ class DocxPackage:
 
     def _commit_parts(self, parts):
         for name, data in parts.items():
+            if data is None:
+                self._payloads.pop(name, None)
+                self._trees.pop(name, None)
+                self._dirty.discard(name)
+                self._entries = [entry for entry in self._entries if entry.filename != name]
+                continue
             if name not in self._payloads:
                 entry = ZipInfo(name)
                 entry.compress_type = ZIP_DEFLATED
@@ -202,7 +215,8 @@ class DocxPackage:
 
         overrides = overrides or {}
         payloads = {name: overrides[name] if name in overrides else self.payload(name)
-                    for name in set(self._payloads) | set(overrides)}
+                    for name in set(self._payloads) | set(overrides)
+                    if name not in overrides or overrides[name] is not None}
         ct = '{http://schemas.openxmlformats.org/package/2006/content-types}'
         types = fromstring(payloads['[Content_Types].xml'], forbid_dtd=True)
         if types.tag != ct + 'Types':
@@ -230,15 +244,16 @@ class DocxPackage:
     def to_bytes(self, overrides=None):
         overrides = overrides or {}
         theme_parts = self._default_theme_parts(overrides)
-        entries = list(self._entries)
+        removed = {name for name, data in overrides.items() if data is None}
+        entries = [entry for entry in self._entries if entry.filename not in removed]
         for name in theme_parts:
             if name not in self._payloads:
                 entry = ZipInfo(name)
                 entry.compress_type = ZIP_DEFLATED
                 entries.append(entry)
         if set(overrides) - set(self.part_names):
-            self.validate_parts(overrides)
-        if len(set(self.part_names) | set(theme_parts) | set(overrides)) > _io.MAX_ZIP_ENTRIES:
+            self.validate_parts(overrides, _allow_removed=True)
+        if len((set(self.part_names) | set(theme_parts) | set(overrides)) - removed) > _io.MAX_ZIP_ENTRIES:
             raise ValueError("DOCX has too many ZIP entries")
         stream = BytesIO()
         expanded = 0
@@ -254,7 +269,7 @@ class DocxPackage:
                 if expanded > _io.MAX_EXPANDED_BYTES:
                     raise ValueError("DOCX expanded size exceeds the safety limit")
                 output.writestr(entry, data)
-            for name in sorted(set(overrides) - {entry.filename for entry in entries}):
+            for name in sorted(set(overrides) - {entry.filename for entry in entries} - removed):
                 data = overrides[name]
                 if len(data) > _io.MAX_PART_BYTES:
                     raise ValueError("DOCX part exceeds the safety limit")
