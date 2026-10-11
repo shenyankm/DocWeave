@@ -319,6 +319,26 @@ class SourceColor(BaseModel):
     theme_shade: str | None = None
 
 
+class SourceSettings(BaseModel):
+    """Immutable source compatibility declarations, not the complete settings part."""
+
+    model_config = ConfigDict(frozen=True, strict=True, hide_input_in_errors=True)
+    data: bytes | None = None
+    compatibility_mode: int = 12
+    do_not_expand_shift_return: bool = False
+
+    @field_serializer('data', when_used='json')
+    def _encode_bytes(self, value: bytes | None):
+        return None if value is None else {'encoding': 'base64', 'data': b64encode(value).decode('ascii')}
+
+    @field_validator('data', mode='before')
+    @classmethod
+    def _decode_bytes(cls, value: Any) -> Any:
+        if isinstance(value, dict) and value.get('encoding') == 'base64' and isinstance(value.get('data'), str):
+            return b64decode(value['data'], validate=True)
+        return value
+
+
 class SourceThemePart(BaseModel):
     """Immutable reachable part, including its original OPC content type."""
 
@@ -1498,6 +1518,7 @@ class Document(BaseModel):
     page_count: int = 0
     source_theme: SourceTheme | None = None
     source_font_table: SourceFontTable | None = None
+    source_settings: SourceSettings | None = None
     font_embedding: FontEmbeddingSettings | None = None
     doc_defaults_font: Optional[Font] = None
     doc_defaults_rpr_present: bool | None = None

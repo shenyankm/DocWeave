@@ -7,7 +7,7 @@ and shape parsing are provided by the LdmBuilderMixin and
 ShapeParserMixin, respectively.
 """
 
-from aspose.words_foss._opc import related_part_snapshot, relationships_path, resolve_target
+from aspose.words_foss._opc import ordered_relationships, related_part_snapshot, relationships_path, resolve_target, resolve_settings_target
 from aspose.words_foss._flat_opc import decode, is_flat_opc
 from aspose.words_foss._links import format_link
 import zipfile
@@ -131,11 +131,13 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             self._document_xml = parse(f).getroot()
         self._index_source_locations(self._document_xml, "word/document.xml")
 
-        relationships = self._read_relationships(zf, "word/document.xml", namelist)
+        relationships = self._document_relationships(zf, namelist)
         targets = {}
         stories = []
         for rid, rel_type, target, mode in relationships:
             kind = rel_type.rsplit("/", 1)[-1]
+            if kind == "settings" and rel_type != "http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings":
+                continue
             if kind == "vbaProject":
                 warn("VBA project resources are omitted by the conversion model; use DocxDocument for package preservation",
                      DocumentLoadWarning, code="load.vba_project_omitted", location="word/document.xml")
@@ -148,16 +150,15 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 if kind != "settings":
                     continue
                 # Native settings recovery accepts a local target even with External mode.
-                try:
-                    name = resolve_target("word/document.xml", target)
-                except ValueError:
-                    continue
+                name = resolve_settings_target(target)
                 if name not in namelist:
                     continue
             if kind not in {"theme", "fontTable", "styles", "settings", "numbering", "image",
                             "header", "footer", "footnotes", "endnotes"}:
                 continue
-            name = resolve_target("word/document.xml", target)
+            name = resolve_settings_target(target) if kind == "settings" else resolve_target("word/document.xml", target)
+            if name is None:
+                continue
             if kind == "image":
                 self._doc_image_rels[rid] = name
             elif kind in {"header", "footer", "footnotes", "endnotes"}:
@@ -199,7 +200,7 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                 self._build_style_id_map()
                 self._parse_doc_defaults()
             elif kind == "settings":
-                self._settings_xml = root
+                self._settings_xml = root if root.tag == W_NS + "settings" else None
             else:
                 self._numbering_xml = root
                 self._parse_numbering()
@@ -477,6 +478,45 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
     ) -> dict[str, str]:
         """Return {rId: media_path} for image rels of a given part (header/footer)."""
         return self._part_resources(zf, part_path, namelist)[0]
+
+    @staticmethod
+    def _document_relationships(zf, namelist):
+        """Recover only the settings selection; resource relationship checks stay strict."""
+        name = relationships_path("word/document.xml")
+        if name not in namelist:
+            return []
+        with zf.open(name) as stream:
+            root = parse(stream).getroot()
+        if root.tag != _PKG_RELS_NS + "Relationships":
+            raise ValueError("Expected an OPC relationships part")
+        nodes = root.findall(_PKG_RELS_NS + "Relationship")
+        settings_type = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings"
+        ordered = ordered_relationships(nodes, lambda node, key: node.get(key, ""))
+        selected = next((node for node in ordered if node.get("Type") == settings_type), None)
+        ids = set()
+        counts = {}
+        for node in nodes:
+            identifier = node.get("Id", "")
+            counts[identifier] = counts.get(identifier, 0) + 1
+        result = []
+        for node in nodes:
+            if node.get("Type") == settings_type:
+                continue
+            rid, target = node.get("Id", ""), node.get("Target", "")
+            kind = node.get("Type", "").rsplit("/", 1)[-1]
+            resource = kind in {"image", "hyperlink", "styles", "numbering", "theme", "header",
+                                "footer", "fontTable", "stylesWithEffects", "footnotes", "endnotes", "comments"}
+            if resource and (not rid or counts[rid] > 1):
+                raise ValueError("Empty or duplicate relationship ID")
+            if not target:
+                continue
+            if not rid or rid in ids:
+                raise ValueError("Empty or duplicate relationship ID")
+            ids.add(rid)
+            result.append((rid, node.get("Type", ""), target, node.get("TargetMode", "")))
+        if selected is not None:
+            result.append(tuple(selected.get(key, "") for key in ("Id", "Type", "Target", "TargetMode")))
+        return result
 
     @staticmethod
     def _read_relationships(zf, part_path, namelist):

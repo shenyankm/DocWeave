@@ -38,6 +38,8 @@ class DocxDocument:
         from aspose.words_foss.dom.comment_utc import metadata_links, typed_parts
         if metadata_links(self._package):
             typed_parts(self._package)
+        from aspose.words_foss.dom.settings import get_default_tab_stop
+        get_default_tab_stop(self._package)
         root = self._package.tree("word/document.xml").documentElement
         if not _is(root, "document") or _find(root, "body") is None:
             raise ValueError("Expected a Transitional Word document with a body")
@@ -93,6 +95,8 @@ class DocxDocument:
     def preservation_report(self):
         """List added/modified/removed/unchanged parts since loading (not sanitization)."""
         overrides, _ = self._prepare_note_projection()
+        from aspose.words_foss.dom.settings import prepare_settings_projection
+        overrides, _ = prepare_settings_projection(self._package, overrides)
         return self._package.preservation_report(overrides)
 
     def story(self, part_name):
@@ -226,6 +230,8 @@ class DocxDocument:
     def _prepared_output(self, *, flat=False):
         from aspose.words_foss.dom.row_format import prepare_row_commit
         overrides, commit_notes = self._prepare_note_projection()
+        from aspose.words_foss.dom.settings import prepare_settings_projection
+        overrides, commit_settings = prepare_settings_projection(self._package, overrides)
         data = self._package.to_bytes(overrides) if overrides else self._package.to_bytes()
         if flat:
             from aspose.words_foss._flat_opc import encode
@@ -233,14 +239,15 @@ class DocxDocument:
         commit_rows = prepare_row_commit(self)
         theme_parts = self._package._default_theme_parts(overrides)
         self._package.validate_parts(theme_parts)
-        return data, commit_notes, commit_rows, theme_parts
+        return data, commit_notes, commit_rows, theme_parts, commit_settings
 
     def _save(self, destination, *, flat=False):
         from aspose.words_foss._io import atomic_output
-        data, commit_notes, commit_rows, theme_parts = self._prepared_output(flat=flat)
+        data, commit_notes, commit_rows, theme_parts, commit_settings = self._prepared_output(flat=flat)
         with atomic_output(destination) as temporary:
             temporary.write_bytes(data)
         commit_notes()
+        commit_settings()
         commit_rows()
         self._package._commit_parts(theme_parts)
         if theme_parts:

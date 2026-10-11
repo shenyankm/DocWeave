@@ -66,6 +66,11 @@ class LdmBuilderMixin:
                     if value.isascii() and value.isdecimal():
                         doc.compatibility_mode = int(value)
                     break
+        compat = self._settings_xml.find(W_NS + 'compat') if self._settings_xml is not None else None
+        doc.source_settings = ldm.SourceSettings(
+            data=ET.tostring(compat) if compat is not None else None,
+            compatibility_mode=doc.compatibility_mode,
+            do_not_expand_shift_return=doc.do_not_expand_shift_return)
         self._bookmark_id_to_name = {}
 
         self._build_name_to_style_id_map()

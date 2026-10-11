@@ -12,7 +12,7 @@
 源包编辑需要保留未关联部件时，使用 `DocxDocument`。
 标为 `External` 但指向包内现存 settings 部件的关系按已观测的基准恢复行为读取；
 真正的外部 URL 不读取。关联或孤立设置的损坏 XML 和 DTD 仍明确报错。
-有效设置映射到 `Document.light_document_model`。`Document.default_tab_stop` 以点读取和设置默认制表位，按 twip 取整；负数报错且保持原值，非有限输入遵循已观测的基准哨兵值。此接口不表示完整商业设置 API 或包保留 DOM 设置编辑已实现。
+有效设置映射到 `Document.light_document_model`。`Document.default_tab_stop` 以点读取和设置默认制表位，按 twip 取整；负数报错且保持原值，非有限输入遵循已观测的基准哨兵值。此接口不表示完整商业设置 API。
 
 ## 保存选项与实际格式
 
@@ -544,3 +544,7 @@ python -m aspose.words_foss.convert report.docx report.pdf --backend libreoffice
 `models.ConversionOptions` 是直接 writer 的额外接口；共享的五个枚举和八个布尔字段
 遵循上文校验规则，其余字段仍需单独核对，不能计入上述 46 项的完成结论。
 ZIP64 强制输出、选择性 HTML 表格及图片重采样仍未实现；诊断说明退回路径，不计为功能完成。
+
+设置关系选择先跳过空目标，再按跨类型重复 Id 的最后记录、UTF-16 顺序和准确 settings 类型选择首项。选中目标缺失、无法解析为包内路径或非 Word 设置根时使用默认值，与 `TargetMode` 无关，不回退到后续关系；相对 External 目标仅在包内解析，不执行网络或外部文件读取。图片、超链接及其它资源的既有验证不因此放宽。
+
+加载的兼容性声明单独保存为不可变 `SourceSettings` 来源，区分缺少 `w:compat`、显式空块及原有未知扩展。JSON 往返和两种 OOXML 输出不再无条件添加模板兼容性开关；编辑已支持的模式/手动换行标志只替换其对应声明，新建模型仍沿用原模板基线。此来源只覆盖兼容性块，不代表完整 settings 资源保真。

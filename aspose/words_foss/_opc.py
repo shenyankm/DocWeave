@@ -35,6 +35,19 @@ def bind_namespace_context(source, target, parent=None):
             target.setAttributeNS(XMLNS, f"xmlns:{prefix}" if prefix else "xmlns", uri)
 
 
+def ordered_relationships(records, attribute):
+    """Return original records in observed 26.9 relationship-ID selection order."""
+    links = {}
+    for record in records:
+        if not attribute(record, "Target"):
+            continue
+        identifier = attribute(record, "Id")
+        if not identifier:
+            raise ValueError("Expected a non-empty relationship identifier")
+        links[identifier] = record
+    return [links[identifier] for identifier in sorted(links, key=lambda value: value.encode("utf-16-be"))]
+
+
 def relationships_path(part_name: str) -> str:
     directory, filename = posixpath.split(part_name)
     return posixpath.join(directory, "_rels", filename + ".rels")
@@ -53,6 +66,14 @@ def resolve_target(part_name: str, target: str) -> str:
     if name in {".", ".."} or name.startswith("../"):
         raise ValueError("Relationship target escapes the package")
     return name
+
+
+def resolve_settings_target(target: str) -> str | None:
+    """Settings URI recovery uses defaults when no package path can be resolved."""
+    try:
+        return resolve_target("word/document.xml", target)
+    except ValueError:
+        return None  # Observed 26.9 behavior, regardless of the settings TargetMode.
 
 
 def related_part_snapshot(archive, part_name: str) -> tuple[tuple[str, str, bytes], ...]:
