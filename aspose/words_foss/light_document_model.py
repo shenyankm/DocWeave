@@ -739,6 +739,7 @@ class Run(BaseModel, NodeCastMixin):
     type: str = Field(default="Run", alias="_type")
     text: str = ""
     is_hyperlink: bool = False
+    source_hyperlink_history: StrictStr | None = None
     font: Font = Field(default_factory=Font)
 
     model_config = {"populate_by_name": True}

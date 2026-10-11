@@ -12,7 +12,7 @@ from typing import Optional
 from xml.etree import ElementTree as ET
 
 from aspose.words_foss import light_document_model as ldm
-from aspose.words_foss._links import format_link
+from aspose.words_foss._links import format_link, validate_hyperlink_history
 from aspose.words_foss._visible_runs import HORIZONTAL_RULE_SHAPE_TYPE
 from aspose.words_foss.docx_reader.constants import (
     PAGE_FIELD_SENTINEL,
@@ -356,6 +356,7 @@ class ParagraphBuilder:
         implicit_paragraph_style: bool = False,
     ) -> None:
         url = self._resolve_hyperlink_url(child)
+        history = validate_hyperlink_history(child.get(W_NS + "history"))
         head_runs, tail_runs = self._split_at_first_tab(child)
 
         if head_runs:
@@ -368,12 +369,14 @@ class ParagraphBuilder:
                         if isinstance(run, ldm.Run) and url:
                             run.text = format_link(run.text, url)
                             run.is_hyperlink = True
+                            run.source_hyperlink_history = history
                 head_runs = []
         if head_runs:
             link_text = "".join(_collect_run_text(r) for r in head_runs)
             if link_text:
                 head_rPr = head_runs[0].find(f"{W_NS}rPr")
-                self._append_link_run(para, link_text, url, head_rPr, para_style_id, implicit_paragraph_style)
+                self._append_link_run(para, link_text, url, head_rPr, para_style_id, implicit_paragraph_style,
+                                      history)
 
         for r_elem in tail_runs:
             self._handle_run(r_elem, para, tracker, para_style_id, image_rels, implicit_paragraph_style)
@@ -404,10 +407,12 @@ class ParagraphBuilder:
         head_rPr: Optional[ET.Element],
         para_style_id: str,
         implicit_paragraph_style: bool = False,
+        history: str | None = None,
     ) -> None:
         run = ldm.Run()
         run.text = format_link(link_text, url) if url else link_text
         run.is_hyperlink = bool(url)
+        run.source_hyperlink_history = history if url else None
         run.font = self._font_resolver.resolve(head_rPr, para_style_id, implicit_paragraph_style)
         para._children.append(run)
 

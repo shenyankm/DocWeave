@@ -356,17 +356,20 @@ def _render_hyperlink_run(
         base_font=base_font,
         style_id_map=style_id_map,
     )
+    from aspose.words_foss._links import validate_hyperlink_history
+    value = validate_hyperlink_history(run.source_hyperlink_history)
+    history = {} if value is None else {"w:history": value}
     if url.startswith("#"):
         anchor = url[1:]
         return el(
             "w:hyperlink",
-            {"w:anchor": anchor, "w:history": "1"},
+            {"w:anchor": anchor, **history},
             inner_xml,
         )
     r_id = rels.setdefault(url, f"rIdLink{len(rels) + 1}")
     return el(
         "w:hyperlink",
-        {"r:id": r_id, "w:history": "1"},
+        {"r:id": r_id, **history},
         inner_xml,
     )
 

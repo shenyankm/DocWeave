@@ -31,3 +31,10 @@ def decode_link(match):
     if target.startswith("<") and target.endswith(">"):
         target = target[1:-1]
     return tuple(_ESCAPED_PUNCTUATION.sub(r"\1", value) for value in (match.group(1), target))
+
+
+def validate_hyperlink_history(value):
+    """Validate the hyperlink ST_OnOff attribute without exposing its contents."""
+    if value is not None and (not isinstance(value, str) or value not in ("0", "1", "true", "false", "on", "off")):
+        raise RuntimeError("Invalid hyperlink history attribute")
+    return value
