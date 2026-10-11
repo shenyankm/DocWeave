@@ -220,6 +220,11 @@ class Node:
                 found.extend(child.get_child_nodes(node_type, deep=True))
         return found
 
+    def get_text(self) -> str:
+        """Return logical Word text with structural control characters."""
+        from aspose.words_foss.dom.text import node_text
+        return node_text(self)
+
     def _editable(self):
         node = self._element
         while node is not None and node.nodeType == XmlNode.ELEMENT_NODE:

@@ -110,6 +110,11 @@ class DocxDocument:
             raise NotImplementedError("Only typed Word stories are editable")
         return self._wrap(part_name, root)
 
+    def get_text(self) -> str:
+        """Return Word text of all sections and their explicitly stored stories."""
+        from aspose.words_foss.dom.text import document_text
+        return document_text(self)
+
     def get_child_nodes(self, node_type=0, deep=False):
         """Traverse the main story; other stories are accessed explicitly."""
         return self.body.get_child_nodes(node_type, deep)
