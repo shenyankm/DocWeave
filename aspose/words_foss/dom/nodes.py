@@ -47,6 +47,17 @@ def _text(node):
                    if child.nodeType in (XmlNode.TEXT_NODE, XmlNode.CDATA_SECTION_NODE))
 
 
+def _raw_inline_text(owner, nodes):
+    parts = []
+    for node in nodes:
+        if _is(node, "t"):
+            parts.append(_text(node))
+        elif node.namespaceURI == W and node.localName in {
+                "tab", "ptab", "br", "cr", "noBreakHyphen", "softHyphen"}:
+            parts.append(owner.owner_document._wrap(owner.part_name, node).get_text())
+    return "".join(parts)
+
+
 def _set_text(node, value):
     text_nodes = [child for child in node.childNodes
                   if child.nodeType in (XmlNode.TEXT_NODE, XmlNode.CDATA_SECTION_NODE)]
@@ -394,10 +405,7 @@ class Paragraph(Node):
     @property
     def text(self):
         """Raw w:t text, including hidden/nested text; no revision filtering or field evaluation."""
-        return "".join(_text(node) if _is(node, "t") else
-                       "\t" if _is(node, "tab") else "\n"
-                       for node in self._element.getElementsByTagNameNS(W, "*")
-                       if node.localName in {"t", "tab", "br", "cr"})
+        return _raw_inline_text(self, self._element.getElementsByTagNameNS(W, "*"))
 
     def add_hyperlink(self, text, target):
         """Append a link; URLs are never fetched. Complex range stories remain rejected."""
@@ -462,10 +470,7 @@ class Run(Node):
 
     @property
     def text(self):
-        return "".join(_text(node) if _is(node, "t") else
-                       "\t" if _is(node, "tab") else "\n"
-                       for node in _elements(self._element)
-                       if node.namespaceURI == W and node.localName in {"t", "tab", "br", "cr"})
+        return _raw_inline_text(self, _elements(self._element))
 
     def _plain_text_nodes(self):
         if any(not (_is(node, "rPr") or _is(node, "t")) for node in _elements(self._element)):

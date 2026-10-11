@@ -4,7 +4,7 @@ from xml.etree.ElementTree import Element
 from aspose.words_foss.docx_reader.utils import _read_word_text
 from aspose.words_foss.dom.nodes import XML, W, _elements, _find, _is, _text
 
-_CONTROLS = {'tab': '\t', 'ptab': '\t', 'cr': '\r', 'noBreakHyphen': '\x1e',
+_CONTROLS = {'tab': '\t', 'ptab': '', 'cr': '\r', 'noBreakHyphen': '\x1e',
              'softHyphen': '\x1f', 'footnoteRef': '\x02', 'endnoteRef': '\x02',
              'annotationRef': '\x05', 'separator': '\x03', 'continuationSeparator': '\x04'}
 _EMPTY = {'bookmarkStart', 'bookmarkEnd', 'commentRangeStart', 'commentRangeEnd',
