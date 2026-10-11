@@ -1,21 +1,4 @@
-"""Header / footer XML rendering.
-
-The reader collects every paragraph from every ``word/header*.xml`` /
-``word/footer*.xml`` part into a single flat list on
-:class:`Document` (``header_paragraphs`` / ``footer_paragraphs``); it
-does not preserve the per-section / per-type (default / firstPage /
-even) split.  We mirror that on write by emitting one ``header1.xml``
-and one ``footer1.xml`` containing the whole list, and reference the
-single pair from every section's ``<w:sectPr>`` so a Word user still
-sees the header on every page.
-
-Headers/footers in the test fixtures carry no inline shapes, bookmarks
-or hyperlinks, so this first pass renders only ``<w:p>`` content.  When
-that limitation matters, ``ImageRenderState`` / ``BookmarkState`` /
-``rels`` would need to be threaded in alongside their own ``.rels``
-sidecar — see ``package.py`` for the structure that's already in place
-for the document part.
-"""
+"""Render explicit section header/footer stories with independent resources."""
 
 
 from typing import Mapping, Optional
@@ -38,6 +21,7 @@ def _render_part(
     style_id_map: Mapping[str, str],
     style_font_map: Mapping[str, ldm.Font],
     image_state: "ImageRenderState | None" = None,
+    num_id_map: Mapping[int, int] | None = None,
 ) -> str:
     """Render a single ``<w:hdr>`` or ``<w:ftr>`` XML payload.
 
@@ -61,7 +45,7 @@ def _render_part(
                 render_paragraph(
                     child,
                     rels,
-                    num_id_map={},
+                    num_id_map=num_id_map or {},
                     image_state=image_state,
                     bookmark_state=bookmark_state,
                     style_pf_map=style_pf_map,
@@ -74,7 +58,7 @@ def _render_part(
                 render_table(
                     child,
                     rels,
-                    num_id_map={},
+                    num_id_map=num_id_map or {},
                     image_state=image_state,
                     bookmark_state=bookmark_state,
                     style_pf_map=style_pf_map,
@@ -114,6 +98,7 @@ def render_header_xml(
     style_id_map: Mapping[str, str],
     style_font_map: Mapping[str, ldm.Font],
     image_state: "ImageRenderState | None" = None,
+    num_id_map: Mapping[int, int] | None = None,
 ) -> str:
     return _render_part(
         children,
@@ -123,6 +108,7 @@ def render_header_xml(
         style_id_map=style_id_map,
         style_font_map=style_font_map,
         image_state=image_state,
+        num_id_map=num_id_map,
     )
 
 
@@ -133,6 +119,7 @@ def render_footer_xml(
     style_id_map: Mapping[str, str],
     style_font_map: Mapping[str, ldm.Font],
     image_state: "ImageRenderState | None" = None,
+    num_id_map: Mapping[int, int] | None = None,
 ) -> str:
     return _render_part(
         children,
@@ -142,6 +129,7 @@ def render_footer_xml(
         style_id_map=style_id_map,
         style_font_map=style_font_map,
         image_state=image_state,
+        num_id_map=num_id_map,
     )
 
 
@@ -195,3 +183,42 @@ def needs_footer(doc: ldm.Document) -> bool:
 
 def _unused() -> Optional[str]:  # pragma: no cover - documentation glue
     return None
+
+
+def render_section_stories(doc, style_pf_map, style_id_map, style_font_map):
+    """Render each explicit header/footer with its own part and relationships."""
+    from .drawing import pt_to_mm
+    from .numbering_part import build_num_id_map
+
+    parts, references = [], []
+    num_id_map = build_num_id_map(doc.lists)
+    counts = {"header": 0, "footer": 0}
+    variants = {0: "default", 1: "default", 2: "first", 3: "first", 4: "even", 5: "even"}
+    for section in doc.sections:
+        refs, seen = [], set()
+        for story in section.headers_footers:
+            kind = story.header_footer_type
+            if kind not in variants:
+                raise ValueError("Unsupported header/footer type")
+            if kind in seen:
+                raise ValueError("Duplicate section header/footer type")
+            seen.add(kind)
+            role = "footer" if kind % 2 else "header"
+            counts[role] += 1
+            number = counts[role]
+            target, rid = f"{role}{number}.xml", f"rId{role.title()}{number}"
+            refs.append(el(f"w:{role}Reference", {"w:type": variants[kind], "r:id": rid}))
+            setup = section.page_setup
+            baseline = (setup.page_height - setup.footer_distance if role == "footer"
+                        else setup.header_distance)
+            images = ImageRenderState(media_name_prefix=f"{role}{number}_image",
+                rel_id_prefix=f"rId{role.title()}{number}Img", doc_pr_offset=(len(parts) + 1) * 100000,
+                section_top_margin_mm=pt_to_mm(baseline),
+                section_left_margin_mm=pt_to_mm(setup.left_margin))
+            links = {}
+            renderer = render_footer_xml if role == "footer" else render_header_xml
+            xml = renderer(story.children, links, style_pf_map, style_id_map,
+                           style_font_map, image_state=images, num_id_map=num_id_map)
+            parts.append((target, rid, role, xml, links, images.images))
+        references.append("".join(refs))
+    return parts, references

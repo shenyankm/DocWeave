@@ -54,7 +54,9 @@ def header_footer_losses(doc):
     for header_type in (0, 1):
         parts = [hf for sec in doc.sections for hf in sec.headers_footers
                  if hf.header_footer_type == header_type]
-        if parts and any(hf.children != parts[0].children for hf in parts[1:]):
+        starts_later = (parts and not any(hf.header_footer_type == header_type
+                       for hf in doc.sections[0].headers_footers))
+        if parts and (starts_later or any(hf.children != parts[0].children for hf in parts[1:])):
             yield "header_footer_flattened", ("Different per-section headers/footers cannot be preserved; "
                                                "only the first populated part is written")
             break

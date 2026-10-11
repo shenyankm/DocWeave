@@ -87,6 +87,11 @@ class LdmBuilderMixin:
         if self._numbering_xml is not None:
             doc.lists = self._lists_builder.build_all()
         doc.sections = self._sections_builder.build_all()
+        even_flags = (self._settings_xml.findall(W_NS + "evenAndOddHeaders")
+                      if self._settings_xml is not None else [])
+        for section in doc.sections:
+            section.page_setup.odd_and_even_pages_header_footer = parse_onoff(
+                even_flags[-1] if even_flags else None)
 
         if self._doc_default_rPr is not None:
             doc.doc_defaults_font = self._fonts_builder.build(self._doc_default_rPr)
@@ -207,20 +212,21 @@ class LdmBuilderMixin:
             ))
 
     def _populate_headers_footers(self, doc: ldm.Document) -> None:
-        """Keep legacy conversion semantics; source_stories retains section variants."""
-        hdr_children = [child for story in doc.source_stories if story.kind == "header"
-                        for child in story.children]
-        ftr_children = [child for story in doc.source_stories if story.kind == "footer"
-                        for child in story.children]
-        for sec in doc.sections:
-            if hdr_children:
-                sec.headers_footers.append(
-                    ldm.HeaderFooter(header_footer_type=0, children=hdr_children)
-                )
-            if ftr_children:
-                sec.headers_footers.append(
-                    ldm.HeaderFooter(header_footer_type=1, children=ftr_children)
-                )
+        """Keep explicit section references; absent references inherit in OOXML."""
+        variants = {"default": 0, "first": 2, "even": 4}
+        for story in doc.source_stories:
+            if story.kind not in {"header", "footer"}:
+                continue
+            for reference in story.references:
+                if reference["inherited"]:
+                    continue
+                index = reference["section"]
+                variant = variants.get(reference["variant"])
+                if variant is None or not 0 <= index < len(doc.sections):
+                    raise ValueError("Invalid header/footer section reference")
+                kind = variant + (story.kind == "footer")
+                doc.sections[index].headers_footers.append(ldm.HeaderFooter(
+                    header_footer_type=kind, children=story.children))
 
     def _build_part_children(
         self,

@@ -64,24 +64,24 @@ def test_load_loss_is_recorded_even_when_warning_is_ignored(tag):
 
 @pytest.mark.parametrize("kind", ["headerReference", "footerReference"])
 @pytest.mark.parametrize("variant", ["different_sections", "first", "even"])
-def test_header_footer_source_loss_is_reported(kind, variant):
+def test_missing_header_footer_resource_is_reported(kind, variant):
     if variant == "different_sections":
         body = (f'<w:p><w:pPr><w:sectPr><w:{kind} w:type="default" r:id="r1"/></w:sectPr></w:pPr></w:p>'
                 f'<w:sectPr><w:{kind} w:type="default" r:id="r2"/></w:sectPr>')
     else:
         body = f'<w:sectPr><w:{kind} w:type="{variant}" r:id="r1"/></w:sectPr>'
-    with pytest.warns(aw.loading.DocumentLoadWarning, match="flattened"):
+    with pytest.warns(aw.loading.DocumentLoadWarning, match="Missing header/footer resource"):
         doc = aw.Document(BytesIO(package(body)))
-    assert doc.diagnostics[0].code == "load.header_footer_flattened"
+    assert doc.diagnostics[0].code == "load.missing_header_footer"
 
 
-def test_distinct_model_headers_and_unknown_nodes_warn_before_save():
+def test_distinct_model_headers_are_saved_and_unknown_nodes_warn():
     doc = document()
     doc.sections[0].headers_footers = [ldm.HeaderFooter(header_footer_type=0, children=[ldm.Paragraph(children=[ldm.Run(text="A")])])]
     doc.sections.append(ldm.Section(headers_footers=[ldm.HeaderFooter(header_footer_type=0, children=[ldm.Paragraph(children=[ldm.Run(text="B")])])]))
-    with pytest.warns(DocxWriterLossyWarning, match="per-section"):
-        doc.to_bytes(aw.SaveFormat.DOCX)
-    assert doc.diagnostics[-1].code == "docx.header_footer_flattened"
+    cold = aw.Document(BytesIO(doc.to_bytes(aw.SaveFormat.DOCX))).light_document_model
+    assert [[p.text for h in s.headers_footers for p in h.paragraphs] for s in cold.sections] == [["A"], ["B"]]
+    assert not any(d.code == "docx.header_footer_flattened" for d in doc.diagnostics)
     doc.sections[0].body.children.append(ldm.UnknownNode(_type="not_supported"))
     with pytest.warns(DocxWriterLossyWarning):
         doc.to_bytes(aw.SaveFormat.DOCX)

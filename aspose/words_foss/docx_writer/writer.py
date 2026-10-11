@@ -28,12 +28,7 @@ from aspose.words_foss.saving import (
 from aspose.words_foss.docx_writer.bookmarks import BookmarkState
 from aspose.words_foss.docx_writer.document_part import _build_style_pf_map, render_document_xml
 from aspose.words_foss.docx_writer.drawing import ImageEntry, ImageRenderState
-from aspose.words_foss.docx_writer.headers_footers import (
-    needs_footer,
-    needs_header,
-    render_footer_xml,
-    render_header_xml,
-)
+from aspose.words_foss.docx_writer.headers_footers import render_section_stories
 from aspose.words_foss.docx_writer.numbering_part import render_numbering_xml
 from aspose.words_foss.docx_writer.package import write_docx_package
 from aspose.words_foss.docx_writer.settings_part import needs_settings, render_settings_xml
@@ -56,7 +51,7 @@ def _warn_about_unsupported_constructs(doc: ldm.Document) -> None:
         warn("Unknown document nodes are omitted from DOCX", DocxWriterLossyWarning,
              stacklevel=3, code="docx.unknown_node")
     for code, message in (*header_footer_losses(doc), *source_story_losses(doc)):
-        if code == "comments_omitted":
+        if code in {"comments_omitted", "header_footer_flattened", "header_footer_variant"}:
             continue  # DOCX/Flat OPC emit classic comment stories and ordered anchors.
         warn(message, DocxWriterLossyWarning, stacklevel=3, code="docx." + code)
 
@@ -73,25 +68,6 @@ _ZIP64_MAP: dict[int, bool] = {
     Zip64Mode.IF_NECESSARY: True,
     Zip64Mode.ALWAYS: True,
 }
-
-
-def _collect_hf_children(
-    doc: ldm.Document, *, header: bool
-) -> list[ldm.Paragraph | ldm.Table]:
-    """Collect ordered children for header or footer rendering.
-
-    Prefers the per-section ``HeaderFooter.children`` list (which preserves
-    interleaved paragraph/table order) and falls back to the flat
-    ``doc.header_paragraphs`` / ``doc.footer_paragraphs`` for backwards
-    compatibility with LDMs that only carry paragraphs.
-    """
-    hf_type = 0 if header else 1
-    for sec in doc.sections:
-        for hf in sec.headers_footers:
-            if hf.header_footer_type == hf_type and hf.children:
-                return list(hf.children)
-    paras = doc.header_paragraphs if header else doc.footer_paragraphs
-    return list(paras)
 
 
 class LdmDocxWriter:
@@ -160,16 +136,6 @@ class LdmDocxWriter:
         hyperlinks: dict[str, str] = {}
         image_state = ImageRenderState()
         bookmark_state = BookmarkState()
-        has_header = needs_header(doc)
-        has_footer = needs_footer(doc)
-        document_xml = render_document_xml(
-            doc,
-            hyperlinks,
-            image_state=image_state,
-            bookmark_state=bookmark_state,
-            has_header=has_header,
-            has_footer=has_footer,
-        )
         styles_xml = render_styles_xml(doc)
         reference = getattr(self.options, "reference_docx", None)
         if reference is not None:
@@ -182,64 +148,13 @@ class LdmDocxWriter:
         numbering_xml = render_numbering_xml(doc) or None
         settings_xml = render_settings_xml(doc) if needs_settings(doc) else None
 
-        # Header / footer parts use their own hyperlink table — Word
-        # resolves ``r:id`` against the part's sidecar rels file, not
-        # the document's, so collisions on ``rIdLink<N>`` are fine.
-        # Each part also owns its own image state with a unique media
-        # filename prefix so images dropped into ``word/media/`` from
-        # the header / footer don't overwrite the body's image1.png.
-        header_xml: Optional[str] = None
-        header_rels: dict[str, str] = {}
-        # Header / footer anchors are placed relative to header_distance
-        # / footer_distance, not the section top margin.  Use the first
-        # section's distances as the baseline (matches reader behaviour).
-        first_section = doc.sections[0] if doc.sections else None
-        first_ps = first_section.page_setup if first_section else None
-        from aspose.words_foss.docx_writer.drawing import pt_to_mm
-        header_baseline_mm = pt_to_mm(first_ps.header_distance) if first_ps and first_ps.header_distance else 12.7
-        page_height_mm = pt_to_mm(first_ps.page_height) if first_ps and first_ps.page_height else 297.0
-        footer_distance_mm = pt_to_mm(first_ps.footer_distance) if first_ps and first_ps.footer_distance else 12.7
-        footer_baseline_mm = page_height_mm - footer_distance_mm
-        left_margin_mm = pt_to_mm(first_ps.left_margin) if first_ps and first_ps.left_margin else 25.4
-        header_image_state = ImageRenderState(
-            media_name_prefix="header_image",
-            rel_id_prefix="rIdHdrImg",
-            doc_pr_offset=100000,
-            section_top_margin_mm=header_baseline_mm,
-            section_left_margin_mm=left_margin_mm,
-        )
-        footer_xml: Optional[str] = None
-        footer_rels: dict[str, str] = {}
-        footer_image_state = ImageRenderState(
-            media_name_prefix="footer_image",
-            rel_id_prefix="rIdFtrImg",
-            doc_pr_offset=200000,
-            section_top_margin_mm=footer_baseline_mm,
-            section_left_margin_mm=left_margin_mm,
-        )
         style_pf_map = _build_style_pf_map(doc)
         style_id_map = build_style_id_map(doc)
         style_font_map = build_style_font_map(doc)
-        if has_header:
-            hdr_children = _collect_hf_children(doc, header=True)
-            header_xml = render_header_xml(
-                hdr_children,
-                header_rels,
-                style_pf_map,
-                style_id_map,
-                style_font_map,
-                image_state=header_image_state,
-            )
-        if has_footer:
-            ftr_children = _collect_hf_children(doc, header=False)
-            footer_xml = render_footer_xml(
-                ftr_children,
-                footer_rels,
-                style_pf_map,
-                style_id_map,
-                style_font_map,
-                image_state=footer_image_state,
-            )
+        header_footer_parts, section_refs = render_section_stories(
+            doc, style_pf_map, style_id_map, style_font_map)
+        document_xml = render_document_xml(doc, hyperlinks, image_state=image_state,
+            bookmark_state=bookmark_state, section_header_footer_refs=section_refs)
 
         from aspose.words_foss._comments import render_comments
         comments_xml, comment_hyperlinks, comment_images = render_comments(doc, style_pf_map, style_id_map, style_font_map)
@@ -264,12 +179,9 @@ class LdmDocxWriter:
             settings_xml=settings_xml,
             hyperlinks=hyperlinks,
             images=image_state.images,
-            header_xml=header_xml,
-            header_hyperlinks=header_rels,
-            header_images=header_image_state.images,
-            footer_xml=footer_xml,
-            footer_hyperlinks=footer_rels,
-            footer_images=footer_image_state.images,
+            header_xml=None, header_hyperlinks={}, header_images=[],
+            footer_xml=None, footer_hyperlinks={}, footer_images=[],
+            header_footer_parts=header_footer_parts,
         )
 
     # ------------------------------------------------------------------
@@ -337,6 +249,7 @@ class _RenderedParts:
     settings_xml: Optional[str]
     hyperlinks: dict[str, str]
     images: list[ImageEntry]
+    header_footer_parts: list
     header_xml: Optional[str]
     header_hyperlinks: dict[str, str]
     header_images: list[ImageEntry]
@@ -361,6 +274,7 @@ class _RenderedParts:
             "settings_xml": self.settings_xml,
             "hyperlinks": self.hyperlinks,
             "images": self.images,
+            "header_footer_parts": self.header_footer_parts,
             "header_xml": self.header_xml,
             "header_hyperlinks": self.header_hyperlinks,
             "header_images": self.header_images,

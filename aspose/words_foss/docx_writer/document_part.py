@@ -192,6 +192,7 @@ def _render_section(
     style_font_map: Mapping[str, ldm.Font],
     has_header: bool,
     has_footer: bool,
+    header_footer_refs: str | None = None,
 ) -> list[str]:
     """Render one section's body content.
 
@@ -207,6 +208,8 @@ def _render_section(
     rendered: list[str] = []
     header_ref = header_reference(HEADER_REL_ID) if has_header else None
     footer_ref = footer_reference(FOOTER_REL_ID) if has_footer else None
+    if header_footer_refs is not None:
+        header_ref, footer_ref = header_footer_refs, None
     sectPr_xml = _sectPr(section.page_setup, header_ref=header_ref, footer_ref=footer_ref)
     children = list(section.body.children)
     image_state.set_section_margins(section.page_setup)
@@ -334,6 +337,7 @@ def _render_body(
     *,
     has_header: bool,
     has_footer: bool,
+    section_header_footer_refs: list[str] | None = None,
 ) -> str:
     """Walk all sections and render their body children."""
     rendered: list[str] = []
@@ -361,6 +365,8 @@ def _render_body(
                 style_font_map=style_font_map,
                 has_header=has_header,
                 has_footer=has_footer,
+                header_footer_refs=(section_header_footer_refs[i]
+                                    if section_header_footer_refs is not None else None),
             )
         )
     # Word treats unclosed bookmarks as a corruption error; flush any
@@ -378,6 +384,7 @@ def render_document_xml(
     bookmark_state: Optional[BookmarkState] = None,
     has_header: bool = False,
     has_footer: bool = False,
+    section_header_footer_refs: list[str] | None = None,
 ) -> str:
     """Build the entire ``word/document.xml`` payload as a string.
 
@@ -410,6 +417,7 @@ def render_document_xml(
         style_font_map,
         has_header=has_header,
         has_footer=has_footer,
+        section_header_footer_refs=section_header_footer_refs,
     )
     # <w:background> sits between document opening and body per CT_Document.
     background = ""

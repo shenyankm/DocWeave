@@ -235,6 +235,12 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                     "inherited": key not in explicit,
                 })
 
+        known_rids = {rid for kind, rid, name in stories
+                      if kind in {"header", "footer"} and name in namelist}
+        if any(rid not in known_rids for rid in reference_map):
+            warn("Missing header/footer resource", DocumentLoadWarning, stacklevel=3,
+                 code="load.missing_header_footer", location="word/document.xml/sectPr")
+
         seen_stories = set()
         for kind, rid, name in stories:
             if name not in namelist:
@@ -326,16 +332,6 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
                  DocumentLoadWarning, stacklevel=3, code="load.character_indents_ignored",
                  location="DOCX paragraph formatting, styles, numbering and source stories")
 
-        references = list(self._document_xml.iter(W_NS + "headerReference")) + list(
-            self._document_xml.iter(W_NS + "footerReference"))
-        for kind in ("headerReference", "footerReference"):
-            refs = [node for node in references if node.tag == W_NS + kind]
-            if (any(node.get(W_NS + "type", "default") != "default" for node in refs)
-                    or len({node.get(R_NS + "id") for node in refs}) > 1):
-                warn("Per-section, first-page or even-page headers/footers are flattened by "
-                     "the light document model", DocumentLoadWarning, stacklevel=3,
-                     code="load.header_footer_flattened", location="word/document.xml/sectPr")
-                break
 
     @staticmethod
     def _prepare_text_space(root):

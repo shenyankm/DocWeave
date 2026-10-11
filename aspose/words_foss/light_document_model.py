@@ -1427,6 +1427,7 @@ class PageSetup(BaseModel):
 
 class HeaderFooter(BaseModel):
     type: str = Field(default="", alias="_type")
+    # 0/1 default header/footer, 2/3 first-page, 4/5 even-page.
     header_footer_type: int | None = None
     children: list[BodyChild] = Field(default_factory=list)
 
