@@ -114,10 +114,10 @@ def text_run(text: str, *, instr: bool = False) -> str:
     """Render raw run text as the children of a ``<w:r>`` element.
 
     OOXML represents soft line breaks, page breaks, column breaks and
-    tab stops as standalone sibling elements (``<w:br/>``, ``<w:br
-    w:type="page"/>``, ``<w:br w:type="column"/>``, ``<w:tab/>``)
+    tab stops and carriage returns as standalone sibling elements (``<w:br/>``, ``<w:br
+    w:type="page"/>``, ``<w:br w:type="column"/>``, ``<w:tab/>``, ``<w:cr/>``)
     rather than literal control characters inside ``<w:t>``.  We split
-    on those four whitespace types and emit the structural form so
+    on these whitespace types and emit the structural form so
     Word renders the layout the way the source intended (and so the
     output is well-formed XML — ``\\x0c`` / ``\\x0b`` are illegal
     inside an XML element); everything else stays in ``<w:t>`` with
@@ -152,6 +152,9 @@ def text_run(text: str, *, instr: bool = False) -> str:
         elif ch == "\v":
             flush()
             parts.append('<w:br w:type="column"/>')
+        elif ch == "\r":
+            flush()
+            parts.append('<w:cr/>')
         else:
             buf.append(ch)
     flush()

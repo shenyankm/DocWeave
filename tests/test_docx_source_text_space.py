@@ -97,6 +97,36 @@ def test_invalid_text_space_is_rejected():
         aw.Document(BytesIO(owned_text('unexpected')))
 
 
+@pytest.mark.parametrize('flat', [False, True])
+@pytest.mark.parametrize('json_reload', [False, True])
+def test_carriage_return_survives_edit_and_repeated_save(flat, json_reload):
+    output = BytesIO()
+    with ZipFile(BytesIO(owned_text(None))) as source, ZipFile(output, 'w') as destination:
+        for name in source.namelist():
+            data = source.read(name)
+            if name == 'word/document.xml':
+                root = ET.fromstring(data)
+                run = root.find('.//' + W + 'r')
+                run.clear()
+                ET.SubElement(run, W + 't').text = 'OWNED A'
+                ET.SubElement(run, W + 'cr')
+                ET.SubElement(run, W + 't').text = 'OWNED B'
+                data = ET.tostring(root)
+            destination.writestr(name, data)
+    raw = output.getvalue()
+    model = aw.Document(BytesIO(encode(raw) if flat else raw)).light_document_model
+    assert model.sections[0].body.paragraphs[0].runs[0].text == 'OWNED A\rOWNED B'
+    if json_reload:
+        model = ldm.Document.model_validate_json(model.model_dump_json())
+    model.sections[0].body.paragraphs[0].runs[0].text += ' EDITED'
+    for _ in range(2):
+        raw = LdmDocxWriter().write_to_bytes(model)
+        with ZipFile(BytesIO(raw)) as package:
+            assert len(ET.fromstring(package.read('word/document.xml')).findall('.//' + W + 'cr')) == 1
+        model = aw.Document(BytesIO(encode(raw) if flat else raw)).light_document_model
+        assert ''.join(run.text for run in model.sections[0].body.paragraphs[0].runs) == 'OWNED A\rOWNED B EDITED'
+
+
 @pytest.mark.parametrize('root_space,local_space,expected', [
     ('preserve', None, '  OWNED\tTEXT  '),
     ('preserve', 'default', '  OWNED\tTEXT  '),
