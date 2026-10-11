@@ -139,6 +139,9 @@ class DocumentReader(LdmBuilderMixin, ShapeParserMixin):
             if kind == "vbaProject":
                 warn("VBA project resources are omitted by the conversion model; use DocxDocument for package preservation",
                      DocumentLoadWarning, code="load.vba_project_omitted", location="word/document.xml")
+            if kind == "comments" and mode != "External":
+                warn("Comment parts and their anchors are omitted by the conversion model; use DocxDocument for package preservation",
+                     DocumentLoadWarning, code="load.comments_omitted", location="word/document.xml")
             if mode == "External":
                 if kind == "hyperlink":
                     self._rels[rid] = target
