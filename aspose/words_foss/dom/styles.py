@@ -18,8 +18,11 @@ from aspose.words_foss.dom.nodes import (
     _onoff,
     _read_character_indent,
     _read_dimension,
+    _read_line_spacing,
     _read_size,
 )
+from aspose.words_foss.model.enums import LineSpacingRule
+
 from aspose.words_foss.utils.xml_helpers import combine_style_toggle, serialize_xml, normalize_font_names
 
 
@@ -288,6 +291,15 @@ class StyleParagraphFormat(ParagraphFormat):
                 return value
         return 0.0
 
+    def _effective_line_spacing(self):
+        resolver = StyleResolver(self._node.owner_document)
+        layers = [resolver._defaults("pPr")] + [_child(style, "pPr") for style in
+                  resolver._chain(self._node.style_id, "paragraph")]
+        return resolver._line_spacing(layers)
+
+    def _line_spacing(self):
+        return self._effective_line_spacing() if self._resolved else super()._line_spacing()
+
     def _character_indent(self, prop):
         if not self._resolved:
             return super()._character_indent(prop)
@@ -510,6 +522,8 @@ class EffectiveParagraphFormat:
     first_line_indent: float = 0.0
     space_before: float = 0.0
     space_after: float = 0.0
+    line_spacing: float = 12.0
+    line_spacing_rule: LineSpacingRule = LineSpacingRule.MULTIPLE
 
 
 class StyleResolver:
@@ -733,7 +747,18 @@ class StyleResolver:
                 value = _read_dimension(_child(layer, tag), name)
                 if value is not None:
                     dimensions[name] = value
-        return EffectiveParagraphFormat(alignment, **flags, **dimensions)
+        value, rule = self._line_spacing(layers)
+        return EffectiveParagraphFormat(alignment, **flags, **dimensions,
+                                        line_spacing=value, line_spacing_rule=rule)
+
+    def _line_spacing(self, layers):
+        default = _child(_child(self.root, "docDefaults"), "pPrDefault")
+        value, rule = (12.95 if default is None else 12.0), LineSpacingRule.MULTIPLE
+        for layer in layers:
+            pair = _read_line_spacing(_child(layer, "spacing"))
+            if pair[0] is not None:
+                value, rule = pair
+        return value, rule
 
     def font(self, run):
         run._editable()
