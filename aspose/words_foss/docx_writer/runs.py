@@ -54,12 +54,8 @@ _TEXT_EFFECT_TOKEN: dict[int, str] = {
     6: "shimmer",           # Shimmer
 }
 
-# Schemes the writer accepts as a real hyperlink target.  The list mirrors
-# what the reader produces from ``w:hyperlink`` (HTTP/S, mailto, tel,
-# file, ftp) plus pure fragment anchors (``#bookmark``).  Any run text
-# matching ``[x](y)`` whose ``y`` doesn't satisfy this gate is left as a
-# literal string, so inline-code samples like ``[1](note)`` aren't
-# silently rewritten into a Word hyperlink.
+# Unmarked runs need a URL-like target so literal text such as ``[1](note)``
+# is not silently rewritten. Declared hyperlinks can also use bare paths.
 _URL_RE = re.compile(r"^(?:[a-zA-Z][a-zA-Z0-9+.\-]*:|#|/|\.{1,2}/)")
 
 
@@ -420,10 +416,8 @@ def render_run(
     accumulate hyperlink relationships (URL → relationship id).  Each
     new URL gets a fresh ``rIdLink<N>``.
 
-    The Markdown-link rewrite is gated on the URL satisfying
-    :data:`_URL_RE` (a scheme like ``http:``, ``mailto:``, a leading
-    ``#``/``/``/``./``).  This stops literal text such as ``[1](note)``
-    or inline-code samples from being silently turned into hyperlinks.
+    Declared hyperlinks retain any target. Unmarked Markdown-link text needs
+    :data:`_URL_RE` so literal text such as ``[1](note)`` stays unchanged.
 
     ``base_font`` is the resolved style-chain font for the paragraph
     that contains this run; passing it lets the writer emit explicit
@@ -440,7 +434,7 @@ def render_run(
         match = INLINE_LINK_RE.fullmatch(token)
         if match:
             label, target = decode_link(match)
-            if _URL_RE.match(target):
+            if target and (run.is_hyperlink or _URL_RE.match(target)):
                 parts = _render_hyperlink_run(label, target, run, rels, base_font=base_font,
                                               style_id_map=style_id_map)
                 if separator:
