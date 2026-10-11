@@ -13,6 +13,7 @@ from functools import partial
 from math import isfinite
 from pathlib import Path
 from typing import Iterator, Optional, Union
+from urllib.parse import quote, unquote
 
 from fpdf import FPDF
 from fpdf.prefs import ViewerPreferences
@@ -98,6 +99,14 @@ class _PdfCanvas(FPDF):
             target, separator, fragment = link.partition("#")
             if target and separator and not fragment:
                 link = target
+            if link.startswith("file:///") and not re.match(r"[A-Za-z][:|]", link[8:]):
+                # Local file actions decode percent bytes as Latin-1 before PDF escaping.
+                link = quote(
+                    re.sub(r"\\+", "/", unquote(link[8:], encoding="latin-1")),
+                    safe=":/?#[]@!$&'()*+,;=%<>^`{|}",
+                )
+                if not link:
+                    return None
             authority = re.match(r"(?i)^https?://[^/?#]+(?=[?#]|$)", link)
             if authority:
                 end = authority.end()

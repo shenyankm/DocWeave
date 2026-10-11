@@ -42,6 +42,8 @@ def test_pdf_action_projects_empty_fragment_without_decoding_source(target, acti
 
 
 @pytest.mark.parametrize('target,action', [
+    ('file:///tmp/a%23b.txt', 'tmp/a#b.txt'),
+    ('file:///tmp/报告.txt', 'tmp/%E6%8A%A5%E5%91%8A.txt'),
     ('https://one.test#', 'https://one.test/'),
     ('https://one.test/path#anchor', 'https://one.test/path#anchor'),
     ('https://one.test?#', 'https://one.test/?'),
@@ -69,3 +71,68 @@ def test_uri_projection_is_pdf_only_across_json_docx_and_flat(target, action, sh
         assert [item.get_object()['/A']['/URI'] for item in pdf.pages[0]['/Annots']] == [action]
         assert restored.model_dump_json() == before
     assert model.model_dump_json() == original
+
+
+@pytest.mark.parametrize("target,action", [
+    ('file:///tmp/input.txt#', 'tmp/input.txt'),
+    ('file:////server/share/Input.txt', '/server/share/Input.txt'),
+    ('file:///tmp/report%20name.txt', 'tmp/report%20name.txt'),
+    ('file:///tmp/报告.txt', 'tmp/%E6%8A%A5%E5%91%8A.txt'),
+    ('file:///tmp/a%23.txt', 'tmp/a#.txt'),
+    ('file:///tmp/a.txt#bookmark', 'tmp/a.txt#bookmark'),
+    ('file:///tmp/a.txt?x=1#bookmark', 'tmp/a.txt?x=1#bookmark'),
+    ('file:///tmp/a.txt##', 'tmp/a.txt##'),
+    ('file:///tmp/../a.txt', 'tmp/../a.txt'),
+    ('file:///tmp//a.txt', 'tmp//a.txt'),
+    ('file:///tmp/a%2Fb.txt', 'tmp/a/b.txt'),
+    ('file:///tmp/a%3Fb.txt', 'tmp/a?b.txt'),
+    ('file:///tmp/a%25b.txt', 'tmp/a%b.txt'),
+    ('file:///tmp/a%5Cb.txt', 'tmp/a/b.txt'),
+    ('file:///tmp/a%22b.txt', 'tmp/a%22b.txt'),
+    ('file:///tmp/a%2Bb.txt', 'tmp/a+b.txt'),
+    ('file:///tmp/a%26b.txt', 'tmp/a&b.txt'),
+    ('file:///tmp/a%3Db.txt', 'tmp/a=b.txt'),
+    ('file:///tmp/a%3Ab.txt', 'tmp/a:b.txt'),
+    ('file:///tmp/a%40b.txt', 'tmp/a@b.txt'),
+    ('file:///tmp/a%7Eb.txt', 'tmp/a~b.txt'),
+    ('file:///tmp/a%21b.txt', 'tmp/a!b.txt'),
+    ('file:///tmp/a%24b.txt', 'tmp/a$b.txt'),
+    ('file:///tmp/a%27b.txt', "tmp/a'b.txt"),
+    ('file:///tmp/a%28b.txt', 'tmp/a(b.txt'),
+    ('file:///tmp/a%3Bb.txt', 'tmp/a;b.txt'),
+    ('file:///tmp/a%00b.txt', 'tmp/a%00b.txt'),
+    ('file:///tmp/a%7fb.txt', 'tmp/a%7Fb.txt'),
+    ('file:///tmp/a%0ab.txt', 'tmp/a%0Ab.txt'),
+    ('file:///tmp/a%ZZb.txt', 'tmp/a%ZZb.txt'),
+    ('file:///tmp/a%b.txt', 'tmp/a%b.txt'),
+    ('file:///tmp/a b.txt', 'tmp/a%20b.txt'),
+    ('file:///tmp/a[1].txt', 'tmp/a[1].txt'),
+    ('file:///tmp/a{1}.txt', 'tmp/a{1}.txt'),
+    ('file:///tmp/报告 %E6%8A%A5.txt', 'tmp/%E6%8A%A5%E5%91%8A%20%C3%A6%C2%8A%C2%A5.txt'),
+    ('file:///tmp/a%23b.txt#锚点', 'tmp/a#b.txt#%E9%94%9A%E7%82%B9'),
+    ('file:///tmp/a.txt#章节 空格', 'tmp/a.txt#%E7%AB%A0%E8%8A%82%20%E7%A9%BA%E6%A0%BC'),
+    ('file:///tmp/含🙂.txt', 'tmp/%E5%90%AB%F0%9F%99%82.txt'),
+    ('file:///tmp/a.txt?x= a#book mark', 'tmp/a.txt?x=%20a#book%20mark'),
+    ('file:///tmp:report', 'tmp:report'),
+    ('file:///?x=1', '?x=1'),
+    ('file:///tmp/a<b>.txt', 'tmp/a<b>.txt'),
+    ('file:///tmp/a^b.txt', 'tmp/a^b.txt'),
+    ('file:///tmp/a`b.txt', 'tmp/a`b.txt'),
+    ('file:///tmp/a|b.txt', 'tmp/a|b.txt'),
+    ('file:///tmp/a\\b.txt', 'tmp/a/b.txt'),
+    ('file:///tmp/%C3%A9.txt', 'tmp/%C3%83%C2%A9.txt'),
+    ('file:///tmp/%FF.txt', 'tmp/%C3%BF.txt'),
+    ('file:///tmp/a\nb.txt', 'tmp/a%0Ab.txt'),
+])
+def test_local_file_pdf_action(target, action):
+    pdf = _PdfCanvas(unit="pt", format=(300, 400)); pdf.add_page()
+    pdf.link(10, 20, 30, 40, target, alt_text="LINK")
+    item = PdfReader(BytesIO(bytes(pdf.output()))).pages[0]["/Annots"][0].get_object()
+    assert item["/A"]["/URI"] == action
+    assert list(map(float, item["/Rect"])) == [10, 340, 40, 380]
+
+
+def test_empty_local_file_path_has_no_pdf_action():
+    pdf = _PdfCanvas(unit="pt", format=(300, 400)); pdf.add_page()
+    pdf.link(10, 20, 30, 40, "file:///", alt_text="LINK")
+    assert not PdfReader(BytesIO(bytes(pdf.output()))).pages[0].get("/Annots")
