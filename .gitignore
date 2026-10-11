@@ -65,3 +65,8 @@ Desktop.ini
 # Local commercial baseline records and collection probes
 /docs/benchmarks/
 /docs/probes/
+
+# Docusaurus local dependencies and generated site
+/site/node_modules/
+/site/.docusaurus/
+/site/build/
