@@ -351,3 +351,71 @@ def test_default_numbering_rule_alias_is_accessible_and_roundtrips(tmp_path, dom
             doc.save(target, format)
         cold = aw.Document(target)
         assert getattr(cold, kind + '_options').restart_rule is rule.DEFAULT
+
+
+def test_page_setup_deepcopy_detaches_owner_and_keeps_declarations():
+    doc = ldm.Document(sections=[ldm.Section()])
+    doc.footnote_options.start_number = 5
+    page = doc.sections[0].page_setup
+    page.footnote_options.start_number = 3
+    copied = deepcopy(page)
+    assert copied._note_defaults is None
+    assert copied._note_targets is None
+    assert copied.model_dump() == page.model_dump()
+    assert copied.footnote_options.start_number == 3
+    assert page._note_defaults is doc.note_properties
+    assert page._note_targets[0] is doc.note_properties
+    copied.footnote_options.start_number = 9
+    assert page.footnote_options.start_number == 3
+    assert doc.footnote_options.start_number == 5
+
+
+def test_first_detached_section_adoption_keeps_typed_caller_identity():
+    original = ldm.Document(sections=[ldm.Section()])
+    original.footnote_options.start_number = 5
+    original.sections[0].page_setup.note_properties.clear()
+    typed = deepcopy({'note_properties': original.note_properties, 'sections': original.sections})
+    owned_section = typed['sections'][0]
+    owned_page = owned_section.page_setup
+    assert owned_page._note_defaults is None
+    adopted = ldm.Document.model_validate(typed)
+    assert adopted.sections[0] is owned_section
+    assert adopted.sections[0].page_setup is owned_page
+    assert owned_page._note_defaults is adopted.note_properties
+    assert owned_page.footnote_options.start_number == 5
+    adopted.footnote_options.start_number = 9
+    assert original.footnote_options.start_number == 5
+    assert original.sections[0].page_setup.footnote_options.start_number == 5
+
+
+def test_direct_bound_section_adoption_still_isolates_original_owner():
+    original = ldm.Document(sections=[ldm.Section()])
+    original.footnote_options.start_number = 5
+    original.sections[0].page_setup.note_properties.clear()
+    adopted = ldm.Document.model_validate({'sections': original.sections,
+        'note_properties': [ldm.NoteProperties(kind='footnote', children=[
+            ldm.NoteProperty(kind='numStart', value='9')])]})
+    assert adopted.sections[0] is not original.sections[0]
+    assert adopted.sections[0].page_setup._note_defaults is adopted.note_properties
+    assert adopted.sections[0].page_setup.footnote_options.start_number == 9
+    assert original.sections[0].page_setup._note_defaults is original.note_properties
+    assert original.sections[0].page_setup.footnote_options.start_number == 5
+
+
+def test_document_deep_model_copy_rebinds_note_owner_views():
+    original = ldm.Document(sections=[ldm.Section(), ldm.Section()])
+    original.endnote_options.start_number = 5
+    for section in original.sections:
+        section.page_setup.note_properties.clear()
+    copied = original.model_copy(deep=True)
+    for section in copied.sections:
+        assert section.page_setup._note_defaults is copied.note_properties
+        assert section.page_setup._note_targets[0] is copied.note_properties
+        assert section.page_setup.endnote_options.start_number == 5
+    copied.sections[0].page_setup.endnote_options.position = aw.notes.EndnotePosition.END_OF_SECTION
+    assert copied.endnote_options.position is aw.notes.EndnotePosition.END_OF_SECTION
+    assert all(s.page_setup.endnote_options.position is aw.notes.EndnotePosition.END_OF_SECTION
+               for s in copied.sections)
+    assert original.endnote_options.position is aw.notes.EndnotePosition.END_OF_DOCUMENT
+    assert all(s.page_setup.endnote_options.position is aw.notes.EndnotePosition.END_OF_DOCUMENT
+               for s in original.sections)

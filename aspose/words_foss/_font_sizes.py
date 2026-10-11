@@ -21,6 +21,21 @@ class FontSizeBinding:
     def __init__(self, document):
         self.document = document
 
+    def nodes(self, node_type):
+        from aspose.words_foss._comments import _comment_story_nodes
+        roots = [child for section in self.document.sections
+                 for child in section.body.children]
+        roots.extend(child for section in self.document.sections
+                     for part in section.headers_footers for child in part.children)
+        roots.extend(child for story in self.document.source_stories for child in story.children)
+        return (node for node in _comment_story_nodes(roots) if isinstance(node, node_type))
+
+    @staticmethod
+    def fonts(paragraph):
+        return (child.font for child in paragraph._children
+                if isinstance(child, (ldm.Run, ldm.NoteReference, ldm.NoteMarker))
+                and child.font is not None)
+
     def chain(self, name):
         styles = {style.name: style for style in self.document.styles}
         chain, seen = [], set()
@@ -43,7 +58,7 @@ class FontSizeBinding:
             if s.type == 1 and s.built_in and s.style_identifier == 0), '')
 
     def table(self, paragraph):
-        for table in self.document.get_child_nodes(ldm.NodeType.TABLE, True):
+        for table in self.nodes(ldm.Table):
             target = next((c for row in table.rows for c in row.cells
                            if any(p is paragraph for p in c.paragraphs)), None)
             if target is None:
@@ -82,11 +97,12 @@ class FontSizeBinding:
         return [], (), ()
 
     def run(self, font, paragraph, *, mark=False, paint=False):
-        if not mark and not any(run.font is font for run in paragraph.runs):
-            paragraph = next((p for p in self.document.get_child_nodes(ldm.NodeType.PARAGRAPH, True)
-                              if any(run.font is font for run in p.runs)), paragraph)
+        if not mark and not any(value is font for value in self.fonts(paragraph)):
+            paragraph = next((p for p in self.nodes(ldm.Paragraph)
+                              if any(value is font for value in self.fonts(p))), paragraph)
         layers, conditions, paint_conditions = ([], (), ()) if mark else self.table(paragraph)
-        paragraph_styles = self.chain(paragraph.paragraph_format.style_name or self.paragraph_style())
+        paragraph_styles = (self.chain(paragraph.paragraph_format.style_name or self.paragraph_style())
+                            or self.chain(self.paragraph_style()))
         paragraph_sizes = [(s.built_in and s.style_identifier == 0, local_size(s.font))
                            for s in paragraph_styles]
         character = None
@@ -113,9 +129,9 @@ class FontSizeBinding:
         return 0.5 if paint and size == 0 else size
 
     def bind(self):
-        for paragraph in self.document.get_child_nodes(ldm.NodeType.PARAGRAPH, True):
-            for run in paragraph.runs:
-                run.font._size_resolver = lambda font, p=paragraph, paint=False: self.run(font, p, paint=paint)
+        for paragraph in self.nodes(ldm.Paragraph):
+            for font in self.fonts(paragraph):
+                font._size_resolver = lambda font, p=paragraph, paint=False: self.run(font, p, paint=paint)
             mark = paragraph.paragraph_format.paragraph_break_font
             if mark is not None:
                 mark._size_resolver = lambda font, p=paragraph, paint=False: self.run(font, p, mark=True, paint=paint)

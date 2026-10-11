@@ -1497,6 +1497,13 @@ class PageSetup(BaseModel):
     _note_defaults: Any = PrivateAttr(default=None)
     _note_targets: Any = PrivateAttr(default=None)
 
+    def __deepcopy__(self, memo=None):
+        # Copy declarations without retaining another document's owner context.
+        detached = super().__copy__()
+        detached.__pydantic_private__['_note_defaults'] = None
+        detached.__pydantic_private__['_note_targets'] = None
+        return BaseModel.__deepcopy__(detached, memo)
+
     def __eq__(self, other):
         # Owner associations are context, not section property values.
         if type(other) is not type(self):
